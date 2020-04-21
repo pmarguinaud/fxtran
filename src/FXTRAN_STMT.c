@@ -2175,7 +2175,56 @@ def_extra_proto (CLASSIS)
 def_extra_proto (TYPEIS)
 {
   XAD(6);
-  return stmt_cltpis_extra (t, ci, ctx, _T(_S(NAMED) H _S(LABEL)));
+
+  XST (_T(_S(TYPE) H _S (SELECTOR)));
+
+  switch (t[0])
+    {
+      case '(':
+        {
+          int k, kn, i, intrinsic = 0;
+          XAD(1);
+
+          kn = FXTRAN_eat_word (t);
+
+          for (i = 0; i < kn; i++)
+            if (zstrcmp (FXTRAN_types[i], t))
+              {
+                intrinsic = 1;
+                break;
+              }
+
+          k = FXTRAN_str_at_level (t, ci, ")", 0);
+
+          if (intrinsic)
+            {
+              k = FXTRAN_typespec (t, ci, ctx) + 1;
+            }
+          else
+            {
+              XNT (_T(_S(TYPE) H _S(NAME)), k-1);
+            }
+
+          XAD(k);
+
+        }
+      break;
+      case 'D':
+        if (zstrcmp ("DEFAULT", t))
+          XAD(7);
+	else
+          FXTRAN_THROW ("Expected `DEFAULT'"); 
+      break;
+      default:
+        FXTRAN_THROW ("Malformed case"); 
+        return;
+      break;
+    }
+
+  XET ();
+
+  if (t[0])
+    stmt_unit_name (t, ci, "", _T(_S(NAMED) H _S(LABEL)), ctx);
 }
 
 def_extra_proto (CASE)
