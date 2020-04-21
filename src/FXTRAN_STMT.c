@@ -433,8 +433,9 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
       if (kdc)
         {
           int intrinsic = 0, i;
+          int kdn  = FXTRAN_eat_word (t);
           for (i = 0; FXTRAN_types[i]; i++)
-            if ((FXTRAN_types_intrinsic[i]) && (zstrcmp (FXTRAN_types[i], t)))
+            if ((FXTRAN_types_intrinsic[i]) && (0 == strncmp (FXTRAN_types[i], t, kdn)))
               {
                 intrinsic = 1;
                 break;
@@ -2187,8 +2188,8 @@ def_extra_proto (TYPEIS)
 
           kn = FXTRAN_eat_word (t);
 
-          for (i = 0; i < kn; i++)
-            if (zstrcmp (FXTRAN_types[i], t))
+          for (i = 0; FXTRAN_types[i]; i++)
+            if (0 == strncmp (FXTRAN_types[i], t, kn))
               {
                 intrinsic = 1;
                 break;
