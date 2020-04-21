@@ -1830,7 +1830,6 @@ def_extra_proto (SELECTTYPE)
     {
       XNT (_T(_S(ASSOCIATE) H _S(NAME)), k-1);
       XAD(k-1);
-      XET ();
       XAD(2);
     }
 
