@@ -384,24 +384,25 @@ typedef struct stmt_actual_args_parms
 {
   const char * argl;
   const char * argn;
+  int allow_column;
 } 
 stmt_actual_args_parms;
 
-#define def_actual_args(n,x) \
+#define def_actual_args(n,x,c) \
 static stmt_actual_args_parms saap_##n = \
-  { _T(x H _S(SPEC)), _T(x) }
+  { _T(x H _S(SPEC)), _T(x), c }
 
-def_actual_args (actual, _S(ARG));
-def_actual_args (filepos, _S(POS) H _S(SPEC));
-def_actual_args (close, _S(CLOSE) H _S(SPEC));
-def_actual_args (open, _S(CONNECT) H _S(SPEC));
-def_actual_args (flush, _S(FLUSH) H _S(SPEC));
-def_actual_args (inquiry, _S(INQUIRY) H _S(SPEC));
-def_actual_args (io, _S(IO) H _S(CONTROL));
-def_actual_args (wait, _S(WAIT) H _S(SPEC));
-def_actual_args (kindsel, _S(KIND) H _S(SPEC));
-def_actual_args (charsel, _S(CHAR) H _S(SPEC));
-def_actual_args (typeparm, _S(TYPE) H _S(PARAMETER) H _S(SPEC));
+def_actual_args (actual, _S(ARG), 0);
+def_actual_args (filepos, _S(POS) H _S(SPEC), 0);
+def_actual_args (close, _S(CLOSE) H _S(SPEC), 0);
+def_actual_args (open, _S(CONNECT) H _S(SPEC), 0);
+def_actual_args (flush, _S(FLUSH) H _S(SPEC), 0);
+def_actual_args (inquiry, _S(INQUIRY) H _S(SPEC), 0);
+def_actual_args (io, _S(IO) H _S(CONTROL), 0);
+def_actual_args (wait, _S(WAIT) H _S(SPEC), 0);
+def_actual_args (kindsel, _S(KIND) H _S(SPEC), 0);
+def_actual_args (charsel, _S(CHAR) H _S(SPEC), 1);
+def_actual_args (typeparm, _S(TYPE) H _S(PARAMETER) H _S(SPEC), 0);
 
 #undef def_actual_args
 
@@ -445,7 +446,11 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
           kc = kc - (kn+1);
         }
 
-      FXTRAN_expr (t, ci, kc-1, ctx);
+      if ((! saap->allow_column) || (t[0] != ':'))
+        {
+          FXTRAN_expr (t, ci, kc-1, ctx);
+        }
+
       XAD(kc-1);
 
       XET ();
@@ -837,6 +842,7 @@ static int clkd_of_type (const char * t, const FXTRAN_char_info * ci,
       XST (spn);
       if (t[0] == '*')
         XAD(1);
+
       k = stmt_actual_args (t, ci, ctx, saap);
       XAD(k);
       XET ();
