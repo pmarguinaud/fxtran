@@ -329,10 +329,13 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
   {
     FXTRAN_stmt_stack stack;
 #define DUMP_FXTRAN_STMT \
-  do {                                                            \
-      int label = fixup_fc_label (text, ci, i1, i2);              \
-      FXTRAN_dump_fc_stmt (text, ci, i1, i2, ctx, &stack, label); \
-      i1 = -1; sc = 0;                                            \
+  do {                                                                \
+      if (i1 >= 0)                                                    \
+        {                                                             \
+          int label = fixup_fc_label (text, ci, i1, i2);              \
+          FXTRAN_dump_fc_stmt (text, ci, i1, i2, ctx, &stack, label); \
+        }                                                             \
+      i1 = -1; sc = 0;                                                \
   } while (0)
 #define GOTO_FXTRAN_COD \
     do { while ((ci[i+1].mask != FXTRAN_COD) && (ci[i+1].mask != FXTRAN_STR)) { i++; } } while (0)

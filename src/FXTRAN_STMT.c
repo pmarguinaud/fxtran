@@ -2087,6 +2087,8 @@ static void stmt_cltpis_extra (const char * t, const FXTRAN_char_info * ci,
 {
   int k;
 
+  XST (_T(_S(TYPE) H _S (SELECTOR)));
+
   switch (t[0])
     {
       case '(':
@@ -2107,7 +2109,7 @@ static void stmt_cltpis_extra (const char * t, const FXTRAN_char_info * ci,
       break;
     }
 
-
+  XET ();
 
   if (t[0])
     stmt_unit_name (t, ci, "", N, ctx);
@@ -2115,7 +2117,14 @@ static void stmt_cltpis_extra (const char * t, const FXTRAN_char_info * ci,
 
 def_extra_proto (CLASSIS)
 {
-  XAD(7);
+  if (zstrcmp ("CLASSDEFAULT",t))
+    {
+      XAD(5);
+    }
+  else
+    {
+      XAD(7);
+    }
   return stmt_cltpis_extra (t, ci, ctx, _T(_S(NAMED) H _S(LABEL)));
 }
 
