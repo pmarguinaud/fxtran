@@ -1110,7 +1110,7 @@ static int FXTRAN_attr0 (const char * t, const FXTRAN_char_info * ci,
               XAD(4);
 	      if (an) XET ();
 	      XAD(1);
-	      XNT (_T(_S(NAME)), k-5);
+	      XNT (_T(_S(NAME)), k-6);
               XAD(k-5);
             }
 	  else if (zstrcmp ("INTENT", T))
