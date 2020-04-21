@@ -2535,7 +2535,7 @@ static int stmt_prog_unit_expected (FXTRAN_stmt_stack * stack)
   FXTRAN_stmt_stack_state * st = FXTRAN_stmt_stack_curr(stack);
   if (st == NULL)
     return 1;
-  if (st->seen_contains)
+  if ((st->seen_contains) && (st->type != FXTRAN_TYPE))
     return 1;
   return 0;
 }
@@ -3815,7 +3815,7 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
   else
     {
       FXTRAN_stmt_type type;
-      int expect_pu;
+      int expect_pu = 0;
       const char * str;
       xml_tu tu;
    
