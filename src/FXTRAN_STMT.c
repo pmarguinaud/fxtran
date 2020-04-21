@@ -19,6 +19,7 @@
 
 const char * FXTRAN_ops[] = { "+",  "-", "**", "*", "//", "/=", "/",
                               "==", ">=", ">", "<=", "<",  NULL };
+
 const char * FXTRAN_types[] = { "LOGICAL", "REAL", "COMPLEX", "INTEGER", "CHARACTER",
                                 "DOUBLEPRECISION", "DOUBLECOMPLEX", "TYPE", "CLASS",
                                 "PROCEDURE", NULL };
@@ -385,24 +386,27 @@ typedef struct stmt_actual_args_parms
   const char * argl;
   const char * argn;
   int allow_column;
+  int typespec;
 } 
 stmt_actual_args_parms;
 
-#define def_actual_args(n,x,c) \
+#define def_actual_args(n,x,c,t) \
 static stmt_actual_args_parms saap_##n = \
-  { _T(x H _S(SPEC)), _T(x), c }
+  { _T(x H _S(SPEC)), _T(x), c, t }
 
-def_actual_args (actual, _S(ARG), 0);
-def_actual_args (filepos, _S(POS) H _S(SPEC), 0);
-def_actual_args (close, _S(CLOSE) H _S(SPEC), 0);
-def_actual_args (open, _S(CONNECT) H _S(SPEC), 0);
-def_actual_args (flush, _S(FLUSH) H _S(SPEC), 0);
-def_actual_args (inquiry, _S(INQUIRY) H _S(SPEC), 0);
-def_actual_args (io, _S(IO) H _S(CONTROL), 0);
-def_actual_args (wait, _S(WAIT) H _S(SPEC), 0);
-def_actual_args (kindsel, _S(KIND) H _S(SPEC), 0);
-def_actual_args (charsel, _S(CHAR) H _S(SPEC), 1);
-def_actual_args (typeparm, _S(TYPE) H _S(PARAMETER) H _S(SPEC), 0);
+def_actual_args (  actual,                             _S(ARG), 0, 0);
+def_actual_args (allocate,                             _S(ARG), 0, 1);
+def_actual_args ( filepos,                  _S(POS) H _S(SPEC), 0, 0);
+def_actual_args (   close,                _S(CLOSE) H _S(SPEC), 0, 0);
+def_actual_args (    open,              _S(CONNECT) H _S(SPEC), 0, 0);
+def_actual_args (   flush,                _S(FLUSH) H _S(SPEC), 0, 0);
+def_actual_args ( inquiry,              _S(INQUIRY) H _S(SPEC), 0, 0);
+def_actual_args (      io,                _S(IO) H _S(CONTROL), 0, 0);
+def_actual_args (    wait,                 _S(WAIT) H _S(SPEC), 0, 0);
+def_actual_args ( kindsel,                 _S(KIND) H _S(SPEC), 0, 0);
+def_actual_args ( charsel,                 _S(CHAR) H _S(SPEC), 1, 0);
+def_actual_args (typeparm, _S(TYPE) H _S(PARAMETER) H _S(SPEC), 0, 0);
+
 
 #undef def_actual_args
 
@@ -423,6 +427,41 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
       return 2;
     }
 
+  if (saap->typespec)
+    {
+      int kdc = FXTRAN_str_at_level (t, ci, "::", ci->parens);
+      if (kdc)
+        {
+          int intrinsic = 0, i;
+          for (i = 0; FXTRAN_types[i]; i++)
+            if ((FXTRAN_types_intrinsic[i]) && (zstrcmp (FXTRAN_types[i], t)))
+              {
+                intrinsic = 1;
+                break;
+              }
+
+          if (intrinsic)
+            {
+              int k = FXTRAN_typespec (t, ci, ctx);
+              XAD (k);
+            }
+          else
+            {
+              int k = FXTRAN_eat_word (t);
+              XST (_T(_S(DERIVED) H _S(TYPE) H _S(SPEC)));
+              XST (_T(_S(TYPE) H _S(NAME)));
+              XNT (_T(_S(NAME)), k);
+              XAD(k);
+              XET ();
+              XET ();
+            }
+
+          if ((t[0] != ':') && (t[1] != ':'))
+            FXTRAN_ABORT ("Expected ::");
+          XAD(2);
+                
+        }
+    }
 
   XST (saap->argl);
 
@@ -1416,7 +1455,7 @@ def_extra_proto (DEALLOCATE)
 def_extra_proto (ALLOCATE)
 {
   XAD(8);
-  stmt_actual_args (t, ci, ctx, &saap_actual);
+  stmt_actual_args (t, ci, ctx, &saap_allocate);
 }
 
 def_extra_proto (NULLIFY)
