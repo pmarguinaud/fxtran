@@ -564,6 +564,7 @@ read_file_guts (cpp_reader *pfile, _cpp_file *file)
 	}
     }
 
+
   if (count < 0)
     {
       cpp_errno (pfile, CPP_DL_ERROR, file->path);
@@ -574,6 +575,15 @@ read_file_guts (cpp_reader *pfile, _cpp_file *file)
     cpp_error (pfile, CPP_DL_WARNING,
 	       "%s is shorter than expected", file->path);
 
+  /* Add an extra \n if needed */
+  if ((total > 0) && (buf[total-1] != '\n'))
+    {
+      total++; size++;
+      buf = xrealloc (buf, size + 1);
+      buf[total-1] = '\n';
+      buf[total+0] = '\0';
+    }
+      
   file->buffer = _cpp_convert_input (pfile, CPP_OPTION (pfile, input_charset),
 				     buf, size, total, &file->st.st_size);
   file->buffer_valid = true;
