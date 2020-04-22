@@ -3518,6 +3518,7 @@ static void stmt_forall_extra (const char * t, const FXTRAN_char_info * ci, FXTR
 			   k-1, forall_triplet_spec, NULL);
 
   XAD(k);
+
   if (t[0] == ',')
     {
       XAD(1);
@@ -3526,8 +3527,9 @@ static void stmt_forall_extra (const char * t, const FXTRAN_char_info * ci, FXTR
       FXTRAN_expr (t, ci, k-1, ctx);
       XAD(k-1);
       XET ();
-      XAD(1);
     }
+
+  XAD(1);
    
   if (simple)
     {
