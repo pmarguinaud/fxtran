@@ -146,6 +146,7 @@ extern const char * FXTRAN_stmt_name[];
   macro(PASS               ,  03 ) \
   macro(NOPASS             ,  03 ) \
   macro(EXTENDS            ,  03 ) \
+  macro(CONTIGUOUS         ,  03 ) \
   macro(ABSTRACT           ,  03 ) \
   macro(NON_OVERRIDABLE    ,  03 ) \
   macro(KIND               ,  03 ) \
