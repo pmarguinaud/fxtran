@@ -3403,6 +3403,8 @@ def_extra_proto (PROCEDURE)
   else
     FXTRAN_THROW ("Expected `MODULEPROCEDURE' or `PROCEDURE'"); 
 
+  skip_dc ();
+
   k = strlen (t);
   FXTRAN_process_list (t, ci, ctx, ",",
 	               _T(_S(MODULE) H _S(PROCEDURE) H _S(NAME) H _S(LIST)), 
