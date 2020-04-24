@@ -2600,7 +2600,7 @@ static int stmt_prog_unit_expected (FXTRAN_stmt_stack * stack)
   FXTRAN_stmt_stack_state * st = FXTRAN_stmt_stack_curr(stack);
   if (st == NULL)
     return 1;
-  if ((st->seen_contains) && (st->type != FXTRAN_TYPE))
+  if ((st->seen_contains) && (st->type != FXTRAN_TYPE) && (st->type != FXTRAN_CLASS))
     return 1;
   return 0;
 }
@@ -2765,8 +2765,16 @@ static FXTRAN_stmt_type get_FXTRAN_stmt_type (const char * t, const FXTRAN_char_
       else
         ret(type);
     }
-    
-
+  else if ((FXTRAN_stmt_in(stack,FXTRAN_TYPE) || FXTRAN_stmt_in(stack,FXTRAN_CLASS))
+       && (FXTRAN_stmt_stack_curr(stack)->seen_contains))
+    {
+      if (zstrcmp ("PROCEDURE(", t))
+        goto other;
+      if (zstrcmp ("PROCEDURE", t))
+        ret(FXTRAN_PROCEDURE);
+      else
+        goto other;       /* Skip assignment & typedecl checks */
+    }
 
  
 other:
@@ -3407,27 +3415,60 @@ def_extra_proto (IMPLICIT)
 
 def_process_list_elt_proto (module_procedure_name)
 {
-  XNT (_T(_S(NAME)), kmax);
+  int k = FXTRAN_eat_word (t);
+
+  XST (_T (_S (RENAME)));
+  XNT (_T(_S (USE) H _S(NAME)), k);
+  XAD(k);
+  
+  if (zstrcmp ("=>", t))
+    {
+      XAD(2);
+      k = FXTRAN_eat_word (t);
+      XNT (_T(_S (NAME)), k);
+    }
+
+  XET ();
+
   return 1;
 }
 
 def_extra_proto (PROCEDURE)
 {
   int k;
+  int module;
 
   if (zstrcmp ("MODULEPROCEDURE", t))
-    XAD(15);
+    {
+      XAD(15);
+      module = 1;
+    }
   else if (zstrcmp ("PROCEDURE", t))
-    XAD(9);
+    {
+      XAD(9);
+      module = 0;
+    }
   else
-    FXTRAN_THROW ("Expected `MODULEPROCEDURE' or `PROCEDURE'"); 
+    {
+      FXTRAN_THROW ("Expected `MODULEPROCEDURE' or `PROCEDURE'"); 
+    }
 
   skip_dc ();
 
   k = strlen (t);
-  FXTRAN_process_list (t, ci, ctx, ",",
-	               _T(_S(MODULE) H _S(PROCEDURE) H _S(NAME) H _S(LIST)), 
-		       k, module_procedure_name, NULL);
+
+  if (module)
+    {
+      FXTRAN_process_list (t, ci, ctx, ",",
+	                  _T(_S(MODULE) H _S(PROCEDURE) H _S(NAME) H _S(LIST)), 
+		          k, module_procedure_name, NULL);
+    }
+  else
+    {
+      FXTRAN_process_list (t, ci, ctx, ",",
+	                  _T(_S(PROCEDURE) H _S(NAME) H _S(LIST)), 
+		          k, module_procedure_name, NULL);
+    }
 
 }
 
