@@ -133,6 +133,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_ASSIGN                            :  return _T(_S(ASSIGN)                         H _S(STMT));
       case FXTRAN_BACKSPACE                         :  return _T(_S(BACKSPACE)                      H _S(STMT));
       case FXTRAN_BIND                              :  return _T(_S(BIND)                           H _S(STMT));
+      case FXTRAN_BLOCK                             :  return _T(_S(BLOCK)                          H _S(STMT));
       case FXTRAN_BLOCKDATA                         :  return _T(_S(BLOCK) H _S(DATA)               H _S(STMT));
       case FXTRAN_CALL                              :  return _T(_S(CALL)                           H _S(STMT));
       case FXTRAN_CASE                              :  return _T(_S(CASE)                           H _S(STMT));
@@ -142,6 +143,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_COMMON                            :  return _T(_S(COMMON)                         H _S(STMT));
       case FXTRAN_COMPUTEDGOTO                      :  return _T(_S(COMPUTED) H _S(GOTO)            H _S(STMT));
       case FXTRAN_CONTAINS                          :  return _T(_S(CONTAINS)                       H _S(STMT));
+      case FXTRAN_CONTIGUOUS                        :  return _T(_S(CONTIGUOUS)                     H _S(STMT));
       case FXTRAN_CONTINUE                          :  return _T(_S(CONTINUE)                       H _S(STMT));
       case FXTRAN_CRAYPOINTER                       :  return _T(_S(CRAY) H _S(POINTER)             H _S(STMT));
       case FXTRAN_CYCLE                             :  return _T(_S(CYCLE)                          H _S(STMT));
@@ -152,6 +154,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_DO                                :  return _T(_S(DO)                             H _S(STMT));
       case FXTRAN_DOLABEL                           :  return _T(_S(DO) H _S(LABEL)                 H _S(STMT));
       case FXTRAN_ENDASSOCIATE                      :  return _T(_S(END) H _S(ASSOCIATE)            H _S(STMT));
+      case FXTRAN_ENDBLOCK                          :  return _T(_S(END) H _S(BLOCK)                H _S(STMT));
       case FXTRAN_ENDBLOCKDATA                      :  return _T(_S(END) H _S(BLOCK) H _S(DATA)     H _S(STMT));
       case FXTRAN_ENDCLASS                          :  return _T(_S(END) H _S(CLASS)                H _S(STMT));
       case FXTRAN_ENDDO                             :  return _T(_S(END) H _S(DO)                   H _S(STMT));
@@ -1165,6 +1168,7 @@ def_attr_extra_func(FINAL);
 def_attr_extra_func(TARGET);
 def_attr_extra_func(POINTER);
 def_attr_extra_func(EXTERNAL);
+def_attr_extra_func(CONTIGUOUS);
 def_attr_extra_func(INTRINSIC);
 def_attr_extra_func(OPTIONAL);
 def_attr_extra_func(PROTECTED);
@@ -1173,6 +1177,16 @@ def_attr_extra_func(VOLATILE);
 def_attr_extra_func(VALUE);
 
 #undef def_attr_extra_func
+
+def_extra_proto (BLOCK)
+{
+  int k;
+
+  k = stmt_bos_named_label (t, ci, ctx);
+  XAD(k);
+
+  XAD(5);
+}
 
 def_extra_proto (CRAYPOINTER)
 {
@@ -2273,6 +2287,7 @@ def_extra_proto (T)                      \
 }
 
 def_endblock_extra_func (ELSE)
+def_endblock_extra_func (ENDBLOCK)
 def_endblock_extra_func (ENDIF)
 def_endblock_extra_func (ENDWHERE)
 def_endblock_extra_func (ENDASSOCIATE)
@@ -2770,6 +2785,7 @@ other:
 	case 'B':
        
         tt(BACKSPACE);      
+        tt0(BLOCK);
         tt(BIND);      
 
 	break;
@@ -2792,7 +2808,7 @@ other:
           ret(FXTRAN_TYPEDECL);
 
         tt(CALL);           tt(CASE);           tt(CLOSE);          tt(COMMON);
-        tt0(CONTAINS);      tt(CONTINUE);       tt(CYCLE);
+        tt0(CONTAINS);      tt(CONTIGUOUS);     tt(CONTINUE);       tt(CYCLE);
 
 	break;
        
@@ -2821,10 +2837,10 @@ other:
        
 	if ((t[1] == 'N') && (t[2] == 'D'))
           {
-            tt2(ASSOCIATE);     tt2(BLOCKDATA);     tt2(CLASS);         tt2(DO);            
-	    tt2(FORALL);        tt2(FUNCTION);      tt2(IF);            tt2(INTERFACE);     
-	    tt2(MODULE);        tt2(PROGRAM);       tt2(SUBROUTINE);    tt2(TYPE);          
-            tt2(WHERE);         tt(ENDFILE);        tt2(ENUM);
+            tt2(ASSOCIATE);     tt2(BLOCK);         tt2(BLOCKDATA);     tt2(CLASS);         
+            tt2(DO);            tt2(FORALL);        tt2(FUNCTION);      tt2(IF);            
+            tt2(INTERFACE);     tt2(MODULE);        tt2(PROGRAM);       tt2(SUBROUTINE);    
+            tt2(TYPE);          tt2(WHERE);         tt(ENDFILE);        tt2(ENUM);
 
             if (FXTRAN_stmt_stack_ok (stack)) /* here we need context data */
               {
@@ -3160,6 +3176,9 @@ def_compound_block_construct_end (SELECTCASE, SELECTCASE, ENDSELECTCASE)
 def_compound_block_construct_opn (SELECTTYPE, SELECTTYPE)
 def_compound_block_construct_alt (SELECTTYPE, SELECTTYPE, TYPEIS)
 def_compound_block_construct_end (SELECTTYPE, SELECTTYPE, ENDSELECTTYPE)
+
+def_simple_block_construct_opn (BLOCK, BLOCK)
+def_simple_block_construct_end (BLOCK, BLOCK, ENDBLOCK)
 
 def_simple_block_construct_opn (CLASS, CLASS)
 def_simple_block_construct_end (CLASS, CLASS, ENDCLASS)

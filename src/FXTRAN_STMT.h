@@ -20,24 +20,26 @@ extern const char * FXTRAN_types[];
       macro(COMPONENTDECL                         , 0,   90,  0 ) \
       macro(POINTERASSIGNMENT                     , 1,   90,  0 ) \
       macro(ASSIGNMENT                            , 1,   77,  0 ) \
-      macro(ASSOCIATE                             , 1,   03,  0 ) \
-      macro(ASYNCHRONOUS                          , 1,   03,  1 ) \
+      macro(ASSOCIATE                             , 1,    3,  0 ) \
+      macro(ASYNCHRONOUS                          , 1,    3,  1 ) \
       macro(IF                                    , 1,   77,  0 ) \
       macro(FORALL                                , 1,   95,  0 ) \
       macro(ALLOCATABLE                           , 0,   90,  1 ) \
       macro(ALLOCATE                              , 1,   90,  0 ) \
       macro(ASSIGN                                , 1,   77,  0 ) \
       macro(BACKSPACE                             , 1,   77,  0 ) \
-      macro(BIND                                  , 0,   03,  1 ) \
+      macro(BIND                                  , 0,    3,  1 ) \
+      macro(BLOCK                                 , 0,    8,  0 ) \
       macro(BLOCKDATA                             , 0,   77,  0 ) \
       macro(CALL                                  , 1,   77,  0 ) \
       macro(CASE                                  , 1,   90,  0 ) \
-      macro(CLASS                                 , 0,   03,  0 ) \
-      macro(CLASSIS                               , 1,   03,  0 ) \
+      macro(CLASS                                 , 0,    3,  0 ) \
+      macro(CLASSIS                               , 1,    3,  0 ) \
       macro(CLOSE                                 , 1,   77,  0 ) \
       macro(COMMON                                , 0,   77,  0 ) \
       macro(COMPUTEDGOTO                          , 0,   77,  0 ) \
       macro(CONTAINS                              , 0,   90,  0 ) \
+      macro(CONTIGUOUS                            , 1,    8,  0 ) \
       macro(CONTINUE                              , 1,   77,  0 ) \
       macro(CYCLE                                 , 1,   90,  0 ) \
       macro(TYPEDECL                              , 0,   77,  0 ) \
@@ -46,9 +48,10 @@ extern const char * FXTRAN_types[];
       macro(DIMENSION                             , 0,   77,  1 ) \
       macro(DO                                    , 1,   77,  0 ) \
       macro(DOLABEL                               , 1,   77,  0 ) \
-      macro(ENDASSOCIATE                          , 1,   03,  0 ) \
+      macro(ENDASSOCIATE                          , 1,    3,  0 ) \
+      macro(ENDBLOCK                              , 0,    8,  0 ) \
       macro(ENDBLOCKDATA                          , 0,   77,  0 ) \
-      macro(ENDCLASS                              , 0,   03,  0 ) \
+      macro(ENDCLASS                              , 0,    3,  0 ) \
       macro(ENDDO                                 , 1,   77,  0 ) \
       macro(ENDFORALL                             , 1,   95,  0 ) \
       macro(ENDFUNCTION                           , 0,   77,  0 ) \
@@ -56,7 +59,7 @@ extern const char * FXTRAN_types[];
       macro(ENDMODULE                             , 0,   90,  0 ) \
       macro(ENDPROGRAM                            , 0,   77,  0 ) \
       macro(ENDSELECTCASE                         , 1,   90,  0 ) \
-      macro(ENDSELECTTYPE                         , 1,   03,  0 ) \
+      macro(ENDSELECTTYPE                         , 1,    3,  0 ) \
       macro(ENDSUBROUTINE                         , 0,   77,  0 ) \
       macro(ENDTYPE                               , 0,   90,  0 ) \
       macro(ENDWHERE                              , 1,   95,  0 ) \
@@ -66,23 +69,23 @@ extern const char * FXTRAN_types[];
       macro(ELSEWHERE                             , 1,   95,  0 ) \
       macro(ENDIF                                 , 1,   77,  0 ) \
       macro(ENTRY                                 , 0,   77,  0 ) \
-      macro(ENDENUM                               , 0,   03,  0 ) \
-      macro(ENUM                                  , 0,   03,  0 ) \
-      macro(ENUMERATOR                            , 0,   03,  0 ) \
+      macro(ENDENUM                               , 0,    3,  0 ) \
+      macro(ENUM                                  , 0,    3,  0 ) \
+      macro(ENUMERATOR                            , 0,    3,  0 ) \
       macro(EQUIVALENCE                           , 0,   77,  0 ) \
       macro(EXIT                                  , 1,   90,  0 ) \
       macro(EXTERNAL                              , 0,   77,  1 ) \
-      macro(FINAL                                 , 1,   03,  0 ) \
-      macro(FLUSH                                 , 1,   03,  0 ) \
+      macro(FINAL                                 , 1,    3,  0 ) \
+      macro(FLUSH                                 , 1,    3,  0 ) \
       macro(FORALLCONSTRUCT                       , 1,   95,  0 ) \
       macro(FORMAT                                , 0,   77,  0 ) \
       macro(FUNCTION                              , 0,   77,  0 ) \
-      macro(GENERIC                               , 0,   03,  0 ) \
+      macro(GENERIC                               , 0,    3,  0 ) \
       macro(GOTO                                  , 1,   77,  0 ) \
       macro(IFTHEN                                , 1,   77,  0 ) \
       macro(IMPLICITNONE                          , 0,   77,  0 ) \
       macro(IMPLICIT                              , 0,   77,  0 ) \
-      macro(IMPORT                                , 0,   03,  0 ) \
+      macro(IMPORT                                , 0,    3,  0 ) \
       macro(INCLUDE                               , 0,   77,  0 ) \
       macro(INQUIRE                               , 1,   90,  0 ) \
       macro(INTENT                                , 0,   90,  1 ) \
@@ -101,24 +104,24 @@ extern const char * FXTRAN_types[];
       macro(PROGRAM                               , 0,   77,  0 ) \
       macro(PRINT                                 , 1,   77,  0 ) \
       macro(PRIVATE                               , 0,   90,  1 ) \
-      macro(PROTECTED                             , 0,   03,  1 ) \
+      macro(PROTECTED                             , 0,    3,  1 ) \
       macro(PUBLIC                                , 0,   90,  1 ) \
       macro(READ                                  , 1,   77,  0 ) \
       macro(RETURN                                , 1,   77,  0 ) \
       macro(REWIND                                , 1,   77,  0 ) \
       macro(SAVE                                  , 0,   77,  1 ) \
       macro(SELECTCASE                            , 1,   90,  0 ) \
-      macro(SELECTTYPE                            , 1,   03,  0 ) \
+      macro(SELECTTYPE                            , 1,    3,  0 ) \
       macro(SEQUENCE                              , 0,   90,  0 ) \
       macro(STOP                                  , 1,   77,  0 ) \
       macro(SUBROUTINE                            , 0,   77,  0 ) \
       macro(TARGET                                , 0,   90,  1 ) \
       macro(TYPE                                  , 0,   90,  0 ) \
-      macro(TYPEIS                                , 1,   03,  0 ) \
+      macro(TYPEIS                                , 1,    3,  0 ) \
       macro(USE                                   , 0,   90,  0 ) \
-      macro(VALUE                                 , 0,   03,  1 ) \
-      macro(VOLATILE                              , 0,   03,  1 ) \
-      macro(WAIT                                  , 1,   03,  0 ) \
+      macro(VALUE                                 , 0,    3,  1 ) \
+      macro(VOLATILE                              , 0,    3,  1 ) \
+      macro(WAIT                                  , 1,    3,  0 ) \
       macro(WHERE                                 , 1,   95,  0 ) \
       macro(WHERECONSTRUCT                        , 1,   95,  0 ) \
       macro(WRITE                                 , 1,   77,  0 ) 
@@ -142,16 +145,16 @@ extern const char FXTRAN_stmt_attr[];
 extern const char * FXTRAN_stmt_name[];
 
 #define FXTRAN_attr_list(macro) \
-  macro(BIND               ,  03 ) \
-  macro(PASS               ,  03 ) \
-  macro(NOPASS             ,  03 ) \
-  macro(EXTENDS            ,  03 ) \
-  macro(CONTIGUOUS         ,  03 ) \
-  macro(ABSTRACT           ,  03 ) \
-  macro(NON_OVERRIDABLE    ,  03 ) \
-  macro(KIND               ,  03 ) \
-  macro(LEN                ,  03 ) \
-  macro(DEFERRED           ,  03 ) 
+  macro(BIND               ,   3 ) \
+  macro(PASS               ,   3 ) \
+  macro(NOPASS             ,   3 ) \
+  macro(EXTENDS            ,   3 ) \
+  macro(CONTIGUOUS         ,   3 ) \
+  macro(ABSTRACT           ,   3 ) \
+  macro(NON_OVERRIDABLE    ,   3 ) \
+  macro(KIND               ,   3 ) \
+  macro(LEN                ,   3 ) \
+  macro(DEFERRED           ,   3 ) 
 
 extern const char * FXTRAN_attr_name[];
 
