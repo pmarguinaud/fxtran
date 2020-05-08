@@ -4,9 +4,10 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 
-int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len)
+int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len, int uppercase)
 {
   int i;
 
@@ -34,11 +35,19 @@ int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len)
           default:
             u = (unsigned char) c;
             if ((u > 31) && (u < 127))
-              f_buffer_putc (buf, c);
+              {
+                if (uppercase)
+                  c = toupper (c);
+                f_buffer_putc (buf, c);
+              }
             else if ((u >= 127) || (u == 9) || (u == 10) || (u == 13))
-              f_buffer_printf (buf, "&#%3.3d;", u);
+              {
+                f_buffer_printf (buf, "&#%3.3d;", u);
+              }
             else
-              f_buffer_printf (buf, "<unknown-char code=\"%d\">?</unknown-char>", u);
+              {
+                f_buffer_printf (buf, "<unknown-char code=\"%d\">?</unknown-char>", u);
+              }
 	    break;
         }
     }
