@@ -29,7 +29,7 @@ extern const char * FXTRAN_types[];
       macro(ASSIGN                                , 1,   77,  0 ) \
       macro(BACKSPACE                             , 1,   77,  0 ) \
       macro(BIND                                  , 0,    3,  1 ) \
-      macro(BLOCK                                 , 0,    8,  0 ) \
+      macro(BLOCK                                 , 1,    8,  0 ) \
       macro(BLOCKDATA                             , 0,   77,  0 ) \
       macro(CALL                                  , 1,   77,  0 ) \
       macro(CASE                                  , 1,   90,  0 ) \
@@ -49,7 +49,7 @@ extern const char * FXTRAN_types[];
       macro(DO                                    , 1,   77,  0 ) \
       macro(DOLABEL                               , 1,   77,  0 ) \
       macro(ENDASSOCIATE                          , 1,    3,  0 ) \
-      macro(ENDBLOCK                              , 0,    8,  0 ) \
+      macro(ENDBLOCK                              , 1,    8,  0 ) \
       macro(ENDBLOCKDATA                          , 0,   77,  0 ) \
       macro(ENDCLASS                              , 0,    3,  0 ) \
       macro(ENDDO                                 , 1,   77,  0 ) \
@@ -75,7 +75,7 @@ extern const char * FXTRAN_types[];
       macro(EQUIVALENCE                           , 0,   77,  0 ) \
       macro(EXIT                                  , 1,   90,  0 ) \
       macro(EXTERNAL                              , 0,   77,  1 ) \
-      macro(FINAL                                 , 1,    3,  0 ) \
+      macro(FINAL                                 , 0,    3,  0 ) \
       macro(FLUSH                                 , 1,    3,  0 ) \
       macro(FORALLCONSTRUCT                       , 1,   95,  0 ) \
       macro(FORMAT                                , 0,   77,  0 ) \
