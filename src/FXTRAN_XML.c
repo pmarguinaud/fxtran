@@ -77,9 +77,12 @@ static int check_op (const char * t, int len, FXTRAN_xmlctx * ctx)
   return 2 + check_id (t+1, len-2, ctx);
 }
 
-static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, const char * tag)
+static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const char * tag)
 {
   if (pos1 == pos2)
+    return;
+ 
+  if (ctx->opts.strip_comments && (m == FXTRAN_COM))
     return;
 
   FXTRAN_f_buffer_printf (&ctx->fb, "<%s>", tag);
@@ -191,7 +194,7 @@ static int adv_pos0 (FXTRAN_xmlctx * ctx, int pos, int noendtag)
                   break;
                 case FXTRAN_COD:
 		  if (ctx->opts.code_tag)
-                    dump_txt_tag (ctx, pos1+i1, pos1+i2, FXTRAN_COD_TAG);
+                    dump_txt_tag (ctx, pos1+i1, pos1+i2, FXTRAN_COD, FXTRAN_COD_TAG);
 		  else
                     dump_txt (ctx, pos1+i1, pos1+i2);
                   break;
@@ -199,10 +202,10 @@ static int adv_pos0 (FXTRAN_xmlctx * ctx, int pos, int noendtag)
                     if (ctx->opts.noinclude)
                       if (FXTRAN_dump_include (Loc->file, ctx, 0, 0) == 0)
                         break;
-                    dump_txt_tag (ctx, pos1+i1, pos1+i2, FXTRAN_CPP_TAG);
+                    dump_txt_tag (ctx, pos1+i1, pos1+i2, FXTRAN_CPP, FXTRAN_CPP_TAG);
 		  break;
 #define dump_txt_by_mask(m) \
-  case m: dump_txt_tag (ctx, pos1+i1, pos1+i2, m##_TAG); break
+  case m: dump_txt_tag (ctx, pos1+i1, pos1+i2, m, m##_TAG); break
                 dump_txt_by_mask (FXTRAN_OPT);
                 dump_txt_by_mask (FXTRAN_STR);
                 dump_txt_by_mask (FXTRAN_COM);

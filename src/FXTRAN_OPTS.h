@@ -20,6 +20,7 @@ typedef struct FXTRAN_opts
   int construct_tag;
   int cray_pointer;
   int help;
+  int strip_comments;
 
   char * ffile;
   char * xfile;

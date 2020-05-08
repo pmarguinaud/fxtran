@@ -92,6 +92,7 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (flat-expr, flat_expr, Flatten all expr);
       FXTRAN_handle_flag (show-lines, show_lines, Show beginning of lines tags);
       FXTRAN_handle_flag (xul-wrap, xul_wrap, Add XUL source code);
+      FXTRAN_handle_flag (strip-comments, strip_comments, Strip comments);
       FXTRAN_handle_flag (code-tag, code_tag, Add a tag for source code);
       FXTRAN_handle_flag (name-attr, name_attr, Add an attribute for N tags);
       FXTRAN_handle_flag (construct-tag, construct_tag, Display program units and constructs);
