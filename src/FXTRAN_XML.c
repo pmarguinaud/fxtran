@@ -88,7 +88,7 @@ static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const 
 
   int uc = ctx->opts.uppercase && 
      ((m == FXTRAN_NAM) || (m == FXTRAN_CPT) || (m == FXTRAN_COD) 
-      || (m == FXTRAN_KWD) || (m == FXTRAN_OPR) || (m = FXTRAN_OMD) || (m == FXTRAN_OMC));
+      || (m == FXTRAN_KWD) || (m == FXTRAN_OPR) || (m == FXTRAN_OMD) || (m == FXTRAN_OMC));
 
   FXTRAN_f_buffer_printf (&ctx->fb, "<%s>", tag);
   FXTRAN_f_buffer_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc);
