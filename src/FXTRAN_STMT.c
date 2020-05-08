@@ -2845,7 +2845,7 @@ other:
        
 	if ((t[1] == 'N') && (t[2] == 'D'))
           {
-            tt2(ASSOCIATE);     tt2(BLOCK);         tt2(BLOCKDATA);     tt2(CLASS);         
+            tt2(ASSOCIATE);     tt2(BLOCKDATA);     tt2(BLOCK);         tt2(CLASS);         
             tt2(DO);            tt2(FORALL);        tt2(FUNCTION);      tt2(IF);            
             tt2(INTERFACE);     tt2(MODULE);        tt2(PROGRAM);       tt2(SUBROUTINE);    
             tt2(TYPE);          tt2(WHERE);         tt(ENDFILE);        tt2(ENUM);
