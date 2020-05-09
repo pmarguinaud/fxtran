@@ -200,6 +200,7 @@ my @x = qw[
   stop                                                           STOP
   stride                                                         STRIDE
   string                                                         STRING
+  strip                                                          STRIP
   subroutine                                                     SUBROUTINE
   subscript                                                      SUBSCRIPT
   S                                                              SYMBOL

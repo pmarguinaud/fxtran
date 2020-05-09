@@ -3932,15 +3932,31 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
       int expect_pu = 0;
       const char * str;
       xml_tu tu;
+      int broken = 0, strip = 0;
    
       memset (&tu, '\0', sizeof (tu));
    
       type = get_FXTRAN_stmt_type (text1, ci1, stack, ctx, &expect_pu, &tu);
 
+      if (type == FXTRAN_NONE)
+        {
+          broken = 1;
+        }
+      if (FXTRAN_stmt_exec[type] && ctx->opts.strip_exec)
+        { 
+          strip = 1;
+          type = FXTRAN_NONE;
+        }
+
       stmt_block_handle (text1, type, expect_pu, label, stack, ctx, &tu);
 
-      str = type == FXTRAN_NONE ? _T(_S(BROKEN) H _S(STMT)) : stmt_as_str (type);
-   
+      if (broken)
+        str = _T(_S(BROKEN) H _S(STMT));
+      else if (strip)
+        str = _T(_S(STRIP) H _S(STMT));
+      else
+        str = stmt_as_str (type);
+
       if (tu.xml_ctu1)
         dump_ctu (&tu.xml_ctu1, ci1->offset, ctx);
 
@@ -3968,7 +3984,6 @@ case FXTRAN_##t: stmt_##t##_extra(text1, ci1, stack, ctx); break;
       dump_otu (tu.xml_otu2, ci1[len-1].offset+1, ctx);
 
     }
- 
 
   free (text1);
   FXTRAN_char_info_free (&ci1);

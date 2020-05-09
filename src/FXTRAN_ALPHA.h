@@ -199,6 +199,7 @@
 #define FXTRAN_STRING_STOP                           "stop"
 #define FXTRAN_STRING_STRIDE                         "stride"
 #define FXTRAN_STRING_STRING                         "string"
+#define FXTRAN_STRING_STRIP                          "strip"
 #define FXTRAN_STRING_SUBROUTINE                     "subroutine"
 #define FXTRAN_STRING_SUBSCRIPT                      "subscript"
 #define FXTRAN_STRING_SYMBOL                         "S"

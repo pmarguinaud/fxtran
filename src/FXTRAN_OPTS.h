@@ -21,6 +21,7 @@ typedef struct FXTRAN_opts
   int cray_pointer;
   int help;
   int strip_comments;
+  int strip_exec;
   int uppercase;
 
   char * ffile;
