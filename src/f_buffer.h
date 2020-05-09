@@ -43,6 +43,9 @@ f_buffer;
 #define f_buffer_str(b) \
   ((b)->str)
 
+#define f_buffer_cur(b) \
+  ((b)->cur)
+
 #define f_buffer_len(b) \
   ((b)->cur - (b)->str)
 
@@ -50,7 +53,7 @@ f_buffer;
   do { (b)->cur = (b)->str; (b)->cur[0] = 0; } while (0)
 
 
-int f_buffer_append_escaped_str (f_buffer *, const char *, int, int);
+int f_buffer_append_escaped_str (f_buffer *, const char *, int, int, int);
 
 int f_buffer_printf (f_buffer *, const char *, ...);
 

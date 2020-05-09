@@ -22,6 +22,7 @@ typedef struct FXTRAN_opts
   int help;
   int strip_comments;
   int strip_exec;
+  int strip_linefeed;
   int uppercase;
 
   char * ffile;

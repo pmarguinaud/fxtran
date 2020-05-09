@@ -7,7 +7,8 @@
 #include <ctype.h>
 
 
-int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len, int uppercase)
+int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len, 
+                                 int uppercase, int strip_linefeed)
 {
   int i;
 
@@ -18,7 +19,11 @@ int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len, int 
       switch (c)
         {
           case '\n':
-            f_buffer_putc (buf, '\n');
+            {
+              int len = f_buffer_len (buf);
+              if ((! strip_linefeed) || (len == 0) || (f_buffer_cur (buf)[-1] != '\n'))
+                f_buffer_putc (buf, '\n');
+            }
             break;
           case '"':
             f_buffer_printf (buf, "&quot;");
