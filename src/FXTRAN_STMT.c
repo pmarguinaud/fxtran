@@ -3948,40 +3948,46 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
           type = FXTRAN_NONE;
         }
 
-      stmt_block_handle (text1, type, expect_pu, label, stack, ctx, &tu);
-
-      if (broken)
-        str = _T(_S(BROKEN) H _S(STMT));
-      else if (strip)
-        str = _T(_S(STRIP) H _S(STMT));
-      else
-        str = stmt_as_str (type);
-
-      if (tu.xml_ctu1)
-        dump_ctu (&tu.xml_ctu1, ci1->offset, ctx);
-
-      dump_otu (tu.xml_otu1, ci1->offset, ctx);
-
-      FXTRAN_xml_start_tag (str, ci1->offset, ctx);
-   
-      switch (type)
+      if (strip)
         {
+          FXTRAN_xml_advance (ctx, ci1->offset);
+          FXTRAN_xml_skip (ctx, ci1[len-1].offset+1);
+        }
+      else
+        {
+          stmt_block_handle (text1, type, expect_pu, label, stack, ctx, &tu);
+
+          if (broken)
+            str = _T(_S(BROKEN) H _S(STMT));
+          else
+            str = stmt_as_str (type);
+
+          if (tu.xml_ctu1)
+            dump_ctu (&tu.xml_ctu1, ci1->offset, ctx);
+
+          dump_otu (tu.xml_otu1, ci1->offset, ctx);
+
+          FXTRAN_xml_start_tag (str, ci1->offset, ctx);
+   
+          switch (type)
+            {
 #define macro_cextra(t,x,nn,isatt) \
 case FXTRAN_##t: stmt_##t##_extra(text1, ci1, stack, ctx); break;
 
-            FXTRAN_statement_list(macro_cextra)
+                FXTRAN_statement_list(macro_cextra)
 
 #undef macro_cextra
          
-          default:
-          break;
+              default:
+              break;
+            }
+
+          FXTRAN_xml_end_tag (ci1[len-1].offset+1, ctx);
+
+          if (tu.xml_ctu2)
+            dump_ctu (&tu.xml_ctu2, ci1[len-1].offset+1, ctx);
+          dump_otu (tu.xml_otu2, ci1[len-1].offset+1, ctx);
         }
-
-      FXTRAN_xml_end_tag (ci1[len-1].offset+1, ctx);
-
-      if (tu.xml_ctu2)
-        dump_ctu (&tu.xml_ctu2, ci1[len-1].offset+1, ctx);
-      dump_otu (tu.xml_otu2, ci1[len-1].offset+1, ctx);
 
     }
 

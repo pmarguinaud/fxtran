@@ -614,3 +614,13 @@ void FXTRAN_xmlctx_free (FXTRAN_xmlctx * ctx)
   free (ctx);
 }
 
+void FXTRAN_xml_advance (FXTRAN_xmlctx * ctx, int pos)
+{
+  adv_pos (ctx, pos);
+}
+
+void FXTRAN_xml_skip (FXTRAN_xmlctx * ctx, int pos)
+{
+  ctx->pos = pos;
+}
+

@@ -20,9 +20,23 @@ int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len,
         {
           case '\n':
             {
-              int len = f_buffer_len (buf);
-              if ((! strip_linefeed) || (len == 0) || (f_buffer_cur (buf)[-1] != '\n'))
-                f_buffer_putc (buf, '\n');
+              if (strip_linefeed)
+                {
+                  int len = f_buffer_len (buf);
+                  if ((len > 0) && (f_buffer_cur (buf)[-1] == '\n'))
+                    goto next;
+                  for (int j = len-1; j >= 0; j--)
+                    if (f_buffer_str (buf)[j] == '\n')
+                      {
+                        buf->cur = buf->str + j + 1;
+                        goto next;
+                      }
+                    else if (f_buffer_str (buf)[j] != ' ')
+                      {
+                        break;
+                      }
+                }
+              f_buffer_putc (buf, '\n');
             }
             break;
           case '"':
@@ -55,6 +69,10 @@ int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len,
               }
 	    break;
         }
+
+next:
+      continue;
+
     }
   return 0;
 }

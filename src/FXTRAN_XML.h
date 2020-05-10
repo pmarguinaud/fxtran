@@ -71,6 +71,8 @@ void FXTRAN_xml_end_tag_unsafe (int, FXTRAN_xmlctx *);
 void FXTRAN_xml_word_tag (const char *, int, int, FXTRAN_xmlctx *);
 void FXTRAN_xml_mark (int, int, FXTRAN_xmlctx *, char);
 void FXTRAN_xml_finish_doc (FXTRAN_xmlctx *);
+void FXTRAN_xml_advance (FXTRAN_xmlctx *, int);
+void FXTRAN_xml_skip (FXTRAN_xmlctx *, int);
 
 #define xml_mark_name(pos1,pos2,ctx) \
   do {                                              \
