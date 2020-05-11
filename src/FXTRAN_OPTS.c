@@ -12,7 +12,7 @@
 
 #define FXTRAN_handle_flag(opt, var, doc) \
   if (help)                                    \
-    printf (" -%-20s : F : %s\n", #opt, #doc); \
+    printf (" -%-40s : F : %s\n", #opt, #doc); \
   else if (strcmp (argv[i], "-"#opt) == 0)     \
     {                                          \
       opts->var++;                             \
@@ -22,7 +22,7 @@
 
 #define FXTRAN_handle_charopt(opt, var, doc) \
   if (help)                                    \
-    printf (" -%-20s : S : %s\n", #opt, #doc); \
+    printf (" -%-40s : S : %s\n", #opt, #doc); \
   else if (strcmp (argv[i], "-"#opt) == 0)     \
     {                                          \
       if (i+1 < argc)                          \
@@ -38,7 +38,7 @@
 
 #define FXTRAN_handle_intopt(opt, var, doc) \
   if (help)                                    \
-    printf (" -%-20s : I : %s\n", #opt, #doc); \
+    printf (" -%-40s : I : %s\n", #opt, #doc); \
   else if (strcmp (argv[i], "-"#opt) == 0)     \
     {                                          \
       if (i+1 < argc)                          \
