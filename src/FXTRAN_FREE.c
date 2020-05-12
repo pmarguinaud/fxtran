@@ -341,7 +341,7 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
     do { while ((ci[i+1].mask != FXTRAN_COD) && (ci[i+1].mask != FXTRAN_STR)) { i++; } } while (0)
 
     int sc = 0;
-    int i1 = -1, i2;
+    int i1 = -1, i2 = -1;
 
     FXTRAN_stmt_stack_init (&stack); 
 

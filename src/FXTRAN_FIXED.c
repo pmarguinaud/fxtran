@@ -319,7 +319,7 @@ void FXTRAN_FIXED_decode (char * text, FXTRAN_xmlctx * ctx)
     } while (0)
     
 
-    int i1 = -1, i2;
+    int i1 = -1, i2 = -1;
     int cr = 0;
     int label = 0;
 

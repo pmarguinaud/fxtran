@@ -24,7 +24,7 @@ int main (int argc, char * argv[])
 {
   FILE * fpx;
   char * text;
-  const char * form;
+  const char * form = NULL;
   FXTRAN_xmlctx * ctx;
 
   FXTRAN_xmlctx_new (&ctx);
