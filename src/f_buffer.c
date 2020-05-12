@@ -22,10 +22,11 @@ int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len,
             {
               if (strip_linefeed)
                 {
+                  int j;
                   int len = f_buffer_len (buf);
                   if ((len > 0) && (f_buffer_cur (buf)[-1] == '\n'))
                     goto next;
-                  for (int j = len-1; j >= 0; j--)
+                  for (j = len-1; j >= 0; j--)
                     if (f_buffer_str (buf)[j] == '\n')
                       {
                         buf->cur = buf->str + j + 1;
