@@ -211,4 +211,6 @@ int FXTRAN_actual_args (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
 void FXTRAN_dump_fc_stmt (const char *, const FXTRAN_char_info *, int, int, 
 		          FXTRAN_xmlctx *, FXTRAN_stmt_stack *, int);
 
+void FXTRAN_final_check_stack_empty (FXTRAN_xmlctx *, FXTRAN_stmt_stack *);
+
 #endif

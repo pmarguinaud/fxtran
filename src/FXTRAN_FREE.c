@@ -381,8 +381,10 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
               FXTRAN_ABORT ("Unexpected mask value `%c'\n", ci[i].mask);
           }
       }
-  }
+   
+    FXTRAN_final_check_stack_empty (ctx, &stack);
 
+  }
 
 
 }

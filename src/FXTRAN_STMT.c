@@ -2736,8 +2736,11 @@ static FXTRAN_stmt_type get_FXTRAN_stmt_type (const char * t, const FXTRAN_char_
               /* At this point, nothing was found, hence we 
 	       * must have entered a nameless program unit */
               FXTRAN_stmt_stack_incr (stack, FXTRAN_PROGRAM);
-	      tu->xml_otu1[0] = _T(_S(PROGRAM) H _S(UNIT));
-	      tu->xml_otu1[1] = NULL;
+              if (ctx->opts.construct_tag)
+                {
+	          tu->xml_otu1[0] = _T(_S(PROGRAM) H _S(UNIT));
+	          tu->xml_otu1[1] = NULL;
+                }
             }
 	  else
             {
@@ -4088,6 +4091,13 @@ int FXTRAN_stmt_in (FXTRAN_stmt_stack * stack, FXTRAN_stmt_type t)
 {
   return FXTRAN_stmt_stack_curr (stack) 
        ? FXTRAN_stmt_stack_curr (stack)->type == t : 0;
+}
+
+void FXTRAN_final_check_stack_empty (FXTRAN_xmlctx * ctx, FXTRAN_stmt_stack * stack)
+{
+  if (FXTRAN_stmt_stack_curr (stack))
+    FXTRAN_ABORT ("Malformed Fortran program");
+
 }
 
   
