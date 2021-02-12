@@ -4,12 +4,12 @@ OBJ=FXTRAN_EXPR.o FXTRAN_FBUFFER.o FXTRAN_FIXED.o FXTRAN_FREE.o FXTRAN_GDB.o \
     FXTRAN_BBT.o FXTRAN_FILE.o FXTRAN_NAMELIST.o fxtran.o 
 
 EXE=../fxtran
-CFLAGS=-Wall -g -I cpp -O0
+CFLAGS=-Wall -g -I cpp -O2
 
 
 $(EXE): FXTRAN_ALPHA.h $(OBJ) 
 	cd cpp && make
-	cc -o $(EXE) $(OBJ) -Lcpp -lcpp -liberty
+	$(CC) -o $(EXE) $(OBJ) -Lcpp -lcpp -liberty
 
 FXTRAN_ALPHA.h: FXTRAN_ALPHA.pl
 	@./FXTRAN_ALPHA.pl

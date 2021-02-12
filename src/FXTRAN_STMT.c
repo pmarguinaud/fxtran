@@ -471,33 +471,59 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
 
   while (t[0])
     {
-      int kn = FXTRAN_eat_word (t);
-      int kc;
-      int kp = FXTRAN_str_at_level (t, ci, ")", ci->parens-1);
-
-      kc = FXTRAN_str_at_level_ir (t, ci, ",", ci->parens, kp);
-
-      if (!kc)
-        kc = kp;
-
-      XST (saap->argn);
-
-      if (kn && (t[kn] == '=') && (t[kn+1] != '='))
+      /* Alternate return */
+      if (t[0] == '*')
         {
-          XNW (_T(_S(ARG) H _S(NAME)), kn);
-          XAD(kn+1); 
-          kc = kc - (kn+1);
-        }
+         int k;
 
-      if ((! saap->allow_column) || (t[0] != ':'))
+          XST (saap->argn);
+          XAD (1);
+
+          XST (_T(_S(LABEL)));
+
+          for (k = 0; isdigit (t[k]); k++);
+
+          if (k == 0)
+            FXTRAN_xml_err ("Expected label", ctx);
+
+          XAD(k);
+          XET ();
+          
+          XET ();
+
+          if ((t[0] != ')') && (t[0] != ','))
+            FXTRAN_xml_err ("Expected `,' or `)'", ctx);
+
+        }
+      else
         {
-          FXTRAN_expr (t, ci, kc-1, ctx);
+          int kn = FXTRAN_eat_word (t);
+          int kc;
+          int kp = FXTRAN_str_at_level (t, ci, ")", ci->parens-1);
+
+          kc = FXTRAN_str_at_level_ir (t, ci, ",", ci->parens, kp);
+
+          if (!kc)
+            kc = kp;
+
+          XST (saap->argn);
+
+          if (kn && (t[kn] == '=') && (t[kn+1] != '='))
+            {
+              XNW (_T(_S(ARG) H _S(NAME)), kn);
+              XAD(kn+1); 
+              kc = kc - (kn+1);
+            }
+
+          if ((! saap->allow_column) || (t[0] != ':'))
+            {
+              FXTRAN_expr (t, ci, kc-1, ctx);
+            }
+
+          XAD(kc-1);
+
+          XET ();
         }
-
-      XAD(kc-1);
-
-      XET ();
-
 
       if (t[0] == ')')
         break;
