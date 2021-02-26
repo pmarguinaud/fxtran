@@ -3482,6 +3482,14 @@ def_extra_proto (PROCEDURE)
       FXTRAN_THROW ("Expected `MODULEPROCEDURE' or `PROCEDURE'"); 
     }
 
+
+  while (t[0] == ',')
+    {
+      XAD(1);
+      k = FXTRAN_attr (t, ci, ctx);
+      XAD(k);
+    }
+
   skip_dc ();
 
   k = strlen (t);
