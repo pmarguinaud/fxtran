@@ -15,6 +15,7 @@
 #include "FXTRAN_EXPR.h"
 #include "FXTRAN_ERROR.h"
 #include "FXTRAN_OMP.h"
+#include "FXTRAN_ACC.h"
 #include "FXTRAN_ALPHA.h"
 
 const char * FXTRAN_ops[] = { "+",  "-", "**", "*", "//", "/=", "/",
@@ -3288,7 +3289,7 @@ static void stmt_simple_extra (const char * t, const FXTRAN_char_info * ci,
   XST (_T(_S(ACTION) H _S(STMT)));
   k = strlen (t);
 
-  FXTRAN_stmt (t, ci, stack, ctx, 0, 0);
+  FXTRAN_stmt (t, ci, stack, ctx, 0, 0, 0);
 
   XAD(k);
   XET ();
@@ -3633,7 +3634,7 @@ static void stmt_forall_extra (const char * t, const FXTRAN_char_info * ci, FXTR
       XST (_T(_S(ACTION) H _S(STMT)));
       k = strlen (t);
      
-      FXTRAN_stmt (t, ci, stack, ctx, 0, 0);
+      FXTRAN_stmt (t, ci, stack, ctx, 0, 0, 0);
      
       XAD(k);
       XET ();
@@ -3932,7 +3933,7 @@ static void dump_otu (const char ** otu, int offset, FXTRAN_xmlctx * ctx)
 
 void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci, 
 		  FXTRAN_stmt_stack * stack, FXTRAN_xmlctx * ctx,
-		  int omp, int label)
+		  int omp, int acc, int label)
 {
   int len;
   char * text1;
@@ -3962,6 +3963,10 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
   if (omp == 2)
     {
       FXTRAN_dump_ompd (text1, ci1, ctx);
+    }
+  else if (acc == 2)
+    {
+      FXTRAN_dump_accd (text1, ci1, ctx);
     }
   else
     {
@@ -4040,7 +4045,7 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
   FXTRAN_char_info * ci1;
   int i, j;
   int I1 = -1, I2 = -1;  /* actual bounds */
-  int omp;
+  int omp, acc;
 
   t = (char*)malloc (i2-i1+2);
   FXTRAN_char_info_alloc (&ci1, i2-i1+2);
@@ -4061,8 +4066,9 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
   t[j] = 0;
 
   omp = FXTRAN_check_omp (text, ci, I1, I2, ctx);
+  acc = FXTRAN_check_acc (text, ci, I1, I2, ctx);
 
-  FXTRAN_stmt (t, ci1, stack, ctx, omp, label);
+  FXTRAN_stmt (t, ci1, stack, ctx, omp, acc, label);
 
   FXTRAN_char_info_free (&ci1);
   free (t);
