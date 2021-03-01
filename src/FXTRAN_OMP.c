@@ -205,6 +205,7 @@ static int FXTRAN_omc_REDUCTION (const char * t, const FXTRAN_char_info * ci,
     FXTRAN_THROW ("Malformed OpenMP clause; expected `:'");
   XAD(1);
 
+  XST (_S(VARIABLE) H _S(LIST));
   while (t[0] != ')')
     {
       kn = FXTRAN_eat_word (t);
@@ -215,6 +216,7 @@ static int FXTRAN_omc_REDUCTION (const char * t, const FXTRAN_char_info * ci,
       else if (t[0] != ')')
         FXTRAN_THROW ("Malformed OpenMP clause");
     }
+  XET ();
 
   if (t[0] != ')')
     FXTRAN_THROW ("Malformed OpenMP clause; expected `)'");
@@ -241,7 +243,7 @@ static int FXTRAN_omc_list (const char * t, const FXTRAN_char_info * ci,
   
   XAD(1);
 
-  XST (_T(_S(LIST)));
+  XST (_S(VARIABLE) H _S(NAME));
   while (t[0] != ')')
     {
       k = FXTRAN_eat_word (t);

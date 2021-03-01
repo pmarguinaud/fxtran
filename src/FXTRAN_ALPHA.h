@@ -70,6 +70,7 @@
 #define FXTRAN_STRING_DELETE                         "delete"
 #define FXTRAN_STRING_DERIVED                        "derived"
 #define FXTRAN_STRING_DESIGNATOR                     "designator"
+#define FXTRAN_STRING_DEVICE                         "device"
 #define FXTRAN_STRING_DIMENSION                      "DIM"
 #define FXTRAN_STRING_DO                             "do"
 #define FXTRAN_STRING_DTIO                           "dtio"
