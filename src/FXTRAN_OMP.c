@@ -273,8 +273,9 @@ static int FXTRAN_omc_expr (const char * t, const FXTRAN_char_info * ci,
   if (t[0] == '(')
     {
       k = FXTRAN_str_at_level (t, ci, ")", 0);
-      FXTRAN_expr (t, ci, k, ctx);
-      XAD(k);
+      XAD(1);
+      FXTRAN_expr (t, ci, k-2, ctx);
+      XAD(k-1);
     }
 
   XET ();

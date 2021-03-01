@@ -36,6 +36,7 @@ const char
    * FXTRAN_KWD_TAG=  "k",
    * FXTRAN_OMD_TAG=  "omp",
    * FXTRAN_OMC_TAG=  "omp",
+   * FXTRAN_ACC_TAG=  "acc",
    * FXTRAN_BOZ_TAG=  "boz",
    * FXTRAN_ZER_TAG=  "zer"
 ;
@@ -234,6 +235,7 @@ static int adv_pos0 (FXTRAN_xmlctx * ctx, int pos, int noendtag, int print)
                 dump_txt_by_mask (FXTRAN_KWD);
                 dump_txt_by_mask (FXTRAN_OMD);
                 dump_txt_by_mask (FXTRAN_OMC);
+                dump_txt_by_mask (FXTRAN_ACC);
 #undef dump_txt_by_mask
                 default:
                   FXTRAN_THROW ("Unexpected mask: `%c'", mask1);

@@ -31,15 +31,17 @@
       { l++; c = 0; }                     \
     else                                  \
       { c++; }                            \
-    if ((!omp) && c                &&     \
+    if ((!omp) && (!acc) & c       &&     \
         (ci[i].mask != FXTRAN_SPC) &&     \
         (ci[i].mask != FXTRAN_COM) &&     \
         (ci[i].mask != FXTRAN_OMD) &&     \
         (ci[i].mask != FXTRAN_ACC) &&     \
         (ci[i].mask != FXTRAN_MAL) &&     \
         (ci[i].mask != FXTRAN_OMC))       \
-      OMP = 0;                            \
-      ACC = 0;                            \
+      {                                   \
+        OMP = 0;                          \
+        ACC = 0;                          \
+      }                                   \
     i++;                                  \
   } while (0)
 
@@ -82,6 +84,7 @@
            kacc--;                                 \
            for (; kacc; kacc--)                    \
              FXTRAN_NEXT_CHAR;                     \
+           acc = 1;                                \
            ACC = 1;                                \
          }                                         \
        else                                        \
@@ -192,6 +195,7 @@ void FXTRAN_FIXED_decode (char * text, FXTRAN_xmlctx * ctx)
   int OMP = 0;  /* true if we are in an OpenMP directive or statement */
   int omp = 0;  /* true if current line starts with an OpenMP sentinel */
   int ACC = 0;  /* true if we are in an OpenACC directive */
+  int acc = 0;  /* true if current line starts with an OpenACC sentinel */
 
 
   len = strlen (text);

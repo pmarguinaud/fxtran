@@ -66,8 +66,10 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
        (ci[i].mask != FXTRAN_OMD) &&     \
        (ci[i].mask != FXTRAN_ACC) &&     \
        (ci[i].mask != FXTRAN_OMC))       \
-     OMP = 0;                            \
-     ACC = 0;                            \
+     {                                   \
+       OMP = 0;                          \
+       ACC = 0;                          \
+     }                                   \
    i++;                                  \
  } while (0)
 
@@ -346,7 +348,7 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
   ctx->ci = ci;
 
   
-  DUMP_FXTRAN_MASK; exit (0);
+/*DUMP_FXTRAN_MASK; exit (0);*/
 
   {
     FXTRAN_stmt_stack stack;
