@@ -11,6 +11,7 @@ typedef struct FXTRAN_opts
   int namelist;
   int namelist_diff;
   int openmp;
+  int openacc;
   int flat_expr;
   int flat_op_expr;
   int show_lines;

@@ -18,6 +18,7 @@
 #include "FXTRAN_ERROR.h"
 #include "FXTRAN_XML.h"
 #include "FXTRAN_OMP.h"
+#include "FXTRAN_ACC.h"
 
 
 #define fc_isspace(c) (((c) == ' ') || ((c) == '\t'))
@@ -34,9 +35,11 @@
         (ci[i].mask != FXTRAN_SPC) &&     \
         (ci[i].mask != FXTRAN_COM) &&     \
         (ci[i].mask != FXTRAN_OMD) &&     \
+        (ci[i].mask != FXTRAN_ACC) &&     \
         (ci[i].mask != FXTRAN_MAL) &&     \
         (ci[i].mask != FXTRAN_OMC))       \
       OMP = 0;                            \
+      ACC = 0;                            \
     i++;                                  \
   } while (0)
 
@@ -55,22 +58,36 @@
 #define CASE_FXTRAN_HANDLE_NEW_BANG \
    case '!':                                       \
      {                                             \
-       int komp = (text[i+1] == '$')               \
+       int komp =                                  \
+          ((strncmp (&text[i+1], "$ ", 2) == 0) || \
+       (strncasecmp (&text[i+1], "$omp", 4) == 0)) \
 	       &&  ctx->opts.openmp  ?             \
 	   FXTRAN_handle_omp (text, ci, i, OMP)    \
 	          : 0;                             \
-       if (komp == 0)                              \
-         {                                         \
-           ci[i].mask = FXTRAN_COM;                \
-           C = 1;                                  \
-         }                                         \
-       else                                        \
+       int kacc =                                  \
+        (strncasecmp (&text[i+1], "$acc", 4) == 0) \
+	       &&  ctx->opts.openacc  ?            \
+	   FXTRAN_handle_acc (text, ci, i, ACC)    \
+	          : 0;                             \
+       if (komp != 0)                              \
          {                                         \
            komp--;                                 \
            for (; komp; komp--)                    \
              FXTRAN_NEXT_CHAR;                     \
            omp = 1;                                \
            OMP = 1;                                \
+         }                                         \
+       else if (kacc != 0)                         \
+         {                                         \
+           kacc--;                                 \
+           for (; kacc; kacc--)                    \
+             FXTRAN_NEXT_CHAR;                     \
+           ACC = 1;                                \
+         }                                         \
+       else                                        \
+         {                                         \
+           ci[i].mask = FXTRAN_COM;                \
+           C = 1;                                  \
          }                                         \
      }                                             \
    break;
@@ -174,6 +191,7 @@ void FXTRAN_FIXED_decode (char * text, FXTRAN_xmlctx * ctx)
   int l = 0;  /* line number */
   int OMP = 0;  /* true if we are in an OpenMP directive or statement */
   int omp = 0;  /* true if current line starts with an OpenMP sentinel */
+  int ACC = 0;  /* true if we are in an OpenACC directive */
 
 
   len = strlen (text);
@@ -335,6 +353,7 @@ void FXTRAN_FIXED_decode (char * text, FXTRAN_xmlctx * ctx)
               label = 10 * label + (c - '0');
             break;
             case FXTRAN_OMD:
+            case FXTRAN_ACC:
             case FXTRAN_OMC:
             case FXTRAN_OPT:
             case FXTRAN_COM:

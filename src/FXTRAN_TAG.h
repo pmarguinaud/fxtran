@@ -23,6 +23,7 @@ extern const char
    * FXTRAN_LIT_TAG,
    * FXTRAN_KWD_TAG,
    * FXTRAN_OMD_TAG,
+   * FXTRAN_ACC_TAG,
    * FXTRAN_OMC_TAG,
    * FXTRAN_BOZ_TAG,
    * FXTRAN_ZER_TAG 

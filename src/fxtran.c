@@ -85,8 +85,8 @@ int main (int argc, char * argv[])
         fprintf (fpx, "<window xmlns=\"" XUL_NS "\"><scrollbox flex=\"1\" style=\"overflow:auto;\"><description>");
      
       fprintf (fpx, "<object xmlns=\"" FXT_NS_SYN "\" source-form=\"%s\""
-            	" source-width=\"%d\" openmp=\"%d\">", 
-               form, ctx->opts.line_length, ctx->opts.openmp);
+            	" source-width=\"%d\" openmp=\"%d\" openacc=\"%d\">", 
+               form, ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc);
     }
 
 

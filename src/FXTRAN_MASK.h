@@ -26,6 +26,7 @@ enum
    FXTRAN_SPC = ' ', /* space */
    FXTRAN_CO2 = '>', /* cont at bol */
    FXTRAN_OMD = '$', /* openmp directive sentinel */
+   FXTRAN_ACC = 'A', /* openmp directive sentinel */
    FXTRAN_OMC = '~', /* openmp code sentinel */
    FXTRAN_MAR = 'R', /* right margin */
 

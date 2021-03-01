@@ -18,6 +18,7 @@
 #include "FXTRAN_XML.h"
 #include "FXTRAN_ERROR.h"
 #include "FXTRAN_OMP.h"
+#include "FXTRAN_ACC.h"
 
 
 static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int i2)
@@ -52,18 +53,21 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
    if (c == 0)                           \
      {                                   \
        omp = 0;                          \
+       acc = 0;                          \
        S = 1;                            \
      }                                   \
    else                                  \
      {                                   \
        S = S && (fc_isspace (text[i]));  \
      }                                   \
-   if ((!omp) && c                &&     \
+   if ((!omp) && (!acc) && c     &&      \
        (ci[i].mask != FXTRAN_SPC) &&     \
        (ci[i].mask != FXTRAN_COM) &&     \
        (ci[i].mask != FXTRAN_OMD) &&     \
+       (ci[i].mask != FXTRAN_ACC) &&     \
        (ci[i].mask != FXTRAN_OMC))       \
      OMP = 0;                            \
+     ACC = 0;                            \
    i++;                                  \
  } while (0)
 
@@ -79,22 +83,38 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
 #define CASE_FXTRAN_HANDLE_NEW_BANG \
    case '!':                                       \
      {                                             \
-       int komp = (text[i+1] == '$')               \
-	       && ctx->opts.openmp ?               \
-	   FXTRAN_handle_omp (text, ci, i, OMP)    \
+       int komp = ctx->opts.openmp &&              \
+     ((strncmp (&text[i+1], "$ ", 2) == 0)         \
+   || (strncmp (&text[i+1], "$&", 2) == 0)         \
+   || (strncasecmp (&text[i+1], "$omp ", 5) == 0)  \
+   || (strncasecmp (&text[i+1], "$omp&", 5) == 0)) \
+	 ? FXTRAN_handle_omp (text, ci, i, OMP)    \
 	          : 0;                             \
-       if (komp == 0)                              \
-         {                                         \
-           ci[i].mask = FXTRAN_COM;                \
-           C = 1;                                  \
-         }                                         \
-       else                                        \
+       int kacc =  ctx->opts.openacc &&            \
+     ((strncasecmp (&text[i+1], "$acc ", 5) == 0)  \
+   || (strncasecmp (&text[i+1], "$acc&", 5) == 0)) \
+	 ? FXTRAN_handle_acc (text, ci, i, ACC)    \
+	          : 0;                             \
+       if (komp != 0)                              \
          {                                         \
            komp--;                                 \
            for (; komp; komp--)                    \
              FXTRAN_NEXT_CHAR;                     \
            omp = 1;                                \
            OMP = 1;                                \
+         }                                         \
+       else if (kacc != 0)                         \
+         {                                         \
+           kacc--;                                 \
+           for (; kacc; kacc--)                    \
+             FXTRAN_NEXT_CHAR;                     \
+           ACC = 1;                                \
+           acc = 1;                                \
+         }                                         \
+       else                                        \
+         {                                         \
+           ci[i].mask = FXTRAN_COM;                \
+           C = 1;                                  \
          }                                         \
      }                                             \
    break;
@@ -170,6 +190,8 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
   char S   = 1; /* true if only space was seen since beginning of line */
   char OMP = 0; /* true if inside OMP directive or statement */
   char omp = 0; /* true if current line starts with OMP sentinel */
+  char ACC = 0; /* true if inside ACC directive */
+  char acc = 0; /* true if current line starts with ACC sentinel */
 
   int c    = 0;  /* column number */
   int l    = 0;  /* line number */
@@ -324,7 +346,7 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
   ctx->ci = ci;
 
   
-/*DUMP_FXTRAN_MASK; exit (0);*/
+  DUMP_FXTRAN_MASK; exit (0);
 
   {
     FXTRAN_stmt_stack stack;
@@ -351,6 +373,7 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
           {
             case FXTRAN_LAB:
             case FXTRAN_OMD:
+            case FXTRAN_ACC:
             case FXTRAN_OPT:
             case FXTRAN_CPP:
             case FXTRAN_COM:
