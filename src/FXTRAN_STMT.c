@@ -1583,7 +1583,7 @@ def_extra_proto (FUNCTION)
 {
   int k2;
   int k3;
-  const char * prefix[] = { "RECURSIVE", "PURE", "ELEMENTAL", NULL };
+  const char * prefix[] = { "MODULE", "RECURSIVE", "PURE", "ELEMENTAL", NULL };
   int seen_ts = 0;
 
  
@@ -2550,7 +2550,7 @@ def_extra_proto (SUBROUTINE)
 {
   int k2;
   int k3;
-  const char * prefix[] = { "RECURSIVE", "PURE", "ELEMENTAL", NULL };
+  const char * prefix[] = { "MODULE", "RECURSIVE", "IMPURE", "PURE", "ELEMENTAL", NULL };
 
   while (1)
     {
@@ -2670,12 +2670,20 @@ static int stmt_prog_unit_expected (FXTRAN_stmt_stack * stack)
   return 0;
 }
 
+static int seen_contains (FXTRAN_stmt_stack * stack)
+{
+  FXTRAN_stmt_stack_state * st = FXTRAN_stmt_stack_curr(stack);
+  if (st == NULL)
+    return 0;
+  return st->seen_contains;
+}
+
 static FXTRAN_stmt_type grok_fs (const char * t, const FXTRAN_char_info * ci)
 {
 /* we need to distinguish between SUBROUTINE and FUNCTION */
   int k = 0;
   int i;
-  const char * prefix[] = { "RECURSIVE", "ELEMENTAL", "PURE", NULL };
+  const char * prefix[] = { "MODULE", "RECURSIVE", "ELEMENTAL", "IMPURE", "PURE", NULL };
   while (1)
     {
       int k1 = k;
@@ -2788,10 +2796,13 @@ static FXTRAN_stmt_type get_FXTRAN_stmt_type (const char * t, const FXTRAN_char_
     {
       FXTRAN_stmt_type type;
 
-      tt(MODULE);
-      tt(SUBMODULE);
-      tt(BLOCKDATA);
-      tt(PROGRAM);        
+      if (! seen_contains (stack))
+        {
+          tt(MODULE);
+          tt(SUBMODULE);
+          tt(BLOCKDATA);
+          tt(PROGRAM);        
+        }
       
       type = grok_fs (t, ci);
 
