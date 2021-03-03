@@ -60,6 +60,7 @@ extern const char * FXTRAN_types[];
       macro(ENDPROGRAM                            , 0,   77,  0 ) \
       macro(ENDSELECTCASE                         , 1,   90,  0 ) \
       macro(ENDSELECTTYPE                         , 1,    3,  0 ) \
+      macro(ENDSUBMODULE                          , 0,    8,  0 ) \
       macro(ENDSUBROUTINE                         , 0,   77,  0 ) \
       macro(ENDTYPE                               , 0,   90,  0 ) \
       macro(ENDWHERE                              , 1,   95,  0 ) \
@@ -114,6 +115,7 @@ extern const char * FXTRAN_types[];
       macro(SELECTTYPE                            , 1,    3,  0 ) \
       macro(SEQUENCE                              , 0,   90,  0 ) \
       macro(STOP                                  , 1,   77,  0 ) \
+      macro(SUBMODULE                             , 0,    8,  0 ) \
       macro(SUBROUTINE                            , 0,   77,  0 ) \
       macro(TARGET                                , 0,   90,  1 ) \
       macro(TYPE                                  , 0,   90,  0 ) \

@@ -166,6 +166,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_ENDPROGRAM                        :  return _T(_S(END) H _S(PROGRAM)              H _S(STMT));
       case FXTRAN_ENDSELECTCASE                     :  return _T(_S(END) H _S(SELECT) H _S(CASE)    H _S(STMT));
       case FXTRAN_ENDSELECTTYPE                     :  return _T(_S(END) H _S(SELECT) H _S(TYPE)    H _S(STMT));
+      case FXTRAN_ENDSUBMODULE                      :  return _T(_S(END) H _S(SUBMODULE)            H _S(STMT));
       case FXTRAN_ENDSUBROUTINE                     :  return _T(_S(END) H _S(SUBROUTINE)           H _S(STMT));
       case FXTRAN_ENDTYPE                           :  return _T(_S(END) H _S(TYPE)                 H _S(STMT));
       case FXTRAN_ENDWHERE                          :  return _T(_S(END) H _S(WHERE)                H _S(STMT));
@@ -219,6 +220,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_SELECTTYPE                        :  return _T(_S(SELECT) H _S(TYPE)              H _S(STMT));
       case FXTRAN_SEQUENCE                          :  return _T(_S(SEQUENCE)                       H _S(STMT));
       case FXTRAN_STOP                              :  return _T(_S(STOP)                           H _S(STMT));
+      case FXTRAN_SUBMODULE                         :  return _T(_S(SUBMODULE)                      H _S(STMT));
       case FXTRAN_SUBROUTINE                        :  return _T(_S(SUBROUTINE)                     H _S(STMT));
       case FXTRAN_TARGET                            :  return _T(_S(TARGET)                         H _S(STMT));
       case FXTRAN_TYPE                              :  return _T(_S(TYPE)                           H _S(STMT));
@@ -1728,6 +1730,41 @@ def_extra_proto (BLOCKDATA)
     stmt_unit_name (t, ci, "BLOCKDATA", _T(_S(BLOCK) H _S(DATA) H _S(NAME)), ctx);
 }
 
+def_extra_proto (SUBMODULE)
+{
+  int k;
+
+  XAD (9);
+
+  if (t[0] != '(')
+    FXTRAN_THROW ("Malformed SUBMODULE statement");
+
+  XAD (1);
+
+  k = FXTRAN_eat_word (t);
+  XST (_T(_S(PARENT) H _S(IDENTIFIER)));
+  XNT (_T(_S(ANCESTOR) H _S(MODULE) H _S(NAME)), k);
+  XAD (k); 
+
+  if (t[0] == ':')
+    {
+      XAD (1);
+      k = FXTRAN_eat_word (t);
+      XNT (_T(_S(PARENT) H _S(MODULE) H _S(NAME)), k);
+      XAD (k); 
+    }
+
+  XET ();
+
+  if (t[0] != ')')
+    FXTRAN_THROW ("Malformed SUBMODULE statement");
+  XAD (1);
+
+  k = FXTRAN_eat_word (t);
+
+  XNT (_T(_S(SUBMODULE) H _S(MODULE) H _S(NAME)), k);
+}
+
 #define def_simple_unit(T) \
 def_extra_proto (T)                                        \
 {                                                          \
@@ -1746,6 +1783,7 @@ def_extra_proto (END##T)                                         \
 }
 
 def_simple_endunit(PROGRAM);
+def_simple_endunit(SUBMODULE);
 def_simple_endunit(MODULE);
 def_simple_endunit(FUNCTION);
 def_simple_endunit(SUBROUTINE);
@@ -2751,6 +2789,7 @@ static FXTRAN_stmt_type get_FXTRAN_stmt_type (const char * t, const FXTRAN_char_
       FXTRAN_stmt_type type;
 
       tt(MODULE);
+      tt(SUBMODULE);
       tt(BLOCKDATA);
       tt(PROGRAM);        
       
@@ -2879,6 +2918,7 @@ other:
             tt2(DO);            tt2(FORALL);        tt2(FUNCTION);      tt2(IF);            
             tt2(INTERFACE);     tt2(MODULE);        tt2(PROGRAM);       tt2(SUBROUTINE);    
             tt2(TYPE);          tt2(WHERE);         tt(ENDFILE);        tt2(ENUM);
+            tt2(SUBMODULE);
 
             if (FXTRAN_stmt_stack_ok (stack)) /* here we need context data */
               {
@@ -2890,6 +2930,7 @@ other:
                       switch (FXTRAN_stmt_stack_curr(stack)->type)
                         {
                           csss(MODULE);
+                          csss(SUBMODULE);
                           csss(PROGRAM);
                           csss(FUNCTION);
                           csss(SUBROUTINE);
@@ -3158,6 +3199,9 @@ def_program_construct_end (FUNCTION, ENDFUNCTION)
 
 def_program_construct_opn (MODULE)
 def_program_construct_end (MODULE, ENDMODULE)
+
+def_program_construct_opn (SUBMODULE)
+def_program_construct_end (SUBMODULE, ENDSUBMODULE)
 
       case FXTRAN_CONTAINS:
         FXTRAN_stmt_stack_curr(stack)->seen_contains = 1;
