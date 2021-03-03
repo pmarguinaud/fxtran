@@ -106,12 +106,6 @@ done:
           ci[i+4].mask = FXTRAN_ACC;
           return 5;
 	}
-      else if ((text[i+2] == ' ') || ACC)
-        {
-          ci[i+0].mask = FXTRAN_OMC;
-          ci[i+1].mask = FXTRAN_OMC;
-          return 2;
-	}
     }
   
 
@@ -176,7 +170,8 @@ static const char * accd_as_str (FXTRAN_accd_type type)
 
 static int FXTRAN_acc_expr (const char * t, const FXTRAN_char_info * ci, 
 		            FXTRAN_xmlctx * ctx, int optional, int list,
-                            int prefix, int star, int seenpar)
+                            int prefix, int star, int seenpar, 
+                            const char * list_tag)
 {
   const char * T = t;
   int k, l;
@@ -194,7 +189,7 @@ static int FXTRAN_acc_expr (const char * t, const FXTRAN_char_info * ci,
 
       if (list)
         {
-          XST (_T(_S(EXPR) H _S(LIST)));
+          XST (list_tag ? list_tag : _T(_S(EXPR) H _S(LIST)));
           while (1)
             {
               if (prefix == 2)
@@ -359,79 +354,16 @@ static int FXTRAN_acc_REDUCTION (const char * t, const FXTRAN_char_info * ci,
     FXTRAN_THROW ("Malformed OpenACC clause; expected `:'");
   XAD(1);
 
-#ifdef UNDEF
-
-  XST (_S(VARIABLE) H _S(LIST));
-  while (t[0] != ')')
-    {
-      kn = FXTRAN_eat_word (t);
-      XNT (_T(_S(VARIABLE)), kn);
-      XAD(kn);
-      if (t[0] == ',')
-        XAD(1);
-      else if (t[0] != ')')
-        FXTRAN_THROW ("Malformed OpenACC clause");
-    }
-  XET ();
-
-  if (t[0] != ')')
-    FXTRAN_THROW ("Malformed OpenACC clause; expected `)'");
-  XAD(1);
-
-#else
-  k = FXTRAN_acc_expr (t, ci, ctx, 0, 1, 0, 0, 1);
+  k = FXTRAN_acc_expr (t, ci, ctx, 0, 1, 0, 0, 1, NULL);
   XAD (k);
-#endif
-
 
   XET ();
-  return t - T;
-}
-
-static int FXTRAN_acc_list (const char * t, const FXTRAN_char_info * ci, 
-		            FXTRAN_xmlctx * ctx, const char * LTN, int prefix)
-{
-  const char * T = t;
-  int k;
-  k = FXTRAN_eat_word (t);
-  XST (_T(_S(CLAUSE)));
-  XST (_T(_S(NAME)));
-  XAD(k);
-  XET ();
-
-  if (t[0] != '(')
-    FXTRAN_THROW ("Malformed OpenACC clause");
-
-  XAD(1);
-
-  if (prefix)
-    {
-      k = FXTRAN_eat_word (t);
-      if (t[k] == ':')
-        XAD (k+1);
-    }
-
-  XST (LTN);
-  while (t[0] != ')')
-    {
-      k = FXTRAN_eat_word (t);
-      XNT (_T(_S(NAME)), k);
-      XAD(k);
-      if (t[0] == ',')
-        XAD(1);
-    }
-  XET ();
-
-  XAD(1);
-
-  XET ();
-
   return t - T;
 }
 
 static int FXTRAN_acc_expr_clause (const char * t, const FXTRAN_char_info * ci, 
 		                   FXTRAN_xmlctx * ctx, int optional, int list,
-                                   int prefix, int star)
+                                   int prefix, int star, const char * list_tag)
 {
   const char * T = t;
   int k, s;
@@ -441,7 +373,7 @@ static int FXTRAN_acc_expr_clause (const char * t, const FXTRAN_char_info * ci,
   XAD(k);
   XET ();
 
-  s = (t - T) + FXTRAN_acc_expr (t, ci, ctx, optional, list, prefix, star, 0);
+  s = (t - T) + FXTRAN_acc_expr (t, ci, ctx, optional, list, prefix, star, 0, list_tag);
 
   XET ();
 
@@ -513,7 +445,7 @@ static int FXTRAN_acc_WAIT_arg (const char * t, const FXTRAN_char_info * ci,
                 FXTRAN_THROW ("Malformed OpenACC directive");
               XAD(1);
             }
-          k = FXTRAN_acc_expr (t, ci, ctx, 0, 1, 0, 0, 1);
+          k = FXTRAN_acc_expr (t, ci, ctx, 0, 1, 0, 0, 1, NULL);
           XAD(k);
         }
       else
@@ -599,7 +531,8 @@ static int FXTRAN_acc_simple (const char * t, const char * C, const FXTRAN_char_
 static int FXTRAN_acc_TILE (const char * t, const FXTRAN_char_info * ci, 
 		            FXTRAN_xmlctx * ctx)                         
 {                                                                       
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 1, 0, 1);                     
+  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 1, 0, 1, 
+                                 _T (_S(SIZE) H _S(EXPR) H _S(LIST)));                     
 }
 
 #define def_FXTRAN_acc_simple(T) \
@@ -621,62 +554,47 @@ static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 0, 0, 0);               \
+  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 0, 0, 0, NULL);         \
 }
 
 #define def_FXTRAN_acc_optional_expr(T) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 1, 0, 0, 0);               \
+  return FXTRAN_acc_expr_clause (t, ci, ctx, 1, 0, 0, 0, NULL);         \
 }
 
-#define def_FXTRAN_acc_prefix_expr_list(T) \
+#define def_FXTRAN_acc_prefix_expr_list(T,N) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 1, 1, 0);               \
+  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 1, 1, 0, N);            \
 }
 
-#define def_FXTRAN_acc_expr_list(T) \
+#define def_FXTRAN_acc_expr_list(T,N) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 1, 0, 0);               \
+  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 1, 0, 0, N);            \
 }
 
 #define def_FXTRAN_acc_optional_expr_list(T) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 1, 1, 0, 0);               \
-}
-
-#define def_FXTRAN_acc_list(T,LTN) \
-static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
-		           FXTRAN_xmlctx * ctx)                         \
-{                                                                       \
-  return FXTRAN_acc_list (t, ci, ctx, LTN, 0);                          \
+  return FXTRAN_acc_expr_clause (t, ci, ctx, 1, 1, 0, 0, NULL);         \
 }
 
 #define def_FXTRAN_acc_optional_prefix_expr(T) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 1, 0, 2, 0);               \
+  return FXTRAN_acc_expr_clause (t, ci, ctx, 1, 0, 2, 0, NULL);         \
 }
-
-#define def_FXTRAN_acc_prefix_list(T,LTN) \
-static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
-		           FXTRAN_xmlctx * ctx)                         \
-{                                                                       \
-  return FXTRAN_acc_list (t, ci, ctx, LTN, 1);                          \
-}
-
 
 def_FXTRAN_acc_expr (DEFAULT_ASYNC)
-def_FXTRAN_acc_expr_list (LINK)
-def_FXTRAN_acc_expr_list (DEVICE_RESIDENT)
+def_FXTRAN_acc_expr_list (LINK, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_expr_list (DEVICE_RESIDENT, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_expr (DEVICE_NUM)
 def_FXTRAN_acc_optional_expr (ASYNC)
 def_FXTRAN_acc_expr (NUM_GANGS)
@@ -685,19 +603,19 @@ def_FXTRAN_acc_expr (VECTOR_LENGTH)
 def_FXTRAN_acc_expr (IF)
 def_FXTRAN_acc_expr (COLLAPSE)
 def_FXTRAN_acc_optional_expr (SELF)
-def_FXTRAN_acc_expr_list (COPY);
-def_FXTRAN_acc_prefix_expr_list (COPYIN);
-def_FXTRAN_acc_prefix_expr_list (COPYOUT);
-def_FXTRAN_acc_prefix_expr_list (CREATE);
-def_FXTRAN_acc_prefix_expr_list (NO_CREATE);
-def_FXTRAN_acc_prefix_expr_list (PRESENT);
-def_FXTRAN_acc_prefix_expr_list (DEVICEPTR);
-def_FXTRAN_acc_prefix_expr_list (ATTACH);
-def_FXTRAN_acc_prefix_expr_list (PRIVATE);
-def_FXTRAN_acc_prefix_expr_list (FIRSTPRIVATE);
-def_FXTRAN_acc_prefix_expr_list (DETACH);
-def_FXTRAN_acc_prefix_expr_list (DELETE);
-def_FXTRAN_acc_prefix_expr_list (USE_DEVICE);
+def_FXTRAN_acc_expr_list (COPY, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (COPYIN, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (COPYOUT, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (CREATE, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (NO_CREATE, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (PRESENT, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (DEVICEPTR, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (ATTACH, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (PRIVATE, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (FIRSTPRIVATE, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (DETACH, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (DELETE, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (USE_DEVICE, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_simple (FINALIZE)
 def_FXTRAN_acc_simple (NOHOST)
 def_FXTRAN_acc_simple (SEQ)
@@ -755,7 +673,7 @@ static void accd_CACHE_extra (const char * t, const FXTRAN_char_info * ci,
 		              FXTRAN_xmlctx * ctx)                          
 {                                                                           
   XAD(5);                                                                   
-  FXTRAN_acc_expr (t, ci, ctx, 1, 1, 1, 0, 0);
+  FXTRAN_acc_expr (t, ci, ctx, 1, 1, 1, 0, 0, NULL);
 }
 
 static void accd_ATOMIC_extra (const char * t, const FXTRAN_char_info * ci,  
