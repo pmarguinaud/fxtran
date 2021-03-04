@@ -57,6 +57,7 @@ extern const char * FXTRAN_types[];
       macro(ENDFUNCTION                           , 0,   77,  0 ) \
       macro(ENDINTERFACE                          , 0,   90,  0 ) \
       macro(ENDMODULE                             , 0,   90,  0 ) \
+      macro(ENDPROCEDURE                          , 0,    8,  0 ) \
       macro(ENDPROGRAM                            , 0,   77,  0 ) \
       macro(ENDSELECTCASE                         , 1,   90,  0 ) \
       macro(ENDSELECTTYPE                         , 1,    3,  0 ) \

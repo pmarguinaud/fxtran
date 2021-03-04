@@ -3,7 +3,7 @@ SUBMODULE (m) n                   ! The descendant submodule n
 
   CONTAINS                        ! Module subprogram part
     MODULE SUBROUTINE sub1(arg1)  ! Definition of sub1 by subroutine subprogram
-      INTEGER :: arg 1
+      INTEGER :: arg1
       arg1 = 1
       i = 2                       ! Host association
       j = 3                       ! Host association

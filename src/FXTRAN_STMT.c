@@ -26,7 +26,7 @@ const char * FXTRAN_types[] = { "LOGICAL", "REAL", "COMPLEX", "INTEGER", "CHARAC
                                 "PROCEDURE", NULL };
 static const int FXTRAN_types_with_kind[] = { 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 };
 static const int FXTRAN_types_with_leng[] = { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 };
-static const int FXTRAN_types_with_name[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 };
+static const int FXTRAN_types_with_name[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0 };
 static const int FXTRAN_types_with_parm[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 };
 static const int FXTRAN_types_intrinsic[] = { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 };
 
@@ -120,118 +120,119 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
 
   switch (type) 
     {
-      case FXTRAN_ARITHMETICIF                      :  return _T(_S(ARITHMETIC) H _S(IF)            H _S(STMT));
-      case FXTRAN_ASSIGNEDGOTO                      :  return _T(_S(ASSIGNED) H _S(GOTO)            H _S(STMT));
-      case FXTRAN_COMPONENTDECL                     :  return _T(_S(COMPONENT) H _S(DECL)           H _S(STMT));
-      case FXTRAN_POINTERASSIGNMENT                 :  return _T(_S(POINTER) H _S(ASSIGNMENT)       H _S(STMT));
-      case FXTRAN_ASSIGNMENT                        :  return _T(_S(ASSIGNMENT)                     H _S(STMT));
-      case FXTRAN_ASSOCIATE                         :  return _T(_S(ASSOCIATE)                      H _S(STMT));
-      case FXTRAN_ASYNCHRONOUS                      :  return _T(_S(ASYNCHRONOUS)                   H _S(STMT));
-      case FXTRAN_IF                                :  return _T(_S(IF)                             H _S(STMT));
-      case FXTRAN_FORALL                            :  return _T(_S(FORALL)                         H _S(STMT));
-      case FXTRAN_ALLOCATABLE                       :  return _T(_S(ALLOCATABLE)                    H _S(STMT));
-      case FXTRAN_ALLOCATE                          :  return _T(_S(ALLOCATE)                       H _S(STMT));
-      case FXTRAN_ASSIGN                            :  return _T(_S(ASSIGN)                         H _S(STMT));
-      case FXTRAN_BACKSPACE                         :  return _T(_S(BACKSPACE)                      H _S(STMT));
-      case FXTRAN_BIND                              :  return _T(_S(BIND)                           H _S(STMT));
-      case FXTRAN_BLOCK                             :  return _T(_S(BLOCK)                          H _S(STMT));
-      case FXTRAN_BLOCKDATA                         :  return _T(_S(BLOCK) H _S(DATA)               H _S(STMT));
-      case FXTRAN_CALL                              :  return _T(_S(CALL)                           H _S(STMT));
-      case FXTRAN_CASE                              :  return _T(_S(CASE)                           H _S(STMT));
-      case FXTRAN_CLASS                             :  return _T(_S(CLASS)                          H _S(STMT));
-      case FXTRAN_CLASSIS                           :  return _T(_S(CLASS) H _S(IS)                 H _S(STMT));
-      case FXTRAN_CLOSE                             :  return _T(_S(CLOSE)                          H _S(STMT));
-      case FXTRAN_COMMON                            :  return _T(_S(COMMON)                         H _S(STMT));
-      case FXTRAN_COMPUTEDGOTO                      :  return _T(_S(COMPUTED) H _S(GOTO)            H _S(STMT));
-      case FXTRAN_CONTAINS                          :  return _T(_S(CONTAINS)                       H _S(STMT));
-      case FXTRAN_CONTIGUOUS                        :  return _T(_S(CONTIGUOUS)                     H _S(STMT));
-      case FXTRAN_CONTINUE                          :  return _T(_S(CONTINUE)                       H _S(STMT));
-      case FXTRAN_CRAYPOINTER                       :  return _T(_S(CRAY) H _S(POINTER)             H _S(STMT));
-      case FXTRAN_CYCLE                             :  return _T(_S(CYCLE)                          H _S(STMT));
-      case FXTRAN_TYPEDECL                          :  return _T(_S(TYPE) H _S(DECL)                H _S(STMT));
-      case FXTRAN_DATA                              :  return _T(_S(DATA)                           H _S(STMT));
-      case FXTRAN_DEALLOCATE                        :  return _T(_S(DEALLOCATE)                     H _S(STMT));
-      case FXTRAN_DIMENSION                         :  return _T(_S(DIMENSION)                      H _S(STMT));
-      case FXTRAN_DO                                :  return _T(_S(DO)                             H _S(STMT));
-      case FXTRAN_DOLABEL                           :  return _T(_S(DO) H _S(LABEL)                 H _S(STMT));
-      case FXTRAN_ENDASSOCIATE                      :  return _T(_S(END) H _S(ASSOCIATE)            H _S(STMT));
-      case FXTRAN_ENDBLOCK                          :  return _T(_S(END) H _S(BLOCK)                H _S(STMT));
-      case FXTRAN_ENDBLOCKDATA                      :  return _T(_S(END) H _S(BLOCK) H _S(DATA)     H _S(STMT));
-      case FXTRAN_ENDCLASS                          :  return _T(_S(END) H _S(CLASS)                H _S(STMT));
-      case FXTRAN_ENDDO                             :  return _T(_S(END) H _S(DO)                   H _S(STMT));
-      case FXTRAN_ENDFORALL                         :  return _T(_S(END) H _S(FORALL)               H _S(STMT));
-      case FXTRAN_ENDFUNCTION                       :  return _T(_S(END) H _S(FUNCTION)             H _S(STMT));
-      case FXTRAN_ENDINTERFACE                      :  return _T(_S(END) H _S(INTERFACE)            H _S(STMT));
-      case FXTRAN_ENDMODULE                         :  return _T(_S(END) H _S(MODULE)               H _S(STMT));
-      case FXTRAN_ENDPROGRAM                        :  return _T(_S(END) H _S(PROGRAM)              H _S(STMT));
-      case FXTRAN_ENDSELECTCASE                     :  return _T(_S(END) H _S(SELECT) H _S(CASE)    H _S(STMT));
-      case FXTRAN_ENDSELECTTYPE                     :  return _T(_S(END) H _S(SELECT) H _S(TYPE)    H _S(STMT));
-      case FXTRAN_ENDSUBMODULE                      :  return _T(_S(END) H _S(SUBMODULE)            H _S(STMT));
-      case FXTRAN_ENDSUBROUTINE                     :  return _T(_S(END) H _S(SUBROUTINE)           H _S(STMT));
-      case FXTRAN_ENDTYPE                           :  return _T(_S(END) H _S(TYPE)                 H _S(STMT));
-      case FXTRAN_ENDWHERE                          :  return _T(_S(END) H _S(WHERE)                H _S(STMT));
-      case FXTRAN_ENDFILE                           :  return _T(_S(END) H _S(FILE)                 H _S(STMT));
-      case FXTRAN_ELSEIF                            :  return _T(_S(ELSE) H _S(IF)                  H _S(STMT));
-      case FXTRAN_ELSE                              :  return _T(_S(ELSE)                           H _S(STMT));
-      case FXTRAN_ELSEWHERE                         :  return _T(_S(ELSE) H _S(WHERE)               H _S(STMT));
-      case FXTRAN_ENDIF                             :  return _T(_S(END) H _S(IF)                   H _S(STMT));
-      case FXTRAN_ENTRY                             :  return _T(_S(ENTRY)                          H _S(STMT));
-      case FXTRAN_ENDENUM                           :  return _T(_S(END) H _S(ENUM)                 H _S(STMT));
-      case FXTRAN_ENUM                              :  return _T(_S(ENUM)                           H _S(STMT));
-      case FXTRAN_ENUMERATOR                        :  return _T(_S(ENUMERATOR)                     H _S(STMT));
-      case FXTRAN_EQUIVALENCE                       :  return _T(_S(EQUIVALENCE)                    H _S(STMT));
-      case FXTRAN_EXIT                              :  return _T(_S(EXIT)                           H _S(STMT));
-      case FXTRAN_EXTERNAL                          :  return _T(_S(EXTERNAL)                       H _S(STMT));
-      case FXTRAN_FINAL                             :  return _T(_S(FINAL)                          H _S(STMT));
-      case FXTRAN_FLUSH                             :  return _T(_S(FLUSH)                          H _S(STMT));
-      case FXTRAN_FORALLCONSTRUCT                   :  return _T(_S(FORALL) H _S(CONSTRUCT)         H _S(STMT));
-      case FXTRAN_FORMAT                            :  return _T(_S(FORMAT)                         H _S(STMT));
-      case FXTRAN_FUNCTION                          :  return _T(_S(FUNCTION)                       H _S(STMT));
-      case FXTRAN_GENERIC                           :  return _T(_S(GENERIC)                        H _S(STMT));
-      case FXTRAN_GOTO                              :  return _T(_S(GOTO)                           H _S(STMT));
-      case FXTRAN_IFTHEN                            :  return _T(_S(IF) H _S(THEN)                  H _S(STMT));
-      case FXTRAN_IMPLICITNONE                      :  return _T(_S(IMPLICIT) H _S(NONE)            H _S(STMT));
-      case FXTRAN_IMPLICIT                          :  return _T(_S(IMPLICIT)                       H _S(STMT));
-      case FXTRAN_IMPORT                            :  return _T(_S(IMPORT)                         H _S(STMT));
-      case FXTRAN_INCLUDE                           :  return _T(_S(INCLUDE)                        H _S(STMT));
-      case FXTRAN_INQUIRE                           :  return _T(_S(INQUIRE)                        H _S(STMT));
-      case FXTRAN_INTENT                            :  return _T(_S(INTENT)                         H _S(STMT));
-      case FXTRAN_INTERFACE                         :  return _T(_S(INTERFACE)                      H _S(STMT));
-      case FXTRAN_INTRINSIC                         :  return _T(_S(INTRINSIC)                      H _S(STMT));
-      case FXTRAN_PROCEDURE                         :  return _T(_S(PROCEDURE)                      H _S(STMT));
-      case FXTRAN_MODULE                            :  return _T(_S(MODULE)                         H _S(STMT));
-      case FXTRAN_NAMELIST                          :  return _T(_S(NAMELIST)                       H _S(STMT));
-      case FXTRAN_NULLIFY                           :  return _T(_S(NULLIFY)                        H _S(STMT));
-      case FXTRAN_OPEN                              :  return _T(_S(OPEN)                           H _S(STMT));
-      case FXTRAN_OPTIONAL                          :  return _T(_S(OPTIONAL)                       H _S(STMT));
-      case FXTRAN_PAUSE                             :  return _T(_S(PAUSE)                          H _S(STMT));
-      case FXTRAN_PARAMETER                         :  return _T(_S(PARAMETER)                      H _S(STMT));
-      case FXTRAN_POINTER                           :  return _T(_S(POINTER)                        H _S(STMT));
-      case FXTRAN_PROGRAM                           :  return _T(_S(PROGRAM)                        H _S(STMT));
-      case FXTRAN_PRINT                             :  return _T(_S(PRINT)                          H _S(STMT));
-      case FXTRAN_PRIVATE                           :  return _T(_S(PRIVATE)                        H _S(STMT));
-      case FXTRAN_PROTECTED                         :  return _T(_S(PROTECTED)                      H _S(STMT));
-      case FXTRAN_PUBLIC                            :  return _T(_S(PUBLIC)                         H _S(STMT));
-      case FXTRAN_READ                              :  return _T(_S(READ)                           H _S(STMT));
-      case FXTRAN_RETURN                            :  return _T(_S(RETURN)                         H _S(STMT));
-      case FXTRAN_REWIND                            :  return _T(_S(REWIND)                         H _S(STMT));
-      case FXTRAN_SAVE                              :  return _T(_S(SAVE)                           H _S(STMT));
-      case FXTRAN_SELECTCASE                        :  return _T(_S(SELECT) H _S(CASE)              H _S(STMT));
-      case FXTRAN_SELECTTYPE                        :  return _T(_S(SELECT) H _S(TYPE)              H _S(STMT));
-      case FXTRAN_SEQUENCE                          :  return _T(_S(SEQUENCE)                       H _S(STMT));
-      case FXTRAN_STOP                              :  return _T(_S(STOP)                           H _S(STMT));
-      case FXTRAN_SUBMODULE                         :  return _T(_S(SUBMODULE)                      H _S(STMT));
-      case FXTRAN_SUBROUTINE                        :  return _T(_S(SUBROUTINE)                     H _S(STMT));
-      case FXTRAN_TARGET                            :  return _T(_S(TARGET)                         H _S(STMT));
-      case FXTRAN_TYPE                              :  return _T(_S(TYPE)                           H _S(STMT));
-      case FXTRAN_TYPEIS                            :  return _T(_S(TYPE) H _S(IS)                  H _S(STMT));
-      case FXTRAN_USE                               :  return _T(_S(USE)                            H _S(STMT));
-      case FXTRAN_VALUE                             :  return _T(_S(VALUE)                          H _S(STMT));
-      case FXTRAN_VOLATILE                          :  return _T(_S(VOLATILE)                       H _S(STMT));
-      case FXTRAN_WAIT                              :  return _T(_S(WAIT)                           H _S(STMT));
-      case FXTRAN_WHERE                             :  return _T(_S(WHERE)                          H _S(STMT));
-      case FXTRAN_WHERECONSTRUCT                    :  return _T(_S(WHERE) H _S(CONSTRUCT)          H _S(STMT));
-      case FXTRAN_WRITE                             :  return _T(_S(WRITE)                          H _S(STMT));
+      case FXTRAN_ARITHMETICIF                      :  return _T(_S(ARITHMETIC) H _S(IF)              H _S(STMT));
+      case FXTRAN_ASSIGNEDGOTO                      :  return _T(_S(ASSIGNED) H _S(GOTO)              H _S(STMT));
+      case FXTRAN_COMPONENTDECL                     :  return _T(_S(COMPONENT) H _S(DECL)             H _S(STMT));
+      case FXTRAN_POINTERASSIGNMENT                 :  return _T(_S(POINTER) H _S(ASSIGNMENT)         H _S(STMT));
+      case FXTRAN_ASSIGNMENT                        :  return _T(_S(ASSIGNMENT)                       H _S(STMT));
+      case FXTRAN_ASSOCIATE                         :  return _T(_S(ASSOCIATE)                        H _S(STMT));
+      case FXTRAN_ASYNCHRONOUS                      :  return _T(_S(ASYNCHRONOUS)                     H _S(STMT));
+      case FXTRAN_IF                                :  return _T(_S(IF)                               H _S(STMT));
+      case FXTRAN_FORALL                            :  return _T(_S(FORALL)                           H _S(STMT));
+      case FXTRAN_ALLOCATABLE                       :  return _T(_S(ALLOCATABLE)                      H _S(STMT));
+      case FXTRAN_ALLOCATE                          :  return _T(_S(ALLOCATE)                         H _S(STMT));
+      case FXTRAN_ASSIGN                            :  return _T(_S(ASSIGN)                           H _S(STMT));
+      case FXTRAN_BACKSPACE                         :  return _T(_S(BACKSPACE)                        H _S(STMT));
+      case FXTRAN_BIND                              :  return _T(_S(BIND)                             H _S(STMT));
+      case FXTRAN_BLOCK                             :  return _T(_S(BLOCK)                            H _S(STMT));
+      case FXTRAN_BLOCKDATA                         :  return _T(_S(BLOCK) H _S(DATA)                 H _S(STMT));
+      case FXTRAN_CALL                              :  return _T(_S(CALL)                             H _S(STMT));
+      case FXTRAN_CASE                              :  return _T(_S(CASE)                             H _S(STMT));
+      case FXTRAN_CLASS                             :  return _T(_S(CLASS)                            H _S(STMT));
+      case FXTRAN_CLASSIS                           :  return _T(_S(CLASS) H _S(IS)                   H _S(STMT));
+      case FXTRAN_CLOSE                             :  return _T(_S(CLOSE)                            H _S(STMT));
+      case FXTRAN_COMMON                            :  return _T(_S(COMMON)                           H _S(STMT));
+      case FXTRAN_COMPUTEDGOTO                      :  return _T(_S(COMPUTED) H _S(GOTO)              H _S(STMT));
+      case FXTRAN_CONTAINS                          :  return _T(_S(CONTAINS)                         H _S(STMT));
+      case FXTRAN_CONTIGUOUS                        :  return _T(_S(CONTIGUOUS)                       H _S(STMT));
+      case FXTRAN_CONTINUE                          :  return _T(_S(CONTINUE)                         H _S(STMT));
+      case FXTRAN_CRAYPOINTER                       :  return _T(_S(CRAY) H _S(POINTER)               H _S(STMT));
+      case FXTRAN_CYCLE                             :  return _T(_S(CYCLE)                            H _S(STMT));
+      case FXTRAN_TYPEDECL                          :  return _T(_S(TYPE) H _S(DECL)                  H _S(STMT));
+      case FXTRAN_DATA                              :  return _T(_S(DATA)                             H _S(STMT));
+      case FXTRAN_DEALLOCATE                        :  return _T(_S(DEALLOCATE)                       H _S(STMT));
+      case FXTRAN_DIMENSION                         :  return _T(_S(DIMENSION)                        H _S(STMT));
+      case FXTRAN_DO                                :  return _T(_S(DO)                               H _S(STMT));
+      case FXTRAN_DOLABEL                           :  return _T(_S(DO) H _S(LABEL)                   H _S(STMT));
+      case FXTRAN_ENDASSOCIATE                      :  return _T(_S(END) H _S(ASSOCIATE)              H _S(STMT));
+      case FXTRAN_ENDBLOCK                          :  return _T(_S(END) H _S(BLOCK)                  H _S(STMT));
+      case FXTRAN_ENDBLOCKDATA                      :  return _T(_S(END) H _S(BLOCK) H _S(DATA)       H _S(STMT));
+      case FXTRAN_ENDCLASS                          :  return _T(_S(END) H _S(CLASS)                  H _S(STMT));
+      case FXTRAN_ENDDO                             :  return _T(_S(END) H _S(DO)                     H _S(STMT));
+      case FXTRAN_ENDFORALL                         :  return _T(_S(END) H _S(FORALL)                 H _S(STMT));
+      case FXTRAN_ENDFUNCTION                       :  return _T(_S(END) H _S(FUNCTION)               H _S(STMT));
+      case FXTRAN_ENDINTERFACE                      :  return _T(_S(END) H _S(INTERFACE)              H _S(STMT));
+      case FXTRAN_ENDMODULE                         :  return _T(_S(END) H _S(MODULE)                 H _S(STMT));
+      case FXTRAN_ENDPROCEDURE                      :  return _T(_S(END) H _S(PROCEDURE)              H _S(STMT));
+      case FXTRAN_ENDPROGRAM                        :  return _T(_S(END) H _S(PROGRAM)                H _S(STMT));
+      case FXTRAN_ENDSELECTCASE                     :  return _T(_S(END) H _S(SELECT) H _S(CASE)      H _S(STMT));
+      case FXTRAN_ENDSELECTTYPE                     :  return _T(_S(END) H _S(SELECT) H _S(TYPE)      H _S(STMT));
+      case FXTRAN_ENDSUBMODULE                      :  return _T(_S(END) H _S(SUBMODULE)              H _S(STMT));
+      case FXTRAN_ENDSUBROUTINE                     :  return _T(_S(END) H _S(SUBROUTINE)             H _S(STMT));
+      case FXTRAN_ENDTYPE                           :  return _T(_S(END) H _S(TYPE)                   H _S(STMT));
+      case FXTRAN_ENDWHERE                          :  return _T(_S(END) H _S(WHERE)                  H _S(STMT));
+      case FXTRAN_ENDFILE                           :  return _T(_S(END) H _S(FILE)                   H _S(STMT));
+      case FXTRAN_ELSEIF                            :  return _T(_S(ELSE) H _S(IF)                    H _S(STMT));
+      case FXTRAN_ELSE                              :  return _T(_S(ELSE)                             H _S(STMT));
+      case FXTRAN_ELSEWHERE                         :  return _T(_S(ELSE) H _S(WHERE)                 H _S(STMT));
+      case FXTRAN_ENDIF                             :  return _T(_S(END) H _S(IF)                     H _S(STMT));
+      case FXTRAN_ENTRY                             :  return _T(_S(ENTRY)                            H _S(STMT));
+      case FXTRAN_ENDENUM                           :  return _T(_S(END) H _S(ENUM)                   H _S(STMT));
+      case FXTRAN_ENUM                              :  return _T(_S(ENUM)                             H _S(STMT));
+      case FXTRAN_ENUMERATOR                        :  return _T(_S(ENUMERATOR)                       H _S(STMT));
+      case FXTRAN_EQUIVALENCE                       :  return _T(_S(EQUIVALENCE)                      H _S(STMT));
+      case FXTRAN_EXIT                              :  return _T(_S(EXIT)                             H _S(STMT));
+      case FXTRAN_EXTERNAL                          :  return _T(_S(EXTERNAL)                         H _S(STMT));
+      case FXTRAN_FINAL                             :  return _T(_S(FINAL)                            H _S(STMT));
+      case FXTRAN_FLUSH                             :  return _T(_S(FLUSH)                            H _S(STMT));
+      case FXTRAN_FORALLCONSTRUCT                   :  return _T(_S(FORALL) H _S(CONSTRUCT)           H _S(STMT));
+      case FXTRAN_FORMAT                            :  return _T(_S(FORMAT)                           H _S(STMT));
+      case FXTRAN_FUNCTION                          :  return _T(_S(FUNCTION)                         H _S(STMT));
+      case FXTRAN_GENERIC                           :  return _T(_S(GENERIC)                          H _S(STMT));
+      case FXTRAN_GOTO                              :  return _T(_S(GOTO)                             H _S(STMT));
+      case FXTRAN_IFTHEN                            :  return _T(_S(IF) H _S(THEN)                    H _S(STMT));
+      case FXTRAN_IMPLICITNONE                      :  return _T(_S(IMPLICIT) H _S(NONE)              H _S(STMT));
+      case FXTRAN_IMPLICIT                          :  return _T(_S(IMPLICIT)                         H _S(STMT));
+      case FXTRAN_IMPORT                            :  return _T(_S(IMPORT)                           H _S(STMT));
+      case FXTRAN_INCLUDE                           :  return _T(_S(INCLUDE)                          H _S(STMT));
+      case FXTRAN_INQUIRE                           :  return _T(_S(INQUIRE)                          H _S(STMT));
+      case FXTRAN_INTENT                            :  return _T(_S(INTENT)                           H _S(STMT));
+      case FXTRAN_INTERFACE                         :  return _T(_S(INTERFACE)                        H _S(STMT));
+      case FXTRAN_INTRINSIC                         :  return _T(_S(INTRINSIC)                        H _S(STMT));
+      case FXTRAN_PROCEDURE                         :  return _T(_S(PROCEDURE)                        H _S(STMT));
+      case FXTRAN_MODULE                            :  return _T(_S(MODULE)                           H _S(STMT));
+      case FXTRAN_NAMELIST                          :  return _T(_S(NAMELIST)                         H _S(STMT));
+      case FXTRAN_NULLIFY                           :  return _T(_S(NULLIFY)                          H _S(STMT));
+      case FXTRAN_OPEN                              :  return _T(_S(OPEN)                             H _S(STMT));
+      case FXTRAN_OPTIONAL                          :  return _T(_S(OPTIONAL)                         H _S(STMT));
+      case FXTRAN_PAUSE                             :  return _T(_S(PAUSE)                            H _S(STMT));
+      case FXTRAN_PARAMETER                         :  return _T(_S(PARAMETER)                        H _S(STMT));
+      case FXTRAN_POINTER                           :  return _T(_S(POINTER)                          H _S(STMT));
+      case FXTRAN_PROGRAM                           :  return _T(_S(PROGRAM)                          H _S(STMT));
+      case FXTRAN_PRINT                             :  return _T(_S(PRINT)                            H _S(STMT));
+      case FXTRAN_PRIVATE                           :  return _T(_S(PRIVATE)                          H _S(STMT));
+      case FXTRAN_PROTECTED                         :  return _T(_S(PROTECTED)                        H _S(STMT));
+      case FXTRAN_PUBLIC                            :  return _T(_S(PUBLIC)                           H _S(STMT));
+      case FXTRAN_READ                              :  return _T(_S(READ)                             H _S(STMT));
+      case FXTRAN_RETURN                            :  return _T(_S(RETURN)                           H _S(STMT));
+      case FXTRAN_REWIND                            :  return _T(_S(REWIND)                           H _S(STMT));
+      case FXTRAN_SAVE                              :  return _T(_S(SAVE)                             H _S(STMT));
+      case FXTRAN_SELECTCASE                        :  return _T(_S(SELECT) H _S(CASE)                H _S(STMT));
+      case FXTRAN_SELECTTYPE                        :  return _T(_S(SELECT) H _S(TYPE)                H _S(STMT));
+      case FXTRAN_SEQUENCE                          :  return _T(_S(SEQUENCE)                         H _S(STMT));
+      case FXTRAN_STOP                              :  return _T(_S(STOP)                             H _S(STMT));
+      case FXTRAN_SUBMODULE                         :  return _T(_S(SUBMODULE)                        H _S(STMT));
+      case FXTRAN_SUBROUTINE                        :  return _T(_S(SUBROUTINE)                       H _S(STMT));
+      case FXTRAN_TARGET                            :  return _T(_S(TARGET)                           H _S(STMT));
+      case FXTRAN_TYPE                              :  return _T(_S(TYPE)                             H _S(STMT));
+      case FXTRAN_TYPEIS                            :  return _T(_S(TYPE) H _S(IS)                    H _S(STMT));
+      case FXTRAN_USE                               :  return _T(_S(USE)                              H _S(STMT));
+      case FXTRAN_VALUE                             :  return _T(_S(VALUE)                            H _S(STMT));
+      case FXTRAN_VOLATILE                          :  return _T(_S(VOLATILE)                         H _S(STMT));
+      case FXTRAN_WAIT                              :  return _T(_S(WAIT)                             H _S(STMT));
+      case FXTRAN_WHERE                             :  return _T(_S(WHERE)                            H _S(STMT));
+      case FXTRAN_WHERECONSTRUCT                    :  return _T(_S(WHERE) H _S(CONSTRUCT)            H _S(STMT));
+      case FXTRAN_WRITE                             :  return _T(_S(WRITE)                            H _S(STMT));
       case FXTRAN_NONE:
       case FXTRAN_LAST:
       break;
@@ -935,7 +936,7 @@ static int kind_of_type (const char * t, const FXTRAN_char_info * ci, FXTRAN_xml
   return clkd_of_type (t, ci, ctx, _T(_S(KIND) H _S(SELECTOR)), &saap_kindsel); /* TODO : be more restrictive */
 }
 
-static int parm_of_type (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx)
+static int parm_of_type (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx, int ktype)
 {
   const char * T = t;
   int k;
@@ -953,11 +954,14 @@ static int parm_of_type (const char * t, const FXTRAN_char_info * ci, FXTRAN_xml
     }
   else
     {
-      k = FXTRAN_eat_word (t);
-      XST (_T(_S(TYPE) H _S(NAME)));
-      XNT (_T(_S(NAME)), k);
-      XAD(k);
-      XET ();
+      if ((FXTRAN_types_with_name[ktype] != 2) || (t[0] != ')'))
+        {
+          k = FXTRAN_eat_word (t);
+          XST (_T(_S(TYPE) H _S(NAME)));
+          XNT (_T(_S(NAME)), k);
+          XAD(k);
+          XET ();
+        }
     }
 
   if (t[0] == '(')
@@ -974,9 +978,9 @@ static int parm_of_type (const char * t, const FXTRAN_char_info * ci, FXTRAN_xml
   return t - T;
 }
 
-static int name_of_type (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx)
+static int name_of_type (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx, int ktype)
 {
-  return parm_of_type (t, ci, ctx); /* TODO : be more restrictive */
+  return parm_of_type (t, ci, ctx, ktype); /* TODO : be more restrictive */
 }
 
 static int typespec_ext (const char * t, const FXTRAN_char_info * ci, 
@@ -987,9 +991,9 @@ static int typespec_ext (const char * t, const FXTRAN_char_info * ci,
   else if (FXTRAN_types_with_leng[ktype])
     return leng_of_type (t, ci, ctx);
   else if (FXTRAN_types_with_name[ktype])
-    return name_of_type (t, ci, ctx);
+    return name_of_type (t, ci, ctx, ktype);
   else if (FXTRAN_types_with_parm[ktype])
-    return parm_of_type (t, ci, ctx);
+    return parm_of_type (t, ci, ctx, ktype);
   return 0;
 }
 
@@ -1006,6 +1010,7 @@ int FXTRAN_typespec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx 
       int len = strlen (FXTRAN_types[i]);
       if (strncmp (FXTRAN_types[i], t, len) == 0)
         {
+
           if (FXTRAN_types_intrinsic[i])
             {
               XST (_T(_S(INTRINSIC) H _S(TYPE) H _S(SPEC)));
@@ -1013,6 +1018,11 @@ int FXTRAN_typespec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx 
 	      XAD(len);
 	      XET ();
 	    }
+          else if (zstrcmp ("PROCEDURE", FXTRAN_types[i]))
+            {
+              XST (_T(_S(PROCEDURE) H _S(TYPE) H _S(SPEC)));
+	      XAD(len);
+            }
 	  else
             {
               XST (_T(_S(DERIVED) H _S(TYPE) H _S(SPEC)));
@@ -1787,6 +1797,7 @@ def_simple_endunit(SUBMODULE);
 def_simple_endunit(MODULE);
 def_simple_endunit(FUNCTION);
 def_simple_endunit(SUBROUTINE);
+def_simple_endunit(PROCEDURE);
 
 def_extra_proto (ENDBLOCKDATA)
 {
@@ -2684,13 +2695,16 @@ static FXTRAN_stmt_type grok_fs (const char * t, const FXTRAN_char_info * ci)
   int k = 0;
   int i;
   const char * prefix[] = { "MODULE", "RECURSIVE", "ELEMENTAL", "IMPURE", "PURE", NULL };
+
+  if (zstrcmp ("MODULEPROCEDURE", t))
+    return FXTRAN_PROCEDURE;
   while (1)
     {
       int k1 = k;
       for (i = 0; prefix[i]; i++)
         if (zstrcmp(prefix[i], &t[k]))
           {
-  	  k += strlen (prefix[i]);
+  	    k += strlen (prefix[i]);
             prefix[i] = "!";
           }
       if (k1 == k)
@@ -2826,6 +2840,8 @@ static FXTRAN_stmt_type get_FXTRAN_stmt_type (const char * t, const FXTRAN_char_
 	}
       else
         {
+          if (seen_contains (stack))
+            *pexpect_pu = 1;
           ret(type);
 	}
     }
@@ -2848,7 +2864,7 @@ static FXTRAN_stmt_type get_FXTRAN_stmt_type (const char * t, const FXTRAN_char_
   else if ((FXTRAN_stmt_in(stack,FXTRAN_TYPE) || FXTRAN_stmt_in(stack,FXTRAN_CLASS))
        && (FXTRAN_stmt_stack_curr(stack)->seen_contains))
     {
-      if (zstrcmp ("PROCEDURE(", t))
+      if (zstrcmp ("PROCEDURE(", t) || zstrcmp("PROCEDURE,", t))
         goto other;
       if (zstrcmp ("PROCEDURE", t))
         ret(FXTRAN_PROCEDURE);
@@ -2929,7 +2945,7 @@ other:
             tt2(DO);            tt2(FORALL);        tt2(FUNCTION);      tt2(IF);            
             tt2(INTERFACE);     tt2(MODULE);        tt2(PROGRAM);       tt2(SUBROUTINE);    
             tt2(TYPE);          tt2(WHERE);         tt(ENDFILE);        tt2(ENUM);
-            tt2(SUBMODULE);
+            tt2(SUBMODULE);     tt2(PROCEDURE);
 
             if (FXTRAN_stmt_stack_ok (stack)) /* here we need context data */
               {
@@ -3065,6 +3081,9 @@ other:
 	case 'P':
        
         if (zstrcmp ("PROCEDURE(",t))
+          ret(FXTRAN_TYPEDECL);
+
+        if (zstrcmp ("PROCEDURE,",t))
           ret(FXTRAN_TYPEDECL);
 
         if (ctx->opts.cray_pointer)                                    
@@ -3214,6 +3233,8 @@ def_program_construct_end (MODULE, ENDMODULE)
 def_program_construct_opn (SUBMODULE)
 def_program_construct_end (SUBMODULE, ENDSUBMODULE)
 
+def_program_construct_end (PROCEDURE, ENDPROCEDURE)
+
       case FXTRAN_CONTAINS:
         FXTRAN_stmt_stack_curr(stack)->seen_contains = 1;
       break;
@@ -3221,7 +3242,13 @@ def_program_construct_end (SUBMODULE, ENDSUBMODULE)
         if ((!FXTRAN_stmt_stack_curr(stack)) && (FXTRAN_stmt_stack_ok(stack)))
           FXTRAN_stmt_stack_incr(stack, FXTRAN_PROGRAM);
 	if (expect_pu)
-          FXTRAN_xml_err ("Expected program unit statement", ctx);
+          switch (Type)
+            {
+def_program_construct_opn (PROCEDURE)
+              default:
+              FXTRAN_xml_err ("Expected program unit statement", ctx);
+            }
+          
       break;
     }
 
@@ -3498,7 +3525,7 @@ def_extra_proto (IMPLICIT)
   
 }
 
-def_process_list_elt_proto (module_procedure_name)
+def_process_list_elt_proto (module_procedure_rename)
 {
   int k = FXTRAN_eat_word (t);
 
@@ -3518,15 +3545,31 @@ def_process_list_elt_proto (module_procedure_name)
   return 1;
 }
 
+def_process_list_elt_proto (module_procedure_name)
+{
+  int k = FXTRAN_eat_word (t);
+
+  XNT (_T(_S(NAME)), k);
+  XAD(k);
+  
+  return 1;
+}
+
 def_extra_proto (PROCEDURE)
 {
   int k;
   int module;
+  int cont = seen_contains (stack);
+  int type = FXTRAN_stmt_in (stack, FXTRAN_TYPE) 
+          || FXTRAN_stmt_in (stack, FXTRAN_CLASS);
 
   if (zstrcmp ("MODULEPROCEDURE", t))
     {
       XAD(15);
-      module = 1;
+      if (cont)
+        module = 0;
+      else
+        module = 1;
     }
   else if (zstrcmp ("PROCEDURE", t))
     {
@@ -3550,18 +3593,13 @@ def_extra_proto (PROCEDURE)
 
   k = strlen (t);
 
-  if (module)
-    {
-      FXTRAN_process_list (t, ci, ctx, ",",
-	                  _T(_S(MODULE) H _S(PROCEDURE) H _S(NAME) H _S(LIST)), 
-		          k, module_procedure_name, NULL);
-    }
-  else
-    {
-      FXTRAN_process_list (t, ci, ctx, ",",
-	                  _T(_S(PROCEDURE) H _S(NAME) H _S(LIST)), 
-		          k, module_procedure_name, NULL);
-    }
+  FXTRAN_process_list (t, ci, ctx, ",",
+                      module 
+                      ? _T(_S(MODULE) H _S(PROCEDURE) H _S(NAME) H _S(LIST)) 
+	              : _T(_S(PROCEDURE) H _S(NAME) H _S(LIST)), 
+		      k, 
+                      type ? module_procedure_rename : module_procedure_name, 
+                      NULL);
 
 }
 
