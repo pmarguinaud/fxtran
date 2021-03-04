@@ -2107,6 +2107,101 @@ def_extra_proto (DATA)
   
 }
 
+def_process_list_elt_proto (forall_triplet_spec)
+{
+  int k;
+  const char * T = t;
+  const char * tag;
+  k = FXTRAN_str_at_level_ir (t, ci, ":", ci[0].parens, kmax);
+
+  if (k == 0)
+    return -1;
+
+  XST (_T(_S(FORALL) H _S(TRIPLET) H _S(SPEC)));
+
+  k = FXTRAN_eat_word (t);
+
+  XST (_T(_S(VARIABLE)));
+  FXTRAN_expr (t, ci, k, ctx);
+  XAD(k);
+  XET ();
+
+  XAD(1);
+  k = FXTRAN_str_at_level_ir (t, ci, ":", ci[0].parens, kmax-(t-T));
+
+  if (k == 0)
+    FXTRAN_THROW ("Expected `:'");
+
+  XST (_T(_S(LOWER) H _S(BOUND)));
+  FXTRAN_expr (t, ci, k-1, ctx);
+  XAD(k-1);
+  XET ();
+  XAD(1);
+
+  k = FXTRAN_str_at_level_ir (t, ci, ":", ci[0].parens, kmax-(t-T));
+
+  if (k)
+    {
+      XST (_T(_S(UPPER) H _S(BOUND)));
+      FXTRAN_expr (t, ci, k-1, ctx);
+      XAD(k-1);
+      XET ();
+      XAD(1);
+      tag = _T(_S(STEP));
+    }
+  else
+    {
+      tag = _T(_S(UPPER) H _S(BOUND));
+    }
+
+  XST (tag);
+  FXTRAN_expr (t, ci, kmax-(t-T), ctx);
+
+  XAD(kmax-(t-T));
+  XET ();
+
+  XET ();
+
+  return 1;
+}
+
+static int forall_header (const char * t, const FXTRAN_char_info * ci, FXTRAN_stmt_stack * stack, 
+		          FXTRAN_xmlctx * ctx)
+{
+  const char * T = t;
+  int k;
+
+  if (t[0] != '(')
+    FXTRAN_THROW ("Expected FORALL header");
+
+  XAD(1);
+
+  k = FXTRAN_str_at_level (t, ci, ")", 0);
+
+  k = FXTRAN_process_list (t, ci, ctx, ",", 
+	          	   _T(_S(FORALL) H _S(TRIPLET) H _S(SPEC) H _S(LIST)), 
+			   k-1, forall_triplet_spec, NULL);
+
+  XAD(k);
+
+  if (t[0] == ',')
+    {
+      XAD(1);
+      k = FXTRAN_str_at_level (t, ci, ")", 0);
+      XST (_T(_S(MASK) H _S(EXPR)));
+      FXTRAN_expr (t, ci, k-1, ctx);
+      XAD(k-1);
+      XET ();
+    }
+
+  if (t[0] != ')')
+    FXTRAN_THROW ("Malformed FORALL header");
+
+  XAD(1);
+
+  return t - T;
+}
+   
 def_extra_proto (DO)
 {
   int k;
@@ -2138,6 +2233,15 @@ def_extra_proto (DO)
       FXTRAN_expr (t, ci, k-1, ctx);
       XAD(k-1);
       XET ();
+    }
+  else if (zstrcmp ("CONCURRENT", t))
+    {
+      XAD(10);
+      if (t[0] == '(')
+        {
+          int k = forall_header (t, ci, stack, ctx);
+          XAD(k);
+        }
     }
   else
     {
@@ -3635,64 +3739,6 @@ def_extra_proto (WHERECONSTRUCT)
   XET ();
 }
 
-def_process_list_elt_proto (forall_triplet_spec)
-{
-  int k;
-  const char * T = t;
-  const char * tag;
-  k = FXTRAN_str_at_level_ir (t, ci, ":", ci[0].parens, kmax);
-
-  if (k == 0)
-    return -1;
-
-  XST (_T(_S(FORALL) H _S(TRIPLET) H _S(SPEC)));
-
-  k = FXTRAN_eat_word (t);
-
-  XST (_T(_S(VARIABLE)));
-  FXTRAN_expr (t, ci, k, ctx);
-  XAD(k);
-  XET ();
-
-  XAD(1);
-  k = FXTRAN_str_at_level_ir (t, ci, ":", ci[0].parens, kmax-(t-T));
-
-  if (k == 0)
-    FXTRAN_THROW ("Expected `:'");
-
-  XST (_T(_S(LOWER) H _S(BOUND)));
-  FXTRAN_expr (t, ci, k-1, ctx);
-  XAD(k-1);
-  XET ();
-  XAD(1);
-
-  k = FXTRAN_str_at_level_ir (t, ci, ":", ci[0].parens, kmax-(t-T));
-
-  if (k)
-    {
-      XST (_T(_S(UPPER) H _S(BOUND)));
-      FXTRAN_expr (t, ci, k-1, ctx);
-      XAD(k-1);
-      XET ();
-      XAD(1);
-      tag = _T(_S(STEP));
-    }
-  else
-    {
-      tag = _T(_S(UPPER) H _S(BOUND));
-    }
-
-  XST (tag);
-  FXTRAN_expr (t, ci, kmax-(t-T), ctx);
-
-  XAD(kmax-(t-T));
-  XET ();
-
-  XET ();
-
-  return 1;
-}
-
 static void stmt_forall_extra (const char * t, const FXTRAN_char_info * ci, FXTRAN_stmt_stack * stack, 
 		               FXTRAN_xmlctx * ctx, int simple)
 {
@@ -3701,26 +3747,11 @@ static void stmt_forall_extra (const char * t, const FXTRAN_char_info * ci, FXTR
   k = stmt_bos_named_label (t, ci, ctx);
   XAD(k);
 
-  XAD(7);
-  k = FXTRAN_str_at_level (t, ci, ")", 0);
+  XAD(6);
 
-  k = FXTRAN_process_list (t, ci, ctx, ",", 
-	          	   _T(_S(FORALL) H _S(TRIPLET) H _S(SPEC) H _S(LIST)), 
-			   k-1, forall_triplet_spec, NULL);
+  k = forall_header (t, ci, stack, ctx);
 
-  XAD(k);
-
-  if (t[0] == ',')
-    {
-      XAD(1);
-      k = FXTRAN_str_at_level (t, ci, ")", 0);
-      XST (_T(_S(MASK) H _S(EXPR)));
-      FXTRAN_expr (t, ci, k-1, ctx);
-      XAD(k-1);
-      XET ();
-    }
-
-  XAD(1);
+  XAD (k);
    
   if (simple)
     {
