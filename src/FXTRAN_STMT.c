@@ -1007,10 +1007,10 @@ int FXTRAN_typespec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx 
   
   for (i = 0; FXTRAN_types[i]; i++)
     {
+      int intrinsic_typ = 0; /* Handle the TYPE(INTEGER|REAL|...) case */
       int len = strlen (FXTRAN_types[i]);
       if (strncmp (FXTRAN_types[i], t, len) == 0)
         {
-
           if (FXTRAN_types_intrinsic[i])
             {
               XST (_T(_S(INTRINSIC) H _S(TYPE) H _S(SPEC)));
@@ -1025,14 +1025,59 @@ int FXTRAN_typespec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx 
             }
 	  else
             {
-              XST (_T(_S(DERIVED) H _S(TYPE) H _S(SPEC)));
-	      XAD(len);
+              int intrinsic_len = 0;
+              
+              /* Starts with TYPE(, but maybe this is a TYPE(INTEGER) */
+              if (zstrcmp ("TYPE(", t))
+                {
+                  int j, k;
+                  for (j = 0; FXTRAN_types[j]; j++)
+                    {
+                      intrinsic_len = strlen (FXTRAN_types[j]);
+                      if (FXTRAN_types_intrinsic[j])
+                        {
+                          if (strncmp (FXTRAN_types[j], t + 5, intrinsic_len) == 0)
+                            {
+                              k = FXTRAN_eat_word (t + 5);
+                              if (k == intrinsic_len) 
+                                {
+                                  intrinsic_typ = 1;
+                                  goto stop;
+                                }
+                            }
+                        }
+                     }
+stop:
+                   {}
+                }
+
+              if (intrinsic_typ)
+                {
+                  XST (_T(_S(INTRINSIC) H _S(TYPE) H _S(SPEC)));
+                  XAD (5);
+                  XST (_T(_S(TYPE) H _S(NAME)));
+	          XAD(intrinsic_len);
+	          XET ();
+                }
+              else
+                {
+                  XST (_T(_S(DERIVED) H _S(TYPE) H _S(SPEC)));
+	          XAD(len);
+                }
 	    }
 
+          int itype = intrinsic_typ ? intrinsic_typ : i;
 
-          k = typespec_ext (t, ci, ctx, i);
+          k = typespec_ext (t, ci, ctx, itype);
 
 	  XAD(k);
+
+          if (intrinsic_typ)
+            {
+              if (t[0] != ')')
+                FXTRAN_THROW ("Malformed type spec");
+              XAD (1);
+            }
 
 	  XET ();
 	  break;
