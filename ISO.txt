@@ -1,7 +1,0 @@
-R1116 submodule is submodule-stmt
-[ specification-part ]
-[ module-subprogram-part ]
-end-submodule-stmt
-R1117 submodule-stmt is SUBMODULE ( parent-identifier ) submodule-name
-R1118 parent-identifier is ancestor-module-name [ : parent-submodule-name ]
-R1119 end-submodule-stmt is END [ SUBMODULE [ submodule-name ] ]
