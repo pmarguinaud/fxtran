@@ -6,7 +6,9 @@ use FileHandle;
 use Data::Dumper;
 
 
+
 my @x = qw[
+  a                                                              ASSIGNMENT
   abstract                                                       ABSTRACT
   ac                                                             AC
   access                                                         ACCESS
@@ -15,12 +17,12 @@ my @x = qw[
   allocate                                                       ALLOCATE
   alt                                                            ALT
   ambiguous                                                      AMBIGUOUS
+  ancestor                                                       ANCESTOR
   arg                                                            ARG
   arithmetic                                                     ARITHMETIC
   array                                                          ARRAY
   assign                                                         ASSIGN
   assigned                                                       ASSIGNED
-  a                                                              ASSIGNMENT
   associate                                                      ASSOCIATE
   association                                                    ASSOCIATION
   assumed                                                        ASSUMED
@@ -33,10 +35,11 @@ my @x = qw[
   block                                                          BLOCK
   bound                                                          BOUND
   broken                                                         BROKEN
+  cache                                                          CACHE
   call                                                           CALL
   case                                                           CASE
-  char                                                           CHAR
   character                                                      CHARACTER
+  char                                                           CHAR
   chunk                                                          CHUNK
   class                                                          CLASS
   clause                                                         CLAUSE
@@ -62,6 +65,7 @@ my @x = qw[
   cycle                                                          CYCLE
   data                                                           DATA
   deallocate                                                     DEALLOCATE
+  declare                                                        DECLARE
   decl                                                           DECL
   deferred                                                       DEFERRED
   defined                                                        DEFINED
@@ -69,22 +73,24 @@ my @x = qw[
   delete                                                         DELETE
   derived                                                        DERIVED
   designator                                                     DESIGNATOR
+  device                                                         DEVICE
   DIM                                                            DIMENSION
   do                                                             DO
   dtio                                                           DTIO
   dummy                                                          DUMMY
-  else                                                           ELSE
-  element                                                        ELEMENT
+  E                                                              EXPR
   elemental                                                      ELEMENTAL
+  element                                                        ELEMENT
+  else                                                           ELSE
   end                                                            END
   EN                                                             ENTITY
+  enter                                                          ENTER
   entry                                                          ENTRY
   enum                                                           ENUM
   enumerator                                                     ENUMERATOR
   equivalence                                                    EQUIVALENCE
   exit                                                           EXIT
   explicit                                                       EXPLICIT
-  E                                                              EXPR
   extends                                                        EXTENDS
   external                                                       EXTERNAL
   file                                                           FILE
@@ -99,51 +105,56 @@ my @x = qw[
   G                                                              GLOBAL
   goto                                                           GOTO
   group                                                          GROUP
-  if                                                             IF
   hollerith                                                      HOLLERITH
+  host                                                           HOST
+  identifier                                                     IDENTIFIER
+  if                                                             IF
   implicit                                                       IMPLICIT
   import                                                         IMPORT
   include                                                        INCLUDE
-  inquire                                                        INQUIRE
-  inquiry                                                        INQUIRY
   init                                                           INIT
   input                                                          INPUT
+  inquire                                                        INQUIRE
+  inquiry                                                        INQUIRY
+  integer                                                        INTEGER
   intent                                                         INTENT
   interface                                                      INTERFACE
-  integer                                                        INTEGER
   internal                                                       INTERNAL
   intrinsic                                                      INTRINSIC
   io                                                             IO
   is                                                             IS
   item                                                           ITEM
   iterator                                                       ITERATOR
+  kernels                                                        KERNELS
   K                                                              KIND
   label                                                          LABEL
+  LC                                                             LOCAL
   len                                                            LEN
   letter                                                         LETTER
-  LT                                                             LIST
   literal                                                        LITERAL
-  LC                                                             LOCAL
   logical                                                        LOGICAL
+  loop                                                           LOOP
   lower                                                          LOWER
+  LT                                                             LIST
   mark                                                           MARK
   mask                                                           MASK
   master                                                         MASTER
   module                                                         MODULE
-  N                                                              NAME
   named                                                          NAMED
-  NS                                                             NAMESPACE
   namelist                                                       NAMELIST
   nature                                                         NATURE
+  N                                                              NAME
   none                                                           NONE
   non_overridable                                                NON_OVERRIDABLE
   nopass                                                         NOPASS
+  NS                                                             NAMESPACE
   nullify                                                        NULLIFY
   numeric                                                        NUMERIC
   obj                                                            OBJECT
   omp                                                            OMP
-  open                                                           OPEN
+  openacc                                                        OPENACC
   openmp                                                         OPENMP
+  open                                                           OPEN
   op                                                             OPERATOR
   optional                                                       OPTIONAL
   ordered                                                        ORDERED
@@ -151,6 +162,7 @@ my @x = qw[
   parallel                                                       PARALLEL
   parameter                                                      PARAMETER
   parens                                                         PARENS
+  parent                                                         PARENT
   pass                                                           PASS
   pause                                                          PAUSE
   pointee                                                        POINTEE
@@ -159,40 +171,44 @@ my @x = qw[
   prefix                                                         PREFIX
   print                                                          PRINT
   private                                                        PRIVATE
-  proc                                                           PROC
   procedure                                                      PROCEDURE
+  proc                                                           PROC
   program                                                        PROGRAM
   protected                                                      PROTECTED
   public                                                         PUBLIC
   pure                                                           PURE
   range                                                          RANGE
-  read                                                           READ
-  reduction                                                      REDUCTION
-  R                                                              REF
   rank                                                           RANK
+  read                                                           READ
   real                                                           REAL
   recursive                                                      RECURSIVE
+  reduction                                                      REDUCTION
   rename                                                         RENAME
   repeat                                                         REPEAT
   result                                                         RESULT
   return                                                         RETURN
   rewind                                                         REWIND
-  save                                                           SAVE
+  routine                                                        ROUTINE
+  R                                                              REF
   saved                                                          SAVED
+  save                                                           SAVE
   section                                                        SECTION
   sections                                                       SECTIONS
-  select                                                         SELECT
   selectcase                                                     SELECTCASE
-  selecttype                                                     SELECTTYPE
   selector                                                       SELECTOR
+  select                                                         SELECT
+  selecttype                                                     SELECTTYPE
   sequence                                                       SEQUENCE
+  serial                                                         SERIAL
   set                                                            SET
   shape                                                          SHAPE
   share                                                          SHARE
+  shutdown                                                       SHUTDOWN
   single                                                         SINGLE
   size                                                           SIZE
-  spec                                                           SPEC
   specific                                                       SPECIFIC
+  spec                                                           SPEC
+  S                                                              SYMBOL
   star                                                           STAR
   status                                                         STATUS
   step                                                           STEP
@@ -200,9 +216,9 @@ my @x = qw[
   stop                                                           STOP
   stride                                                         STRIDE
   string                                                         STRING
+  submodule                                                      SUBMODULE
   subroutine                                                     SUBROUTINE
   subscript                                                      SUBSCRIPT
-  S                                                              SYMBOL
   target                                                         TARGET
   test                                                           TEST
   then                                                           THEN
@@ -211,12 +227,13 @@ my @x = qw[
   T                                                              TYPE
   unit                                                           UNIT
   unkwown                                                        UNKNOWN
+  update                                                         UPDATE
   upper                                                          UPPER
-  use                                                            USE
   user                                                           USER
+  use                                                            USE
   value                                                          VALUE
-  V                                                              VARIABLE
   volatile                                                       VOLATILE
+  V                                                              VARIABLE
   wait                                                           WAIT
   where                                                          WHERE
   work                                                           WORK
@@ -254,16 +271,16 @@ sub lookupU2S
 {
   my $x = shift;
   unless (exists ($U2S{$x}))
-    {   
+    {
       my @x = split (m/-/o, $x);
       $_ = $U2S{$_} for (@x);
-      if (grep { !defined ($_) } @x) 
+      if (grep { !defined ($_) } @x)
         {
           die ("Cannot translate $x\n");
         }
       $U2S{$x} = join ('-', @x);
-      $S2U{$U2S{$x}} = $x; 
-    }   
+      $S2U{$U2S{$x}} = $x;
+    }
   return $U2S{$x};
 }
 
@@ -291,23 +308,23 @@ EOF
 
 {
   my $fhh = 'FileHandle'->new ('>FXTRAN_ALPHA.h');
-  
+
   $fhh->print (<< 'EOF');
 #ifndef _FXTRAN_ALPHA_H
 #define _FXTRAN_ALPHA_H
-  
-  
+
+
 #define _S(x) FXTRAN_STRING_##x
 #define H "-"
 #define _T(x) x
-  
+
 EOF
-  
+
   while (my ($str, $key) = splice (@x, 0, 2))
     {
       $fhh->printf ("#define FXTRAN_STRING_%-30s \"%s\"\n", $key, $str);
     }
-  
+
   $fhh->print ("#endif\n");
 
 }
