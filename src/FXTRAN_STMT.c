@@ -2176,6 +2176,17 @@ static int forall_header (const char * t, const FXTRAN_char_info * ci, FXTRAN_st
 
   XAD(1);
 
+  k = FXTRAN_str_at_level (t, ci, "::", 1);
+
+  if (k > 0)
+    {
+      k = FXTRAN_typespec (t, ci, ctx);
+      XAD (k);
+      if (! zstrcmp ("::", t))
+        FXTRAN_THROW ("Malformed FORALL header");
+      XAD (2);
+    }
+
   k = FXTRAN_str_at_level (t, ci, ")", 0);
 
   k = FXTRAN_process_list (t, ci, ctx, ",", 
