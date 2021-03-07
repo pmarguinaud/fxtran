@@ -2290,58 +2290,62 @@ def_extra_proto (DO)
       XAD(k-1);
       XET ();
     }
-  else if (zstrcmp ("CONCURRENT", t))
-    {
-      XAD(10);
-      if (t[0] == '(')
-        {
-          int k = forall_header (t, ci, stack, ctx);
-          XAD(k);
-        }
-    }
   else
     {
-      int k = FXTRAN_eat_word (t);
-      XST (_T(_S(DO) H _S(VARIABLE)));
-      FXTRAN_expr (t, ci, k, ctx);
-      XAD(k);
-      XET ();
-      if (t[0] != '=')
-        FXTRAN_THROW ("Expected `='"); 
-      XAD(1);
+      int k = FXTRAN_str_at_level (t, ci, "=", 0);
+      if (k)
+        {
+          k = FXTRAN_eat_word (t);
+          XST (_T(_S(DO) H _S(VARIABLE)));
+          FXTRAN_expr (t, ci, k, ctx);
+          XAD(k);
+          XET ();
+          if (t[0] != '=')
+            FXTRAN_THROW ("Expected `='"); 
+          XAD(1);
 
-      k = FXTRAN_str_at_level (t, ci, ",", 0);
-      if (k == 0)
-        FXTRAN_THROW ("Expected `,'"); 
+          k = FXTRAN_str_at_level (t, ci, ",", 0);
+          if (k == 0)
+            FXTRAN_THROW ("Expected `,'"); 
 
-      XST (_T(_S(LOWER) H _S(BOUND)));
-      FXTRAN_expr (t, ci, k-1, ctx);
-      XAD(k-1);
-      XET ();
-      XAD(1);
+          XST (_T(_S(LOWER) H _S(BOUND)));
+          FXTRAN_expr (t, ci, k-1, ctx);
+          XAD(k-1);
+          XET ();
+          XAD(1);
 
-      k = FXTRAN_str_at_level (t, ci, ",", 0);
-      if (k == 0)
-        k = strlen (t);
-      else
-        k = k - 1;
+          k = FXTRAN_str_at_level (t, ci, ",", 0);
+          if (k == 0)
+            k = strlen (t);
+          else
+            k = k - 1;
 
-      XST (_T(_S(UPPER) H _S(BOUND)));
-      FXTRAN_expr (t, ci, k, ctx);
-      XAD(k);
-      XET ();
+          XST (_T(_S(UPPER) H _S(BOUND)));
+          FXTRAN_expr (t, ci, k, ctx);
+          XAD(k);
+          XET ();
 
-      if (t[0] == '\0')
-        return;
+          if (t[0] == '\0')
+            return;
 
-      XAD(1);
-        
-      k = strlen (t);
+          XAD(1);
+            
+          k = strlen (t);
 
-      XST (_T(_S(STEP)));
-      FXTRAN_expr (t, ci, k, ctx);
-      XAD(k);
-      XET ();
+          XST (_T(_S(STEP)));
+          FXTRAN_expr (t, ci, k, ctx);
+          XAD(k);
+          XET ();
+        }
+      else if (zstrcmp ("CONCURRENT", t))
+        {
+          XAD(10);
+          if (t[0] == '(')
+            {
+              int k = forall_header (t, ci, stack, ctx);
+              XAD(k);
+            }
+        }
     }
 }
 
