@@ -339,10 +339,8 @@ static int FXTRAN_ref_parens (const char * t, const FXTRAN_char_info * ci,
         XET ();
 	break;
       case FXTRAN_grok_parens_RANGE:
-        XST (_T(_S(PARENS) H _S(REF)));
 	array_ref (t, ci, ctx);
         XAD(k);  
-        XET ();
 	break;
       case FXTRAN_grok_parens_ITRTR:
 	FXTRAN_THROW ("Malformed expr");
