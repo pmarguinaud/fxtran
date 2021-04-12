@@ -12,6 +12,10 @@ typedef struct FXTRAN_opts
   int namelist_diff;
   int openmp;
   int openacc;
+  char * directive;
+  char * directive_st;
+  char * directive_ct;
+  int directive_ln;
   int flat_expr;
   int flat_op_expr;
   int show_lines;

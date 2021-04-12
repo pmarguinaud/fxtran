@@ -103,8 +103,22 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (cray-pointer, cray_pointer, Allow Cray pointers);
       FXTRAN_handle_flag (help, help, Print help message);
 
+      FXTRAN_handle_charopt (directive, directive, Directive name);
       FXTRAN_handle_charopt (o, xfile, Output file);
       FXTRAN_handle_intopt (line-length, line_length, Set source code line length);
+
+      if (opts->directive)
+        {
+          opts->directive_ln = strlen (opts->directive) + 2;
+          opts->directive_st = (char *)malloc (opts->directive_ln + 1); 
+          strcpy (opts->directive_st, "$");
+          strcat (opts->directive_st, opts->directive); 
+          strcat (opts->directive_st, " ");
+          opts->directive_ct = (char *)malloc (opts->directive_ln + 1); 
+          strcpy (opts->directive_ct, "$");
+          strcat (opts->directive_ct, opts->directive); 
+          strcat (opts->directive_ct, "&");
+        }
 
       if (help)
         return 0;

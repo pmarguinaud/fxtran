@@ -19,6 +19,7 @@
 #include "FXTRAN_ERROR.h"
 #include "FXTRAN_OMP.h"
 #include "FXTRAN_ACC.h"
+#include "FXTRAN_DDD.h"
 
 
 static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int i2)
@@ -54,21 +55,23 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
      {                                   \
        omp = 0;                          \
        acc = 0;                          \
+       ddd = 0;                          \
        S = 1;                            \
      }                                   \
    else                                  \
      {                                   \
        S = S && (fc_isspace (text[i]));  \
      }                                   \
-   if ((!omp) && (!acc) && c     &&      \
-       (ci[i].mask != FXTRAN_SPC) &&     \
-       (ci[i].mask != FXTRAN_COM) &&     \
-       (ci[i].mask != FXTRAN_OMD) &&     \
-       (ci[i].mask != FXTRAN_ACC) &&     \
-       (ci[i].mask != FXTRAN_OMC))       \
+   if ((!omp) && (!acc) && (!ddd) && c   \
+    && (ci[i].mask != FXTRAN_SPC)        \
+    && (ci[i].mask != FXTRAN_COM)        \
+    && (ci[i].mask != FXTRAN_OMD)        \
+    && (ci[i].mask != FXTRAN_ACC)        \
+    && (ci[i].mask != FXTRAN_OMC))       \
      {                                   \
        OMP = 0;                          \
        ACC = 0;                          \
+       DDD = 0;                          \
      }                                   \
    i++;                                  \
  } while (0)
@@ -97,6 +100,11 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
    || (strncasecmp (&text[i+1], "$acc&", 5) == 0)) \
 	 ? FXTRAN_handle_acc (text, ci, i, ACC)    \
 	          : 0;                             \
+       int kddd =  ctx->opts.directive &&          \
+     ((strncasecmp (&text[i+1], ctx->opts.directive_st, ctx->opts.directive_ln) == 0)  \
+   || (strncasecmp (&text[i+1], ctx->opts.directive_ct, ctx->opts.directive_ln) == 0)) \
+	 ? FXTRAN_handle_ddd (text, ci, i, DDD, &ctx->opts)                            \
+	          : 0;                             \
        if (komp != 0)                              \
          {                                         \
            komp--;                                 \
@@ -112,6 +120,14 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
              FXTRAN_NEXT_CHAR;                     \
            ACC = 1;                                \
            acc = 1;                                \
+         }                                         \
+       else if (kddd != 0)                         \
+         {                                         \
+           kddd--;                                 \
+           for (; kddd; kddd--)                    \
+             FXTRAN_NEXT_CHAR;                     \
+           DDD = 1;                                \
+           ddd = 1;                                \
          }                                         \
        else                                        \
          {                                         \
@@ -194,6 +210,8 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
   char omp = 0; /* true if current line starts with OMP sentinel */
   char ACC = 0; /* true if inside ACC directive */
   char acc = 0; /* true if current line starts with ACC sentinel */
+  char DDD = 0;
+  char ddd = 0;
 
   int c    = 0;  /* column number */
   int l    = 0;  /* line number */
@@ -376,6 +394,7 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
             case FXTRAN_LAB:
             case FXTRAN_OMD:
             case FXTRAN_ACC:
+            case FXTRAN_DDD:
             case FXTRAN_OPT:
             case FXTRAN_CPP:
             case FXTRAN_COM:

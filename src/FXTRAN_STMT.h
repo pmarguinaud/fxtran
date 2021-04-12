@@ -197,7 +197,7 @@ int FXTRAN_stmt_stack_ok (FXTRAN_stmt_stack *);
 int FXTRAN_stmt_in (FXTRAN_stmt_stack *, FXTRAN_stmt_type);
 
 
-void FXTRAN_stmt (const char *, const FXTRAN_char_info *, FXTRAN_stmt_stack *, FXTRAN_xmlctx * ctx, int, int, int);
+void FXTRAN_stmt (const char *, const FXTRAN_char_info *, FXTRAN_stmt_stack *, FXTRAN_xmlctx * ctx, int, int, int, int);
 int FXTRAN_typespec (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *);
 
 #define def_process_list_elt_proto(f) \

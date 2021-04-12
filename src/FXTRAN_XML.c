@@ -237,6 +237,9 @@ static int adv_pos0 (FXTRAN_xmlctx * ctx, int pos, int noendtag, int print)
                 dump_txt_by_mask (FXTRAN_OMC);
                 dump_txt_by_mask (FXTRAN_ACC);
 #undef dump_txt_by_mask
+                case FXTRAN_DDD:
+                  dump_txt_tag (ctx, pos1+i1, pos1+i2, FXTRAN_DDD, ctx->opts.directive);
+                  break;
                 default:
                   FXTRAN_THROW ("Unexpected mask: `%c'", mask1);
               }
