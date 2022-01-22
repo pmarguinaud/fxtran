@@ -2,7 +2,7 @@
  * FXTRAN -- Philippe Marguinaud -- pmarguinaud@hotmail.com
  * Distributed under the GNU General Public License
  */
-#include "FXTRAN_CPP.h"
+#include "FXTRAN_LOAD.h"
 #include "FXTRAN_CPP_INTF.h"
 #include "FXTRAN_XML.h"
 #include "FXTRAN_FBUFFER.h"
@@ -100,22 +100,33 @@ static const char * resolve_filename (const char * filename, char ** includes)
   return NULL;
 }
 
-static void FXTRAN_load_nocpp0 (f_buffer * fb, const char * filename, FXTRAN_xmlctx * ctx, 
-		                FXTRAN_cpp2loc_array * pcla, FXTRAN_file ** pcurrent, 
-				FXTRAN_file ** proot)
+static void FXTRAN_load_nocpp0 (f_buffer * fb, const char * filename, char * text,
+                                FXTRAN_xmlctx * ctx, FXTRAN_cpp2loc_array * pcla, 
+                                FXTRAN_file ** pcurrent, FXTRAN_file ** proot)
 {
   char * t0;
   char * t0bol;
   const char * filename_r;
 
-  filename_r = resolve_filename (filename, ctx->opts.includes);
+  if (filename)
+    {
+      filename_r = resolve_filename (filename, ctx->opts.includes);
+      if (filename_r == NULL)
+        FXTRAN_ABORT ("Cannot find included file `%s'", filename);
+      t0 = FXTRAN_slurp (filename_r);
+      FXTRAN_file_enter (filename_r, t0, pcurrent, proot);
+    }
+  else if (text)
+    {
+      filename_r = "<string>";
+      t0 = text;
+      FXTRAN_file_enter (filename_r, t0, pcurrent, proot);
+    }
+  else
+    {
+      FXTRAN_ABORT ("Expected filename or text");
+    }
 
-  if (filename_r == NULL)
-    FXTRAN_ABORT ("Cannot find included file `%s'", filename);
-
-  t0 = FXTRAN_slurp (filename_r);
-
-  FXTRAN_file_enter (filename_r, t0, pcurrent, proot);
 
   for (t0bol = t0; *t0bol; t0bol++)
     {
@@ -142,7 +153,7 @@ static void FXTRAN_load_nocpp0 (f_buffer * fb, const char * filename, FXTRAN_xml
             }
 	  else
             {
-              FXTRAN_load_nocpp0 (fb, inc, ctx, pcla, pcurrent, proot);
+              FXTRAN_load_nocpp0 (fb, inc, NULL, ctx, pcla, pcurrent, proot);
 	    }
         }
       else
@@ -156,10 +167,10 @@ static void FXTRAN_load_nocpp0 (f_buffer * fb, const char * filename, FXTRAN_xml
 
   FXTRAN_file_leave (pcurrent, proot);
 
-  free (t0);
+  if (text == NULL)
+    free (t0);
 
 }
-
 
 char * FXTRAN_load_nocpp (const char * f, FXTRAN_xmlctx * ctx)
 {
@@ -172,7 +183,7 @@ char * FXTRAN_load_nocpp (const char * f, FXTRAN_xmlctx * ctx)
  
   FXTRAN_f_buffer_init (&fb);
 
-  FXTRAN_load_nocpp0 (&fb, f, ctx, &cla, &current, &ctx->root);
+  FXTRAN_load_nocpp0 (&fb, f, NULL, ctx, &cla, &current, &ctx->root);
 
   FXTRAN_f_buffer_take (&fb, &text);
   FXTRAN_take_cpp2loc_array (&cla, &ctx->c2l);
@@ -181,3 +192,25 @@ char * FXTRAN_load_nocpp (const char * f, FXTRAN_xmlctx * ctx)
 
   return text;
 }
+
+char * FXTRAN_load_text (char * text, FXTRAN_xmlctx * ctx)
+{
+  FXTRAN_file * current = NULL;
+  f_buffer fb;
+  FXTRAN_cpp2loc_array cla;
+
+  FXTRAN_init_cpp2loc_array (&cla);
+ 
+  FXTRAN_f_buffer_init (&fb);
+
+  FXTRAN_load_nocpp0 (&fb, NULL, text, ctx, &cla, &current, &ctx->root);
+
+  FXTRAN_f_buffer_take (&fb, &text);
+  FXTRAN_take_cpp2loc_array (&cla, &ctx->c2l);
+
+  text_cleanup (ctx, &text);
+
+  return text;
+}
+
+
