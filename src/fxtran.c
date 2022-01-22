@@ -15,10 +15,7 @@
 #include "FXTRAN_ERROR.h"
 #include "FXTRAN_MISC.h"
 #include "FXTRAN_CPP.h"
-
-#define XUL_NS "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-#define FXT_NS_SYN "http://fxtran.net/#syntax"
-#define FXT_NS_NAM "http://fxtran.net/#namelist"
+#include "FXTRAN_NS.h"
 
 int main (int argc, char * argv[])
 {
@@ -72,8 +69,10 @@ int main (int argc, char * argv[])
 
   FXTRAN_xml_finish_doc (ctx);
 
-  fprintf (fpx, "<?xml version=\"1.0\"?><?xml-stylesheet "
-		"type=\"text/css\" href=\"fxtran.css\"?>");
+  fprintf (fpx, "<?xml version=\"1.0\"?>");
+
+  if (ctx->opts.css)
+    fprintf (fpx, "<?xml-stylesheet type=\"text/css\" href=\"fxtran.css\"?>");
 
   if (ctx->opts.namelist)
     {
