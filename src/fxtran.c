@@ -4,16 +4,22 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "FXTRAN_RUN.h"
 
 int main (int argc, char * argv[])
 {
+#ifdef UNDEF
+  char * Xml;
   char * Text = 
 "X = Y (1:KLON)\n"
 "END\n"
 ;
 
-  return FXTRAN_RUN (argc, argv, Text, NULL);
-//return run (argc, argv, NULL, NULL);
+  int c = FXTRAN_RUN (argc, argv, Text, &Xml);
+  printf ("%s", Xml);
+  return c;
+#endif
+  return FXTRAN_RUN (argc, argv, NULL, NULL);
 }

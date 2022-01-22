@@ -9,6 +9,7 @@
 #include "FXTRAN_FIXED.h"
 #include "FXTRAN_FREE.h"
 #include "FXTRAN_NAMELIST.h"
+#include "FXTRAN_FILE_FUNC.h"
 #include "FXTRAN_FBUFFER.h"
 #include "FXTRAN_XML.h"
 #include "FXTRAN_OPTS.h"
@@ -75,6 +76,13 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
                form_str (ctx->opts.form), ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc);
     }
 
+
+  // Force entering current file
+  if (Text) 
+    {
+      FXTRAN_file_change (NULL, ctx->root, ctx);
+    }
+
   if (ctx->opts.namelist)
     FXTRAN_NAMELIST_decode (text, ctx);
   else
@@ -107,7 +115,6 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
 
   FXTRAN_f_buffer_printf (&ctx->fb, "\n");
 
-
   if (strcmp (ctx->opts.xfile, "-") == 0)
     fpx = stdout;
   else
@@ -117,6 +124,15 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
     FXTRAN_THROW ("Cannot open output file `%s'\n", ctx->opts.xfile);
 
   fwrite (FXTRAN_f_buffer_str (&ctx->fb), FXTRAN_f_buffer_len (&ctx->fb), 1, fpx);
+
+  if (Text)
+    {
+      int len = FXTRAN_f_buffer_len (&ctx->fb);
+      char * buf = FXTRAN_f_buffer_str (&ctx->fb);
+      *Xml = (char *)malloc (len + 1);
+      memcpy (*Xml, buf, len);
+      (*Xml)[0] = '\0';
+    }
 
   fclose (fpx);
 

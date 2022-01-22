@@ -118,7 +118,7 @@ static void FXTRAN_load_nocpp0 (f_buffer * fb, const char * filename, char * tex
     }
   else if (text)
     {
-      filename_r = "<string>";
+      filename_r = "&lt;string&gt;";
       t0 = text;
       FXTRAN_file_enter (filename_r, t0, pcurrent, proot);
     }
