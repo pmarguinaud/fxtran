@@ -115,26 +115,28 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
 
   FXTRAN_f_buffer_printf (&ctx->fb, "\n");
 
-  if (strcmp (ctx->opts.xfile, "-") == 0)
-    fpx = stdout;
-  else
-    fpx = fopen (ctx->opts.xfile, "w");
-
-  if (fpx == NULL)
-    FXTRAN_THROW ("Cannot open output file `%s'\n", ctx->opts.xfile);
-
-  fwrite (FXTRAN_f_buffer_str (&ctx->fb), FXTRAN_f_buffer_len (&ctx->fb), 1, fpx);
-
   if (Text)
     {
       int len = FXTRAN_f_buffer_len (&ctx->fb);
       char * buf = FXTRAN_f_buffer_str (&ctx->fb);
       *Xml = (char *)malloc (len + 1);
       memcpy (*Xml, buf, len);
-      (*Xml)[0] = '\0';
+      (*Xml)[len] = '\0';
     }
+  else
+    {
+      if (strcmp (ctx->opts.xfile, "-") == 0)
+        fpx = stdout;
+      else
+        fpx = fopen (ctx->opts.xfile, "w");
 
-  fclose (fpx);
+      if (fpx == NULL)
+        FXTRAN_THROW ("Cannot open output file `%s'\n", ctx->opts.xfile);
+
+      fwrite (FXTRAN_f_buffer_str (&ctx->fb), FXTRAN_f_buffer_len (&ctx->fb), 1, fpx);
+
+      fclose (fpx);
+    }
 
   FXTRAN_free_opts (ctx);
 

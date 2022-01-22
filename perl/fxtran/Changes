@@ -1,0 +1,6 @@
+Revision history for Perl extension fxtran.
+
+0.01  Fri Jan 21 18:49:08 2022
+	- original version; created by h2xs 1.23 with options
+		-A -n fxtran
+
