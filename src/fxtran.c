@@ -17,11 +17,24 @@
 #include "FXTRAN_CPP.h"
 #include "FXTRAN_NS.h"
 
+static const char * form_str (int form)
+{
+  switch (form)
+    {
+      case FXTRAN_FORM_FREE:
+        return "FREE";
+      case FXTRAN_FORM_FIXED:
+        return "FIXED";
+      default:
+        return "UNKNOWN";
+    }
+  return NULL;
+}
+
 int main (int argc, char * argv[])
 {
   FILE * fpx;
   char * text;
-  const char * form = NULL;
   FXTRAN_xmlctx * ctx;
 
   FXTRAN_xmlctx_new (&ctx);
@@ -36,13 +49,24 @@ int main (int argc, char * argv[])
       return 0;
     }
 
-  if (strcmp (ctx->opts.xfile, "-") == 0)
-    fpx = stdout;
-  else
-    fpx = fopen (ctx->opts.xfile, "w");
+  FXTRAN_f_buffer_printf (&ctx->fb, "<?xml version=\"1.0\"?>");
 
-  if (fpx == NULL)
-    FXTRAN_THROW ("Cannot open output file `%s'\n", ctx->opts.xfile);
+  if (ctx->opts.css)
+    FXTRAN_f_buffer_printf (&ctx->fb, "<?xml-stylesheet type=\"text/css\" href=\"fxtran.css\"?>");
+
+  if (ctx->opts.namelist)
+    {
+      FXTRAN_f_buffer_printf (&ctx->fb, "<namelist xmlns=\"" FXT_NS_NAM "\">");
+    }
+  else
+    {
+      if (ctx->opts.xul_wrap)
+        FXTRAN_f_buffer_printf (&ctx->fb, "<window xmlns=\"" XUL_NS "\"><scrollbox flex=\"1\" style=\"overflow:auto;\"><description>");
+     
+      FXTRAN_f_buffer_printf (&ctx->fb, "<object xmlns=\"" FXT_NS_SYN "\" source-form=\"%s\""
+            	" source-width=\"%d\" openmp=\"%d\" openacc=\"%d\">", 
+               form_str (ctx->opts.form), ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc);
+    }
 
   if (ctx->opts.cpp)
     text = FXTRAN_load_cpp (ctx->opts.ffile, ctx);
@@ -56,11 +80,9 @@ int main (int argc, char * argv[])
       {
         case FXTRAN_FORM_FREE:
           FXTRAN_FREE_decode (text, ctx);
-          form = "FREE";
           break;
         case FXTRAN_FORM_FIXED:
           FXTRAN_FIXED_decode (text, ctx);
-          form = "FIXED";
           break;
         default:
           FXTRAN_THROW ("Unknown source code form");
@@ -69,41 +91,30 @@ int main (int argc, char * argv[])
 
   FXTRAN_xml_finish_doc (ctx);
 
-  fprintf (fpx, "<?xml version=\"1.0\"?>");
-
-  if (ctx->opts.css)
-    fprintf (fpx, "<?xml-stylesheet type=\"text/css\" href=\"fxtran.css\"?>");
-
   if (ctx->opts.namelist)
     {
-      fprintf (fpx, "<namelist xmlns=\"" FXT_NS_NAM "\">");
+      FXTRAN_f_buffer_printf (&ctx->fb, "</namelist>");
     }
   else
     {
-      if (ctx->opts.xul_wrap)
-        fprintf (fpx, "<window xmlns=\"" XUL_NS "\"><scrollbox flex=\"1\" style=\"overflow:auto;\"><description>");
+      FXTRAN_f_buffer_printf (&ctx->fb, "</object>");
      
-      fprintf (fpx, "<object xmlns=\"" FXT_NS_SYN "\" source-form=\"%s\""
-            	" source-width=\"%d\" openmp=\"%d\" openacc=\"%d\">", 
-               form, ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc);
+      if (ctx->opts.xul_wrap)
+        FXTRAN_f_buffer_printf (&ctx->fb, "</description></scrollbox></window>");
     }
 
+  FXTRAN_f_buffer_printf (&ctx->fb, "\n");
+
+
+  if (strcmp (ctx->opts.xfile, "-") == 0)
+    fpx = stdout;
+  else
+    fpx = fopen (ctx->opts.xfile, "w");
+
+  if (fpx == NULL)
+    FXTRAN_THROW ("Cannot open output file `%s'\n", ctx->opts.xfile);
 
   fwrite (FXTRAN_f_buffer_str (&ctx->fb), FXTRAN_f_buffer_len (&ctx->fb), 1, fpx);
-
-  if (ctx->opts.namelist)
-    {
-      fprintf (fpx, "</namelist>");
-    }
-  else
-    {
-      fprintf (fpx, "</object>");
-     
-      if (ctx->opts.xul_wrap)
-        fprintf (fpx, "</description></scrollbox></window>");
-    }
-
-  fprintf (fpx, "\n");
 
   fclose (fpx);
 
