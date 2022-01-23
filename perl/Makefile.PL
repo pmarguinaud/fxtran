@@ -11,9 +11,9 @@ WriteMakefile(
     VERSION_FROM      => 'lib/fxtran.pm', # finds $VERSION, requires EU::MM from perl >= 5.5
     PREREQ_PM         => {}, # e.g., Module::Name => 1.1
     ABSTRACT_FROM     => 'lib/fxtran.pm', # retrieve abstract from module
-    AUTHOR            => 'Philippe Marguinaud <phi001@>',
+    AUTHOR            => 'Philippe Marguinaud <pmarguinaud@hotmail.com>',
     LICENSE           => 'GPL',
-    LIBS              => ["-L$pwd/../../lib -lfxtran"], 
+    LIBS              => ["-L$pwd/../lib -lfxtran"], 
     DEFINE            => '', 
-    INC               => '-I../../src', 
+    INC               => '-I../src', 
 );

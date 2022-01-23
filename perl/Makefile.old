@@ -12,12 +12,12 @@
 #   MakeMaker Parameters:
 
 #     ABSTRACT_FROM => q[lib/fxtran.pm]
-#     AUTHOR => [q[Philippe Marguinaud <phi001@>]]
+#     AUTHOR => [q[Philippe Marguinaud <pmarguinaud@hotmail.com>]]
 #     BUILD_REQUIRES => {  }
 #     CONFIGURE_REQUIRES => {  }
 #     DEFINE => q[]
-#     INC => q[-I../../src]
-#     LIBS => [q[-L/home/phi001/fxtran/master/perl/fxtran/../../lib -lfxtran]]
+#     INC => q[-I../src]
+#     LIBS => [q[-L/home/phi001/fxtran/master/perl/../lib -lfxtran]]
 #     LICENSE => q[GPL]
 #     NAME => q[fxtran]
 #     PREREQ_PM => {  }
@@ -156,7 +156,7 @@ BASEEXT = fxtran
 PARENT_NAME = 
 DLBASE = $(BASEEXT)
 VERSION_FROM = lib/fxtran.pm
-INC = -I../../src
+INC = -I../src
 DEFINE = 
 OBJECT = $(BASEEXT)$(OBJ_EXT)
 LDFROM = $(OBJECT)
@@ -292,8 +292,8 @@ MPOLLUTE =
 # fxtran might depend on some other libraries:
 # See ExtUtils::Liblist for details
 #
-EXTRALIBS = -L/home/phi001/fxtran/master/perl/fxtran/../../lib -lfxtran
-LDLOADLIBS = -L/home/phi001/fxtran/master/perl/fxtran/../../lib -lfxtran
+EXTRALIBS = -L/home/phi001/fxtran/master/perl/../lib -lfxtran
+LDLOADLIBS = -L/home/phi001/fxtran/master/perl/../lib -lfxtran
 BSLOADLIBS = 
 
 
@@ -314,7 +314,7 @@ PASTHRU = LIBPERL_A="$(LIBPERL_A)"\
 	LD="$(LD)"\
 	PREFIX="$(PREFIX)"\
 	PASTHRU_DEFINE=' $(PASTHRU_DEFINE)'\
-	PASTHRU_INC='-I../../src $(PASTHRU_INC)'
+	PASTHRU_INC='-I../src $(PASTHRU_INC)'
 
 
 # --- MakeMaker special_targets section:
@@ -587,7 +587,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '---' > META_new.yml
 	$(NOECHO) $(ECHO) 'abstract: '\''Perl extension for blah blah blah'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'author:' >> META_new.yml
-	$(NOECHO) $(ECHO) '  - '\''Philippe Marguinaud <phi001@>'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) '  - '\''Philippe Marguinaud <pmarguinaud@hotmail.com>'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'build_requires:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  ExtUtils::MakeMaker: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'configure_requires:' >> META_new.yml
@@ -611,7 +611,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '{' > META_new.json
 	$(NOECHO) $(ECHO) '   "abstract" : "Perl extension for blah blah blah",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "author" : [' >> META_new.json
-	$(NOECHO) $(ECHO) '      "Philippe Marguinaud <phi001@>"' >> META_new.json
+	$(NOECHO) $(ECHO) '      "Philippe Marguinaud <pmarguinaud@hotmail.com>"' >> META_new.json
 	$(NOECHO) $(ECHO) '   ],' >> META_new.json
 	$(NOECHO) $(ECHO) '   "dynamic_config" : 1,' >> META_new.json
 	$(NOECHO) $(ECHO) '   "generated_by" : "ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150010",' >> META_new.json
@@ -1010,10 +1010,10 @@ testdb_dynamic :: dynamic pure_all
 subdirs-test_static :: static pure_all
 
 test_static :: subdirs-test_static $(MAP_TARGET)
-	PERL_DL_NONLAZY=1 "/home/phi001/fxtran/master/perl/fxtran/$(MAP_TARGET)" $(MAP_PERLINC) "-MExtUtils::Command::MM" "-MTest::Harness" "-e" "undef *Test::Harness::Switches; test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
+	PERL_DL_NONLAZY=1 "/home/phi001/fxtran/master/perl/$(MAP_TARGET)" $(MAP_PERLINC) "-MExtUtils::Command::MM" "-MTest::Harness" "-e" "undef *Test::Harness::Switches; test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
 
 testdb_static :: static pure_all $(MAP_TARGET)
-	PERL_DL_NONLAZY=1 "/home/phi001/fxtran/master/perl/fxtran/$(MAP_TARGET)" $(MAP_PERLINC) "-I$(INST_LIB)" "-I$(INST_ARCHLIB)" $(TEST_FILE)
+	PERL_DL_NONLAZY=1 "/home/phi001/fxtran/master/perl/$(MAP_TARGET)" $(MAP_PERLINC) "-I$(INST_LIB)" "-I$(INST_ARCHLIB)" $(TEST_FILE)
 
 
 
@@ -1022,7 +1022,7 @@ testdb_static :: static pure_all $(MAP_TARGET)
 ppd :
 	$(NOECHO) $(ECHO) '<SOFTPKG NAME="fxtran" VERSION="0.01">' > fxtran.ppd
 	$(NOECHO) $(ECHO) '    <ABSTRACT>Perl extension for blah blah blah</ABSTRACT>' >> fxtran.ppd
-	$(NOECHO) $(ECHO) '    <AUTHOR>Philippe Marguinaud &lt;phi001@&gt;</AUTHOR>' >> fxtran.ppd
+	$(NOECHO) $(ECHO) '    <AUTHOR>Philippe Marguinaud &lt;pmarguinaud@hotmail.com&gt;</AUTHOR>' >> fxtran.ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> fxtran.ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="x86_64-linux-gnu-thread-multi-5.30" />' >> fxtran.ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> fxtran.ppd
