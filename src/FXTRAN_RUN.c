@@ -78,10 +78,7 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
 
 
   // Force entering current file
-  if (Text) 
-    {
-      FXTRAN_file_change (NULL, ctx->root, ctx);
-    }
+  FXTRAN_file_change (NULL, ctx->root, ctx);
 
   if (ctx->opts.namelist)
     FXTRAN_NAMELIST_decode (text, ctx);
