@@ -1,4 +1,13 @@
 *.o
 *.a
 *.x
-fxtran
+bin
+lib
+perl/fxtran/MYMETA.json
+perl/fxtran/MYMETA.yml
+perl/fxtran/Makefile
+perl/fxtran/blib/
+perl/fxtran/fxtran.bs
+perl/fxtran/fxtran.c
+perl/fxtran/pm_to_blib
+*.swp

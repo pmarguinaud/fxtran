@@ -22,7 +22,7 @@ $(LIB): $(OBJ)
 FXTRAN_ALPHA.h: FXTRAN_ALPHA.pl
 	@./FXTRAN_ALPHA.pl
 clean:
-	\rm -f *.o $(EXE) *~
+	\rm -f *.o $(EXE) *~ $(LIB)
 	cd cpp && make clean
 
 

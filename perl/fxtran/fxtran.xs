@@ -11,17 +11,22 @@
 MODULE = fxtran		PACKAGE = fxtran		
 
 void
-hello()
-    CODE:
-        printf("Hello, world!\n");
+run (...)
+PPCODE:
+        int argc = items+1;
+        char * argv[argc];
+        argv[0] = "";
+        for (int i = 0; i < argc-2; i++)
+          argv[i+1] = SvPV_nolen (ST (i));
+        argv[argc-1] = "_.F90";
+   
         char * Xml;
-        char * Text = "X = Y (1:KLON)\nEND\n" ;
-        int argc = 2;
-        char * argv[2] = {"", "_.F90"};
+        char * Text = SvPV_nolen (ST (items-1));
+
         FXTRAN_RUN (argc, argv, Text, &Xml);
-        FILE * fp = fopen ("_.xml", "w");
-        fprintf (fp, "%s", Xml);
-        fclose (fp);
+
+        EXTEND (SP, 1);
+        PUSHs (sv_2mortal (newSVpv (Xml, 0)));
+ 
+        free (Xml);
         
-
-
