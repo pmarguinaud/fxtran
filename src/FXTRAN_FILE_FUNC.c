@@ -14,7 +14,7 @@
 void FXTRAN_handle_empty (FXTRAN_xmlctx * ctx)
 {
   FXTRAN_cpp2loc * Loc = &ctx->c2l[0];
-  int empty = FXTRAN_f_buffer_len (&ctx->fb) == 0;
+  int empty = FXTRAN_f_buffer_empty (&ctx->fb);
 
   if (!empty)
     return;

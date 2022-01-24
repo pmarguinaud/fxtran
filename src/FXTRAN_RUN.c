@@ -76,9 +76,7 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
                form_str (ctx->opts.form), ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc);
     }
 
-
-  // Force entering current file
-  FXTRAN_file_change (NULL, ctx->root, ctx);
+  ctx->fb.len0 = FXTRAN_f_buffer_len (&ctx->fb);
 
   if (ctx->opts.namelist)
     FXTRAN_NAMELIST_decode (text, ctx);

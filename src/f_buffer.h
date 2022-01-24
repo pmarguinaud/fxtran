@@ -14,6 +14,7 @@ typedef struct f_buffer
   char * str;
   char * cur;
   int len;
+  int len0;
 }
 f_buffer;
 
@@ -69,6 +70,9 @@ int f_buffer_append (f_buffer *, const f_buffer *);
     (buf)->cur++;             \
     (buf)->cur[0] = 0;        \
   } while (0)
+
+#define f_buffer_empty(buf) \
+  ((buf)->len0 == f_buffer_len(buf))
 
 #endif
 

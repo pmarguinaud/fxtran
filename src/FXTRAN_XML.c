@@ -397,7 +397,7 @@ check:
 
 static void adv_pos (FXTRAN_xmlctx * ctx, int pos, int print)
 {
-  int empty = FXTRAN_f_buffer_len (&ctx->fb) == 0;
+  int empty = FXTRAN_f_buffer_empty (&ctx->fb);
      
   if (empty)
     FXTRAN_handle_empty (ctx);
@@ -407,7 +407,7 @@ static void adv_pos (FXTRAN_xmlctx * ctx, int pos, int print)
 
 static void adv_pos_noendtag (FXTRAN_xmlctx * ctx, int pos, int print) 
 {
-  int empty = FXTRAN_f_buffer_len (&ctx->fb) == 0;
+  int empty = FXTRAN_f_buffer_empty (&ctx->fb);
      
   if (empty)
     FXTRAN_handle_empty (ctx);

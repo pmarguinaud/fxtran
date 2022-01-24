@@ -41,5 +41,7 @@
 
 #define FXTRAN_f_buffer_putc                     f_buffer_putc
 
+#define FXTRAN_f_buffer_empty                    f_buffer_empty
+
 #endif
 
