@@ -395,28 +395,29 @@ typedef struct stmt_actual_args_parms
   const char * argn;
   int allow_column;
   int typespec;
+  int list;
 } 
 stmt_actual_args_parms;
 
-#define def_actual_args(n,x,c,t) \
+#define def_actual_args(n,x,c,t,l) \
 static stmt_actual_args_parms saap_##n = \
-  { _T(x H _S(SPEC)), _T(x), c, t }
+  { _T(x H _S(SPEC)), _T(x), c, t, l }
 
 #define def_actual_argsl(n,x,l,c,t) \
 static stmt_actual_args_parms saap_##n = \
-  { _T(l), _T(x), c, t }
+  { _T(l), _T(x), c, t, 1 }
 
-def_actual_args (  actual,                             _S(ARG), 0, 0);
-def_actual_args (allocate,                             _S(ARG), 0, 1);
-def_actual_args ( filepos,                  _S(POS) H _S(SPEC), 0, 0);
-def_actual_args (   close,                _S(CLOSE) H _S(SPEC), 0, 0);
-def_actual_args (    open,              _S(CONNECT) H _S(SPEC), 0, 0);
-def_actual_args (   flush,                _S(FLUSH) H _S(SPEC), 0, 0);
-def_actual_args ( inquiry,              _S(INQUIRY) H _S(SPEC), 0, 0);
-def_actual_args (      io,                _S(IO) H _S(CONTROL), 0, 0);
-def_actual_args (    wait,                 _S(WAIT) H _S(SPEC), 0, 0);
-def_actual_args ( kindsel,                 _S(KIND) H _S(SPEC), 0, 0);
-def_actual_args ( charsel,                 _S(CHAR) H _S(SPEC), 1, 0);
+def_actual_args (  actual,                             _S(ARG), 0, 0, 1);
+def_actual_args (allocate,                             _S(ARG), 0, 1, 1);
+def_actual_args ( filepos,                  _S(POS) H _S(SPEC), 0, 0, 1);
+def_actual_args (   close,                _S(CLOSE) H _S(SPEC), 0, 0, 1);
+def_actual_args (    open,              _S(CONNECT) H _S(SPEC), 0, 0, 1);
+def_actual_args (   flush,                _S(FLUSH) H _S(SPEC), 0, 0, 1);
+def_actual_args ( inquiry,              _S(INQUIRY) H _S(SPEC), 0, 0, 1);
+def_actual_args (      io,                _S(IO) H _S(CONTROL), 0, 0, 1);
+def_actual_args (    wait,                 _S(WAIT) H _S(SPEC), 0, 0, 1);
+def_actual_args ( kindsel,                 _S(KIND) H _S(SPEC), 0, 0, 0);
+def_actual_args ( charsel,                 _S(CHAR) H _S(SPEC), 1, 0, 0);
 
 def_actual_argsl (typeparmspec, _S(TYPE) H _S(PARAMETER) H _S(SPEC), 
                   _S(TYPE) H _S(PARAMETER) H _S(SPEC) H _S(LIST), 0, 0);
@@ -480,7 +481,8 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
         }
     }
 
-  XST (saap->argl);
+  if (saap->list)
+    XST (saap->argl);
 
   while (t[0])
     {
@@ -545,7 +547,8 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
       
     }
 
-  XET ();
+  if (saap->list)
+    XET ();
 
   return t - T + 1;
 }
