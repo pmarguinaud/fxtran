@@ -148,8 +148,8 @@ static void FXTRAN_load_nocpp0 (f_buffer * fb, const char * filename, char * tex
         {
           if (ctx->opts.noinclude)
             {
-              FXTRAN_file_enter (inc, "", pcurrent, proot);
-              FXTRAN_file_leave (pcurrent, proot);
+              FXTRAN_f_buffer_ncat (fb, ll+1, t0bol);
+	      FXTRAN_incr_cpp2loc_array (pcla);
             }
 	  else
             {
