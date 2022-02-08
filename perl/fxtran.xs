@@ -13,10 +13,11 @@ MODULE = fxtran		PACKAGE = fxtran
 void
 run (...)
 PPCODE:
+        int i;
         int argc = items+1;
         char * argv[argc];
         argv[0] = "";
-        for (int i = 0; i < argc-2; i++)
+        for (i = 0; i < argc-2; i++)
           argv[i+1] = SvPV_nolen (ST (i));
         argv[argc-1] = "_.F90";
    

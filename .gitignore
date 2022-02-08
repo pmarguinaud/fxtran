@@ -6,6 +6,7 @@ bin
 lib
 perl/MYMETA.json
 perl/MYMETA.yml
+perl/Makefile.old
 perl/Makefile
 perl/blib/
 perl/fxtran.bs
