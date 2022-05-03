@@ -13,10 +13,12 @@ all: $(EXE) $(LIB)
 
 
 $(EXE): FXTRAN_ALPHA.h fxtran.o $(OBJ) 
+	@mkdir -p ../bin
 	cd cpp && make
 	$(CC) -o $(EXE) fxtran.o $(OBJ) -Lcpp -lcpp -liberty
 
 $(LIB): $(OBJ)
+	@mkdir -p ../lib
 	ar crv $(LIB) $(OBJ) cpp/*.o
 
 FXTRAN_ALPHA.h: FXTRAN_ALPHA.pl
