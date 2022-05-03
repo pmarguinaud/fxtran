@@ -2,8 +2,8 @@
 *.a
 *.so
 *.x
-bin
-lib
+bin/*
+lib/*
 perl/MYMETA.json
 perl/MYMETA.yml
 perl/Makefile.old
