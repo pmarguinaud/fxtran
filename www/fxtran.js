@@ -23,7 +23,8 @@ function NClick (n)
 {
   let t = n.textContent;
   let ns = document.evaluate ('//f:N[string(.)="' + t + '"]', 
-                               document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                               document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, 
+                               null);
   console.log (n);
   console.log (n.parentNode);
 
@@ -89,6 +90,34 @@ function _onclick (e)
     }
 }
 
+function _oncontextmenu (e)
+{
+  e.preventDefault ();
+
+  let menu = parseHTML 
+(`<nav 
+ style="display: none; border: solid 1px #dfdfdf; width: 240px; background-color: #fff;"> 
+  <ul>
+    <li><a href="#">A</a></li>
+    <li><a href="#">B</a></li>
+    <li><a href="#">C</a></li>
+  </ul>
+</nav>`);
+  document.documentElement.appendChild (menu);
+
+
+  menu.style.display = "block";
+  menu.style.position = "absolute";
+  menu.style.left = (e.x-10).toString () + "px";
+  menu.style.top  = (e.y-10).toString () + "px";
+
+  menu.addEventListener ("mouseleave", function () 
+    {
+      menu.remove ();
+    }, false);
+
+}
+
 function _onload ()
 {
   let ns;
@@ -146,6 +175,8 @@ function _onload ()
     }
 
   document.addEventListener ('click', _onclick);
+  document.addEventListener ('contextmenu', _oncontextmenu);
+
 }
 
 
