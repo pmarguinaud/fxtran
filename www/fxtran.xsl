@@ -12,39 +12,8 @@
 
   <xsl:template match="/f:object">
 
-<html:style>
-file 
-{
-  white-space: pre;
-  font-weight: bold;
-  font-family: monospace;
-  line-height: 0px;
-}
 
-C
-{
-  color: blue;
-  cursor: not-allowed;
-}
-
-n 
-{
-  font-weight: normal;
-  cursor: pointer;
-}
-
-cnt
-{
-  color: red;
-}
-
-include
-{
-  color: green;
-  font-weight: bold;
-}
-
-</html:style>
+<html:link rel="stylesheet" href="fxtran.css"/>
 
 <html:script src="fxtran.js"/>
 
