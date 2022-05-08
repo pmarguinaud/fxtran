@@ -50,13 +50,22 @@ include
 
 var fxtranURI = 'http://fxtran.net/#syntax';
 
+function nsResolver (prefix) 
+{
+  const ns = {
+    'f': fxtranURI
+  };
+  return ns[prefix] || null;
+}
+ 
 function ucFirst (s) 
 {
   return s.charAt (0).toUpperCase () + s.slice (1);
 }
 
-function argNClick ()
+function NClick ()
 {
+  console.log ('NClick');
 }
 
 function methodExists (method)
@@ -64,17 +73,17 @@ function methodExists (method)
   return eval ('typeof ' + method + ' == "function"');
 }
 
+function methodCall (method, n)
+{
+  return eval (method + ' (n)');
+}
+
 function _onclick (e)
 {
   let n = e.target;
 
-  while (true)
+  while (n && (n.namespaceURI == fxtranURI))
     {
-      if (! n)
-        break;
-      if (n.namespaceURI != fxtranURI)
-        break;
-      console.log (n);
       let nn = n.nodeName.split ('-');
       for (let i = 1; i < nn.length; i++)
         {
@@ -82,28 +91,20 @@ function _onclick (e)
         }
 
       let method = nn.join ('') + 'Click';
-      console.log (method, " ", methodExists (method));
+
+      if (methodExists (method))
+        {
+          methodCall (method, n);
+          break;
+        }
 
       n = n.parentNode;
     }
-
-//console.log ("CLICK = ", e);
-//console.log (typeof truc);
-//console.log (eval ('typeof _onclick'));
-//console.log (eval ('zut (e)'));
 }
 
 function _onload ()
 {
 
-  let nsResolver = function(prefix) 
-  {
-      const ns = {
-        'f': fxtranURI
-      };
-      return ns[prefix] || null;
-  };
- 
   
   let ns;
   ns = document.evaluate ('//f:file', document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
