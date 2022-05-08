@@ -24,11 +24,13 @@ file
 C
 {
   color: blue;
+  cursor: not-allowed;
 }
 
 n 
 {
   font-weight: normal;
+  cursor: pointer;
 }
 
 cnt
@@ -46,9 +48,49 @@ include
 
 <html:script><![CDATA[
 
-function foldCall (call)
-{
+var fxtranURI = 'http://fxtran.net/#syntax';
 
+function ucFirst (s) 
+{
+  return s.charAt (0).toUpperCase () + s.slice (1);
+}
+
+function argNClick ()
+{
+}
+
+function methodExists (method)
+{
+  return eval ('typeof ' + method + ' == "function"');
+}
+
+function _onclick (e)
+{
+  let n = e.target;
+
+  while (true)
+    {
+      if (! n)
+        break;
+      if (n.namespaceURI != fxtranURI)
+        break;
+      console.log (n);
+      let nn = n.nodeName.split ('-');
+      for (let i = 1; i < nn.length; i++)
+        {
+          nn[i] = ucFirst (nn[i]);
+        }
+
+      let method = nn.join ('') + 'Click';
+      console.log (method, " ", methodExists (method));
+
+      n = n.parentNode;
+    }
+
+//console.log ("CLICK = ", e);
+//console.log (typeof truc);
+//console.log (eval ('typeof _onclick'));
+//console.log (eval ('zut (e)'));
 }
 
 function _onload ()
@@ -57,7 +99,7 @@ function _onload ()
   let nsResolver = function(prefix) 
   {
       const ns = {
-        'f': 'http://fxtran.net/#syntax'
+        'f': fxtranURI
       };
       return ns[prefix] || null;
   };
@@ -85,7 +127,7 @@ function _onload ()
       for (t of tt)
         {
 
-          let L = document.createElementNS ("http://fxtran.net/#syntax", "L");
+          let L = document.createElementNS (fxtranURI, "L");
           L.appendChild (document.createTextNode (("0000" + I).slice (-4) + " | "));
           s.parentNode.insertBefore (L, s.nextSibling);
           s.parentNode.insertBefore (document.createTextNode (t + "\n"), s.nextSibling);
@@ -117,7 +159,7 @@ function _onload ()
       x.addEventListener ('click', function (e) { console.log (e); console.log ("CALL"); x.remove ();  });
     }
 
-  document.addEventListener ('click', function (e) { console.log (e); console.log ("DOCUMENT"); });
+  document.addEventListener ('click', _onclick);
 }
 
 
