@@ -52,9 +52,7 @@ var fxtranURI = 'http://fxtran.net/#syntax';
 
 function nsResolver (prefix) 
 {
-  const ns = {
-    'f': fxtranURI
-  };
+  const ns = {'f': fxtranURI};
   return ns[prefix] || null;
 }
  
