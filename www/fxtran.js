@@ -93,23 +93,21 @@ function _onclick (e)
 function _oncontextmenu (e)
 {
   e.preventDefault ();
+  console.log (e);
 
   let menu = parseHTML 
-(`<nav 
- style="display: none; border: solid 1px #dfdfdf; width: 240px; background-color: #fff;"> 
-  <ul>
-    <li><a href="#">A</a></li>
-    <li><a href="#">B</a></li>
-    <li><a href="#">C</a></li>
-  </ul>
-</nav>`);
+(`<div class="menu">
+   <a href="#" class="menu-button">AAAAAAAAAAAAAAAAAAAAAAX</a>
+   <a href="#" class="menu-button">B</a>
+   <a href="#" class="menu-button">C</a>
+</div>`);
   document.documentElement.appendChild (menu);
 
 
   menu.style.display = "block";
   menu.style.position = "absolute";
-  menu.style.left = (e.x-10).toString () + "px";
-  menu.style.top  = (e.y-10).toString () + "px";
+  menu.style.left = (e.layerX-10).toString () + "px";
+  menu.style.top  = (e.layerY-10).toString () + "px";
 
   menu.addEventListener ("mouseleave", function () 
     {
