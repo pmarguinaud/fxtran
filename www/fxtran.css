@@ -38,6 +38,7 @@ include
   border: none;
   text-decoration: none;
   display: block;
+  cursor: pointer;
 }
 
 .menu-button:hover, .menu-button:focus 

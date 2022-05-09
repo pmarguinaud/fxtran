@@ -59,9 +59,33 @@ function methodExists (method)
   return eval ('typeof ' + method + ' == "function"');
 }
 
-function methodCall (method, n)
+function methodCall (method, n, e)
 {
-  return eval (method + ' (n)');
+  return eval (method + ' (n, e)');
+}
+
+function findTarget (methodSuffix, n)
+{
+  while (n) 
+    {
+      if (n.namespaceURI == fxtranURI)
+        {
+          let nn = n.nodeName.split ('-');
+          for (let i = 1; i < nn.length; i++)
+            {
+              nn[i] = ucFirst (nn[i]);
+            }
+
+          let method = nn.join ('') + methodSuffix;
+
+          if (methodExists (method))
+            {
+              return {"node": n, "method": method};
+            }
+        }
+      n = n.parentNode;
+    }
+
 }
 
 function _onclick (e)
@@ -70,39 +94,26 @@ function _onclick (e)
 
   console.log ("_onclick = ", e);
 
-  while (n && (n.namespaceURI == fxtranURI))
+  let a = findTarget ('Click', n);
+
+  if (a)
     {
-      let nn = n.nodeName.split ('-');
-      for (let i = 1; i < nn.length; i++)
-        {
-          nn[i] = ucFirst (nn[i]);
-        }
-
-      let method = nn.join ('') + 'Click';
-
-      if (methodExists (method))
-        {
-          methodCall (method, n);
-          break;
-        }
-
-      n = n.parentNode;
+      methodCall (a["method"], a["node"], e);
     }
 }
 
-function _oncontextmenu (e)
+function getContextMenu (e, h)
 {
-  e.preventDefault ();
-  console.log (e);
+  let menu = parseHTML ('<div class="menu"/>');
 
-  let menu = parseHTML 
-(`<div class="menu">
-   <a href="#" class="menu-button">AAAAAAAAAAAAAAAAAAAAAAX</a>
-   <a href="#" class="menu-button">B</a>
-   <a href="#" class="menu-button">C</a>
-</div>`);
+  for (k in h)
+    {
+      let a = parseHTML ('<a class="menu-button">' + k + '</a>');
+      menu.appendChild (a);
+      a.onclick = h[k];
+    }
+
   document.documentElement.appendChild (menu);
-
 
   menu.style.display = "block";
   menu.style.position = "absolute";
@@ -114,12 +125,21 @@ function _oncontextmenu (e)
       menu.remove ();
     }, false);
 
+  return menu;
 }
 
-function _onload ()
+function _oncontextmenu (e)
 {
-  let ns;
-  ns = document.evaluate ('//f:file', document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+  e.preventDefault ();
+  console.log (e);
+
+  let menu = getContextMenu (e, {"coucou": function () { alert ("coucou"); }, "dance": function () { alert ("dance"); }});
+
+}
+
+function numberLines ()
+{
+  let ns = document.evaluate ('//f:file', document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
   
   let f = ns.snapshotItem (0);
   
@@ -147,34 +167,18 @@ function _onload ()
           I++;
 
         }
-      
-
-        
       s.parentNode.removeChild (s);
-
     }
     
   f.removeChild (f.firstChild);
   f.removeChild (f.lastChild);
-  
-  let type = "stmt";
-  let size = type.length;
-  //ns = document.evaluate ('//f:file//*[substring(name(),string-length(name())-' + size + ')="-' + type + '"]', 
-  //                        document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null); 
+}
 
-  ns = document.evaluate ('//f:file//f:call-stmt', 
-                          document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null); 
-  
-  for (let i = 0; i < ns.snapshotLength; i++)
-    {
-      let x = ns.snapshotItem (i);
-//    console.log (x);
-//    x.addEventListener ('click', function (e) { console.log (e); console.log ("CALL"); x.remove ();  });
-    }
-
+function _onload ()
+{
+  numberLines ();
   document.addEventListener ('click', _onclick);
   document.addEventListener ('contextmenu', _oncontextmenu);
-
 }
 
 
