@@ -19,38 +19,52 @@ function ucFirst (s)
   return s.charAt (0).toUpperCase () + s.slice (1);
 }
 
-function NClick (n)
+function findNodes (xpath, node = document)
+{
+  return document.evaluate (xpath, node, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+}
+
+
+function highLight (t)
+{
+  let ns = findNodes ('//f:n[string(.)="' + t + '"]');
+  let TT = parseHTML ('<tt style="background-color:red;"/>');
+
+  for (let i = 0; i < ns.snapshotLength; i++)
+    {
+      let s = ns.snapshotItem (i);
+      let tt = TT.cloneNode (true);
+      let t = s.firstChild;
+      tt.appendChild (t);
+      s.appendChild (tt);
+    }
+}
+
+function unHighLight (t)
+{
+  let ns = findNodes ('//f:n[string(.)="' + t + '"]');
+
+  for (let i = 0; i < ns.snapshotLength; i++)
+    {
+      let s = ns.snapshotItem (i);
+      if (s.firstChild.namespaceURI == htmlURI)
+        {
+          s.firstChild.replaceWith (s.firstChild.firstChild);
+        }
+    }
+}
+
+function nClick (n)
 {
   let t = n.textContent;
-  let ns = document.evaluate ('//f:N[string(.)="' + t + '"]', 
-                               document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, 
-                               null);
-  console.log (n);
-  console.log (n.parentNode);
 
-  if (n.parentNode.namespaceURI == htmlURI)
+  if (n.firstChild.namespaceURI == htmlURI)
     {
-      
-      for (let i = 0; i < ns.snapshotLength; i++)
-        {
-          let s = ns.snapshotItem (i);
-          if (s.parentNode.namespaceURI == htmlURI)
-            {
-              s.parentNode.replaceWith (s);
-            }
-        }
+      unHighLight (t);
     }
   else
     {
-      let TT = parseHTML ('<tt style="background-color:red;"/>');
-
-      for (let i = 0; i < ns.snapshotLength; i++)
-        {
-          let s = ns.snapshotItem (i);
-          let t = TT.cloneNode (true);
-          t.appendChild (s.cloneNode (true));
-          s.replaceWith (t);
-        }
+      highLight (t);
     }
 }
 
@@ -92,8 +106,6 @@ function _onclick (e)
 {
   let n = e.target;
 
-  console.log ("_onclick = ", e);
-
   let a = findTarget ('Click', n);
 
   if (a)
@@ -109,8 +121,9 @@ function getContextMenu (e, h)
   for (k in h)
     {
       let a = parseHTML ('<a class="menu-button">' + k + '</a>');
+      let kk = k;
       menu.appendChild (a);
-      a.onclick = h[k];
+      a.onclick = function () { h[kk].call (); menu.remove (); };
     }
 
   document.documentElement.appendChild (menu);
@@ -120,32 +133,100 @@ function getContextMenu (e, h)
   menu.style.left = (e.layerX-10).toString () + "px";
   menu.style.top  = (e.layerY-10).toString () + "px";
 
+  let clean;
+
   menu.addEventListener ("mouseleave", function () 
     {
       menu.remove ();
+      document.removeEventListener ("keydown", clean, false);
     }, false);
+
+  clean = function (e) 
+  {
+    if (e.key == 'Escape')
+      {
+        menu.remove ();
+        document.removeEventListener ("keydown", clean, false);
+      }
+  };
+
+  document.addEventListener ("keydown", clean, false);
 
   return menu;
 }
 
+function nContextMenu (n, e)
+{
+  getContextMenu (e, 
+    {
+      "HighLight"   : function () { let t = n.textContent;   highLight (t); },
+      "UnHighLight" : function () { let t = n.textContent; unHighLight (t); },
+    });
+}
+
+function wrapTag (t, n)
+{
+  t.replaceWith (n);
+  n.appendChild (t);
+}
+
+function unWrapTag (t)
+{
+  t.parentNode.replaceWith (t);
+}
+
+function callStmtFold (n)
+{
+  let ns = findNodes ('./f:arg-spec', n);
+  if (ns.snapshotLength)
+    {
+      wrapTag (ns.snapshotItem (0), parseHTML ('<tt style="display: none;"/>'));
+    }
+}
+
+function callStmtUnFold (n)
+{
+  let ns = findNodes ('./html:*/f:arg-spec', n);
+  if (ns.snapshotLength)
+    {
+      unWrapTag (ns.snapshotItem (0));
+    }
+}
+
+function callStmtContextMenu (n, e)
+{
+
+  getContextMenu (e, 
+    {
+      "Fold"   : function () { callStmtFold   (n); },
+      "UnFold" : function () { callStmtUnFold (n); },
+    });
+}
+
 function _oncontextmenu (e)
 {
-  e.preventDefault ();
-  console.log (e);
+  
+  let n = e.target;
 
-  let menu = getContextMenu (e, {"coucou": function () { alert ("coucou"); }, "dance": function () { alert ("dance"); }});
+  let a = findTarget ('ContextMenu', n);
+
+  if (a)
+    {
+      e.preventDefault ();
+      methodCall (a["method"], a["node"], e);
+    }
 
 }
 
 function numberLines ()
 {
-  let ns = document.evaluate ('//f:file', document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+  let ns = findNodes ('//f:file');
   
   let f = ns.snapshotItem (0);
   
   f.insertBefore (document.createTextNode ("\n"), f.firstChild);
     
-  ns = document.evaluate ('//f:file//text()[contains(.,"\n")]', document, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+  ns = findNodes ('//f:file//text()[contains(.,"\n")]');
                 
   let I = 1;                            
   for (let i = 0; i < ns.snapshotLength; i++)
@@ -179,6 +260,7 @@ function _onload ()
   numberLines ();
   document.addEventListener ('click', _onclick);
   document.addEventListener ('contextmenu', _oncontextmenu);
+
 }
 
 
