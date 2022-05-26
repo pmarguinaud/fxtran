@@ -51,31 +51,31 @@ Generating a parser from the BNF definition is however not straightforward, beca
 3. In fixed form, spaces are not significant. That is, a routine such as :
 
 
-    SUBROUTINE MYSUB (X, Y)
-    IMPLICIT NONE
-    REAL X
-    REAL Y
-    END SUBROUTINE
+        SUBROUTINE MYSUB (X, Y)
+        IMPLICIT NONE
+        REAL X
+        REAL Y
+        END SUBROUTINE
 
 
 could also be defined as :
 
-    SUB ROUTINE MY SUB (X, Y)
-    IMPLICITNONE
-    REALX
-    R E A L Y
-    ENDSUBROUTIN E
+        SUB ROUTINE MY SUB (X, Y)
+        IMPLICITNONE
+        REALX
+        R E A L Y
+        ENDSUBROUTIN E
 
 4. Linebreaks and commends can be inserted almost anywhere :
 
-    CHARACTER(LEN=16) :: STR
-    REAL X, Y, ZZ
-    STR = "EXAMPLE OF&  
-    ! This is a comment
-          &STRING"
-    X = Y + Z& ! Another comment
-       &Z
-    END
+        CHARACTER(LEN=16) :: STR
+        REAL X, Y, ZZ
+        STR = "EXAMPLE OF&  
+        ! This is a comment
+              &STRING"
+        X = Y + Z& ! Another comment
+           &Z
+        END
 
 ## Parsing FORTRAN code using fxtran
 
