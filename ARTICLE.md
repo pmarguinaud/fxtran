@@ -108,6 +108,7 @@ of a FORTRAN program:
     CALL SUB (X, Y, Z)
     END
 
+The result of parsing this program with fxtran is :
 
     <?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0"><file name="main.F90"><program-unit><program-stmt>PROGRAM <program-N><N><n>MAIN</n></N></program-N></program-stmt>
     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Z</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
@@ -116,7 +117,40 @@ of a FORTRAN program:
     <end-program-stmt>END</end-program-stmt></program-unit>
 
 
+The careful reader has already noticed that **the original source code is embedded** in this XML document. This 
+implies that recovering the original content is just a matter of removing the XML tags.
 
+Let us have a closer look.
+
+The following FORTRAN statement :
+
+    CALL SUB (X, Y , Z)
+
+is represented by the following XML fragment :
+
+    <call-stmt>CALL <procedure-designator><named-E><N><n>SUB</n></N></named-E></procedure-designator> (<arg-spec><arg><named-E><N><n>X</n></N></named-E></arg>, <arg><named-E><N><n>Y</n></N></named-E></arg>, <arg><named-E><N><n>Z</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+We first observer that we have a `call-stmt` tag surrounding the whole statement. `call-stmt' is the denomination 
+used in the ISO/IEC 1539; in fxtran output; note that I have tried to use the FORTRAN BNF linguo eveywhere 
+it was possible.
+
+Some other important elements are tagged with `named-E`; these are named expressions (`E` stands for expression,
+and there are so many expressions in FORTRAN source code, that it was necessary to use a shorter word). There
+are other kinds of expressions like literal expressions (`literal-E`), expressions using operators (`op-E`), etc.
+
+The reader should now be able to distinguish other tags, such as the `procedure-designator` (the name of 
+the callee, which is also a named expression), the arguments of the callee, etc.
+
+The following statement :
+
+    REAL :: X, Y, Z
+
+is a type declaration statement, whose parsed output is :
+
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Z</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+It is possible to distinguish the type specification (the `REAL` intrinsic type is used here), and entity 
+declarations (`EN-decl`) tags, grouped in a list (`EN-decl-LT`, `LT` being the abbreviated form os list).
 
 
 
