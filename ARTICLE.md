@@ -163,7 +163,7 @@ whose XML representation is :
     <a-stmt><E-1><named-E><N><n>XX</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>Z</n><cnt>&amp;</cnt>
       <cnt>&amp;</cnt><n>ZZZ</n></N></named-E></E-2></a-stmt>
 
-We see here that an identifier may be split accross multiple lines, using `&' lines continuators. To cope with
+We see here that an identifier may be split accross multiple lines, using `&` lines continuators. To cope with
 this possibility, it is necessary to introduce this extra `n` tag, which stands for a piece of identifier.
 
 
