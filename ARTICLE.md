@@ -51,11 +51,11 @@ Generating a parser from the BNF definition is however not straightforward, beca
 3. In fixed form, spaces are not significant. That is, a routine such as :
 
 
-        SUBROUTINE MYSUB (X, Y)
-        IMPLICIT NONE
-        REAL X
-        REAL Y
-        END SUBROUTINE
+    SUBROUTINE MYSUB (X, Y)
+    IMPLICIT NONE
+    REAL X
+    REAL Y
+    END SUBROUTINE
 
 
 could also be defined as :
