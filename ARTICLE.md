@@ -68,14 +68,11 @@ could also be defined as :
 
     CHARACTER(LEN=16) :: STR
     REAL X, Y, ZZ
-    
     STR = "EXAMPLE OF&  
     ! This is a comment
           &STRING"
-    
     X = Y + Z& ! Another comment
        &Z
-    
     END
 
 ## Parsing FORTRAN code using fxtran
