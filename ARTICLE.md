@@ -152,6 +152,22 @@ is a type declaration statement, whose parsed output is :
 It is possible to distinguish the type specification (the `REAL` intrinsic type is used here), and entity 
 declarations (`EN-decl`) tags, grouped in a list (`EN-decl-LT`, `LT` being the abbreviated form os list).
 
+Eventually note that FORTRAN identifiers are tagged with `n`s nested in `N` tags. To understand why, look at the
+following assignment statement :
+
+    XX = Z&
+      &ZZZ
+
+whose XML representation is :
+
+    <a-stmt><E-1><named-E><N><n>XX</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>Z</n><cnt>&amp;</cnt>
+      <cnt>&amp;</cnt><n>ZZZ</n></N></named-E></E-2></a-stmt>
+
+We see here that an identifier may be split accross multiple lines, using `&' lines continuators. To cope with
+this possibility, it is necessary to introduce this extra `n` tag, which stands for a piece of identifier.
+
+
+
 
 
 
