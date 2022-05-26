@@ -131,8 +131,8 @@ is represented by the following XML fragment :
     <call-stmt>CALL <procedure-designator><named-E><N><n>SUB</n></N></named-E></procedure-designator> (<arg-spec><arg><named-E><N><n>X</n></N></named-E></arg>, <arg><named-E><N><n>Y</n></N></named-E></arg>, <arg><named-E><N><n>Z</n></N></named-E></arg></arg-spec>)</call-stmt>
 
 We first observer that we have a `call-stmt` tag surrounding the whole statement. `call-stmt' is the denomination 
-used in the ISO/IEC 1539; in fxtran output; note that I have tried to use the FORTRAN BNF linguo eveywhere 
-it was possible.
+used in the ISO/IEC 1539; in fxtran output; note that I have tried to **use the FORTRAN BNF linguo eveywhere 
+it was possible**.
 
 Some other important elements are tagged with `named-E`; these are named expressions (`E` stands for expression,
 and there are so many expressions in FORTRAN source code, that it was necessary to use a shorter word). There
