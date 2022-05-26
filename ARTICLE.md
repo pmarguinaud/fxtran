@@ -1,4 +1,4 @@
-# Parsing and refactoring FORTRAN code using XML
+# Parsing and refactoring FORTRAN code : when XML meets high performance computing
 
 ## Introduction
 
@@ -166,6 +166,27 @@ whose XML representation is :
 We see here that an identifier may be split accross multiple lines, using `&` lines continuators. To cope with
 this possibility, it is necessary to introduce this extra `n` tag, which stands for a piece of identifier.
 
+## FORTRAN code refactoring
+
+Once the FORTRAN source has been parsed, it becomes possible to perform surgical modifications (eg adding an
+extra argument to a particular subroutine). We will look here at a typical modification which is necessary
+when porting the existing code (which works well on x86 platforms with micro-vectorization) to accelerators
+like graphical processors.
+
+Let us take as an example the following code snippet :
+
+    REAL :: X (KLON, KLEV)
+    REAL :: Y (KLON, KLEV)
+    REAL :: Z
+
+    DO JLEV = 2, KLEV
+      DO JLON = 1, KLON
+        Z = X (JLON, JLEV-1) + Y (JLON, JLEV)
+        X (JLON, JLEV) = Z * Z
+      ENDDO
+    ENDDO
+
+On x86, the inner loop would vectorize, and the compiler would generate AVX instructions.
 
 
 
