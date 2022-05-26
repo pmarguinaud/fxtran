@@ -77,6 +77,11 @@ could also be defined as :
            &Z
         END
 
+Implementing a FORTRAN parser is therefore a non trivial task. It has to be emphasized that such a tool
+has a very high value for people (like the author) who are involved in the maintenance and the evolution
+of codebases consisting of several millions of lines of FORTRAN code.
+
+
 ## Parsing FORTRAN code using fxtran
 
 Several tools are available for parsing FORTRAN: some compilers (OMNI or gfortran) can dump the syntax tree they 
@@ -91,7 +96,10 @@ created by a human being, with some indentation, whitespaces, comments, etc. We 
 comes to representing such data. HTML is a typical example of documents that may be hand written but that have a
 structure. 
 
-FORTRAN source code annotated with XML tags is the result of parsing by fxtran. Let us take a simple example
+fxtran (https://github.com/pmarguinaud/fxtran) is a FORTRAN parser written in C which relies on XML for its output. 
+Its handles most of FORTRAN 2003/2008 features and is extremely fast, at least 10 times faster that fparser.
+
+FORTRAN source code annotated with XML tags is the result of parsing by fxtran. Let us take a very simple example
 of a FORTRAN program:
 
     PROGRAM MAIN
@@ -99,6 +107,16 @@ of a FORTRAN program:
     X = Y + Z
     CALL SUB (X, Y, Z)
     END
+
+
+    <?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0"><file name="main.F90"><program-unit><program-stmt>PROGRAM <program-N><N><n>MAIN</n></N></program-N></program-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Z</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>Y</n></N></named-E> <op><o>+</o></op> <named-E><N><n>Z</n></N></named-E></op-E></E-2></a-stmt>
+    <call-stmt>CALL <procedure-designator><named-E><N><n>SUB</n></N></named-E></procedure-designator> (<arg-spec><arg><named-E><N><n>X</n></N></named-E></arg>, <arg><named-E><N><n>Y</n></N></named-E></arg>, <arg><named-E><N><n>Z</n></N></named-E></arg></arg-spec>)</call-stmt>
+    <end-program-stmt>END</end-program-stmt></program-unit>
+
+
+
 
 
 
