@@ -94,6 +94,12 @@ structure.
 FORTRAN source code annotated with XML tags is the result of parsing by fxtran. Let us take a simple example
 of a FORTRAN program:
 
+    PROGRAM MAIN
+    REAL :: X, Y, Z
+    X = Y + Z
+    CALL SUB (X, Y, Z)
+    END
+
 
 
 
