@@ -136,7 +136,7 @@ it is possible**.
 
 Some other important elements are tagged with `named-E`; these are named expressions (`E` stands for expression,
 and there are so many expressions in FORTRAN source code, that it was necessary to use a shorter word). There
-are other kinds of expressions like literal expressions (`literal-E`), expressions using operators (`op-E`), etc.
+are other kinds of expressions like literal expressions (`literal-E`), expressions involving operators (`op-E`), etc.
 
 The reader should now be able to distinguish other tags, such as the `procedure-designator` (the name of 
 the callee, which is also a named expression), the arguments of the callee, etc.
@@ -175,6 +175,7 @@ like graphical processors.
 
 Let us take as an example the following code snippet :
 
+    PROGRAM LOOP
     REAL :: X (KLON, KLEV)
     REAL :: Y (KLON, KLEV)
     REAL :: Z
@@ -185,6 +186,7 @@ Let us take as an example the following code snippet :
         X (JLON, JLEV) = Z * Z
       ENDDO
     ENDDO
+    END PROGRAM
 
 On x86, the inner loop would vectorize, and the compiler would generate AVX instructions, but when using 
 graphical accelerators (hereafter GPUs), the situtation is very different, because these devices are an
@@ -205,10 +207,60 @@ What we did in this transformation is that we exchanged the loops on `JLON` and 
 directive stating that the iterations of this loop should be distributed over the GPU cores, and that
 `Z` is a private variable, which means that each GPU should have its private copy.
 
+Our transformation involves the following steps :
 
+* Parse the document
+* Target the loops that should be transformed (`JLON` loops nested in a `JLEV` loop)
+* Exchange `JLEV` and `JLON` loops
+* Find private variables (scalar variables which are modified in the `JLON` loop)
+* Create the OpenACC directive and insert it
 
+Parsing the document is straightforward; we first invoke fxtran (the `-construct-tag` option adds tags for
+structures like loops, if then else constructs, etc.):
 
+    $ fxtran -construct-tag loop.F90
+    $ ls -l loop.F90.xml 
+    -rw-rw-r-- 1 phi001 phi001 2825 mai   27 09:29 loop.F90.xml
 
+We then use an XML parser and load the XML document, after registering the fxtran namespace (here we
+use Perl and the libxml2 bindings, but any other language with any XML library would actually do the job) :
+
+    use XML::LibXML;
+    use strict;
+   
+    my $xpc = 'XML::LibXML::XPathContext'->new ();
+    $xpc->registerNs (f => 'http://fxtran.net/#syntax');
+    my $doc = 'XML::LibXML'->load_xml (location => 'loop.F90.xml');
+
+We can then search `JLEV` loop construct which contain `JLON` loops using XPath :
+
+    my @do_jlev = $xpc->findnodes 
+                  ('//f:do-construct[f:do-stmt[string(f:do-V)="JLEV"]]'
+                .  '[f:do-construct[f:do-stmt[string(f:do-V)="JLON"]]]',
+                   $doc);
+
+The DO statements we need to exchange are easily retrieved :
+
+    for my $do_jlev (@do_jlev)
+      {
+        my ($do_jlon) = $xpc->findnodes ('./f:do-construct[f:do-stmt[string(f:do-V)="JLON"]]', $do_jlev);
+        my $do_jlev_stmt = $do_jlev->firstChild;
+        my $do_jlon_stmt = $do_jlon->firstChild;
+        ...
+
+And it is also easy to exchange them using the XML DOM methods :
+
+       my $do_jlev_stmt_1 = $do_jlev_stmt->cloneNode (1);
+       my $do_jlon_stmt_1 = $do_jlon_stmt->cloneNode (1);
+       $do_jlev_stmt->replaceNode ($do_jlon_stmt_1);
+       $do_jlon_stmt->replaceNode ($do_jlev_stmt_1);
+       ...
+     
+We then look for scalar (that is without a reference list) variables which are on the left hand side 
+of assignment statements (that is contained in the `E-1` member of `a-stmt` elements):
+
+       my @s = $xpc->findnodes ('.//f:a-stmt/f:E-1/f:named-E[not(f:R-LT)]/f:N/f:n/text()', $do_jlev);
+       @s = map { $_->textContent } @s;
 
 
 
