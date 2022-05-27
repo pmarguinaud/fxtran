@@ -416,7 +416,7 @@ selects one of them using the mouse :
 
 Et cetera. 
 
-** Conclusion
+## Conclusion
 
 
 
