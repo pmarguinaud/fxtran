@@ -169,10 +169,11 @@ this possibility, it is necessary to introduce this extra `n` tag, which stands 
 
 ## FORTRAN code refactoring
 
-Once the FORTRAN source has been parsed, it becomes possible to perform surgical modifications (eg adding an
-extra argument to a particular subroutine). We will look here at a typical modification which is necessary
-when porting the existing code (which works well on x86 platforms with micro-vectorization) to accelerators
-like graphical processors.
+Once the FORTRAN source has been parsed, it becomes possible to perform surgery (eg adding an
+extra argument to a particular subroutine). 
+
+In this article, we will look at a typical modification which is necessary when porting the existing code 
+(which works well on x86 platforms with micro-vectorization) to accelerators such as graphical processors.
 
 Let us take as an example the following code snippet :
 
@@ -206,15 +207,15 @@ into :
 
 What we did in this transformation is that we exchanged the loops on `JLON` and `JLEV` and added an OpenACC
 directive stating that the iterations of this loop should be distributed over the GPU cores, and that
-`Z` is a private variable, which means that each GPU core should have its own private copy.
+`Z` is a private variable, which means that each GPU core should have its own private copy of this variable.
 
-Our transformation involves the following steps :
+Therefore, our transformation involves the following steps :
 
 * Parse the document
 * Target the loops that should be transformed (`JLON` loops nested in a `JLEV` loop)
 * Exchange `JLEV` and `JLON` loops
 * Find private variables (scalar variables which are modified in the `JLON` loop)
-* Create the OpenACC directive and insert it
+* Create the OpenACC directive and insert it before the loop nest
 
 Parsing the document is straightforward; we first invoke fxtran (the `-construct-tag` option adds tags for
 structures like loops, if then else constructs, etc.):
@@ -234,6 +235,7 @@ use Perl and the libxml2 bindings, but any other language with any other XML lib
     my $xpc = 'XML::LibXML::XPathContext'->new ();
     $xpc->registerNs (f => $uri);
     my $doc = 'XML::LibXML'->load_xml (location => 'loop.F90.xml');
+    ...
 
 We can then search `JLEV` loop constructs which contain `JLON` loops using XPath :
 
@@ -241,6 +243,7 @@ We can then search `JLEV` loop constructs which contain `JLON` loops using XPath
                   ('//f:do-construct[f:do-stmt[string(f:do-V)="JLEV"]]'
                 .  '[f:do-construct[f:do-stmt[string(f:do-V)="JLON"]]]',
                    $doc);
+    ...
 
 The DO statements we need to exchange are easily retrieved :
 
