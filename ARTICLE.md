@@ -1,9 +1,10 @@
-# Parsing and refactoring FORTRAN code : when XML meets high performance computing
+# Parsing and refactoring FORTRAN code with XML
 
 ## Introduction
 
 FORTRAN (FORmula TRANslation) is a compiled language widely used in scientific computing. It has beeen
-designed in the fifties and underwent substancial evolutions over the last 50 years (1977, 1990, 2003, 2008).
+designed in the middle of the twentieth century and underwent substancial evolutions over the last 50 
+years (1977, 1990, 2003, 2008).
 
 The specification of FORTRAN is described in the ISO/IEC 1539 document using the Backus-Naur form (BNF) syntax. For
 instance, a FORTRAN program is defined as :
@@ -419,7 +420,7 @@ Et cetera.
 ## Conclusion
 
 In this article, we have seen how XML can be used to parse FORTRAN. The principles described here
-could surely be applied to some other languages such as C++ or Java. Producing XML as the results of
+could surely be applied to some other languages such as C++ or Java. Producing XML as the result of
 parsing source code offers several benefits :
 
 * the original document can be retrieved, or if some modifications have been applied, then the impact
