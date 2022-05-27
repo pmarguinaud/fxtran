@@ -186,7 +186,26 @@ Let us take as an example the following code snippet :
       ENDDO
     ENDDO
 
-On x86, the inner loop would vectorize, and the compiler would generate AVX instructions.
+On x86, the inner loop would vectorize, and the compiler would generate AVX instructions, but when using 
+graphical accelerators (hereafter GPUs), the situtation is very different, because these devices are an
+aggregate of thousands of very small cores which do not have any vectorization capability, but nevertheless
+require coordinated access to memory. The reader should not pay too much attention to these details, but
+needs to understand that our purpose is to tranform this loop (as well as all loops which are similar)
+into :
+
+    !$acc loop vector private (Z)
+    DO JLON = 1, KLON
+      DO JLEV = 2, KLEV
+        Z = X (JLON, JLEV-1) + Y (JLON, JLEV)
+        X (JLON, JLEV) = Z * Z
+      ENDDO
+    ENDDO
+
+What we did in this transformation is that we exchanged the loops on `JLON` and `JLEV` and added an OpenACC
+directive stating that the iterations of this loop should be distributed over the GPU cores, and that
+`Z` is a private variable, which means that each GPU should have its private copy.
+
+
 
 
 
