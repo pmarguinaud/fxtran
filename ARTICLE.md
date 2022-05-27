@@ -356,11 +356,58 @@ and trigger the `onload` function once the document is loaded.
 
 With an empty `onload` function, we get some nice FORTRAN code, with some colors brought in by 
 the CSS (note that for some reason, the document has to be served by an actual HTTP server, just
-loading from your local disk will not enable the XSL processing):
+loading from your local disk will not enable the XSL processing) :
 
 ![](snapshots/firefox1.png)
 
+Cool ! 
 
+But we can do much better : we can modify the document in the `onload` function so that the lines
+get numbered; to achieve this, we create the javascript `numberLines` function :
+
+    function numberLines ()
+    {
+      let ns = findNodes ('//f:file');
+      
+      let f = ns.snapshotItem (0);
+      
+      f.insertBefore (document.createTextNode ("\n"), f.firstChild);
+        
+      ns = findNodes ('//f:file//text()[contains(.,"\n")]');
+                    
+      let I = 1;                            
+      for (let i = 0; i < ns.snapshotLength; i++)
+        {
+          let s = ns.snapshotItem (i);
+          let t = s.textContent;
+          let tt = t.split (/\n/);
+          let nsi = s.nextSibling;
+    
+          let ll = tt.pop ();
+    
+          for (t of tt)
+            {
+              let L = document.createElementNS (fxtranURI, "L");
+              L.appendChild (document.createTextNode (("0000" + I).slice (-4) + " | "));
+              let tn = document.createTextNode (t + "\n");
+              s.parentNode.insertBefore (tn, nsi);
+              s.parentNode.insertBefore (L, nsi);
+              I++;
+            }
+    
+          ll = document.createTextNode (ll);
+          s.parentNode.insertBefore (ll, nsi);
+          s.parentNode.removeChild (s);
+        }
+        
+      f.removeChild (f.firstChild);
+      f.removeChild (f.lastChild);
+    }
+
+I will not detail the `numberLines` function, but you see its result on the document in the following 
+snapshot :
+
+![](snapshots/firefox2.png)
 
 
 

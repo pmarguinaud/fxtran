@@ -220,7 +220,6 @@ function _oncontextmenu (e)
 
 function numberLines ()
 {
-  return;
   let ns = findNodes ('//f:file');
   
   let f = ns.snapshotItem (0);
