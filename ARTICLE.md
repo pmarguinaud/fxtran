@@ -418,6 +418,15 @@ Et cetera.
 
 ## Conclusion
 
+In this article, we have seen how XML can be used to parse FORTRAN. The principles described here
+could surely be applied to some other languages such as C++ or Java. Producing XML as the results of
+parsing source code offers several benefits :
+
+* the original document can be retrieved, or if some modifications have been applied, then the impact
+on the source code is kept to the minimal
+* XML power tools (XPath, XML DOM, etc.) can be used to modify the document
+* the cherry on the cake is that an XSL stylesheet can be attached to the XML document, allowing for
+loading the source code in a web browser
 
 
 
