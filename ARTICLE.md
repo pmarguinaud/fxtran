@@ -2,8 +2,8 @@
 
 ## Introduction
 
-FORTRAN (FORmula TRANslation) is a compiled language widely used in scientific computing. It has beeen
-designed in the middle of the twentieth century and underwent substancial evolutions over the last 50 
+FORTRAN (FORmula TRANslation) is a compiled language widely used in scientific computing. It has been
+designed in the middle of the twentieth century and underwent substantial evolutions over the last 50 
 years (1977, 1990, 2003, 2008).
 
 The specification of FORTRAN is described in the ISO/IEC 1539 document using the Backus-Naur form (BNF) syntax. For
@@ -164,7 +164,7 @@ whose XML representation is :
     <a-stmt><E-1><named-E><N><n>XX</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>Z</n><cnt>&amp;</cnt>
       <cnt>&amp;</cnt><n>ZZZ</n></N></named-E></E-2></a-stmt>
 
-We see here that an identifier may be split accross multiple lines, using `&` lines continuators. To cope with
+We see here that an identifier may be split across multiple lines, using `&` lines continuators. To cope with
 this possibility, it is necessary to introduce this extra `n` tag, which stands for a piece of identifier.
 
 ## FORTRAN code refactoring
