@@ -46,7 +46,7 @@ Et cetera.
 
 Generating a parser from the BNF definition is however not straightforward, because :
 
-1. There are no reserved keywords; it is legal, for instance to have a variable named IF or SUBROUTINE.
+1. There are no reserved keywords; it is legal, for instance to have a variable named `IF` or `SUBROUTINE`.
 2. A lot of constraints apply. These are listed in the ISO/IEC 1539 document.
 3. In fixed form, spaces are not significant. That is, a routine such as :
 
@@ -97,7 +97,7 @@ comes to representing such data. HTML is a typical example of documents that may
 structure. 
 
 fxtran (https://github.com/pmarguinaud/fxtran) is a FORTRAN parser written in C which relies on XML for its output. 
-Its handles most of FORTRAN 2003/2008 features and is extremely fast, at least 10 times faster that fparser.
+It handles most of FORTRAN 2003/2008 features and is extremely fast, at least 10 times faster that fparser.
 
 FORTRAN source code annotated with XML tags is the result of parsing by fxtran. Let us take a very simple example
 of a FORTRAN program:
@@ -130,9 +130,9 @@ is represented by the following XML fragment :
 
     <call-stmt>CALL <procedure-designator><named-E><N><n>SUB</n></N></named-E></procedure-designator> (<arg-spec><arg><named-E><N><n>X</n></N></named-E></arg>, <arg><named-E><N><n>Y</n></N></named-E></arg>, <arg><named-E><N><n>Z</n></N></named-E></arg></arg-spec>)</call-stmt>
 
-We first observer that we have a `call-stmt` tag surrounding the whole statement. `call-stmt' is the denomination 
-used in the ISO/IEC 1539; in fxtran output; note that I have tried to **use the FORTRAN BNF linguo eveywhere 
-it is possible**.
+We first observe that we have a `call-stmt` tag surrounding the whole statement. `call-stmt' is the denomination 
+used in the ISO/IEC 1539; note that I have tried to **use the FORTRAN BNF linguo eveywhere it is possible** in 
+the fxtran output.
 
 Some other important elements are tagged with `named-E`; these are named expressions (`E` stands for expression,
 and there are so many expressions in FORTRAN source code, that it was necessary to use a shorter word). There
@@ -189,7 +189,7 @@ Let us take as an example the following code snippet :
     END PROGRAM
 
 On x86, the inner loop would vectorize, and the compiler would generate AVX instructions, but when using 
-graphical accelerators (hereafter GPUs), the situtation is very different, because these devices are an
+graphical accelerators (hereafter GPUs), the situation is very different, because these devices are an
 aggregate of thousands of very small cores which do not have any vectorization capability, but nevertheless
 require coordinated access to memory. The reader should not pay too much attention to these details, but
 needs to understand that our purpose is to tranform this loop (as well as all loops which are similar)
@@ -205,7 +205,7 @@ into :
 
 What we did in this transformation is that we exchanged the loops on `JLON` and `JLEV` and added an OpenACC
 directive stating that the iterations of this loop should be distributed over the GPU cores, and that
-`Z` is a private variable, which means that each GPU should have its private copy.
+`Z` is a private variable, which means that each GPU core should have its own private copy.
 
 Our transformation involves the following steps :
 
@@ -222,8 +222,8 @@ structures like loops, if then else constructs, etc.):
     $ ls -l loop.F90.xml 
     -rw-rw-r-- 1 phi001 phi001 2825 mai   27 09:29 loop.F90.xml
 
-We then use an XML parser and load the XML document, after registering the fxtran namespace (here we
-use Perl and the libxml2 bindings, but any other language with any XML library would actually do the job) :
+We then use an XML parser and load the XML document, after registering the fxtran namespace (here I
+use Perl and the libxml2 bindings, but any other language with any other XML library would do the job) :
 
     use XML::LibXML;
     use strict;
@@ -234,7 +234,7 @@ use Perl and the libxml2 bindings, but any other language with any XML library w
     $xpc->registerNs (f => $uri);
     my $doc = 'XML::LibXML'->load_xml (location => 'loop.F90.xml');
 
-We can then search `JLEV` loop construct which contain `JLON` loops using XPath :
+We can then search `JLEV` loop constructs which contain `JLON` loops using XPath :
 
     my @do_jlev = $xpc->findnodes 
                   ('//f:do-construct[f:do-stmt[string(f:do-V)="JLEV"]]'
@@ -258,7 +258,7 @@ And it is also easy to exchange them using the XML DOM methods :
         $do_jlon_stmt->replaceNode ($do_jlev_stmt_1);
         ...
      
-We then look for scalar (that is without a reference list) variables which are on the left hand side 
+We then look for scalars (that is named variables without a reference list) which are on the left hand side 
 of assignment statements (that is contained in the `E-1` member of `a-stmt` elements):
 
         my @s = $xpc->findnodes ('.//f:a-stmt/f:E-1/f:named-E[not(f:R-LT)]/f:N/f:n/text()', $do_jlev);
@@ -282,7 +282,7 @@ The final FORTRAN source code is retrieved just by removing XML tags :
 
     print $doc->textContent;
 
-We eventually get :
+And that is :
 
     PROGRAM LOOP
 
@@ -309,7 +309,7 @@ clearly proves that it is possible :
 * to search FORTRAN source using XPath
 * to apply transforms to FORTRAN source code using the XML DOM methods
 
-## Loading FORTRAN source in firefox 
+## Loading FORTRAN source code in firefox 
 
 XML is the language for representing semi-structured data, but it is also the language of choice
 for displaying content on the web. A side effect (the primary goal was automated transformation
@@ -362,7 +362,7 @@ loading from your local disk will not enable the XSL processing) :
 
 Cool ! 
 
-But we can do much better : we can modify the document in the `onload` function so that the lines
+But we can do much better : we can modify the document from within the `onload` function so that the lines
 get numbered; to achieve this, we create the javascript `numberLines` function :
 
     function numberLines ()
@@ -404,8 +404,8 @@ get numbered; to achieve this, we create the javascript `numberLines` function :
       f.removeChild (f.lastChild);
     }
 
-I will not detail the `numberLines` function, but you see its result on the document in the following 
-snapshot :
+I will not detail the `numberLines` function, but it works, and you can see its result on the document 
+in the following snapshot :
 
 ![](snapshots/firefox2.png)
 
