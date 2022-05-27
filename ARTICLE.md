@@ -228,8 +228,10 @@ use Perl and the libxml2 bindings, but any other language with any XML library w
     use XML::LibXML;
     use strict;
    
+    my $uri = 'http://fxtran.net/#syntax';
+
     my $xpc = 'XML::LibXML::XPathContext'->new ();
-    $xpc->registerNs (f => 'http://fxtran.net/#syntax');
+    $xpc->registerNs (f => $uri);
     my $doc = 'XML::LibXML'->load_xml (location => 'loop.F90.xml');
 
 We can then search `JLEV` loop construct which contain `JLON` loops using XPath :
@@ -250,17 +252,55 @@ The DO statements we need to exchange are easily retrieved :
 
 And it is also easy to exchange them using the XML DOM methods :
 
-       my $do_jlev_stmt_1 = $do_jlev_stmt->cloneNode (1);
-       my $do_jlon_stmt_1 = $do_jlon_stmt->cloneNode (1);
-       $do_jlev_stmt->replaceNode ($do_jlon_stmt_1);
-       $do_jlon_stmt->replaceNode ($do_jlev_stmt_1);
-       ...
+        my $do_jlev_stmt_1 = $do_jlev_stmt->cloneNode (1);
+        my $do_jlon_stmt_1 = $do_jlon_stmt->cloneNode (1);
+        $do_jlev_stmt->replaceNode ($do_jlon_stmt_1);
+        $do_jlon_stmt->replaceNode ($do_jlev_stmt_1);
+        ...
      
 We then look for scalar (that is without a reference list) variables which are on the left hand side 
 of assignment statements (that is contained in the `E-1` member of `a-stmt` elements):
 
-       my @s = $xpc->findnodes ('.//f:a-stmt/f:E-1/f:named-E[not(f:R-LT)]/f:N/f:n/text()', $do_jlev);
-       @s = map { $_->textContent } @s;
+        my @s = $xpc->findnodes ('.//f:a-stmt/f:E-1/f:named-E[not(f:R-LT)]/f:N/f:n/text()', $do_jlev);
+        @s = map { $_->textContent } @s;
+        ...
+
+We can then generate the OpenACC directive and insert it in the XML document, before the `JLEV` loop:
+
+        my $acc = "!\$acc loop vector" . (@s ? " private (" . join (', ', @s) . ")" : '');
+        
+        my $C = 'XML::LibXML::Element'->new ('C');
+        $C->setNamespace ($uri, 'f');
+        $C->appendChild ('XML::LibXML::Text'->new ($acc));
+
+        $do_jlev->parentNode->insertBefore ($C, $do_jlev);
+        $do_jlev->parentNode->insertBefore ('XML::LibXML::Text'->new ("\n"), $do_jlev);
+
+      }
+
+The final FORTRAN source code is retrieved just by removing XML tags :
+
+    print $doc->textContent;
+
+We eventually get :
+
+    PROGRAM LOOP
+
+    REAL :: X (KLON, KLEV)
+    REAL :: Y (KLON, KLEV)
+    REAL :: Z
+
+    !$acc loop vector private (Z)
+    DO JLON = 1, KLON
+      DO JLEV = 2, KLEV
+        Z = X (JLON, JLEV-1) + Y (JLON, JLEV)
+        X (JLON, JLEV) = Z * Z
+      ENDDO
+    ENDDO
+
+    END PROGRAM
+
+
 
 
 
