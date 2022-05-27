@@ -300,8 +300,10 @@ We eventually get :
 
     END PROGRAM
 
-This example is of course a simplified version of what we get in real life, but it clearly proves 
-that it is possible :
+Et voilà !
+
+This example is of course a simplified version of what we have to deal with in real life, but it 
+clearly proves that it is possible :
 
 * to parse FORTRAN source code using XML
 * to search FORTRAN source using XPath
@@ -350,7 +352,13 @@ We list here the contents of the stylesheet :
     </xsl:stylesheet>
 
 Its purpose is merely to embed the XML document inside an HTML page, attach a CSS stylesheet to it
-and trigger the `_onload` function once the document is loaded.
+and trigger the `onload` function once the document is loaded.
+
+With an empty `onload` function, we get some nice FORTRAN code, with some colors brought in by 
+the CSS (note that for some reason, the document has to be served by an actual HTTP server, just
+loading from your local disk will not enable the XSL processing):
+
+![](snapshots/firefox1.png)
 
 
 

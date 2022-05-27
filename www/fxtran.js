@@ -220,6 +220,7 @@ function _oncontextmenu (e)
 
 function numberLines ()
 {
+  return;
   let ns = findNodes ('//f:file');
   
   let f = ns.snapshotItem (0);
@@ -233,21 +234,23 @@ function numberLines ()
     {
       let s = ns.snapshotItem (i);
       let t = s.textContent;
-      let tt = t.split (/\n/).reverse ();
+      let tt = t.split (/\n/);
+      let nsi = s.nextSibling;
 
-      let t1 = tt.shift ();
-      s.parentNode.insertBefore (document.createTextNode (t1), s.nextSibling);  
-          
+      let ll = tt.pop ();
+
       for (t of tt)
         {
-
           let L = document.createElementNS (fxtranURI, "L");
           L.appendChild (document.createTextNode (("0000" + I).slice (-4) + " | "));
-          s.parentNode.insertBefore (L, s.nextSibling);
-          s.parentNode.insertBefore (document.createTextNode (t + "\n"), s.nextSibling);
+          let tn = document.createTextNode (t + "\n");
+          s.parentNode.insertBefore (tn, nsi);
+          s.parentNode.insertBefore (L, nsi);
           I++;
-
         }
+
+      ll = document.createTextNode (ll);
+      s.parentNode.insertBefore (ll, nsi);
       s.parentNode.removeChild (s);
     }
     
@@ -258,8 +261,8 @@ function numberLines ()
 function _onload ()
 {
   numberLines ();
-  document.addEventListener ('click', _onclick);
-  document.addEventListener ('contextmenu', _oncontextmenu);
+//document.addEventListener ('click', _onclick);
+//document.addEventListener ('contextmenu', _oncontextmenu);
 
 }
 
