@@ -150,7 +150,7 @@ is a type declaration statement, whose parsed output is :
     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Z</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
 
 It is possible to distinguish the type specification (the `REAL` intrinsic type is used here), and entity 
-declarations (`EN-decl`) tags, grouped in a list (`EN-decl-LT`, `LT` being the abbreviated form os list).
+declarations (`EN-decl`) tags, grouped in a list (`EN-decl-LT`, `LT` being the abbreviated form of list).
 
 Eventually note that FORTRAN identifiers are tagged with `n`s nested in `N` tags. To understand why, look at the
 following assignment statement :
@@ -415,6 +415,8 @@ selects one of them using the mouse :
 ![](snapshots/firefox3.png)
 
 Et cetera. 
+
+** Conclusion
 
 
 
