@@ -300,6 +300,60 @@ We eventually get :
 
     END PROGRAM
 
+This example is of course a simplified version of what we get in real life, but it clearly proves 
+that it is possible :
+
+* to parse FORTRAN source code using XML
+* to search FORTRAN source using XPath
+* to apply transforms to FORTRAN source code using the XML DOM methods
+
+## Loading FORTRAN source in firefox 
+
+XML is the language for representing semi-structured data, but it is also the language of choice
+for displaying content on the web. A side effect (the primary goal was automated transformation
+of source code) of parsing FORTRAN source code into XML is that it is now possible to attach an 
+XSL stylesheet to an XML document produced by fxtran, and load the document in firefox.
+
+Attaching the XSL stylesheet is straightforward :
+
+     <?xml version="1.0"?><?xml-stylesheet type="text/xsl" href="fxtran.xsl"?>
+
+We list here the contents of the stylesheet :
+
+    <?xml version="1.0"?>
+    <xsl:stylesheet version="1.0" 
+     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+     xmlns:f="http://fxtran.net/#syntax"
+     xmlns:html="http://www.w3.org/1999/xhtml">
+    
+      <xsl:output method="xml"/>
+    
+      <xsl:template match="*">
+        <xsl:copy-of select="."/>
+      </xsl:template>
+    
+      <xsl:template match="/f:object">
+    
+    
+    <html:link rel="stylesheet" href="fxtran.css"/>
+    
+    <html:script src="fxtran.js"/>
+    
+    <html:body onload="_onload()">
+    
+        <xsl:apply-templates/>
+    
+    </html:body>
+    
+      </xsl:template>
+    
+    </xsl:stylesheet>
+
+Its purpose is merely to embed the XML document inside an HTML page, attach a CSS stylesheet to it
+and trigger the `_onload` function once the document is loaded.
+
+
+
 
 
 
