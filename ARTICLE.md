@@ -409,6 +409,14 @@ snapshot :
 
 ![](snapshots/firefox2.png)
 
+Another thing we can do is adding event listeners, and highlight some variables when the user
+selects one of them using the mouse :
+
+![](snapshots/firefox3.png)
+
+Et cetera. 
+
+
 
 
 

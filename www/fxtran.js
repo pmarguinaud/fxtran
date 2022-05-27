@@ -260,8 +260,8 @@ function numberLines ()
 function _onload ()
 {
   numberLines ();
-//document.addEventListener ('click', _onclick);
-//document.addEventListener ('contextmenu', _oncontextmenu);
+  document.addEventListener ('click', _onclick);
+  document.addEventListener ('contextmenu', _oncontextmenu);
 
 }
 
