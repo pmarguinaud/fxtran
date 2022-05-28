@@ -177,10 +177,15 @@ In this article, we will look at a typical modification which is necessary when 
 
 Let us take as an example the following code snippet :
 
-    PROGRAM LOOP
+    SUBROUTINE LOOP (KLON, KLEV, X, Y)
+
+    INTEGER :: KLON
+    INTEGER :: KLEV
     REAL :: X (KLON, KLEV)
     REAL :: Y (KLON, KLEV)
     REAL :: Z
+
+    INTEGER :: JLON, JLEV
 
     DO JLEV = 2, KLEV
       DO JLON = 1, KLON
@@ -188,7 +193,8 @@ Let us take as an example the following code snippet :
         X (JLON, JLEV) = Z * Z
       ENDDO
     ENDDO
-    END PROGRAM
+
+    END SUBROUTINE
 
 On x86, the inner loop would vectorize, and the compiler would generate AVX instructions, but when using 
 graphical accelerators (hereafter GPUs), the situation is very different, because these devices are an
@@ -288,8 +294,10 @@ The final FORTRAN source code is retrieved just by removing XML tags :
 
 And that is :
 
-    PROGRAM LOOP
+    SUBROUTINE LOOP (KLON, KLEV, X, Y)
 
+    INTEGER :: KLON
+    INTEGER :: KLEV
     REAL :: X (KLON, KLEV)
     REAL :: Y (KLON, KLEV)
     REAL :: Z
@@ -302,7 +310,7 @@ And that is :
       ENDDO
     ENDDO
 
-    END PROGRAM
+    END SUBROUTINE
 
 Et voilà !
 
