@@ -119,7 +119,8 @@ The result of parsing this program with fxtran is :
 
 
 The careful reader has already noticed that **the original source code is embedded** in this XML document. This 
-implies that recovering the original content is just a matter of removing the XML tags.
+implies that recovering the original content is just a matter of removing the XML tags. Please also note that whitespaces
+and linebreaks matter, which is why we did not reformat the XML (this would have altered its meaning).
 
 Let us have a closer look.
 
@@ -166,6 +167,9 @@ whose XML representation is :
 
 We see here that an identifier may be split across multiple lines, using `&` lines continuators. To cope with
 this possibility, it is necessary to introduce this extra `n` tag, which stands for a piece of identifier.
+
+The important thing to remember from this section is that fxtran output is a syntax tree describing the FORTRAN
+source code structure, but which also contains the original document and its layout.
 
 ## FORTRAN code refactoring
 
