@@ -1,3 +1,6 @@
+
+This article has been published on [xml.com](https://www.xml.com/articles/2022/05/31/parsing-and-refactoring-fortran-code-xml/).
+
 # Parsing and refactoring FORTRAN code with XML
 
 ## Introduction
