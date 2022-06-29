@@ -75,6 +75,7 @@ extern const char * FXTRAN_types[];
       macro(ENUM                                  , 0,    3,  0 ) \
       macro(ENUMERATOR                            , 0,    3,  0 ) \
       macro(EQUIVALENCE                           , 0,   77,  0 ) \
+      macro(ERRORSTOP                             , 0,    3,  0 ) \
       macro(EXIT                                  , 1,   90,  0 ) \
       macro(EXTERNAL                              , 0,   77,  1 ) \
       macro(FINAL                                 , 0,    3,  0 ) \

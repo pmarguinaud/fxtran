@@ -222,6 +222,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_SELECTTYPE                        :  return _T(_S(SELECT) H _S(TYPE)                H _S(STMT));
       case FXTRAN_SEQUENCE                          :  return _T(_S(SEQUENCE)                         H _S(STMT));
       case FXTRAN_STOP                              :  return _T(_S(STOP)                             H _S(STMT));
+      case FXTRAN_ERRORSTOP                         :  return _T(_S(ERROR) H _S(STOP)                 H _S(STMT));
       case FXTRAN_SUBMODULE                         :  return _T(_S(SUBMODULE)                        H _S(STMT));
       case FXTRAN_SUBROUTINE                        :  return _T(_S(SUBROUTINE)                       H _S(STMT));
       case FXTRAN_TARGET                            :  return _T(_S(TARGET)                           H _S(STMT));
@@ -3180,7 +3181,7 @@ other:
             return FXTRAN_ELSEWHERE;
 
         tt(ELSE);           tt(ENDIF);          tt(ENTRY);          tt(EQUIVALENCE);    
-	tt(EXIT);           tt(EXTERNAL);
+	tt(ERRORSTOP);      tt(EXIT);           tt(EXTERNAL);
 
 	break;
        
@@ -4085,6 +4086,19 @@ def_extra_proto (RETURN)
     {
       k = strlen (t);
       FXTRAN_xml_word_tag (_T(_S(RETURN) H _S(CODE)), 
+		           ci->offset, ci[k-1].offset+1, ctx);
+    }
+}
+
+def_extra_proto (ERRORSTOP)
+{
+  int k;
+  XAD(9);
+
+  if (t[0])
+    {
+      k = strlen (t);
+      FXTRAN_xml_word_tag (_T(_S(STOP) H _S(CODE)), 
 		           ci->offset, ci[k-1].offset+1, ctx);
     }
 }

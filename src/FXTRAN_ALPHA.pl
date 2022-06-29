@@ -89,6 +89,7 @@ my @x = qw[
   enum                                                           ENUM
   enumerator                                                     ENUMERATOR
   equivalence                                                    EQUIVALENCE
+  error                                                          ERROR
   exit                                                           EXIT
   explicit                                                       EXPLICIT
   extends                                                        EXTENDS

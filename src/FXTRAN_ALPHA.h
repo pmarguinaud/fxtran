@@ -87,6 +87,7 @@
 #define FXTRAN_STRING_ENUM                           "enum"
 #define FXTRAN_STRING_ENUMERATOR                     "enumerator"
 #define FXTRAN_STRING_EQUIVALENCE                    "equivalence"
+#define FXTRAN_STRING_ERROR                          "error"
 #define FXTRAN_STRING_EXIT                           "exit"
 #define FXTRAN_STRING_EXPLICIT                       "explicit"
 #define FXTRAN_STRING_EXTENDS                        "extends"
