@@ -8,6 +8,7 @@ make
 
 dir=fxtran_1-0_amd64
 
+
 mkdir -p $dir/usr/bin
 cp bin/fxtran $dir/usr/bin/fxtran
 
@@ -35,3 +36,5 @@ mv debian DEBIAN
 cd ..
 
 dpkg-deb --build --root-owner-group $dir
+\rm -rf $dir
+
