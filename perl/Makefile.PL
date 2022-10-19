@@ -1,4 +1,4 @@
-use 5.030000;
+use 5.016000;
 use ExtUtils::MakeMaker;
 use Cwd;
 
