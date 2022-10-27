@@ -1,11 +1,8 @@
 #!/usr/bin/perl -w
-#unkwown                                                        UNKNOWN
-#
+
 use strict;
 use FileHandle;
 use Data::Dumper;
-
-
 
 my @x = qw[
   a                                                              ASSIGNMENT
@@ -227,7 +224,7 @@ my @x = qw[
   triplet                                                        TRIPLET
   T                                                              TYPE
   unit                                                           UNIT
-  unkwown                                                        UNKNOWN
+  unknown                                                        UNKNOWN
   update                                                         UPDATE
   upper                                                          UPPER
   user                                                           USER
@@ -243,9 +240,9 @@ my @x = qw[
 
 
 {
-  my $fhp = 'FileHandle'->new ('>../FXTRAN_ALPHA.pm');
+  my $fhp = 'FileHandle'->new ('>../perl/lib/fxtran/alpha.pm');
   $fhp->print (<< 'EOF');
-package FXTRAN_ALPHA;
+package fxtran::alpha;
 
 use strict;
 
@@ -257,9 +254,14 @@ EOF
     {
       $_ = lc ($_);
     }
+  for my $k (keys (%a2f))
+    {
+      delete $a2f{$k} if ($k eq $a2f{$k});
+    }
   my %f2a = reverse (%a2f);
 
   local $Data::Dumper::Terse = 1;
+  local $Data::Dumper::Sortkeys = 1;
   $fhp->print ("my %U2S = %{");
   $fhp->print (&Dumper (\%f2a));
   $fhp->print ("};\n");
@@ -274,11 +276,7 @@ sub lookupU2S
   unless (exists ($U2S{$x}))
     {
       my @x = split (m/-/o, $x);
-      $_ = $U2S{$_} for (@x);
-      if (grep { !defined ($_) } @x)
-        {
-          die ("Cannot translate $x\n");
-        }
+      $_ = $U2S{$_} || $_ for (@x);
       $U2S{$x} = join ('-', @x);
       $S2U{$U2S{$x}} = $x;
     }
@@ -291,11 +289,7 @@ sub lookupS2U
   unless (exists ($S2U{$x}))
     {
       my @x = split (m/-/o, $x);
-      $_ = $S2U{$_} for (@x);
-      if (grep { !defined ($_) } @x)
-        {
-          die ("Cannot translate $x\n");
-        }
+      $_ = $S2U{$_} || $_ for (@x);
       $S2U{$x} = join ('-', @x);
       $U2S{$S2U{$x}} = $x;
     }

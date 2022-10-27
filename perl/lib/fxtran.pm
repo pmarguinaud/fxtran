@@ -4,83 +4,119 @@ use 5.016000;
 use strict;
 use warnings;
 
-require Exporter;
+use base qw (Exporter);
+use XML::LibXML;
+use XSLoader;
 
-our @ISA = qw(Exporter);
+our @EXPORT = qw (parse s t e n);
 
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
+our $VERSION = '0.02';
 
-# This allows declaration	use fxtran ':all';
-# If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
-# will save memory.
-our %EXPORT_TAGS = ( 'all' => [ qw(
-	
-) ] );
+&XSLoader::load ('fxtran', $VERSION);
 
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
+sub t
+{
+  'XML::LibXML::Text'->new ($_[0]);
+}
 
-our @EXPORT = qw(
-	
-);
+sub s
+{
+  &parse (statement => $_[0]);
+}
 
-our $VERSION = '0.01';
+sub e
+{
+  &parse (expr => $_[0]);
+}
 
-require XSLoader;
-XSLoader::load('fxtran', $VERSION);
+sub n
+{
+  my $xml = shift;
+  my $doc = 'XML::LibXML'->load_xml (string => '<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax">' . $xml . '</object>');
 
-# Preloaded methods go here.
+  my @c = $doc->documentElement ()->childNodes ();
+  if (scalar (@c) > 1)
+    {
+      return @c;
+    }
+  else
+    {
+      return $c[0];
+    }
+}
+
+sub parse
+{      
+  my %args = @_;     
+     
+  my @fopts = @{ $args{fopts} || [] };     
+  my @xopts = @{ $args{xopts} || [] };     
+     
+  if ($args{string})     
+    {     
+      use File::Temp;     
+      my $fh = 'File::Temp'->new (SUFFIX => '.F90');     
+      $fh->print ($args{string});     
+      $fh->flush ();     
+      system (qw (fxtran -construct-tag -no-include), @fopts, $fh->filename)     
+        && die ($args{string});     
+      my $doc = 'XML::LibXML'->load_xml (location => $fh->filename . '.xml', @xopts);     
+      return $doc;     
+    }     
+  elsif ($args{fragment})     
+    {     
+      chomp (my $fragment = $args{fragment});     
+      my $program = << "EOF";      
+$fragment      
+END      
+EOF
+      my $xml = &run ('-construct-tag', '-no-include', @fopts, $program);     
+      my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);     
+      $doc = $doc->lastChild->firstChild;     
+     
+      $doc->lastChild->unbindNode () for (1 .. 2);     
+      my @c = $doc->childNodes ();     
+     
+      return @c;     
+    }     
+  elsif ($args{statement})     
+    {     
+      my $program = << "EOF";      
+$args{statement}      
+END      
+EOF
+      my $xml = &run ('-line-length', 300, $program);     
+      my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);     
+      my $n = $doc->documentElement->firstChild->firstChild;     
+      return $n;     
+    }     
+  elsif ($args{expr})     
+    {     
+      my $program = << "EOF";      
+X = $args{expr}      
+END      
+EOF
+      my $xml = &run ('-line-length', 300, $program);     
+      my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);     
+      my $n = $doc->documentElement->firstChild->firstChild->lastChild->firstChild;     
+      return $n;     
+    }     
+  elsif (my $f = $args{location})     
+    {     
+      use File::stat;     
+      return unless (-f $f);     
+     
+      my $dir = $args{dir} || &dirname ($f);     
+      my $xml = "$dir/" . &basename ($f) . '.xml';     
+     
+      my @cmd = (qw (fxtran -construct-tag -no-include), @fopts, -o => $xml, $f);     
+      system (@cmd)     
+        && croak ("`@cmd' failed\n");     
+     
+      my $doc = 'XML::LibXML'->load_xml (location => $xml, @xopts);     
+      return $doc;     
+    }     
+  &croak ("@_");
+}      
 
 1;
-__END__
-# Below is stub documentation for your module. You'd better edit it!
-
-=head1 NAME
-
-fxtran - Perl extension for blah blah blah
-
-=head1 SYNOPSIS
-
-  use fxtran;
-  blah blah blah
-
-=head1 DESCRIPTION
-
-Stub documentation for fxtran, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
-
-=head2 EXPORT
-
-None by default.
-
-
-
-=head1 SEE ALSO
-
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
-
-If you have a mailing list set up for your module, mention it here.
-
-If you have a web site set up for your module, mention it here.
-
-=head1 AUTHOR
-
-Philippe Marguinaud, E<lt>phi001@E<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright (C) 2022 by Philippe Marguinaud
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.30.0 or,
-at your option, any later version of Perl 5 you may have available.
-
-
-=cut

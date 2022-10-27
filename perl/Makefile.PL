@@ -4,13 +4,12 @@ use Cwd;
 
 my $pwd = &cwd ();
 
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
-WriteMakefile(
+&WriteMakefile
+(
     NAME              => 'fxtran',
-    VERSION_FROM      => 'lib/fxtran.pm', # finds $VERSION, requires EU::MM from perl >= 5.5
-    PREREQ_PM         => {}, # e.g., Module::Name => 1.1
-    ABSTRACT_FROM     => 'lib/fxtran.pm', # retrieve abstract from module
+    VERSION_FROM      => 'lib/fxtran.pm', 
+    PREREQ_PM         => {'XML::XPath::Parser' => 1.48, 'XML::LibXML' => 2.0207}, 
+    ABSTRACT_FROM     => 'lib/fxtran.pm', 
     AUTHOR            => 'Philippe Marguinaud <pmarguinaud@hotmail.com>',
     LICENSE           => 'GPL',
     LIBS              => ["-L$pwd/../lib -lfxtran"], 

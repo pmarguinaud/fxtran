@@ -225,7 +225,7 @@
 #define FXTRAN_STRING_TRIPLET                        "triplet"
 #define FXTRAN_STRING_TYPE                           "T"
 #define FXTRAN_STRING_UNIT                           "unit"
-#define FXTRAN_STRING_UNKNOWN                        "unkwown"
+#define FXTRAN_STRING_UNKNOWN                        "unknown"
 #define FXTRAN_STRING_UPDATE                         "update"
 #define FXTRAN_STRING_UPPER                          "upper"
 #define FXTRAN_STRING_USER                           "user"
