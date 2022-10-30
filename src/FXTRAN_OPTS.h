@@ -19,7 +19,6 @@ typedef struct FXTRAN_opts
   int flat_expr;
   int flat_op_expr;
   int show_lines;
-  int xul_wrap;
   int css;
   int code_tag;
   int name_attr;

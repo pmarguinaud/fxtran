@@ -68,9 +68,6 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
     }
   else
     {
-      if (ctx->opts.xul_wrap)
-        FXTRAN_f_buffer_printf (&ctx->fb, "<window xmlns=\"" XUL_NS "\"><scrollbox flex=\"1\" style=\"overflow:auto;\"><description>");
-     
       FXTRAN_f_buffer_printf (&ctx->fb, "<object xmlns=\"" FXT_NS_SYN "\" source-form=\"%s\""
             	" source-width=\"%d\" openmp=\"%d\" openacc=\"%d\">", 
                form_str (ctx->opts.form), ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc);
@@ -103,9 +100,6 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
   else
     {
       FXTRAN_f_buffer_printf (&ctx->fb, "</object>");
-     
-      if (ctx->opts.xul_wrap)
-        FXTRAN_f_buffer_printf (&ctx->fb, "</description></scrollbox></window>");
     }
 
   FXTRAN_f_buffer_printf (&ctx->fb, "\n");
