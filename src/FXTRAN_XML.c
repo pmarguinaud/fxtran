@@ -589,6 +589,14 @@ void FXTRAN_xml_word_tag_keyword (const char * tag, int pos1, int pos2,
   FXTRAN_f_buffer_printf (&ctx->fb, "</%s>", tag);
 }
 
+FXTRAN_xmlctx * FXTRAN_xmlctx_new ()
+{
+  FXTRAN_xmlctx * ctx = (FXTRAN_xmlctx*)malloc (sizeof (FXTRAN_xmlctx)); 
+  memset (ctx, '\0', sizeof (FXTRAN_xmlctx));                            
+  FXTRAN_f_buffer_init (&ctx->fb); ctx->lev = -1;                       
+  return ctx;
+} 
+
 void FXTRAN_xmlctx_free (FXTRAN_xmlctx * ctx) 
 {
   FXTRAN_file * f, * g;
@@ -634,4 +642,5 @@ void FXTRAN_xml_skip (FXTRAN_xmlctx * ctx, int pos)
 {
   adv_pos (ctx, pos, 0);
 }
+
 

@@ -6,6 +6,7 @@
 #define _FXTRAN_XML_H
 
 #include <string.h>
+#include <setjmp.h>
 
 #include "FXTRAN_FBUFFER.h"
 #include "FXTRAN_CHARINFO.h"
@@ -26,6 +27,9 @@ typedef struct FXTRAN_xmlctx_stack_elt
 
 typedef struct FXTRAN_xmlctx
 {
+  /* pointer to where we should go back when something goes wrong */
+  jmp_buf env_buffer;
+
   /* buffer where XML is stored */
   f_buffer fb;
 
@@ -55,14 +59,7 @@ typedef struct FXTRAN_XML_ATTR
   const char * value;
 } FXTRAN_XML_ATTR;
 
-#define FXTRAN_xmlctx_new(pctx) \
-  do {                                                                      \
-    FXTRAN_xmlctx * _ctx = (FXTRAN_xmlctx*)malloc (sizeof (FXTRAN_xmlctx)); \
-    *(pctx) = _ctx;                                                         \
-    memset (_ctx, '\0', sizeof (FXTRAN_xmlctx));                            \
-    FXTRAN_f_buffer_init (&_ctx->fb); _ctx->lev = -1;                       \
-  } while (0)
-
+FXTRAN_xmlctx * FXTRAN_xmlctx_new ();
 void FXTRAN_xmlctx_free (FXTRAN_xmlctx *);
 void FXTRAN_xml_start_tag (const char *, int, FXTRAN_xmlctx *);
 void FXTRAN_xml_start_tag_attr (const char *, int, FXTRAN_xmlctx *, const FXTRAN_XML_ATTR *);

@@ -38,7 +38,7 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
   char * text;
   FXTRAN_xmlctx * ctx;
 
-  FXTRAN_xmlctx_new (&ctx);
+  ctx = FXTRAN_xmlctx_new ();
 
   FXTRAN_parse_opts (ctx, argc, argv);
 
