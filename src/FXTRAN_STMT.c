@@ -4154,37 +4154,44 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
 {
   int len;
   const int ncharmargin = 32;
+  FXTRAN_char_info * ci1;
+  char * text1;
+
+  ctx->lev_stmt++;
 
   len = strlen (text);
 
-  ctx->text1 = (char*)malloc (len+1+ncharmargin);
-  FXTRAN_char_info_alloc (&ctx->ci1, len);
+  ctx->stmt[ctx->lev_stmt].text = (char*)malloc (len+1+ncharmargin);
+  FXTRAN_char_info_alloc (&ctx->stmt[ctx->lev_stmt].ci, len);
 
-  memset (&ctx->text1[len], '\0', ncharmargin);
+  text1 = ctx->stmt[ctx->lev_stmt].text;
+  ci1 = ctx->stmt[ctx->lev_stmt].ci;
 
-  len = FXTRAN_restrict_tci (ctx->text1, ctx->ci1, text, ci, len);
+  memset (&text1[len], '\0', ncharmargin);
+
+  len = FXTRAN_restrict_tci (text1, ci1, text, ci, len);
   
   /* we compute dots and parens on a per statement basis, so that
    * we be able to parse all statements even though one of them is broken 
    */
-  FXTRAN_set_char_info_dop (ctx->text1, ctx->ci1);
+  FXTRAN_set_char_info_dop (text1, ci1);
 
   /* check that dots and parens are balanced */
 
-  if (FXTRAN_check_dpb (ctx->text1, ctx->ci1, len))
+  if (FXTRAN_check_dpb (text1, ci1, len))
     FXTRAN_THROW ("Unbalanced parens or dots in `%s'\n", text);
     
   if (omp == 2)
     {
-      FXTRAN_dump_ompd (ctx->text1, ctx->ci1, ctx);
+      FXTRAN_dump_ompd (text1, ci1, ctx);
     }
   else if (acc == 2)
     {
-      FXTRAN_dump_accd (ctx->text1, ctx->ci1, ctx);
+      FXTRAN_dump_accd (text1, ci1, ctx);
     }
   else if (ddd == 2)
     {
-      FXTRAN_dump_dddd (ctx->text1, ctx->ci1, ctx);
+      FXTRAN_dump_dddd (text1, ci1, ctx);
     }
   else
     {
@@ -4196,7 +4203,7 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
    
       memset (&tu, '\0', sizeof (tu));
    
-      type = get_FXTRAN_stmt_type (ctx->text1, ctx->ci1, stack, ctx, &expect_pu, &tu);
+      type = get_FXTRAN_stmt_type (text1, ci1, stack, ctx, &expect_pu, &tu);
 
       if (type == FXTRAN_NONE)
         {
@@ -4210,12 +4217,12 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
 
       if (strip)
         {
-          FXTRAN_xml_advance (ctx, ctx->ci1->offset);
-          FXTRAN_xml_skip (ctx, ctx->ci1[len-1].offset+1);
+          FXTRAN_xml_advance (ctx, ci1->offset);
+          FXTRAN_xml_skip (ctx, ci1[len-1].offset+1);
         }
       else
         {
-          stmt_block_handle (ctx->text1, type, expect_pu, label, stack, ctx, &tu);
+          stmt_block_handle (text1, type, expect_pu, label, stack, ctx, &tu);
 
           if (broken)
             str = _T(_S(BROKEN) H _S(STMT));
@@ -4223,16 +4230,16 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
             str = stmt_as_str (type);
 
           if (tu.xml_ctu1)
-            dump_ctu (&tu.xml_ctu1, ctx->ci1->offset, ctx);
+            dump_ctu (&tu.xml_ctu1, ci1->offset, ctx);
 
-          dump_otu (tu.xml_otu1, ctx->ci1->offset, ctx);
+          dump_otu (tu.xml_otu1, ci1->offset, ctx);
 
-          FXTRAN_xml_start_tag (str, ctx->ci1->offset, ctx);
+          FXTRAN_xml_start_tag (str, ci1->offset, ctx);
    
           switch (type)
             {
 #define macro_cextra(t,x,nn,isatt) \
-case FXTRAN_##t: stmt_##t##_extra(ctx->text1, ctx->ci1, stack, ctx); break;
+case FXTRAN_##t: stmt_##t##_extra(text1, ci1, stack, ctx); break;
 
                 FXTRAN_statement_list(macro_cextra)
 
@@ -4242,18 +4249,24 @@ case FXTRAN_##t: stmt_##t##_extra(ctx->text1, ctx->ci1, stack, ctx); break;
               break;
             }
 
-          FXTRAN_xml_end_tag (ctx->ci1[len-1].offset+1, ctx);
+          FXTRAN_xml_end_tag (ci1[len-1].offset+1, ctx);
 
           if (tu.xml_ctu2)
-            dump_ctu (&tu.xml_ctu2, ctx->ci1[len-1].offset+1, ctx);
-          dump_otu (tu.xml_otu2, ctx->ci1[len-1].offset+1, ctx);
+            dump_ctu (&tu.xml_ctu2, ci1[len-1].offset+1, ctx);
+          dump_otu (tu.xml_otu2, ci1[len-1].offset+1, ctx);
         }
 
     }
 
-  free (ctx->text1); ctx->text1 = NULL;
-  FXTRAN_char_info_free (&ctx->ci1);
 
+  free (text1); text1 = NULL;
+  FXTRAN_char_info_free (&ci1);
+
+  ctx->stmt[ctx->lev_stmt].text = text1;
+  ctx->stmt[ctx->lev_stmt].ci = ci1;
+
+
+  ctx->lev_stmt--;
 }
 
 void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1, int i2, 

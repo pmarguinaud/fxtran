@@ -36,6 +36,7 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 {
   FILE * fpx;
   FXTRAN_xmlctx * ctx;
+  int err;
 
   ctx = FXTRAN_xmlctx_new ();
 
@@ -131,7 +132,8 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 
 cleanup:
 
-  if (ctx->err[0])
+  err = ctx->err[0];
+  if (err)
     {
       if (Err)
         *Err = strdup (ctx->err);
@@ -142,7 +144,7 @@ cleanup:
   FXTRAN_free_opts (ctx);
   FXTRAN_xmlctx_free (ctx);
 
-  return ctx->err[0];
+  return err;
 }
 
 
