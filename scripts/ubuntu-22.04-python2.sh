@@ -4,9 +4,9 @@ set -x
 set -e
 
 
-cd python
+cd python2
 
-dir=python-fxtran_1-0_amd64
+dir=python2-fxtran_1-0_amd64
 
 make clean
 make
@@ -19,7 +19,7 @@ cd $dir
 mkdir -p debian
 
 cat -> debian/control << EOF
-Package: python-fxtran
+Package: python2-fxtran
 Version: 1.0
 Architecture: amd64
 Source: fxtran

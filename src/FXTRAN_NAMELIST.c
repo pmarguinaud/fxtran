@@ -288,6 +288,7 @@ void FXTRAN_NAMELIST_decode (FXTRAN_xmlctx * ctx)
   len = strlen (text);
 
   FXTRAN_char_info_alloc (&ci, len);
+  ctx->ci = ci;
 
   for (i = 0; i < len;)
     {
@@ -349,9 +350,6 @@ void FXTRAN_NAMELIST_decode (FXTRAN_xmlctx * ctx)
 
   FXTRAN_set_char_info_off (text, ci);
   FXTRAN_set_char_info_dop (text, ci);
-
-  ctx->text = text;
-  ctx->ci = ci;
 
 /*DUMP_FXTRAN_MASK(text,ci,len);*/
 

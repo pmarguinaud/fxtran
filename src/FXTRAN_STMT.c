@@ -4159,6 +4159,9 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
 
   ctx->lev_stmt++;
 
+  if (ctx->lev_stmt >= FXTRAN_XML_MAXSTL)
+    FXTRAN_ABORT ("FXTRAN_XML_MAXSTL limit is reached");
+
   len = strlen (text);
 
   ctx->stmt[ctx->lev_stmt].text = (char*)malloc (len+1+ncharmargin);
@@ -4272,15 +4275,14 @@ case FXTRAN_##t: stmt_##t##_extra(text1, ci1, stack, ctx); break;
 void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1, int i2, 
 		          FXTRAN_xmlctx * ctx, FXTRAN_stmt_stack * stack, int label)
 {
-  char * t;
-  FXTRAN_char_info * ci1;
+  int len = i2-i1+1;
+  char t[len+1];
+  FXTRAN_char_info ci1[len+1];
   int i, j;
   int I1 = -1, I2 = -1;  /* actual bounds */
   int omp, acc, ddd;
 
-  t = (char*)malloc (i2-i1+2);
-  FXTRAN_char_info_alloc (&ci1, i2-i1+2);
-
+  FXTRAN_char_info_init (ci1, len);
 
   for (i = i1, j = 0; i < i2+1; i++)
     if ((ci[i].mask == FXTRAN_COD) || (ci[i].mask == FXTRAN_STR))
@@ -4301,9 +4303,6 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
   ddd = FXTRAN_check_ddd (text, ci, I1, I2, ctx);
 
   FXTRAN_stmt (t, ci1, stack, ctx, omp, acc, ddd, label);
-
-  FXTRAN_char_info_free (&ci1);
-  free (t);
 }
 
 
