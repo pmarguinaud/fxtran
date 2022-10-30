@@ -19,7 +19,7 @@
     if (ctx->opts.gdb)                                           \
       FXTRAN_save_where (__FILE__, __LINE__);                    \
     FXTRAN_XML_print_section (ctx->text, ctx->ci, ctx->pos, 3);  \
-    exit (1);                                                    \
+    longjmp (ctx->env_buf, 1);                                   \
   } while (0)
 
 #define FXTRAN_ABORT(...) FXTRAN_THROW(__VA_ARGS__)

@@ -24,11 +24,13 @@ typedef struct FXTRAN_xmlctx_stack_elt
 
 #define FXTRAN_XML_MAXLEV 1024
 #define FXTRAN_XML_NS     1024
+#define FXTRAN_XML_MAXERR 1024
 
 typedef struct FXTRAN_xmlctx
 {
   /* pointer to where we should go back when something goes wrong */
-  jmp_buf env_buffer;
+  jmp_buf env_buf;
+  char err[FXTRAN_XML_MAXERR];
 
   /* buffer where XML is stored */
   f_buffer fb;
@@ -60,6 +62,7 @@ typedef struct FXTRAN_XML_ATTR
 } FXTRAN_XML_ATTR;
 
 FXTRAN_xmlctx * FXTRAN_xmlctx_new ();
+#define FXTRAN_xmlctx_eval(ctx) setjmp ((ctx)->env_buf)
 void FXTRAN_xmlctx_free (FXTRAN_xmlctx *);
 void FXTRAN_xml_start_tag (const char *, int, FXTRAN_xmlctx *);
 void FXTRAN_xml_start_tag_attr (const char *, int, FXTRAN_xmlctx *, const FXTRAN_XML_ATTR *);

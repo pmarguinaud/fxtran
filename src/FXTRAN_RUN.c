@@ -40,6 +40,9 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
 
   ctx = FXTRAN_xmlctx_new ();
 
+  if (FXTRAN_xmlctx_eval (ctx))
+    goto cleanup;
+
   FXTRAN_parse_opts (ctx, argc, argv);
 
   if (ctx->opts.help)
@@ -126,6 +129,8 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
 
       fclose (fpx);
     }
+
+cleanup:
 
   FXTRAN_free_opts (ctx);
 
