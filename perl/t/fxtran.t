@@ -19,4 +19,11 @@ $fh->print (&F ('//EN-decl', $doc), "\n");
 
 $fh->print (&F ('//entity-decl', $doc), "\n");
 
+eval
+{
+  &s ('X = ..');
+};
+
+$fh->print ($@, "\n");
+
 

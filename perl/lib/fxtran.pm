@@ -120,3 +120,15 @@ EOF
 }      
 
 1;
+
+=pod
+
+=head NAME
+
+fxtran - Perl binding for fxtran parser
+
+=head AUTHOR
+
+pmarguinaud@hotmail.com
+
+=cut

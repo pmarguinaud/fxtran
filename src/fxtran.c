@@ -10,5 +10,5 @@
 
 int main (int argc, char * argv[])
 {
-  return FXTRAN_RUN (argc, argv, NULL, NULL);
+  return FXTRAN_RUN (argc, argv, NULL, NULL, NULL);
 }

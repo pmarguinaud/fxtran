@@ -32,7 +32,7 @@ static const char * form_str (int form)
   return NULL;
 }
 
-int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
+int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 {
   FILE * fpx;
   char * text;
@@ -134,14 +134,16 @@ cleanup:
 
   if (ctx->err[0])
     {
-      fprintf (stderr, "%s", ctx->err);
+      if (Err)
+        *Err = strdup (ctx->err);
+      else
+	fprintf (stderr, "%s", ctx->err);
     }
 
   FXTRAN_free_opts (ctx);
-
   FXTRAN_xmlctx_free (ctx);
 
-  return 0;
+  return ctx->err[0];
 }
 
 

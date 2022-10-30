@@ -21,13 +21,20 @@ PPCODE:
           argv[i+1] = SvPV_nolen (ST (i));
         argv[argc-1] = "_.F90";
    
-        char * Xml;
+        char * Xml = NULL, * Err = NULL;
         char * Text = SvPV_nolen (ST (items-1));
 
-        FXTRAN_RUN (argc, argv, Text, &Xml);
-
-        EXTEND (SP, 1);
-        PUSHs (sv_2mortal (newSVpv (Xml, 0)));
+        FXTRAN_RUN (argc, argv, Text, &Xml, &Err);
  
-        free (Xml);
+        if (Err)
+          {
+            SV * err = sv_2mortal (newSVpv (Err, 0));
+            croak_sv (err);
+          }
+        else
+          {
+            EXTEND (SP, 1);
+            PUSHs (sv_2mortal (newSVpv (Xml, 0)));
+            free (Xml);
+          }
         
