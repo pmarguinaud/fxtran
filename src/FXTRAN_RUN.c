@@ -35,7 +35,6 @@ static const char * form_str (int form)
 int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 {
   FILE * fpx;
-  char * text;
   FXTRAN_xmlctx * ctx;
 
   ctx = FXTRAN_xmlctx_new ();
@@ -54,11 +53,11 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
     }
 
   if (Text)
-    text = FXTRAN_load_text (Text, ctx);
+    ctx->text = FXTRAN_load_text (Text, ctx);
   else if (ctx->opts.cpp)
-    text = FXTRAN_load_cpp (ctx->opts.ffile, ctx);
+    ctx->text = FXTRAN_load_cpp (ctx->opts.ffile, ctx);
   else
-    text = FXTRAN_load_nocpp (ctx->opts.ffile, ctx);
+    ctx->text = FXTRAN_load_nocpp (ctx->opts.ffile, ctx);
 
   FXTRAN_f_buffer_printf (&ctx->fb, "<?xml version=\"1.0\"?>");
 
@@ -79,15 +78,15 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
   ctx->fb.len0 = FXTRAN_f_buffer_len (&ctx->fb);
 
   if (ctx->opts.namelist)
-    FXTRAN_NAMELIST_decode (text, ctx);
+    FXTRAN_NAMELIST_decode (ctx);
   else
     switch (ctx->opts.form)
       {
         case FXTRAN_FORM_FREE:
-          FXTRAN_FREE_decode (text, ctx);
+          FXTRAN_FREE_decode (ctx);
           break;
         case FXTRAN_FORM_FIXED:
-          FXTRAN_FIXED_decode (text, ctx);
+          FXTRAN_FIXED_decode (ctx);
           break;
         default:
           FXTRAN_THROW ("Unknown source code form");

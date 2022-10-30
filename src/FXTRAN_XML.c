@@ -595,7 +595,9 @@ void FXTRAN_xml_word_tag_keyword (const char * tag, int pos1, int pos2,
 FXTRAN_xmlctx * FXTRAN_xmlctx_new ()
 {
   FXTRAN_xmlctx * ctx = (FXTRAN_xmlctx*)malloc (sizeof (FXTRAN_xmlctx)); 
+
   ctx->err[0] = '\0';
+
   memset (&ctx->fb, '\0', sizeof (ctx->fb));                            
   ctx->pos = 0;
   ctx->line = 0;

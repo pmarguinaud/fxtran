@@ -7,6 +7,6 @@
 
 #include "FXTRAN_XML.h"
 
-void FXTRAN_NAMELIST_decode (char *, FXTRAN_xmlctx *);
+void FXTRAN_NAMELIST_decode (FXTRAN_xmlctx *);
 
 #endif

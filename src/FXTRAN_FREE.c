@@ -191,8 +191,9 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
     ctx->ci = NULL;                    \
   } while (0)
 
-void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
+void FXTRAN_FREE_decode (FXTRAN_xmlctx * ctx)
 {
+  char * text = ctx->text;
   FXTRAN_char_info * ci;
 
   int len, i;
@@ -220,6 +221,7 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
   len = strlen (text);
 
   FXTRAN_char_info_alloc (&ci, len);
+  ctx->ci = ci;
 
   for (i = 0; i < len;)
     {
@@ -362,10 +364,6 @@ void FXTRAN_FREE_decode (char * text, FXTRAN_xmlctx * ctx)
 
   FXTRAN_set_char_info_off (text, ci);
 
-  ctx->text = text;
-  ctx->ci = ci;
-
-  
 /*DUMP_FXTRAN_MASK; exit (0);*/
 
   {

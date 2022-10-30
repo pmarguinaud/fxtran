@@ -265,8 +265,9 @@ static int FXTRAN_NAMELIST_item (const char * t, const FXTRAN_char_info * ci, FX
   return t - T;
 }
 
-void FXTRAN_NAMELIST_decode (char * text, FXTRAN_xmlctx * ctx)
+void FXTRAN_NAMELIST_decode (FXTRAN_xmlctx * ctx)
 {
+  char * text = ctx->text;
   FXTRAN_char_info * ci;
 
   int len, i;
