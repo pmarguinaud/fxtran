@@ -21,7 +21,7 @@ void FXTRAN_ERROR (FXTRAN_xmlctx * ctx, const char * file,
   err += vsnprintf (err, errmax - err, fmt, ap);                               
   va_end (ap);
   err += snprintf (err, errmax - err, "\n");                                      
-  FXTRAN_XML_print_section (ctx->text, ctx->ci, ctx->pos, 3);  
+  err += FXTRAN_XML_print_section (err, errmax - err, ctx->text, ctx->ci, ctx->pos, 3);  
   longjmp (ctx->env_buf, 1);                                   
 }
 

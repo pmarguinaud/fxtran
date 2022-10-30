@@ -42,6 +42,10 @@ typedef struct FXTRAN_xmlctx
   char * text;
   FXTRAN_char_info * ci;
 
+  /* For use in FXTRAN_stmt */
+  char * text1;
+  FXTRAN_char_info * ci1;
+
   /* stack of xml tags */
   int lev;
   FXTRAN_xmlctx_stack_elt stack[FXTRAN_XML_MAXLEV];
@@ -140,7 +144,7 @@ extern int FXTRAN_XML_dump;
   do { FXTRAN_XML_dump = x; } while (0)
 
 
-void FXTRAN_XML_print_section (const char *, const FXTRAN_char_info *, int, int);
+int FXTRAN_XML_print_section (char *, int, const char *, const FXTRAN_char_info *, int, int);
 
 void FXTRAN_xml_word_tag_name (const char *, int, int, FXTRAN_xmlctx *, const char *, int);
 void FXTRAN_xml_word_tag_op (const char *, int, int, FXTRAN_xmlctx *, const char *, int);

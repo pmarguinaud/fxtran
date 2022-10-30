@@ -100,64 +100,67 @@ static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const 
 }
 
 
-void FXTRAN_XML_print_section (const char * t, const FXTRAN_char_info * ci, int pos, int nl)
+int FXTRAN_XML_print_section (char * buf, int size, const char * t, 
+		              const FXTRAN_char_info * ci, int pos, int nl)
 {
   int i, j;
   int i1, i2;
   int is = 0;
+  char * bufmin = buf, * bufmax = buf + size;
 
-  if (t == NULL)
-    return;
-  if (ci == NULL)
-    return;
+  if ((t == NULL) || (ci == NULL))
+    return 0;
 
   for (i1 = pos; i1 >= 0; i1--)
     if (ci[pos].line - ci[i1].line >= nl)
       break;
+
   if (i1 < 0)
     i1 = 0;
+
   for (i2 = pos; t[i2]; i2++)
     if (ci[i2].line - ci[pos].line >= nl+1)
       break;
 
-  printf ("      | ");
+  buf += snprintf (buf, bufmax - buf, "      | ");
   for (i = 0; i < 80; i++)
     if (i % 10 == 0)
-      printf ("%d", i/10);
+      buf += snprintf (buf, bufmax - buf, "%d", i/10);
     else
-      printf (" ");
-  printf ("\n");
+      buf += snprintf (buf, bufmax - buf, " ");
+  buf += snprintf (buf, bufmax - buf, "\n");
 
   for (i = i1; i < i2-1; i++)
     {
       if (i == 0)
-        printf ("%5d | ", 1);
-      printf ("%c", t[i]);
+        buf += snprintf (buf, bufmax - buf, "%5d | ", 1);
+      buf += snprintf (buf, bufmax - buf, "%c", t[i]);
       if (t[i] == '\n')
         {
           if (is)
             {
-	      printf ("        ");
+	      buf += snprintf (buf, bufmax - buf, "        ");
               for (j = 0; j < ci[pos].column-1; j++)
-                printf (" ");
-	      printf ("^\n");
+                buf += snprintf (buf, bufmax - buf, " ");
+	      buf += snprintf (buf, bufmax - buf, "^\n");
 	      is = 0;
             }
-	  printf ("%5d | ", ci[i+1].line+1);
+	  buf += snprintf (buf, bufmax - buf, "%5d | ", ci[i+1].line+1);
         }
       if (i == pos)
         is = 1;
     }
-  printf ("\n");
+  buf += snprintf (buf, bufmax - buf, "\n");
   if (is)
     {
-      printf ("        ");
+      buf += snprintf (buf, bufmax - buf, "        ");
       for (j = 0; j < ci[pos].column-1; j++)
-        printf (" ");
-      printf ("^\n");
+        buf += snprintf (buf, bufmax - buf, " ");
+      buf += snprintf (buf, bufmax - buf, "^\n");
       is = 0;
     }
-  
+
+  return buf - bufmin;
 }
 
 static int adv_pos0 (FXTRAN_xmlctx * ctx, int pos, int noendtag, int print) 
@@ -596,8 +599,13 @@ FXTRAN_xmlctx * FXTRAN_xmlctx_new ()
   memset (&ctx->fb, '\0', sizeof (ctx->fb));                            
   ctx->pos = 0;
   ctx->line = 0;
+
   ctx->text = NULL;
   ctx->ci = NULL;
+
+  ctx->text1 = NULL;
+  ctx->ci1 = NULL;
+
   memset (&ctx->opts, '\0', sizeof (ctx->opts));                            
   ctx->root = NULL;
   ctx->c2l = NULL;
@@ -610,6 +618,13 @@ void FXTRAN_xmlctx_free (FXTRAN_xmlctx * ctx)
 {
   FXTRAN_file * f, * g;
   FXTRAN_cpp2loc * Loc;
+
+#define ff(x) do { if(x) free (x); x = NULL; } while (0)
+  ff (ctx->text);
+  ff (ctx->ci);
+  ff (ctx->text1);
+  ff (ctx->ci1);
+#undef ff
 
   FXTRAN_f_buffer_free (&ctx->fb);  
 

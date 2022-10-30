@@ -139,11 +139,6 @@ cleanup:
 
   FXTRAN_free_opts (ctx);
 
-  free (ctx->text);
-  ctx->text = NULL;
-  free (ctx->ci);
-  ctx->ci = NULL;
-
   FXTRAN_xmlctx_free (ctx);
 
   return 0;
