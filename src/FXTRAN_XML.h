@@ -35,7 +35,6 @@ typedef struct FXTRAN_xmlctx
   /* buffer where XML is stored */
   f_buffer fb;
 
-
   /* current position in text and ci */
   int pos;    /* in output from cpp */
   int line;   /* in output from cpp */

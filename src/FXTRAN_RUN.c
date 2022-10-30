@@ -132,6 +132,11 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml)
 
 cleanup:
 
+  if (ctx->err[0])
+    {
+      fprintf (stderr, "%s", ctx->err);
+    }
+
   FXTRAN_free_opts (ctx);
 
   free (ctx->text);

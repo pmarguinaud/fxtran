@@ -13,3 +13,4 @@ perl/fxtran.bs
 perl/fxtran.c
 perl/pm_to_blib
 *.swp
+.gdb_history
