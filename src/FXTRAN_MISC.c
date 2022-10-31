@@ -354,12 +354,14 @@ char * FXTRAN_slurp (const char * f)
 {
   struct stat st;
   char * text;
+  size_t size;
   FILE * fp;
 
   if (stat (f, &st) == -1)
     return NULL;
 
-  text = (char*)malloc (st.st_size+1);
+  size = st.st_size;
+  text = (char*)malloc (size+1);
 
   if (text == NULL)
     return NULL;
@@ -367,7 +369,7 @@ char * FXTRAN_slurp (const char * f)
   if ((fp = fopen (f, "r")) == NULL)
     return NULL;
 
-  size_t n = fread (text, st.st_size, 1, fp);
+  size_t n = fread (text, size, 1, fp);
 
   if (n != 1)
     {
@@ -377,7 +379,17 @@ char * FXTRAN_slurp (const char * f)
 
   fclose (fp);
 
-  text[st.st_size] = '\0';
+  text[size] = '\0';
+
+  /* Fix that kind of file where last line does not finish with '\n' */
+  if (text[size-1] != '\n')
+    {
+      size = size + 1;
+      text = (char*)realloc (text, size+1);
+      text[size-1] = '\n';
+      text[size] = '\0';
+    }
+  
 
   return text;
 }
