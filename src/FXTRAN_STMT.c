@@ -4152,24 +4152,12 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
 		  FXTRAN_stmt_stack * stack, FXTRAN_xmlctx * ctx,
 		  int omp, int acc, int ddd, int label)
 {
-  int len;
+  int len = strlen (text);
   const int ncharmargin = 32;
-  FXTRAN_char_info * ci1;
-  char * text1;
+  FXTRAN_char_info ci1[len+1];
+  char text1[len+1+ncharmargin];
 
-  ctx->lev_stmt++;
-
-  if (ctx->lev_stmt >= FXTRAN_XML_MAXSTL)
-    FXTRAN_ABORT ("FXTRAN_XML_MAXSTL limit is reached");
-
-  len = strlen (text);
-
-  ctx->stmt[ctx->lev_stmt].text = (char*)malloc (len+1+ncharmargin);
-  FXTRAN_char_info_alloc (&ctx->stmt[ctx->lev_stmt].ci, len);
-
-  text1 = ctx->stmt[ctx->lev_stmt].text;
-  ci1 = ctx->stmt[ctx->lev_stmt].ci;
-
+  FXTRAN_char_info_init (ci1, len);
   memset (&text1[len], '\0', ncharmargin);
 
   len = FXTRAN_restrict_tci (text1, ci1, text, ci, len);
@@ -4260,16 +4248,6 @@ case FXTRAN_##t: stmt_##t##_extra(text1, ci1, stack, ctx); break;
         }
 
     }
-
-
-  free (text1); text1 = NULL;
-  FXTRAN_char_info_free (&ci1);
-
-  ctx->stmt[ctx->lev_stmt].text = text1;
-  ctx->stmt[ctx->lev_stmt].ci = ci1;
-
-
-  ctx->lev_stmt--;
 }
 
 void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1, int i2, 

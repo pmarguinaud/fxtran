@@ -25,7 +25,6 @@ typedef struct FXTRAN_xmlctx_stack_elt
 #define FXTRAN_XML_MAXLEV 1024
 #define FXTRAN_XML_NS     1024
 #define FXTRAN_XML_MAXERR 1024
-#define FXTRAN_XML_MAXSTL   10
 
 typedef struct FXTRAN_xmlctx
 {
@@ -42,14 +41,6 @@ typedef struct FXTRAN_xmlctx
 
   char * text;
   FXTRAN_char_info * ci;
-
-  /* For use in FXTRAN_stmt */
-  int lev_stmt;
-  struct
-  {
-    char * text;
-    FXTRAN_char_info * ci;
-  } stmt[FXTRAN_XML_MAXSTL];
 
   /* stack of xml tags */
   int lev;

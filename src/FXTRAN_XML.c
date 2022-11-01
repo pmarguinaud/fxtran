@@ -605,9 +605,6 @@ FXTRAN_xmlctx * FXTRAN_xmlctx_new ()
   ctx->text = NULL;
   ctx->ci = NULL;
 
-  ctx->lev_stmt = -1;
-  memset (&ctx->stmt, '\0', sizeof (ctx->stmt));
-
   memset (&ctx->opts, '\0', sizeof (ctx->opts));                            
   ctx->root = NULL;
   ctx->c2l = NULL;
@@ -620,16 +617,10 @@ void FXTRAN_xmlctx_free (FXTRAN_xmlctx * ctx)
 {
   FXTRAN_file * f, * g;
   FXTRAN_cpp2loc * Loc;
-  int i;
 
 #define ff(x) do { if(x) free (x); x = NULL; } while (0)
   ff (ctx->text);
   ff (ctx->ci);
-  for (i = 0; i < FXTRAN_XML_MAXSTL; i++)
-    {
-      ff (ctx->stmt[i].text);
-      ff (ctx->stmt[i].ci);
-    }
 #undef ff
 
   FXTRAN_f_buffer_free (&ctx->fb);  
