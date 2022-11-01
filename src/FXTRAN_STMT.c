@@ -768,7 +768,9 @@ static stmt_entity_decl_parms seda_enumerator =
   _T(_S(NAMED) H _S(CONSTANT))
 };
 
-static int stmt_entity (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx, 
+def_process_list_elt_proto (data_stmt_value);
+
+static int stmt_entity (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx, int seen_dc,
 		        const stmt_entity_decl_parms * seda, FXTRAN_stmt_stack * stack)
 {
   int k;
@@ -813,11 +815,24 @@ static int stmt_entity (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
       FXTRAN_expr (t, ci, k-1, ctx);
       XAD(k-1);
     }
+  else if ((t[0] == '/') && (! seen_dc))
+    {
+      int k;
+      XAD (1);
+      k = FXTRAN_str_at_level (t, ci, "/", 0);
+      if (k == 0)
+        FXTRAN_THROW ("Expected `/'");
+      FXTRAN_process_list (t, ci, ctx, ",", 
+        	           _T(_S(DATA) H _S(STMT) H _S(VALUE) H _S(LIST)), 
+        		   k-1, data_stmt_value, NULL);
+  
+      XAD(k);
+    }
   else if (t[0])
     {
-      k = lev == 0 ? strlen (t) : FXTRAN_str_at_level (t, ci, ")", lev-1)-1;
-      FXTRAN_expr (t, ci, k, ctx);
-      XAD(k);
+//    k = lev == 0 ? strlen (t) : FXTRAN_str_at_level (t, ci, ")", lev-1)-1;
+//    FXTRAN_expr (t, ci, k, ctx);
+//    XAD(k);
     }
 
   XET ();
@@ -825,7 +840,7 @@ static int stmt_entity (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
   return t - T;
 }
 
-static void stmt_entity_list (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx, 
+static void stmt_entity_list (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx, int seen_dc,
 			      const stmt_entity_decl_parms * seda, FXTRAN_stmt_stack * stack)
 {
   int k;
@@ -834,7 +849,7 @@ static void stmt_entity_list (const char * t, const FXTRAN_char_info * ci, FXTRA
     return;
 
   XST (seda->lst);
-  while (t[0] && (k = stmt_entity (t, ci, ctx, seda, stack)))
+  while (t[0] && (k = stmt_entity (t, ci, ctx, seen_dc, seda, stack)))
     {
       XAD(k);
       if (t[0] == ',')
@@ -1250,7 +1265,7 @@ static void FXTRAN_stmt_attr_extra (const char * t, const FXTRAN_char_info * ci,
 
   skip_dc ();
     
-  stmt_entity_list (t, ci, ctx, &seda_entity, stack);
+  stmt_entity_list (t, ci, ctx, 1, &seda_entity, stack);
 }
 
 #define def_attr_extra_func(T) \
@@ -1430,7 +1445,7 @@ def_extra_proto (DIMENSION)
 
   skip_dc ();
 
-  stmt_entity_list (t, ci, ctx, &seda_entity, stack);
+  stmt_entity_list (t, ci, ctx, 1, &seda_entity, stack);
 }
 
 def_extra_proto (INTENT)
@@ -1446,7 +1461,7 @@ def_extra_proto (INTENT)
 
   skip_dc ();
 
-  stmt_entity_list (t, ci, ctx, &seda_entity, stack);
+  stmt_entity_list (t, ci, ctx, 1, &seda_entity, stack);
 }
 
 def_extra_proto (BIND)
@@ -1472,7 +1487,7 @@ def_extra_proto (BIND)
   if (T)
     FXTRAN_expr (T, CI, K, ctx);
 
-  stmt_entity_list (t, ci, ctx, &seda_entity, stack);
+  stmt_entity_list (t, ci, ctx, 1, &seda_entity, stack);
 
 }
 
@@ -1722,9 +1737,9 @@ def_extra_proto (TYPEDECL)
 {
   int k;
   int nattr = 0;
-  int isoldchar;
+  int isoldchar = zstrcmp ("CHARACTER*", t);
+  int seen_dc = 0;
 
-  isoldchar = zstrcmp ("CHARACTER*", t);
 
   XSA (_T(_S(TYPE) H _S(SPEC)));
   k = FXTRAN_typespec (t, ci, ctx);
@@ -1744,9 +1759,11 @@ def_extra_proto (TYPEDECL)
       nattr++;
     }
 
+  seen_dc = t[0] == ':';
+
   skip_dc ();
 
-  stmt_entity_list (t, ci, ctx, &seda_entity, stack);
+  stmt_entity_list (t, ci, ctx, seen_dc, &seda_entity, stack);
 
 }
 
@@ -1877,7 +1894,7 @@ def_extra_proto (PARAMETER)
 
   XAD(10);
   
-  stmt_entity_list (t, ci, ctx, &seda_entity, stack);
+  stmt_entity_list (t, ci, ctx, 0, &seda_entity, stack);
 }
 
 def_extra_proto (USE)
@@ -1964,7 +1981,7 @@ def_extra_proto (ENUMERATOR)
   XAD(10);
   skip_dc ();
 
-  stmt_entity_list (t, ci, ctx, &seda_enumerator, stack);
+  stmt_entity_list (t, ci, ctx, 0, &seda_enumerator, stack);
 }
 
 def_extra_proto (SELECTTYPE)
@@ -2706,7 +2723,7 @@ again:
     char t1[k];
     FXTRAN_char_info ci1[k];
     FXTRAN_restrict_tci (t1, ci1, t, ci, k);
-    stmt_entity_list (t1, ci1, ctx, seda, stack);
+    stmt_entity_list (t1, ci1, ctx, 1, seda, stack);
     XAD(k);
   }
 
