@@ -774,15 +774,12 @@ static int stmt_entity (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
 		        const stmt_entity_decl_parms * seda, FXTRAN_stmt_stack * stack)
 {
   int k;
-  int lev;
   const char * T;
 
   T = t;
 
   if (t[0] == 0)
     return 0;
-
-  lev = ci[0].parens;
 
   XST (seda->lste);
 
@@ -806,17 +803,13 @@ static int stmt_entity (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
   k = stmt_old_cl (t, ci, ctx);
   XAD(k);
 
-  k = FXTRAN_stmt_init_expr (t, ci, ctx);
-  XAD(k);
-
-
-  if ((k = FXTRAN_str_at_level (t, ci, ",", lev)))
+  if ((k = FXTRAN_stmt_init_expr (t, ci, ctx)))
     {
-      FXTRAN_expr (t, ci, k-1, ctx);
-      XAD(k-1);
+      XAD(k);
     }
   else if ((t[0] == '/') && (! seen_dc))
     {
+      /* This is not legal, but all compilers accept it : real  sin36(2) /2*0.587785252292473/ */
       int k;
       XAD (1);
       k = FXTRAN_str_at_level (t, ci, "/", 0);
@@ -827,12 +820,6 @@ static int stmt_entity (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
         		   k-1, data_stmt_value, NULL);
   
       XAD(k);
-    }
-  else if (t[0])
-    {
-//    k = lev == 0 ? strlen (t) : FXTRAN_str_at_level (t, ci, ")", lev-1)-1;
-//    FXTRAN_expr (t, ci, k, ctx);
-//    XAD(k);
     }
 
   XET ();
@@ -2836,6 +2823,8 @@ static void def_construct_end_ (FXTRAN_stmt_type TFO, FXTRAN_stmt_type TF, int b
 		                FXTRAN_stmt_stack * stack, FXTRAN_xmlctx * ctx, xml_tu * tu) 
 {
   FXTRAN_stmt_stack_state * sts = FXTRAN_stmt_stack_curr (stack); 
+  if (sts == NULL)
+    FXTRAN_ABORT ("");
   if (sts->type != TFO)                                  
     FXTRAN_ABORT ("Unexpected %s statement", stmt_as_str (TF));               
   if (ctx->opts.construct_tag)                                    

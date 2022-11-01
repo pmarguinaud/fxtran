@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 #include "FXTRAN_FIXED.h"
 #include "FXTRAN_FREE.h"
 #include "FXTRAN_NAMELIST.h"
@@ -32,6 +33,25 @@ static const char * form_str (int form)
   return NULL;
 }
 
+static void FXTRAN_increase_stack_size (FXTRAN_xmlctx * ctx)
+{
+  struct rlimit rlim;
+  getrlimit (RLIMIT_STACK, &ctx->rlim);
+  if ((ctx->rlim.rlim_cur != RLIM_INFINITY) || (ctx->rlim.rlim_max != RLIM_INFINITY))
+    {
+      rlim.rlim_cur = RLIM_INFINITY;
+      rlim.rlim_max = RLIM_INFINITY;
+      if (setrlimit (RLIMIT_STACK, &rlim) < 0)
+        FXTRAN_ABORT ("Cannot increase stack size limit");
+    }
+}
+
+static void FXTRAN_restore_stack_size (FXTRAN_xmlctx * ctx)
+{
+  if ((ctx->rlim.rlim_cur != RLIM_INFINITY) || (ctx->rlim.rlim_max != RLIM_INFINITY))
+    setrlimit (RLIMIT_STACK, &ctx->rlim);
+}
+
 int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 {
   FILE * fpx;
@@ -42,6 +62,8 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 
   if (FXTRAN_xmlctx_eval (ctx))
     goto cleanup;
+
+  FXTRAN_increase_stack_size (ctx);
 
   FXTRAN_parse_opts (ctx, argc, argv);
 
@@ -131,6 +153,8 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
     }
 
 cleanup:
+
+  FXTRAN_restore_stack_size (ctx);
 
   err = ctx->err[0];
   if (err)

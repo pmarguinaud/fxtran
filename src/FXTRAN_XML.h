@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <setjmp.h>
+#include <sys/resource.h>
 
 #include "FXTRAN_FBUFFER.h"
 #include "FXTRAN_CHARINFO.h"
@@ -28,6 +29,8 @@ typedef struct FXTRAN_xmlctx_stack_elt
 
 typedef struct FXTRAN_xmlctx
 {
+  struct rlimit rlim;
+
   /* pointer to where we should go back when something goes wrong */
   jmp_buf env_buf;
   char err[FXTRAN_XML_MAXERR];
