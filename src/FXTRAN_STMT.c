@@ -3402,11 +3402,11 @@ static void stmt_block_handle (const char * t, FXTRAN_stmt_type Type, int expect
 #define def_program_construct_opn(TF) \
   def_construct_opn__(TF,0,_T(_S(PROGRAM) H _S(UNIT)),NULL)
 #define def_program_construct_end(TFO,TF) \
-  def_construct_end__(TFO,TF,0)
+  def_construct_end__(TFO,TF,0) 
 
 
   /* Particular case of a program made of a single END statement after another program unit */
-  if (expect_pu && (Type == FXTRAN_ENDPROGRAM))
+  if ((!FXTRAN_stmt_stack_curr(stack)) && (Type == FXTRAN_ENDPROGRAM))
     def_construct_opn_ (FXTRAN_PROGRAM, 0, _T(_S(PROGRAM) H _S(UNIT)), NULL, stack, ctx, tu);
 
   /* program unit */
