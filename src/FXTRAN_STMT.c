@@ -2469,12 +2469,13 @@ def_extra_proto (TYPEIS)
 
           kn = FXTRAN_eat_word (t);
 
-          for (i = 0; FXTRAN_types[i]; i++)
-            if (0 == strncmp (FXTRAN_types[i], t, kn))
-              {
-                intrinsic = 1;
-                break;
-              }
+          if (t[kn] != ')')
+            for (i = 0; FXTRAN_types[i]; i++)
+              if (FXTRAN_types_intrinsic[i] && (0 == strncmp (FXTRAN_types[i], t, kn)))
+                {
+                  intrinsic = 1;
+                  break;
+                }
 
           k = FXTRAN_str_at_level (t, ci, ")", 0);
 
