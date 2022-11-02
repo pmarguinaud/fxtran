@@ -602,6 +602,47 @@ static int FXTRAN_expr_parens (const char * t, const FXTRAN_char_info * ci,
   return t - T;
 }
 
+static int FXTRAN_expr_percent (const char * t, const FXTRAN_char_info * ci, 
+                                FXTRAN_xmlctx * ctx)
+{
+  const char * T = t;
+  int k;
+  
+  XST (_T (_S (FUNCTION)));
+
+  /* Skip % */
+  if (t[0] != '%')
+    FXTRAN_ABORT ("Expected '('");
+  XAD(1);
+
+  /* Skip function name */
+  k = FXTRAN_eat_word (t);
+  XNT (_T(_S(NAME)), k);
+  XAD (k);
+
+  /* Skip ( */
+  if (t[0] != '(')
+    FXTRAN_ABORT ("Expected '('");
+  XAD (1);
+
+  /* Argument */
+  XST (_T (_S (ARG)));
+
+  k = FXTRAN_str_at_level (t, ci, ")", ci->parens-1);
+
+  FXTRAN_expr (t, ci, k-1, ctx);
+  XAD (k-1);
+  
+  XET ();
+
+  if (t[0] != ')')
+    FXTRAN_ABORT ("Expected ')'");
+  XAD (1);
+
+  XET ();
+
+  return t - T;
+}
 
 static int FXTRAN_expr_primary (const char * t, const FXTRAN_char_info * ci, 
                                  FXTRAN_xmlctx * ctx, int kmax)
@@ -630,6 +671,12 @@ static int FXTRAN_expr_primary (const char * t, const FXTRAN_char_info * ci,
           XAD(FXTRAN_expr_boz_litteral_constant (t, ci, ctx));
           goto end;
         }
+    }
+
+  if ((n > 4) && (t[0] == '%') && (t[4] == '('))
+    {
+      XAD(FXTRAN_expr_percent (t, ci, ctx));
+      goto end;
     }
 
   if ((k = FXTRAN_eat_word (t)))
