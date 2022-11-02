@@ -608,18 +608,28 @@ static int FXTRAN_expr_primary (const char * t, const FXTRAN_char_info * ci,
 {
   const char * T = t;
   int k;
+  int n = strlen (t);
 
-  if (((t[0] == '(') && (t[1] == '/')) || (t[0] == '[')) 
+  if (((n > 1) && (t[0] == '(') && (t[1] == '/')) || (t[0] == '[')) 
     {
       XAD(FXTRAN_expr_array_constructor (t, ci, ctx));
       goto end;
     }
 
-  if (((t[0] == 'B') || (t[0] == 'O') || (t[0] == 'Z'))
-    && (t[1] == '"') && (t[2] == '"'))
+  if (n > 2)
     {
-      XAD(FXTRAN_expr_boz_litteral_constant (t, ci, ctx));
-      goto end;
+      if (((t[0] == 'B') || (t[0] == 'O') || (t[0] == 'Z') || (t[0] == 'X'))
+        && (t[1] == '"') && (t[2] == '"'))
+        {
+          XAD(FXTRAN_expr_boz_litteral_constant (t, ci, ctx));
+          goto end;
+        }
+      if (((t[2] == 'B') || (t[2] == 'O') || (t[2] == 'Z') || (t[2] == 'X'))
+        && (t[0] == '"') && (t[1] == '"'))
+        {
+          XAD(FXTRAN_expr_boz_litteral_constant (t, ci, ctx));
+          goto end;
+        }
     }
 
   if ((k = FXTRAN_eat_word (t)))
