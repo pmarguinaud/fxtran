@@ -378,7 +378,7 @@ void FXTRAN_FREE_decode (FXTRAN_xmlctx * ctx)
       i1 = -1; sc = 0;                                                \
   } while (0)
 #define GOTO_FXTRAN_COD \
-    do { while ((ci[i+1].mask != FXTRAN_COD) && (ci[i+1].mask != FXTRAN_STR)) { i++; } } while (0)
+    do { while ((ci[i+1].mask != FXTRAN_COD) && (ci[i+1].mask != FXTRAN_STR)) { i++; if (i > len) FXTRAN_ABORT ("End of file"); } } while (0)
 
     int sc = 0;
     int i1 = -1, i2 = -1;
