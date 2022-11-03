@@ -2692,12 +2692,19 @@ again:
   if (t[0] == '/')
     {
       XAD(1);
-      k = FXTRAN_eat_word (t);
-      XNT (name, k);
-      XAD(k);
-      if (t[0] != '/')
-        FXTRAN_THROW ("Expected `/'");
-      XAD(1);
+      if (t[0] == '/') /* Blank common */
+        {
+          XAD(1);
+        }
+      else
+        {
+          k = FXTRAN_eat_word (t);
+          XNT (name, k);
+          XAD(k);
+          if (t[0] != '/')
+            FXTRAN_THROW ("Expected `/'");
+          XAD(1);
+        }
     }
 
   k = FXTRAN_str_at_level (t, ci, "/", 0);
