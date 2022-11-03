@@ -2935,6 +2935,9 @@ static int get_do_label (const char * t)
 {
   int i;
   int do_label = 0;
+  int k = FXTRAN_eat_word (t);
+  if (t[k] == ':')
+    t = &t[k+1];
   for (i = 2; isdigit (t[i]); i++)
     do_label = do_label * 10 + (t[i] - '0');
   return do_label;
@@ -4282,6 +4285,7 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
   int I1 = -1, I2 = -1;  /* actual bounds */
   int omp, acc, ddd;
 
+
   FXTRAN_char_info_init (ci1, len);
 
   for (i = i1, j = 0; i < i2+1; i++)
@@ -4295,6 +4299,9 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
         t[j] = text[i];
 	j++;
       }
+
+  if ((label > 0) && (I1 < 0) && (I2 < 0))
+    FXTRAN_ABORT ("Label without statement");
 
   t[j] = 0;
 
