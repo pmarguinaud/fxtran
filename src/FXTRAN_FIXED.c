@@ -261,7 +261,10 @@ void FXTRAN_FIXED_decode (FXTRAN_xmlctx * ctx)
 	        ci[i].mask = FXTRAN_ZER;
 	      break;
               CASE_FXTRAN_SPACE:
-                ci[i].mask = FXTRAN_MAL;
+                if (q)
+                  FXTRAN_ABORT ("Unterminated string");
+                else
+                  ci[i].mask = FXTRAN_MAL;
 	      break;
 	      default:
                 ci[i].mask = FXTRAN_CO2;
