@@ -92,7 +92,6 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (flat-op-expr, flat_op_expr, Flatten op exprs);
       FXTRAN_handle_flag (flat-expr, flat_expr, Flatten all expr);
       FXTRAN_handle_flag (show-lines, show_lines, Show beginning of lines tags);
-      FXTRAN_handle_flag (css, css, Add css stylesheet);
       FXTRAN_handle_flag (strip-comments, strip_comments, Strip comments);
       FXTRAN_handle_flag (strip-executable-statements, strip_exec, Strip executable statements);
       FXTRAN_handle_flag (strip-linefeed, strip_linefeed, Strip multiple linefeed);
@@ -103,6 +102,7 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (cray-pointer, cray_pointer, Allow Cray pointers);
       FXTRAN_handle_flag (help, help, Print help message);
 
+      FXTRAN_handle_charopt (xml-stylesheet, xml_stylesheet, Path to XML stylesheet);
       FXTRAN_handle_charopt (directive, directive, Directive name);
       FXTRAN_handle_charopt (o, xfile, Output file);
       FXTRAN_handle_intopt (line-length, line_length, Set source code line length);
@@ -262,6 +262,8 @@ int FXTRAN_parse_opts (FXTRAN_xmlctx * ctx, int argc, char * argv[])
 
 void FXTRAN_free_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts)
 {
+  if (opts->xml_stylesheet)
+    free (opts->xml_stylesheet);
 
   if (opts->ffile)
     free (opts->ffile);

@@ -84,8 +84,8 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 
   FXTRAN_f_buffer_printf (&ctx->fb, "<?xml version=\"1.0\"?>");
 
-  if (ctx->opts.css)
-    FXTRAN_f_buffer_printf (&ctx->fb, "<?xml-stylesheet type=\"text/css\" href=\"fxtran.css\"?>");
+  if (ctx->opts.xml_stylesheet)
+    FXTRAN_f_buffer_printf (&ctx->fb, "<?xml-stylesheet type=\"text/xsl\" href=\"%s\"?>", ctx->opts.xml_stylesheet);
 
   if (ctx->opts.namelist)
     {
