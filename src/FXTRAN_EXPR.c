@@ -47,19 +47,58 @@ static int FXTRAN_expr_kind_spec (const char * t, const FXTRAN_char_info * ci,
   return t - T;
 }
 
+static int FXTRAN_expr_hollerith (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx)
+{
+  const char * T = t;
+  int n = 0;
+  int i, k;
+
+  for (i = 0; t[i]; i++)
+    if (! isdigit (t[i]))
+      {
+        break;
+      }
+    else
+      {
+        n = 10 * n + (t[i] - '0');
+      }
+
+  if ((n == 0) || (t[i] != 'H'))
+    FXTRAN_ABORT ("Malformed hollerith constant");
+  
+  XST (_T(_S(HOLLERITH) H _S(EXPR)));
+  XAD (i + 1);
+
+  for (i = 0; t[i]; i++)
+    if (ci[i].offset - ci[i-1].offset)
+
+  XET ();
+  
+  return t - T;
+}
+
 int FXTRAN_expr_numeric_litteral_constant (const char * t, const FXTRAN_char_info * ci,
                                            FXTRAN_xmlctx * ctx, int op)
 {
   const char * T = t;
   int seen_dot = 0;
   int k;
+  int i;
+
+  if (! op)
+    {
+      for (i = 0; t[i]; i++)
+        if (! isdigit (t[i]))
+          break;
+      if ((i > 0) && (t[i] == 'H'))
+        return FXTRAN_expr_hollerith (t, ci, ctx);
+    }
 
   if (! ctx->opts.flat_expr)
     XST (_T(_S(LITERAL) H _S(EXPR)));
 
   if (op && ((t[0] == '+') || (t[0] == '-')))
     XAD (1);
-    
 
   while (1)
     {
