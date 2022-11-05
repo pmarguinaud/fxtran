@@ -51,7 +51,7 @@ static int FXTRAN_expr_hollerith (const char * t, const FXTRAN_char_info * ci, F
 {
   const char * T = t;
   int n = 0;
-  int i, k;
+  int i, j, k;
 
   for (i = 0; t[i]; i++)
     if (! isdigit (t[i]))
@@ -67,10 +67,24 @@ static int FXTRAN_expr_hollerith (const char * t, const FXTRAN_char_info * ci, F
     FXTRAN_ABORT ("Malformed hollerith constant");
   
   XST (_T(_S(HOLLERITH) H _S(EXPR)));
-  XAD (i + 1);
 
-  for (i = 0; t[i]; i++)
-    if (ci[i].offset - ci[i-1].offset)
+  k = i + 1;
+  for (j = i + 1; j < i + 1 + n; j++)
+    {
+      switch (ctx->ci[ci[0].offset+j].mask)
+        {
+	  case FXTRAN_SPC:
+          break;
+          case FXTRAN_COD:
+            k++;
+	  break;
+          default:
+	    FXTRAN_ABORT ("Malformed hollerith constant");
+	}
+    }
+
+  xml_mark_hol (ci[0].offset, ci[k-1].offset+1, ctx);
+  XAD (k);
 
   XET ();
   

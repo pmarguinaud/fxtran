@@ -13,6 +13,7 @@ enum
    FXTRAN_OPR = '+', /* ops */
    FXTRAN_LIT = '8', /* litteral */
    FXTRAN_BOZ = 'Z', /* boz */
+   FXTRAN_HOL = 'H', /* hollerith */
    FXTRAN_CPT = '%', /* component */
    FXTRAN_KWD = '_', /* keyword */
    

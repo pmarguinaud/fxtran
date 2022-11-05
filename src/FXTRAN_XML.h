@@ -100,6 +100,12 @@ void FXTRAN_xml_skip (FXTRAN_xmlctx *, int);
       FXTRAN_xml_mark (pos1,pos2,ctx,FXTRAN_BOZ);   \
   } while (0)
 
+#define xml_mark_hol(pos1,pos2,ctx) \
+  do {                                              \
+    if (FXTRAN_XML_dump)                            \
+      FXTRAN_xml_mark (pos1,pos2,ctx,FXTRAN_HOL);   \
+  } while (0)
+
 #define xml_mark_comp(pos1,pos2,ctx) \
   do {                                              \
     if (FXTRAN_XML_dump)                            \

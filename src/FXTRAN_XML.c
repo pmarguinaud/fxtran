@@ -38,6 +38,7 @@ const char
    * FXTRAN_OMC_TAG=  "omp",
    * FXTRAN_ACC_TAG=  "acc",
    * FXTRAN_BOZ_TAG=  "boz",
+   * FXTRAN_HOL_TAG=  "hol",
    * FXTRAN_ZER_TAG=  "zer"
 ;
 
@@ -234,6 +235,7 @@ static int adv_pos0 (FXTRAN_xmlctx * ctx, int pos, int noendtag, int print)
                 dump_txt_by_mask (FXTRAN_OPR);
                 dump_txt_by_mask (FXTRAN_LIT);
                 dump_txt_by_mask (FXTRAN_BOZ);
+                dump_txt_by_mask (FXTRAN_HOL);
                 dump_txt_by_mask (FXTRAN_CPT);
                 dump_txt_by_mask (FXTRAN_KWD);
                 dump_txt_by_mask (FXTRAN_OMD);
@@ -511,10 +513,18 @@ void FXTRAN_xml_mark (int pos1, int pos2, FXTRAN_xmlctx * ctx, char mask)
 {
   int i;
 
-  for (i = 0; i < pos2-pos1; i++)
-    if ((ctx->ci[pos1+i].mask == FXTRAN_COD) || 
-     (mask == FXTRAN_BOZ && ctx->ci[pos1+i].mask == FXTRAN_STR))
-        ctx->ci[pos1+i].mask = mask;
+  if (mask == FXTRAN_HOL)
+    {
+      for (i = 0; i < pos2-pos1; i++)
+        ctx->ci[pos1+i].mask = FXTRAN_HOL;
+    }
+  else
+    {
+      for (i = 0; i < pos2-pos1; i++)
+        if ((ctx->ci[pos1+i].mask == FXTRAN_COD) || 
+         (mask == FXTRAN_BOZ && ctx->ci[pos1+i].mask == FXTRAN_STR))
+            ctx->ci[pos1+i].mask = mask;
+    }
 }
 
 
