@@ -3257,7 +3257,7 @@ other:
 	  }
 
 
-	tt0(IMPLICITNONE);  tt(IMPLICIT);       tt(IMPORT);         tt(INCLUDE);        
+	tt(IMPLICITNONE);   tt(IMPLICIT);       tt(IMPORT);         tt(INCLUDE);        
 	tt(INQUIRE);        tt(INTENT);         tt(INTERFACE);      tt(INTRINSIC);
 
 	break;
@@ -3602,7 +3602,6 @@ def_stmt_simple_extra(WHERE, _T(_S(MASK) H _S(EXPR)))
 #define def_stmt_empty(T) \
 def_extra_proto (T) { }
 
-def_stmt_empty (IMPLICITNONE)
 def_stmt_empty (CONTINUE)
 def_stmt_empty (CONTAINS)
 def_stmt_empty (SEQUENCE)
@@ -3732,6 +3731,40 @@ def_extra_proto (IMPLICIT)
 	               _T(_S(IMPLICIT) H _S(SPEC) H _S(LIST)), 
 		       k, implicit_spec, NULL);
   
+}
+
+def_extra_proto (IMPLICITNONE)
+{
+  int k;
+  XAD(12);
+
+  if (t[0] == '\0')
+    return;
+
+  if (t[0] != '(')
+    FXTRAN_ABORT ("Expected '('");
+
+  XAD (1);
+
+  XST (_T(_S(IMPLICIT) H _S(NONE) H _S(SPEC) H _S(LIST)));
+  while (1)
+    {
+      if (t[0] == ')') /* List might be empty */
+        break;
+      k = FXTRAN_eat_word (t);
+      if (k == 0)
+        FXTRAN_ABORT ("Expected spec");
+
+      XST (_T(_S(IMPLICIT) H _S(NONE) H _S(SPEC)));
+      XAD (k);
+      XET ();
+      if (t[0] == ')')
+        break;
+      if (t[0] != ',')
+        FXTRAN_ABORT ("Expected ','");
+      XAD (1);
+    }
+  XET ();
 }
 
 def_process_list_elt_proto (module_procedure_rename)
