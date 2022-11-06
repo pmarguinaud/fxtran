@@ -13,6 +13,12 @@
 
 extern const char * FXTRAN_ops[];
 extern const char * FXTRAN_types[];
+extern const int FXTRAN_types_with_kind[];
+extern const int FXTRAN_types_with_leng[];
+extern const int FXTRAN_types_with_name[];
+extern const int FXTRAN_types_with_parm[];
+extern const int FXTRAN_types_intrinsic[];
+
 
 #define FXTRAN_statement_list(macro) \
       macro(ARITHMETICIF                          , 1,   77,  0 ) \

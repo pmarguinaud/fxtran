@@ -523,6 +523,23 @@ static int FXTRAN_expr_array_constructor (const char * t, const FXTRAN_char_info
     int k2;
     if (k1)
       {
+        int kdd = FXTRAN_eat_word (t);
+	if ((t[kdd] == ':') && (t[kdd+1] == ':'))
+          {
+            int i;
+	    for (i = 0; FXTRAN_types[i]; i++)
+              if (FXTRAN_types_intrinsic[i])
+                if (0 == strncmp (FXTRAN_types[i], t, kdd))
+                  goto regular_ts;
+	    XST (_S (TYPE) H _S (NAME));
+	    XNT (_T(_S(NAME)), kdd);
+	    XAD (kdd);
+	    XET ();
+            XAD (2);
+	    k = k - kdd - 2;
+            goto process_list;
+          }
+regular_ts:
         k2 = FXTRAN_typespec (t, ci, ctx);
         if (k1 != k2+1)
           FXTRAN_THROW ("Malformed typespec in array constructor");
@@ -532,6 +549,7 @@ static int FXTRAN_expr_array_constructor (const char * t, const FXTRAN_char_info
       }
   }
 
+process_list:
   FXTRAN_process_list (t, ci, ctx, ",", 
 		       _T(_S(AC) H _S(VALUE) H _S(LIST)), 
 		       k-2*ki, ac_value, NULL);

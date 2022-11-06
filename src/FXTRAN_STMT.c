@@ -25,11 +25,11 @@ const char * FXTRAN_ops[] = { "+",  "-", "**", "*", "//", "/=", "/",
 const char * FXTRAN_types[] = { "LOGICAL", "REAL", "COMPLEX", "INTEGER", "CHARACTER",
                                 "DOUBLEPRECISION", "DOUBLECOMPLEX", "TYPE", "CLASS",
                                 "PROCEDURE", NULL };
-static const int FXTRAN_types_with_kind[] = { 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 };
-static const int FXTRAN_types_with_leng[] = { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 };
-static const int FXTRAN_types_with_name[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0 };
-static const int FXTRAN_types_with_parm[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 };
-static const int FXTRAN_types_intrinsic[] = { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 };
+const int FXTRAN_types_with_kind[] = { 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 };
+const int FXTRAN_types_with_leng[] = { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 };
+const int FXTRAN_types_with_name[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0 };
+const int FXTRAN_types_with_parm[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 };
+const int FXTRAN_types_intrinsic[] = { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 };
 
 
 #define macro_name(x,n) \
