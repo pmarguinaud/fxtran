@@ -88,15 +88,11 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
     FXTRAN_f_buffer_printf (&ctx->fb, "<?xml-stylesheet type=\"text/xsl\" href=\"%s\"?>", ctx->opts.xml_stylesheet);
 
   if (ctx->opts.namelist)
-    {
-      FXTRAN_f_buffer_printf (&ctx->fb, "<namelist xmlns=\"" FXT_NS_NAM "\">");
-    }
+    FXTRAN_f_buffer_printf (&ctx->fb, "<namelist xmlns=\"" FXT_NS_NAM "\">");
   else
-    {
-      FXTRAN_f_buffer_printf (&ctx->fb, "<object xmlns=\"" FXT_NS_SYN "\" source-form=\"%s\""
-            	" source-width=\"%d\" openmp=\"%d\" openacc=\"%d\">", 
-               form_str (ctx->opts.form), ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc);
-    }
+    FXTRAN_f_buffer_printf (&ctx->fb, "<object xmlns=\"" FXT_NS_SYN "\" source-form=\"%s\""
+             " source-width=\"%d\" openmp=\"%d\" openacc=\"%d\">",
+             form_str (ctx->opts.form), ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc);
 
   ctx->fb.len0 = FXTRAN_f_buffer_len (&ctx->fb);
 
@@ -119,17 +115,13 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
   FXTRAN_xml_finish_doc (ctx);
 
   if (ctx->opts.namelist)
-    {
-      FXTRAN_f_buffer_printf (&ctx->fb, "</namelist>");
-    }
+    FXTRAN_f_buffer_printf (&ctx->fb, "</namelist>");
   else
-    {
-      FXTRAN_f_buffer_printf (&ctx->fb, "</object>");
-    }
+    FXTRAN_f_buffer_printf (&ctx->fb, "</object>");
 
   FXTRAN_f_buffer_printf (&ctx->fb, "\n");
 
-  if (Text)
+  if (Xml)
     {
       int len = FXTRAN_f_buffer_len (&ctx->fb);
       char * buf = FXTRAN_f_buffer_str (&ctx->fb);

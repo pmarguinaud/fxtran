@@ -529,9 +529,8 @@ void FXTRAN_xml_err (const char * str, FXTRAN_xmlctx * ctx)
 
 void FXTRAN_xml_finish_doc (FXTRAN_xmlctx * ctx)
 {
-  int len = strlen (ctx->text);
-  while (ctx->lev >= 0)
-    FXTRAN_xml_end_tag (len, ctx);
+  if (ctx->lev >= 0)
+    FXTRAN_ABORT ("Unexpected EOF");
   adv_pos (ctx, strlen (ctx->text), 1);
 }
 
