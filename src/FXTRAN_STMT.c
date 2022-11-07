@@ -472,6 +472,11 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
               XST (_T(_S(TYPE) H _S(NAME)));
               XNT (_T(_S(NAME)), k);
               XAD(k);
+	      if (t[0] == '(')
+                {
+                  k = stmt_actual_args (t, ci, ctx, &saap_typeparmspec);
+	          XAD (k);
+	        }
               XET ();
               XET ();
             }
