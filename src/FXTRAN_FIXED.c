@@ -321,7 +321,11 @@ void FXTRAN_FIXED_decode (FXTRAN_xmlctx * ctx)
 
   FXTRAN_set_char_info_off (text, ci);
 
-/*DUMP_FXTRAN_MASK; exit (0);*/
+  if (ctx->opts.dump_mask)
+    {
+      DUMP_FXTRAN_MASK; 
+      exit (0);
+    }
   
   {
     FXTRAN_stmt_stack stack;

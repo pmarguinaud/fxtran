@@ -3445,6 +3445,8 @@ def_program_construct_end (SUBMODULE, ENDSUBMODULE)
 def_program_construct_end (PROCEDURE, ENDPROCEDURE)
 
       case FXTRAN_CONTAINS:
+        if (! FXTRAN_stmt_stack_curr(stack))
+          FXTRAN_ABORT ("Unexpected CONTAINS statement");
         FXTRAN_stmt_stack_curr(stack)->seen_contains = 1;
       break;
       default:

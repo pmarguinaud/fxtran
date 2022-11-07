@@ -29,6 +29,7 @@ typedef struct FXTRAN_opts
   int strip_exec;
   int strip_linefeed;
   int uppercase;
+  int dump_mask;
 
   char * ffile;
   char * xfile;
