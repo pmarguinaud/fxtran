@@ -397,33 +397,34 @@ typedef struct stmt_actual_args_parms
   int allow_column;
   int typespec;
   int list;
+  int allow_asterix;
 } 
 stmt_actual_args_parms;
 
-#define def_actual_args(n,x,c,t,l) \
+#define def_actual_args(n,x,c,t,l,a) \
 static stmt_actual_args_parms saap_##n = \
-  { _T(x H _S(SPEC)), _T(x), c, t, l }
+  { _T(x H _S(SPEC)), _T(x), c, t, l, a }
 
-#define def_actual_argsl(n,x,l,c,t) \
+#define def_actual_argsl(n,x,l,c,t,a) \
 static stmt_actual_args_parms saap_##n = \
-  { _T(l), _T(x), c, t, 1 }
+  { _T(l), _T(x), c, t, 1, a }
 
-def_actual_args (  actual,                             _S(ARG), 0, 0, 1);
-def_actual_args (allocate,                             _S(ARG), 0, 1, 1);
-def_actual_args ( filepos,                  _S(POS) H _S(SPEC), 0, 0, 1);
-def_actual_args (   close,                _S(CLOSE) H _S(SPEC), 0, 0, 1);
-def_actual_args (    open,              _S(CONNECT) H _S(SPEC), 0, 0, 1);
-def_actual_args (   flush,                _S(FLUSH) H _S(SPEC), 0, 0, 1);
-def_actual_args ( inquiry,              _S(INQUIRY) H _S(SPEC), 0, 0, 1);
-def_actual_args (      io,                _S(IO) H _S(CONTROL), 0, 0, 1);
-def_actual_args (    wait,                 _S(WAIT) H _S(SPEC), 0, 0, 1);
-def_actual_args ( kindsel,                 _S(KIND) H _S(SPEC), 0, 0, 0);
-def_actual_args ( charsel,                 _S(CHAR) H _S(SPEC), 1, 0, 0);
+def_actual_args (  actual,                             _S(ARG), 0, 0, 1, 0);
+def_actual_args (allocate,                             _S(ARG), 0, 1, 1, 0);
+def_actual_args ( filepos,                  _S(POS) H _S(SPEC), 0, 0, 1, 0);
+def_actual_args (   close,                _S(CLOSE) H _S(SPEC), 0, 0, 1, 0);
+def_actual_args (    open,              _S(CONNECT) H _S(SPEC), 0, 0, 1, 0);
+def_actual_args (   flush,                _S(FLUSH) H _S(SPEC), 0, 0, 1, 0);
+def_actual_args ( inquiry,              _S(INQUIRY) H _S(SPEC), 0, 0, 1, 0);
+def_actual_args (      io,                _S(IO) H _S(CONTROL), 0, 0, 1, 1);
+def_actual_args (    wait,                 _S(WAIT) H _S(SPEC), 0, 0, 1, 0);
+def_actual_args ( kindsel,                 _S(KIND) H _S(SPEC), 0, 0, 0, 0);
+def_actual_args ( charsel,                 _S(CHAR) H _S(SPEC), 1, 0, 0, 1);
 
 def_actual_argsl (typeparmspec, _S(TYPE) H _S(PARAMETER) H _S(SPEC), 
-                  _S(TYPE) H _S(PARAMETER) H _S(SPEC) H _S(LIST), 0, 0);
+                  _S(TYPE) H _S(PARAMETER) H _S(SPEC) H _S(LIST), 1, 0, 1);
 def_actual_argsl (typeparmname, _S(TYPE) H _S(PARAMETER) H _S(NAME), 
-                  _S(TYPE) H _S(PARAMETER) H _S(NAME) H _S(LIST), 0, 0);
+                  _S(TYPE) H _S(PARAMETER) H _S(NAME) H _S(LIST), 0, 0, 0);
 
 
 #undef def_actual_args
@@ -487,8 +488,13 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
 
   while (t[0])
     {
-      /* Alternate return */
-      if (t[0] == '*')
+      if ((t[0] == '*') && ((t[1] == ',') || (t[1] == ')')) && saap->allow_asterix)
+        {
+          XST (saap->argn);
+          XAD (1);
+          XET ();
+        }
+      else if (t[0] == '*') /* Alternate return */
         {
          int k;
 
@@ -500,7 +506,7 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
           for (k = 0; isdigit (t[k]); k++);
 
           if (k == 0)
-            FXTRAN_xml_err ("Expected label", ctx);
+            FXTRAN_ABORT ("Expected label", ctx);
 
           XAD(k);
           XET ();
@@ -508,7 +514,7 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
           XET ();
 
           if ((t[0] != ')') && (t[0] != ','))
-            FXTRAN_xml_err ("Expected `,' or `)'", ctx);
+            FXTRAN_ABORT ("Expected `,' or `)'", ctx);
 
         }
       else
@@ -3457,7 +3463,7 @@ def_program_construct_end (PROCEDURE, ENDPROCEDURE)
             {
 def_program_construct_opn (PROCEDURE)
               default:
-              FXTRAN_xml_err ("Expected program unit statement", ctx);
+              FXTRAN_ABORT ("Expected program unit statement", ctx);
             }
           
       break;

@@ -112,8 +112,6 @@ void FXTRAN_xml_skip (FXTRAN_xmlctx *, int);
       FXTRAN_xml_mark (pos1,pos2,ctx,FXTRAN_KWD);   \
   } while (0)
 
-void FXTRAN_xml_err (const char *, FXTRAN_xmlctx *);
-
 #define XST(S) \
   do {                                              \
     if (FXTRAN_XML_dump)                            \

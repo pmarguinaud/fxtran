@@ -517,16 +517,6 @@ void FXTRAN_xml_mark (int pos1, int pos2, FXTRAN_xmlctx * ctx, char mask)
         ctx->ci[pos1+i].mask = mask;
 }
 
-
-
-void FXTRAN_xml_err (const char * str, FXTRAN_xmlctx * ctx)
-{
-  FXTRAN_f_buffer_printf (&ctx->fb, "<error msg=\"");
-  FXTRAN_f_buffer_append_escaped_str (&ctx->fb, str, strlen (str), 0, 0);
-  FXTRAN_f_buffer_printf (&ctx->fb, "\"/>");
-}
-
-
 void FXTRAN_xml_finish_doc (FXTRAN_xmlctx * ctx)
 {
   if (ctx->lev >= 0)
