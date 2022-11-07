@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <limits.h>
 
 #include "FXTRAN_FREE.h"
 #include "FXTRAN_MASK.h"
@@ -375,13 +376,13 @@ void FXTRAN_FREE_decode (FXTRAN_xmlctx * ctx)
           int label = fixup_fc_label (text, ci, i1, i2);              \
           FXTRAN_dump_fc_stmt (text, ci, i1, i2, ctx, &stack, label); \
         }                                                             \
-      i1 = -1; sc = 0;                                                \
+      i1 = INT_MIN; sc = 0;                                                \
   } while (0)
 #define GOTO_FXTRAN_COD \
     do { while ((ci[i+1].mask != FXTRAN_COD) && (ci[i+1].mask != FXTRAN_STR)) { i++; if (i > len) FXTRAN_ABORT ("End of file"); } } while (0)
 
     int sc = 0;
-    int i1 = -1, i2 = -1;
+    int i1 = INT_MIN, i2 = INT_MIN;
 
     FXTRAN_stmt_stack_init (&stack); 
 

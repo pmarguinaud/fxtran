@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <limits.h>
 
 #include "FXTRAN_MISC.h"
 #include "FXTRAN_FIXED.h"
@@ -337,14 +338,14 @@ void FXTRAN_FIXED_decode (FXTRAN_xmlctx * ctx)
             if (i1 >= 0)              \
               {                       \
                 DUMP_FXTRAN_STMT;     \
-                i1 = -1;              \
+                i1 = INT_MIN;         \
               }                       \
             cr = 0;                   \
   	}                             \
     } while (0)
     
 
-    int i1 = -1, i2 = -1;
+    int i1 = INT_MIN, i2 = INT_MIN;
     int cr = 0;
     int label = 0;
 
@@ -381,8 +382,9 @@ void FXTRAN_FIXED_decode (FXTRAN_xmlctx * ctx)
 	      i2 = i;
             break;
             case FXTRAN_SMC:
-	      DUMP_FXTRAN_STMT;
-	      i1 = -1;
+	      if (i1 >= 0)
+	        DUMP_FXTRAN_STMT;
+	      i1 = INT_MIN;
             break;
             case '\n':
 	      cr++;
