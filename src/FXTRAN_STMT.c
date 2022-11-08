@@ -453,8 +453,11 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
         {
           int intrinsic = 0, i;
           int kdn  = FXTRAN_eat_word (t);
+	  char w[kdn+1];
+          strncpy (&w[0], t, kdn); w[kdn] = '\0';
+
           for (i = 0; FXTRAN_types[i]; i++)
-            if ((FXTRAN_types_intrinsic[i]) && (0 == strncmp (FXTRAN_types[i], t, kdn)))
+            if ((FXTRAN_types_intrinsic[i]) && (0 == strcmp (FXTRAN_types[i], w)))
               {
                 intrinsic = 1;
                 break;

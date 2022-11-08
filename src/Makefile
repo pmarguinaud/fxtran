@@ -7,7 +7,14 @@ OBJ=FXTRAN_EXPR.o FXTRAN_FBUFFER.o FXTRAN_FIXED.o FXTRAN_FREE.o FXTRAN_GDB.o \
 EXE=../bin/fxtran
 LIB=../lib/libfxtran.a
 
-CFLAGS=-Wall -g -fPIC -I cpp -O2
+
+OPT=2
+
+ifeq ($(DEBUG), 1)
+  OPT=0
+endif
+
+CFLAGS=-Wall -g -fPIC -I cpp -O$(OPT)
 
 all: $(EXE) $(LIB)
 
