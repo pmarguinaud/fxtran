@@ -3462,7 +3462,10 @@ def_program_construct_end (PROCEDURE, ENDPROCEDURE)
       break;
       default:
         if ((!FXTRAN_stmt_stack_curr(stack)) && (FXTRAN_stmt_stack_ok(stack)))
-          FXTRAN_stmt_stack_incr(stack, FXTRAN_PROGRAM);
+          {
+	    expect_pu = 0;
+            def_construct_opn_ (FXTRAN_PROGRAM, 0, _T(_S(PROGRAM) H _S(UNIT)), NULL, stack, ctx, tu);
+	  }
 	if (expect_pu)
           switch (Type)
             {
