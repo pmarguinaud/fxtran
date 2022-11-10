@@ -2433,9 +2433,22 @@ static void stmt_cltpis_extra (const char * t, const FXTRAN_char_info * ci,
     {
       case '(':
         XAD(1);
-        k = FXTRAN_str_at_level (t, ci, ")", 0);
-	XNT (_T(_S(TYPE) H _S(NAME)), k-1);
-        XAD(k);
+        k = FXTRAN_eat_word (t);
+	if (t[k] == ')')
+          {
+            XNT (_T(_S(TYPE) H _S(NAME)), k);
+            XAD (k);
+          }
+	else
+          {
+            XST (_T(_S(DERIVED) H _S(TYPE) H _S(SPEC)));
+            XNT (_T(_S(TYPE) H _S(NAME)), k);
+            XAD (k);
+            k = stmt_actual_args (t, ci, ctx, &saap_typeparmspec);
+	    XAD (k);
+	    XET ();
+          }
+	XAD (1);
       break;
       case 'D':
         if (zstrcmp ("DEFAULT", t))
