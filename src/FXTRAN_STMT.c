@@ -429,6 +429,49 @@ def_actual_argsl (typeparmname, _S(TYPE) H _S(PARAMETER) H _S(NAME),
 
 #undef def_actual_args
 
+
+static int stmt_actual_args (const char *, const FXTRAN_char_info *, 
+		             FXTRAN_xmlctx *, const stmt_actual_args_parms *);
+
+static int ts_with_args (const char * t, const FXTRAN_char_info * ci,
+                         FXTRAN_xmlctx * ctx)
+{
+  const char * T = t;
+  int intrinsic = 0, i;
+  int kdn  = FXTRAN_eat_word (t);
+  char w[kdn+1];
+  strncpy (&w[0], t, kdn); w[kdn] = '\0';
+
+  for (i = 0; FXTRAN_types[i]; i++)
+    if ((FXTRAN_types_intrinsic[i]) && (0 == strcmp (FXTRAN_types[i], w)))
+      {
+        intrinsic = 1;
+        break;
+      }
+
+  if (intrinsic)
+    {
+      int k = FXTRAN_typespec (t, ci, ctx);
+      XAD (k);
+    }
+  else
+    {
+      int k = FXTRAN_eat_word (t);
+      XST (_T(_S(DERIVED) H _S(TYPE) H _S(SPEC)));
+      XST (_T(_S(TYPE) H _S(NAME)));
+      XNT (_T(_S(NAME)), k);
+      XAD(k);
+      if (t[0] == '(')
+        {
+          k = stmt_actual_args (t, ci, ctx, &saap_typeparmspec);
+          XAD (k);
+        }
+      XET ();
+      XET ();
+    }
+  return t - T;
+}
+
 static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci, 
 		             FXTRAN_xmlctx * ctx, const stmt_actual_args_parms * saap)
 {
@@ -451,43 +494,11 @@ static int stmt_actual_args (const char * t, const FXTRAN_char_info * ci,
       int kdc = FXTRAN_str_at_level (t, ci, "::", ci->parens);
       if (kdc)
         {
-          int intrinsic = 0, i;
-          int kdn  = FXTRAN_eat_word (t);
-	  char w[kdn+1];
-          strncpy (&w[0], t, kdn); w[kdn] = '\0';
-
-          for (i = 0; FXTRAN_types[i]; i++)
-            if ((FXTRAN_types_intrinsic[i]) && (0 == strcmp (FXTRAN_types[i], w)))
-              {
-                intrinsic = 1;
-                break;
-              }
-
-          if (intrinsic)
-            {
-              int k = FXTRAN_typespec (t, ci, ctx);
-              XAD (k);
-            }
-          else
-            {
-              int k = FXTRAN_eat_word (t);
-              XST (_T(_S(DERIVED) H _S(TYPE) H _S(SPEC)));
-              XST (_T(_S(TYPE) H _S(NAME)));
-              XNT (_T(_S(NAME)), k);
-              XAD(k);
-	      if (t[0] == '(')
-                {
-                  k = stmt_actual_args (t, ci, ctx, &saap_typeparmspec);
-	          XAD (k);
-	        }
-              XET ();
-              XET ();
-            }
-
+          int k = ts_with_args (t, ci, ctx);
+	  XAD (k);
           if ((t[0] != ':') && (t[1] != ':'))
             FXTRAN_ABORT ("Expected ::");
           XAD(2);
-                
         }
     }
 
@@ -2433,21 +2444,8 @@ static void stmt_cltpis_extra (const char * t, const FXTRAN_char_info * ci,
     {
       case '(':
         XAD(1);
-        k = FXTRAN_eat_word (t);
-	if (t[k] == ')')
-          {
-            XNT (_T(_S(TYPE) H _S(NAME)), k);
-            XAD (k);
-          }
-	else
-          {
-            XST (_T(_S(DERIVED) H _S(TYPE) H _S(SPEC)));
-            XNT (_T(_S(TYPE) H _S(NAME)), k);
-            XAD (k);
-            k = stmt_actual_args (t, ci, ctx, &saap_typeparmspec);
-	    XAD (k);
-	    XET ();
-          }
+        k = ts_with_args (t, ci, ctx);
+	XAD (k);
 	XAD (1);
       break;
       case 'D':
@@ -2483,58 +2481,15 @@ def_extra_proto (CLASSIS)
 
 def_extra_proto (TYPEIS)
 {
-  XAD(6);
-
-  XST (_T(_S(TYPE) H _S (SELECTOR)));
-
-  switch (t[0])
+  if (zstrcmp ("TYPEDEFAULT",t))
     {
-      case '(':
-        {
-          int k, kn, i, intrinsic = 0;
-          XAD(1);
-
-          kn = FXTRAN_eat_word (t);
-
-          if (t[kn] != ')')
-            for (i = 0; FXTRAN_types[i]; i++)
-              if (FXTRAN_types_intrinsic[i] && (0 == strncmp (FXTRAN_types[i], t, kn)))
-                {
-                  intrinsic = 1;
-                  break;
-                }
-
-          k = FXTRAN_str_at_level (t, ci, ")", 0);
-
-          if (intrinsic)
-            {
-              k = FXTRAN_typespec (t, ci, ctx) + 1;
-            }
-          else
-            {
-              XNT (_T(_S(TYPE) H _S(NAME)), k-1);
-            }
-
-          XAD(k);
-
-        }
-      break;
-      case 'D':
-        if (zstrcmp ("DEFAULT", t))
-          XAD(7);
-	else
-          FXTRAN_THROW ("Expected `DEFAULT'"); 
-      break;
-      default:
-        FXTRAN_THROW ("Malformed case"); 
-        return;
-      break;
+      XAD(4);
     }
-
-  XET ();
-
-  if (t[0])
-    stmt_unit_name (t, ci, "", _T(_S(NAMED) H _S(LABEL)), ctx);
+  else
+    {
+      XAD(6);
+    }
+  return stmt_cltpis_extra (t, ci, ctx, _T(_S(NAMED) H _S(LABEL)));
 }
 
 def_extra_proto (CASE)
