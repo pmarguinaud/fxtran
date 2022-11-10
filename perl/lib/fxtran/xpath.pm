@@ -7,7 +7,7 @@ use XML::LibXML;
 use Carp qw (croak);
 
 use base qw (Exporter);
-our @EXPORT = qw (F);
+our @EXPORT = qw (F f);
 
 use fxtran::alpha;
 
@@ -67,7 +67,7 @@ sub walk_XML_XPath_Step
           my @p = @{ $s->{predicates} || [] };
           my $p = 'XML::XPath::Parser'->new ();
           (my $type = $s->{literal}) =~ s/^ANY-//o;
-          $type = &fxtran::alpha::lookupU2S ($type);
+#         $type = &fxtran::alpha::lookupU2S ($type);
 
           my $size = length ($type);
           my $t = $p->parse ('./f:*[substring(name(),string-length(name())-' . $size . ')="-'.$type.'"]');
@@ -89,7 +89,8 @@ sub walk_XML_XPath_Step
         }
       elsif (($s->{literal} !~ m/^\w+:/o) && (! $s->{test}))
         {
-          my $literal = &fxtran::alpha::lookupU2S ($s->{literal});
+#         my $literal = &fxtran::alpha::lookupU2S ($s->{literal});
+          my $literal = $s->{literal};
           $s->{literal} = "f:$literal";
         }
     }

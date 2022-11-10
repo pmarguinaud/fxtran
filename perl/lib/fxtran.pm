@@ -7,6 +7,7 @@ use warnings;
 use base qw (Exporter);
 use XML::LibXML;
 use XSLoader;
+use Carp qw (croak);
 
 our @EXPORT = qw (parse s t e n);
 
@@ -70,7 +71,8 @@ sub parse
 $fragment      
 END      
 EOF
-      my $xml = &run ('-construct-tag', '-no-include', @fopts, $program);     
+      my $xml = eval { &run ('-construct-tag', '-no-include', @fopts, $program) };
+      $@ && &croak ($@);
       my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);     
       $doc = $doc->lastChild->firstChild;     
      
@@ -85,7 +87,8 @@ EOF
 $args{statement}      
 END      
 EOF
-      my $xml = &run ('-line-length', 300, $program);     
+      my $xml = eval { &run ('-line-length', 300, $program) };
+      $@ && &croak ($@);
       my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);     
       my $n = $doc->documentElement->firstChild->firstChild;     
       return $n;     
@@ -96,7 +99,8 @@ EOF
 X = $args{expr}      
 END      
 EOF
-      my $xml = &run ('-line-length', 300, $program);     
+      my $xml = eval { &run ('-line-length', 300, $program) };
+      $@ && &croak ($@);
       my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);     
       my $n = $doc->documentElement->firstChild->firstChild->lastChild->firstChild;     
       return $n;     
@@ -104,6 +108,7 @@ EOF
   elsif (my $f = $args{location})     
     {     
       use File::stat;     
+      use File::Basename;
       return unless (-f $f);     
      
       my $dir = $args{dir} || &dirname ($f);     
@@ -114,7 +119,7 @@ EOF
         && croak ("`@cmd' failed\n");     
      
       my $doc = 'XML::LibXML'->load_xml (location => $xml, @xopts);     
-      return $doc;     
+      return $doc;
     }     
   &croak ("@_");
 }      
