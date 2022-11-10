@@ -87,7 +87,7 @@ EOF
 $args{statement}      
 END      
 EOF
-      my $xml = eval { &run ('-line-length', 300, $program) };
+      my $xml = eval { &run ('-line-length', 512, $program) };
       $@ && &croak ($@);
       my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);     
       my $n = $doc->documentElement->firstChild->firstChild;     
@@ -99,7 +99,7 @@ EOF
 X = $args{expr}      
 END      
 EOF
-      my $xml = eval { &run ('-line-length', 300, $program) };
+      my $xml = eval { &run ('-line-length', 512, $program) };
       $@ && &croak ($@);
       my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);     
       my $n = $doc->documentElement->firstChild->firstChild->lastChild->firstChild;     
