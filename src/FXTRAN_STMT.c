@@ -1055,6 +1055,50 @@ static int typespec_ext (const char * t, const FXTRAN_char_info * ci,
   return 0;
 }
 
+static int FXTRAN_procedure_typespec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx)
+{
+  const char * T = t;
+  int i;
+  int k;
+  XST (_T(_S(PROCEDURE) H _S(TYPE) H _S(SPEC)));
+  XAD (9);
+  if (t[0] == '(')
+    {
+      XAD (1);
+      if (t[0] != ')')
+        {
+          k = FXTRAN_eat_word (t);
+          if (t[k] == ')')
+            {
+              char w[k+1];
+              strncpy (&w[0], &t[0], k); w[k] = '\0';
+              for (i = 0; FXTRAN_types[i]; i++)
+                if ((strcmp (FXTRAN_types[i], w) == 0) && FXTRAN_types_intrinsic[i])
+	          {
+                    
+                    k = FXTRAN_typespec (t, ci, ctx);
+                    XAD (k);
+                    goto end_parens;
+	          }
+              XST (_T(_S(PROCEDURE) H _S(NAME)));
+              XNT (_T(_S(NAME)), k);
+              XAD (k);
+              XET ();
+            }
+          else
+            {
+              k = FXTRAN_typespec (t, ci, ctx);
+              XAD (k);
+            }
+end_parens:
+          if (t[0] != ')')
+            FXTRAN_ABORT ("Expected ')'");
+        }
+      XAD (1);
+    }
+  XET ();
+  return t - T;
+}
 
 int FXTRAN_typespec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx)
 {
@@ -1062,7 +1106,6 @@ int FXTRAN_typespec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx 
   int i;
   int k;
 
-  
   for (i = 0; FXTRAN_types[i]; i++)
     {
       int intrinsic_typ = 0; /* Handle the TYPE(INTEGER|REAL|...) case */
@@ -1078,8 +1121,9 @@ int FXTRAN_typespec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx 
 	    }
           else if (zstrcmp ("PROCEDURE", FXTRAN_types[i]))
             {
-              XST (_T(_S(PROCEDURE) H _S(TYPE) H _S(SPEC)));
-	      XAD(len);
+              k = FXTRAN_procedure_typespec (t, ci, ctx);
+	      XAD (k);
+              goto end;
             }
 	  else
             {
@@ -1142,6 +1186,7 @@ stop:
         }
     }
 
+end:
   return t - T;
 }
 
@@ -1688,7 +1733,7 @@ def_extra_proto (FUNCTION)
 {
   int k2;
   int k3;
-  const char * prefix[] = { "MODULE", "RECURSIVE", "PURE", "ELEMENTAL", NULL };
+  const char * prefix[] = { "MODULE", "RECURSIVE", "NON_RECURSIVE", "IMPURE", "PURE", "ELEMENTAL", NULL };
   int seen_ts = 0;
 
  
@@ -2742,7 +2787,7 @@ def_extra_proto (SUBROUTINE)
 {
   int k2;
   int k3;
-  const char * prefix[] = { "MODULE", "RECURSIVE", "IMPURE", "PURE", "ELEMENTAL", NULL };
+  const char * prefix[] = { "MODULE", "RECURSIVE", "NON_RECURSIVE", "IMPURE", "PURE", "ELEMENTAL", NULL };
 
   while (1)
     {
@@ -2877,7 +2922,7 @@ static FXTRAN_stmt_type grok_fs (const char * t, const FXTRAN_char_info * ci)
 /* we need to distinguish between SUBROUTINE and FUNCTION */
   int k = 0;
   int i;
-  const char * prefix[] = { "MODULE", "RECURSIVE", "ELEMENTAL", "IMPURE", "PURE", NULL };
+  const char * prefix[] = { "MODULE", "NON_RECURSIVE", "RECURSIVE", "ELEMENTAL", "IMPURE", "PURE", NULL };
 
   if (zstrcmp ("MODULEPROCEDURE", t))
     return FXTRAN_PROCEDURE;
