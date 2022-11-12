@@ -139,6 +139,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_BLOCKDATA                         :  return _T(_S(BLOCK) H _S(DATA)                 H _S(STMT));
       case FXTRAN_CALL                              :  return _T(_S(CALL)                             H _S(STMT));
       case FXTRAN_CASE                              :  return _T(_S(CASE)                             H _S(STMT));
+      case FXTRAN_SELECTRANKCASE                    :  return _T(_S(SELECT) H _S(RANK) H _S(CASE)     H _S(STMT));
       case FXTRAN_CLASS                             :  return _T(_S(CLASS)                            H _S(STMT));
       case FXTRAN_CLASSIS                           :  return _T(_S(CLASS) H _S(IS)                   H _S(STMT));
       case FXTRAN_CLOSE                             :  return _T(_S(CLOSE)                            H _S(STMT));
@@ -167,6 +168,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_ENDPROCEDURE                      :  return _T(_S(END) H _S(PROCEDURE)              H _S(STMT));
       case FXTRAN_ENDPROGRAM                        :  return _T(_S(END) H _S(PROGRAM)                H _S(STMT));
       case FXTRAN_ENDSELECTCASE                     :  return _T(_S(END) H _S(SELECT) H _S(CASE)      H _S(STMT));
+      case FXTRAN_ENDSELECTRANK                     :  return _T(_S(END) H _S(SELECT) H _S(RANK)      H _S(STMT));
       case FXTRAN_ENDSELECTTYPE                     :  return _T(_S(END) H _S(SELECT) H _S(TYPE)      H _S(STMT));
       case FXTRAN_ENDSUBMODULE                      :  return _T(_S(END) H _S(SUBMODULE)              H _S(STMT));
       case FXTRAN_ENDSUBROUTINE                     :  return _T(_S(END) H _S(SUBROUTINE)             H _S(STMT));
@@ -219,6 +221,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_REWIND                            :  return _T(_S(REWIND)                           H _S(STMT));
       case FXTRAN_SAVE                              :  return _T(_S(SAVE)                             H _S(STMT));
       case FXTRAN_SELECTCASE                        :  return _T(_S(SELECT) H _S(CASE)                H _S(STMT));
+      case FXTRAN_SELECTRANK                        :  return _T(_S(SELECT) H _S(RANK)                H _S(STMT));
       case FXTRAN_SELECTTYPE                        :  return _T(_S(SELECT) H _S(TYPE)                H _S(STMT));
       case FXTRAN_SEQUENCE                          :  return _T(_S(SEQUENCE)                         H _S(STMT));
       case FXTRAN_STOP                              :  return _T(_S(STOP)                             H _S(STMT));
@@ -635,28 +638,34 @@ def_process_list_elt_proto (shape_spec)
 
   XST (_T(_S(SHAPE) H _S(SPEC)));
 
-  k = FXTRAN_str_at_level_ir (t, ci, ":", ci[0].parens, kmax);
-
-  if (k)
+  if ((kmax == 2) && (t[0] == '.') && (t[1] == '.'))
     {
-      if (k > 1)
+      XAD (2);
+    }
+  else
+    {
+      k = FXTRAN_str_at_level_ir (t, ci, ":", ci[0].parens, kmax);
+      if (k)
         {
-          XST (_T(_S(LOWER) H _S(BOUND)));
-          FXTRAN_expr (t, ci, k-1, ctx);
-          XAD(k-1);
+          if (k > 1)
+            {
+              XST (_T(_S(LOWER) H _S(BOUND)));
+              FXTRAN_expr (t, ci, k-1, ctx);
+              XAD(k-1);
+              XET ();
+            }
+          XAD(1);
+     
+          kmax = kmax - (t - T);
+        }
+     
+      if (kmax)
+        {
+          XST (_T(_S(UPPER) H _S(BOUND)));
+          FXTRAN_expr (t, ci, kmax, ctx);
+          XAD(kmax);
           XET ();
         }
-      XAD(1);
-
-      kmax = kmax - (t - T);
-    }
-
-  if (kmax)
-    {
-      XST (_T(_S(UPPER) H _S(BOUND)));
-      FXTRAN_expr (t, ci, kmax, ctx);
-      XAD(kmax);
-      XET ();
     }
 
   XET ();
@@ -2078,6 +2087,40 @@ def_extra_proto (SELECTTYPE)
   
 }
 
+def_extra_proto (SELECTRANK)
+{
+  int k;
+
+  k = stmt_bos_named_label (t, ci, ctx);
+  XAD(k);
+
+  XAD(11);
+  k = FXTRAN_str_at_level (t, ci, ")", 0);
+
+  if (k == 0)
+    return;
+
+  k = FXTRAN_str_at_level (t, ci, "=>", ci[0].parens);
+
+  if (k)
+    {
+      XNT (_T(_S(ASSOCIATE) H _S(NAME)), k-1);
+      XAD(k-1);
+      XAD(2);
+    }
+
+  k = FXTRAN_str_at_level (t, ci, ")", 0);
+
+  XST (_T(_S(SELECTOR)));
+
+  FXTRAN_expr (t, ci, k-1, ctx);
+
+  XAD(k-1);
+
+  XET ();
+  
+}
+
 def_extra_proto (SELECTCASE)
 {
   int k;
@@ -2571,6 +2614,40 @@ def_extra_proto (CASE)
     stmt_unit_name (t, ci, "", _T(_S(NAMED) H _S(LABEL)), ctx);
 }
 
+def_extra_proto (SELECTRANKCASE)
+{
+  int k;
+  XAD(4);
+  XST (_T(_S(RANK) H _S(SELECTOR)));
+
+  switch (t[0])
+    {
+      case '(':
+        XAD(1);
+        k = FXTRAN_str_at_level (t, ci, ")", 0);
+        FXTRAN_process_list (t, ci, ctx, ",", 
+	        	     _T(_S(RANK) H _S(VALUE) H _S(RANGE) H _S(LIST)), 
+			     k-1, case_value_range, NULL);
+        XAD(k);
+      break;
+      case 'D':
+        if (zstrcmp ("DEFAULT", t))
+          XAD(7);
+	else
+          FXTRAN_THROW ("Expected `DEFAULT'"); 
+      break;
+      default:
+        FXTRAN_THROW ("Malformed case"); 
+      break;
+    }
+
+
+  XET ();
+
+  if (t[0])
+    stmt_unit_name (t, ci, "", _T(_S(NAMED) H _S(LABEL)), ctx);
+}
+
 #define def_endblock_extra_func(T) \
 def_extra_proto (T)                      \
 {                                        \
@@ -2601,6 +2678,13 @@ def_extra_proto (ENDSELECTTYPE)
 }
 
 def_extra_proto (ENDSELECTCASE)
+{
+  XAD(9);                               
+  if (t[0])                             
+    stmt_eos_named_label (t, ci, ctx);  
+}
+
+def_extra_proto (ENDSELECTRANK)
 {
   XAD(9);                               
   if (t[0])                             
@@ -3210,6 +3294,7 @@ other:
                         switch (FXTRAN_stmt_stack_curr(stack)->type)
                           {
                             csss(SELECTCASE);
+                            csss(SELECTRANK);
                             csss(SELECTTYPE);
                             default:
                               break;
@@ -3328,7 +3413,9 @@ other:
        
 	case 'R':
 
-        tt(READ);
+        if (zstrcmp ("RANK",t))
+          ret(FXTRAN_SELECTRANKCASE);           
+	tt(READ);
 
         if (zstrcmp ("REAL",t))
           ret(FXTRAN_TYPEDECL);
@@ -3339,8 +3426,8 @@ other:
 
 	case 'S':
        
-        tt(SAVE);           tt(SELECTTYPE);     tt(SELECTCASE);     tt(SEQUENCE);       
-	tt(STOP);           
+        tt(SAVE);           tt(SELECTTYPE);     tt(SELECTRANK);     tt(SELECTCASE);     
+	tt(SEQUENCE);       tt(STOP);           
        
         break;
 
@@ -3533,6 +3620,10 @@ def_compound_block_construct_end (WHERECONSTRUCT, WHERE, ENDWHERE)
 def_compound_block_construct_opn (SELECTCASE, SELECTCASE)
 def_compound_block_construct_alt (SELECTCASE, SELECTCASE, CASE)
 def_compound_block_construct_end (SELECTCASE, SELECTCASE, ENDSELECTCASE)
+
+def_compound_block_construct_opn (SELECTRANK, SELECTRANK)
+def_compound_block_construct_alt (SELECTRANK, SELECTRANK, SELECTRANKCASE)
+def_compound_block_construct_end (SELECTRANK, SELECTRANK, ENDSELECTRANK)
 
 def_compound_block_construct_opn (SELECTTYPE, SELECTTYPE)
 def_compound_block_construct_alt (SELECTTYPE, SELECTTYPE, TYPEIS)
