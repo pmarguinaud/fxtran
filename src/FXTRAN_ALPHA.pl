@@ -36,6 +36,7 @@ my @x = qw[
   cache                                                          CACHE
   call                                                           CALL
   case                                                           CASE
+  change                                                         CHANGE
   character                                                      CHARACTER
   char                                                           CHAR
   chunk                                                          CHUNK
@@ -219,6 +220,7 @@ my @x = qw[
   spec                                                           SPEC
   S                                                              SYMBOL
   star                                                           STAR
+  stat                                                           STAT
   status                                                         STATUS
   step                                                           STEP
   stmt                                                           STMT

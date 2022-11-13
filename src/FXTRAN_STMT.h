@@ -39,6 +39,7 @@ extern const int FXTRAN_types_intrinsic[];
       macro(BLOCKDATA                             , 0,   77,  0 ) \
       macro(CALL                                  , 1,   77,  0 ) \
       macro(CASE                                  , 1,   90,  0 ) \
+      macro(CHANGETEAM                            , 1,    8,  0 ) \
       macro(CLASS                                 , 0,    3,  0 ) \
       macro(CLASSIS                               , 1,    3,  0 ) \
       macro(CLOSE                                 , 1,   77,  0 ) \
@@ -59,6 +60,7 @@ extern const int FXTRAN_types_intrinsic[];
       macro(ENDASSOCIATE                          , 1,    3,  0 ) \
       macro(ENDBLOCK                              , 1,    8,  0 ) \
       macro(ENDBLOCKDATA                          , 0,   77,  0 ) \
+      macro(ENDCHANGETEAM                         , 1,    8,  0 ) \
       macro(ENDCLASS                              , 0,    3,  0 ) \
       macro(ENDCRITICAL                           , 1,    8,  0 ) \
       macro(ENDDO                                 , 1,   77,  0 ) \

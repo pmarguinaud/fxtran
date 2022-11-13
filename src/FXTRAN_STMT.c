@@ -139,6 +139,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_BLOCKDATA                         :  return _T(_S(BLOCK) H _S(DATA)                 H _S(STMT));
       case FXTRAN_CALL                              :  return _T(_S(CALL)                             H _S(STMT));
       case FXTRAN_CASE                              :  return _T(_S(CASE)                             H _S(STMT));
+      case FXTRAN_CHANGETEAM                        :  return _T(_S(CHANGE) H _S(TEAM)                H _S(STMT));
       case FXTRAN_CLASS                             :  return _T(_S(CLASS)                            H _S(STMT));
       case FXTRAN_CLASSIS                           :  return _T(_S(CLASS) H _S(IS)                   H _S(STMT));
       case FXTRAN_CLOSE                             :  return _T(_S(CLOSE)                            H _S(STMT));
@@ -160,6 +161,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_ENDASSOCIATE                      :  return _T(_S(END) H _S(ASSOCIATE)              H _S(STMT));
       case FXTRAN_ENDBLOCK                          :  return _T(_S(END) H _S(BLOCK)                  H _S(STMT));
       case FXTRAN_ENDBLOCKDATA                      :  return _T(_S(END) H _S(BLOCK) H _S(DATA)       H _S(STMT));
+      case FXTRAN_ENDCHANGETEAM                     :  return _T(_S(END) H _S(CHANGE) H _S(TEAM)      H _S(STMT));
       case FXTRAN_ENDCLASS                          :  return _T(_S(END) H _S(CLASS)                  H _S(STMT));
       case FXTRAN_ENDCRITICAL                       :  return _T(_S(END) H _S(CRITICAL)               H _S(STMT));
       case FXTRAN_ENDDO                             :  return _T(_S(END) H _S(DO)                     H _S(STMT));
@@ -1461,6 +1463,126 @@ def_extra_proto (BLOCK)
   XAD(k);
 
   XAD(5);
+}
+
+def_extra_proto (CHANGETEAM)
+{
+  int kp;
+  int k;
+  int seen_assoc;
+  int seen_sync;
+
+  k = stmt_bos_named_label (t, ci, ctx);
+  XAD(k);
+  XAD(10);
+  if (t[0] != '(')
+    FXTRAN_ABORT ("Expected '('");
+  XAD (1);
+  
+  k = FXTRAN_str_at_level (t, ci, ",", ci->parens);
+  if (k == 0)
+    k = FXTRAN_str_at_level (t, ci, ")", ci->parens-1);
+
+  XST (_T(_S(TEAM) H _S(VALUE)));
+  FXTRAN_expr (t, ci, k-1, ctx);
+  XAD (k-1);
+  XET ();
+
+
+  seen_assoc = 0;
+  seen_sync = 0;
+  while (t[0] && (t[0] != ')'))
+    {
+      if (t[0] != ',')
+        FXTRAN_ABORT ("Expected ','");
+
+      /* The following will be valid AFTER XAD(1) */
+      k = FXTRAN_str_at_level (t+1, ci+1, ",", ci->parens);
+      if (k == 0)
+        k = FXTRAN_str_at_level (t+1, ci+1, ")", ci->parens-1);
+      kp = FXTRAN_str_at_level (t+1, ci+1, "=>", ci->parens);
+
+      if (kp > 0)
+        {
+          if (seen_sync > 0)
+            FXTRAN_ABORT ("Malformed statement");
+
+          XAD (1); /* Skip ',' */
+
+          if (! seen_assoc)
+            XST (_T (_S(COARRAY) H _S(ASSOCIATION) H _S(LIST)));
+          seen_assoc = 1;
+
+          XST (_T(_S(COARRAY) H _S(ASSOCIATION)));
+
+          XST (_T(_S(CODIMENSION) H _S(DECL)));
+          FXTRAN_expr (t, ci, kp-1, ctx);
+          XAD (kp-1);
+          XET ();
+  
+          XAD (2);
+  
+          XST (_T(_S(SELECTOR)));
+          FXTRAN_expr (t, ci, k-kp-2, ctx);
+          XAD (k-kp-2);
+          XET ();
+  
+          XET ();
+        }
+      else
+        {
+          if (seen_assoc && (! seen_sync))
+            XET ();
+
+          XAD (1); /* Skip ',' */
+
+          if (! seen_sync)
+            XST (_T(_S(SYNC) H _S(STAT) H _S(LIST)));
+          seen_sync = 1;
+
+          XST (_T(_S(ARG)));
+
+          kp = FXTRAN_str_at_level (t, ci, "=", ci->parens);
+
+          if ((kp > 0) && (kp < k))
+            {
+              int kw = FXTRAN_eat_word (t);
+              XNW (_T(_S(ARG) H _S(NAME)), kw); 
+              XAD(kw);
+              if (t[0] != '=')
+                FXTRAN_ABORT ("Expected '='");
+              XAD (1);
+              FXTRAN_expr (t, ci, k-kp-1, ctx);
+              XAD (k-kp-1);
+            }
+          else
+            {
+              FXTRAN_expr (t, ci, k-1, ctx);
+              XAD (k-1);
+            }
+
+          XET ();
+        }
+    }
+
+  if (seen_sync || seen_assoc)
+    XET ();
+
+  if (t[0] != ')')
+    FXTRAN_ABORT ("Expected ')'");
+}
+
+def_extra_proto (ENDCHANGETEAM)
+{
+  int k;
+  XAD(13);
+  if (t[0] == '(')
+    {
+      k = stmt_actual_args (t, ci, ctx, &saap_sync);
+      XAD (k);
+    }
+  if (t[0])                              
+    stmt_eos_named_label (t, ci, ctx);  
 }
 
 def_extra_proto (CRITICAL)
@@ -3253,9 +3375,9 @@ other:
         if (zstrcmp ("COMPLEX",t))
           ret(FXTRAN_TYPEDECL);
 
-        tt(CALL);           tt(CASE);           tt(CLOSE);          tt(COMMON);
-        tt0(CONTAINS);      tt(CONTIGUOUS);     tt(CONTINUE);       tt(CYCLE);
-        tt(CODIMENSION);    tt(CRITICAL);
+        tt(CALL);           tt(CASE);           tt(CHANGETEAM);     tt(CLOSE);          
+        tt(COMMON);         tt0(CONTAINS);      tt(CONTIGUOUS);     tt(CONTINUE);       
+        tt(CYCLE);          tt(CODIMENSION);    tt(CRITICAL);
 
 	break;
        
@@ -3284,11 +3406,11 @@ other:
        
 	if ((t[1] == 'N') && (t[2] == 'D'))
           {
-            tt2(ASSOCIATE);     tt2(BLOCKDATA);     tt2(BLOCK);         tt2(CLASS);         
-            tt2(DO);            tt2(FORALL);        tt2(FUNCTION);      tt2(IF);            
-            tt2(INTERFACE);     tt2(MODULE);        tt2(PROGRAM);       tt2(SUBROUTINE);    
-            tt2(TYPE);          tt2(WHERE);         tt(ENDFILE);        tt2(ENUM);
-            tt2(SUBMODULE);     tt2(PROCEDURE);     tt2(CRITICAL);
+            tt2(ASSOCIATE);     tt2(BLOCKDATA);     tt2(BLOCK);         tt2(CHANGETEAM);
+            tt2(CLASS);         tt2(DO);            tt2(FORALL);        tt2(FUNCTION);      
+            tt2(IF);            tt2(INTERFACE);     tt2(MODULE);        tt2(PROGRAM);       
+            tt2(SUBROUTINE);    tt2(TYPE);          tt2(WHERE);         tt(ENDFILE);        
+            tt2(ENUM);          tt2(SUBMODULE);     tt2(PROCEDURE);     tt2(CRITICAL);
 
             if (FXTRAN_stmt_stack_ok (stack)) /* here we need context data */
               {
@@ -3657,6 +3779,9 @@ def_simple_block_construct_end (BLOCK, BLOCK, ENDBLOCK)
 
 def_simple_block_construct_opn (CRITICAL, CRITICAL)
 def_simple_block_construct_end (CRITICAL, CRITICAL, ENDCRITICAL)
+
+def_construct_opn__(CHANGETEAM,0,_T(_S(CHANGE) H _S(TEAM) H _S(CONSTRUCT)),NULL)
+def_construct_end__(CHANGETEAM,ENDCHANGETEAM,0)
 
 def_simple_block_construct_opn (CLASS, CLASS)
 def_simple_block_construct_end (CLASS, CLASS, ENDCLASS)
