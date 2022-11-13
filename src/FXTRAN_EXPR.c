@@ -165,6 +165,61 @@ def_process_list_elt_proto(expr_parens_item)
   return 1;
 }
 
+def_process_list_elt_proto (cosection_subscript)
+{
+  const char * T = t;
+  int k;
+  const char * tags[] = { _T(_S(LOWER) H _S(COBOUND)), 
+	                  _T(_S(UPPER) H _S(COBOUND)), 
+			  NULL };
+  int itag = 0;
+  int lev = ci->parens;
+
+  XST (_T(_S(COSECTION) H _S(SUBSCRIPT)));
+
+  k = FXTRAN_str_at_level_ir (t, ci, ":", lev, kmax);
+
+  if (k)
+    {
+      if (k > 1)
+        {
+          XST (tags[itag++]);
+          FXTRAN_expr (t, ci, k-1, ctx);
+          XAD(k-1);
+          XET ();
+        }
+      XAD(1);
+
+    }
+
+  k = FXTRAN_str_at_level_ir (t, ci, ":", lev, kmax-(t-T));
+  
+  if (k)
+    {
+      if (k > 1)
+        {
+          XST (tags[itag++]);
+          FXTRAN_expr (t, ci, k-1, ctx);
+          XAD(k-1);
+          XET ();
+        }
+      XAD(1);
+  
+    }
+
+
+  if (kmax-(t-T))
+    {
+      XST (tags[itag++]);
+      FXTRAN_expr (t, ci, kmax-(t-T), ctx);
+      XAD(kmax-(t-T));
+      XET ();
+    }
+
+  XET ();
+  return 1;
+}
+
 def_process_list_elt_proto (section_subscript)
 {
   const char * T = t;
@@ -236,7 +291,7 @@ static int coarray_ref (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
 
           FXTRAN_process_list (t, ci, ctx, ",", 
 			       _T(_S(COSECTION) H _S(SUBSCRIPT) H _S(LIST)), 
-			       k-1, section_subscript, NULL);
+			       k-1, cosection_subscript, NULL);
 	  XAD(k-1);
           XAD(1);
           XET ();
