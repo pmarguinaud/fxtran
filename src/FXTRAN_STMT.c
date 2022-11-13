@@ -699,11 +699,17 @@ static int stmt_old_cl (const char * t , const FXTRAN_char_info * ci, FXTRAN_xml
       if (t[0] == '(')
         {
           int k = FXTRAN_str_at_level (t, ci, ")", ci->parens);
-
           XAD(1);
-	  k = k - 1;
-	  FXTRAN_expr (t, ci, k-1, ctx);
-	  XAD(k);
+          if ((t[0] == ':') && (t[1] == ')')) /* Parse *(:) */
+            {
+              XAD (2);
+            }
+          else
+            {
+	      k = k - 1;
+	      FXTRAN_expr (t, ci, k-1, ctx);
+	      XAD(k);
+            }
 	}
       else if (isdigit (t[0]))
         {
