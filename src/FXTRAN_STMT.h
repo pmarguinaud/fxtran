@@ -42,6 +42,7 @@ extern const int FXTRAN_types_intrinsic[];
       macro(CLASS                                 , 0,    3,  0 ) \
       macro(CLASSIS                               , 1,    3,  0 ) \
       macro(CLOSE                                 , 1,   77,  0 ) \
+      macro(CRITICAL                              , 1,    8,  0 ) \
       macro(CODIMENSION                           , 0,    8,  1 ) \
       macro(COMMON                                , 0,   77,  0 ) \
       macro(COMPUTEDGOTO                          , 0,   77,  0 ) \
@@ -59,6 +60,7 @@ extern const int FXTRAN_types_intrinsic[];
       macro(ENDBLOCK                              , 1,    8,  0 ) \
       macro(ENDBLOCKDATA                          , 0,   77,  0 ) \
       macro(ENDCLASS                              , 0,    3,  0 ) \
+      macro(ENDCRITICAL                           , 1,    8,  0 ) \
       macro(ENDDO                                 , 1,   77,  0 ) \
       macro(ENDFORALL                             , 1,   95,  0 ) \
       macro(ENDFUNCTION                           , 0,   77,  0 ) \
