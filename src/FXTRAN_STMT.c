@@ -1584,7 +1584,7 @@ def_extra_proto (CHANGETEAM)
 def_extra_proto (ENDCHANGETEAM)
 {
   int k;
-  XAD(13);
+  XAD(7);
   if (t[0] == '(')
     {
       k = stmt_actual_args (t, ci, ctx, &saap_sync);
@@ -3490,11 +3490,14 @@ other:
        
 	if ((t[1] == 'N') && (t[2] == 'D'))
           {
-            tt2(ASSOCIATE);     tt2(BLOCKDATA);     tt2(BLOCK);         tt2(CHANGETEAM);
+            tt2(ASSOCIATE);     tt2(BLOCKDATA);     tt2(BLOCK);         
             tt2(CLASS);         tt2(DO);            tt2(FORALL);        tt2(FUNCTION);      
             tt2(IF);            tt2(INTERFACE);     tt2(MODULE);        tt2(PROGRAM);       
             tt2(SUBROUTINE);    tt2(TYPE);          tt2(WHERE);         tt(ENDFILE);        
             tt2(ENUM);          tt2(SUBMODULE);     tt2(PROCEDURE);     tt2(CRITICAL);
+
+            if (zstrcmp("ENDTEAM",t)) 
+              ret(FXTRAN_ENDCHANGETEAM); 
 
             if (FXTRAN_stmt_stack_ok (stack)) /* here we need context data */
               {
