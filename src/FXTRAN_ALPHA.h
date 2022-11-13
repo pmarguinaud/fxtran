@@ -206,6 +206,7 @@
 #define FXTRAN_STRING_SECTION                        "section"
 #define FXTRAN_STRING_SECTIONS                       "sections"
 #define FXTRAN_STRING_SELECTCASE                     "selectcase"
+#define FXTRAN_STRING_SELECTRANK                     "selectrank"
 #define FXTRAN_STRING_SELECTOR                       "selector"
 #define FXTRAN_STRING_SELECT                         "select"
 #define FXTRAN_STRING_SELECTTYPE                     "selecttype"
