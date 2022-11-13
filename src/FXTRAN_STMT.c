@@ -142,6 +142,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_CLASS                             :  return _T(_S(CLASS)                            H _S(STMT));
       case FXTRAN_CLASSIS                           :  return _T(_S(CLASS) H _S(IS)                   H _S(STMT));
       case FXTRAN_CLOSE                             :  return _T(_S(CLOSE)                            H _S(STMT));
+      case FXTRAN_CODIMENSION                       :  return _T(_S(CODIMENSION)                      H _S(STMT));
       case FXTRAN_COMMON                            :  return _T(_S(COMMON)                           H _S(STMT));
       case FXTRAN_COMPUTEDGOTO                      :  return _T(_S(COMPUTED) H _S(GOTO)              H _S(STMT));
       case FXTRAN_CONTAINS                          :  return _T(_S(CONTAINS)                         H _S(STMT));
@@ -663,6 +664,66 @@ def_process_list_elt_proto (shape_spec)
   return 1;
 }
 
+def_process_list_elt_proto (coshape_spec)
+{
+  const char * T = t;
+  int k;
+
+  XST (_T(_S(SHAPE) H _S(SPEC)));
+
+  k = FXTRAN_str_at_level_ir (t, ci, ":", ci[0].parens, kmax);
+
+  if (k)
+    {
+      if (k > 1)
+        {
+          XST (_T(_S(LOWER) H _S(COBOUND)));
+          FXTRAN_expr (t, ci, k-1, ctx);
+          XAD(k-1);
+          XET ();
+        }
+      XAD(1);
+
+      kmax = kmax - (t - T);
+    }
+
+  if (kmax)
+    {
+      XST (_T(_S(UPPER) H _S(COBOUND)));
+      FXTRAN_expr (t, ci, kmax, ctx);
+      XAD(kmax);
+      XET ();
+    }
+
+  XET ();
+  return 1;
+}
+
+
+static int coarray_spec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx *ctx)
+{
+  const char * T = t;
+  int lev = ci[0].parens;
+  int k;
+
+  if (t[0] == '[')
+    {
+      XST (_T(_S(COARRAY) H _S(SPEC)));
+      XAD(1);
+      if ((k = FXTRAN_str_at_level (t, ci, "]", lev)))
+        {
+
+          FXTRAN_process_list (t, ci, ctx, ",", _T(_S(COSHAPE) H _S(SPEC) H _S(LIST)), k,
+			       coshape_spec, NULL);
+	  XAD(k-1);
+          XAD(1);
+          XET ();
+        }
+       
+    }
+
+  return t - T;
+}
 
 static int array_spec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx *ctx)
 {
@@ -678,7 +739,7 @@ static int array_spec (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlct
         {
 
           FXTRAN_process_list (t, ci, ctx, ",", _T(_S(SHAPE) H _S(SPEC) H _S(LIST)), k,
-			        shape_spec, NULL);
+			       shape_spec, NULL);
 	  XAD(k-1);
           XAD(1);
           XET ();
@@ -846,6 +907,9 @@ static int stmt_entity (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
         }
 
       k = array_spec (t, ci, ctx);
+      XAD(k);
+     
+      k = coarray_spec (t, ci, ctx);
       XAD(k);
      
       k = stmt_old_cl (t, ci, ctx);
@@ -1264,65 +1328,71 @@ static int FXTRAN_attr0 (const char * t, const FXTRAN_char_info * ci,
     XST (_T(_S(ATTRIBUTE)));
 
 
-  if (t[k] != '(')
+  if (t[k] == '[')
+    {
+      if (zstrcmp ("CODIMENSION", T))
+        {
+          if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
+          XAD(11);
+          if (an) XET ();
+          k = coarray_spec (t, ci, ctx);
+          XAD(k);
+        }
+    }
+  else if (t[k] != '(')
     {
       if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
       XAD(k);
       if (an) XET ();
     }
-  else
+  else if ((k = FXTRAN_str_at_level (t, ci, ")", 0)))
     {
-      if ((k = FXTRAN_str_at_level (t, ci, ")", 0)))
+      if (zstrcmp ("DIMENSION", T))
         {
-
-          if (zstrcmp ("DIMENSION", T))
-            {
-              if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
-              XAD(9);
-              if (an) XET ();
-              k = array_spec (t, ci, ctx);
-              XAD(k);
-            }
-          else if (zstrcmp ("BIND", T))
-            {
-              if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
-	      XAD(4);
-	      if (an) XET ();
-	      XAD(1);
-              k = bind_spec (t, ci, ctx);
-              XAD(k);
-            }
-          else if (zstrcmp ("EXTENDS", T))
-            {
-              if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
-              XAD(7);
-              if (an) XET ();
-              XAD(1);
-	      XNT (_T(_S(NAME)), k-9);
-              XAD(k-8);
-            }
-          else if (zstrcmp ("PASS", T))
-            {
-              if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
-              XAD(4);
-	      if (an) XET ();
-	      XAD(1);
-	      XNT (_T(_S(NAME)), k-6);
-              XAD(k-5);
-            }
-	  else if (zstrcmp ("INTENT", T))
-            {
-              if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
-              XAD(6);
-	      if (an) XET ();
-	      XAD(1);
-              k = FXTRAN_eat_word (t);
-	      XST (_T(_S(INTENT) H _S(SPEC)));
-	      XAD(k);
-	      XET ();
-	      XAD(1);
-            }
-  
+          if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
+          XAD(9);
+          if (an) XET ();
+          k = array_spec (t, ci, ctx);
+          XAD(k);
+        }
+      else if (zstrcmp ("BIND", T))
+        {
+          if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
+          XAD(4);
+          if (an) XET ();
+          XAD(1);
+          k = bind_spec (t, ci, ctx);
+          XAD(k);
+        }
+      else if (zstrcmp ("EXTENDS", T))
+        {
+          if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
+          XAD(7);
+          if (an) XET ();
+          XAD(1);
+          XNT (_T(_S(NAME)), k-9);
+          XAD(k-8);
+        }
+      else if (zstrcmp ("PASS", T))
+        {
+          if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
+          XAD(4);
+          if (an) XET ();
+          XAD(1);
+          XNT (_T(_S(NAME)), k-6);
+          XAD(k-5);
+        }
+      else if (zstrcmp ("INTENT", T))
+        {
+          if (an) XST (_T(_S(ATTRIBUTE) H _S(NAME)));
+          XAD(6);
+          if (an) XET ();
+          XAD(1);
+          k = FXTRAN_eat_word (t);
+          XST (_T(_S(INTENT) H _S(SPEC)));
+          XAD(k);
+          XET ();
+          XAD(1);
         }
     }
     
@@ -1516,6 +1586,17 @@ def_extra_proto (SAVE)
     
   FXTRAN_process_list (t, ci, ctx, ",", _T(_S(SAVED) H _S(ENTITY) H _S(LIST)), strlen (t),
 		        saved_entity, NULL);
+}
+
+def_extra_proto (CODIMENSION)
+{
+  int k = FXTRAN_attr0 (t, ci, ctx, "CODIMENSION");
+
+  XAD(k);
+
+  skip_dc ();
+
+  stmt_entity_list (t, ci, ctx, 1, 0, &seda_entity, stack);
 }
 
 def_extra_proto (DIMENSION)
@@ -3150,6 +3231,7 @@ other:
 
         tt(CALL);           tt(CASE);           tt(CLOSE);          tt(COMMON);
         tt0(CONTAINS);      tt(CONTIGUOUS);     tt(CONTINUE);       tt(CYCLE);
+        tt(CODIMENSION);
 
 	break;
        

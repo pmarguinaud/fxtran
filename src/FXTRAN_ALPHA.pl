@@ -41,7 +41,10 @@ my @x = qw[
   class                                                          CLASS
   clause                                                         CLAUSE
   close                                                          CLOSE
-  co                                                             CO
+  coarray                                                        COARRAY
+  cobound                                                        COBOUND
+  codimension                                                    CODIMENSION
+  coshape                                                        COSHAPE
   code                                                           CODE
   common                                                         COMMON
   complex                                                        COMPLEX
@@ -57,6 +60,7 @@ my @x = qw[
   contiguous                                                     CONTIGUOUS
   continue                                                       CONTINUE
   control                                                        CONTROL
+  cosection                                                      COSECTION
   cray                                                           CRAY
   critical                                                       CRITICAL
   cycle                                                          CYCLE

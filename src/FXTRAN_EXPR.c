@@ -221,6 +221,34 @@ def_process_list_elt_proto (section_subscript)
   return 1;
 }
 
+static int coarray_ref (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx *ctx)
+{
+  const char * T = t;
+  int lev = ci[0].parens;
+  int k;
+
+  if (t[0] == '[')
+    {
+      XST (_T(_S(COARRAY) H _S(REF)));
+      XAD(1);
+      if ((k = FXTRAN_str_at_level (t, ci, "]", lev)))
+        {
+
+          FXTRAN_process_list (t, ci, ctx, ",", 
+			       _T(_S(COSECTION) H _S(SUBSCRIPT) H _S(LIST)), 
+			       k-1, section_subscript, NULL);
+	  XAD(k-1);
+          XAD(1);
+          XET ();
+        }
+      else
+        FXTRAN_THROW ("Expected closing `]'"); 
+       
+    }
+
+  return t - T;
+}
+
 static int array_ref (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx *ctx)
 {
   const char * T = t;
@@ -383,7 +411,13 @@ static int FXTRAN_ref_list (const char * t, const FXTRAN_char_info * ci,
 
   while (t < &T[kmax])
     {
-      if (t[0] == '(')
+      if (t[0] == '[')
+        {
+          if (lst++ == 0)
+            XST (_T(_S(REF) H _S(LIST)));
+          XAD(coarray_ref (t, ci, ctx));
+        }
+      else if (t[0] == '(')
         {
           if (lst++ == 0)
             XST (_T(_S(REF) H _S(LIST)));

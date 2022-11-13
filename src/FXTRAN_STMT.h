@@ -42,6 +42,7 @@ extern const int FXTRAN_types_intrinsic[];
       macro(CLASS                                 , 0,    3,  0 ) \
       macro(CLASSIS                               , 1,    3,  0 ) \
       macro(CLOSE                                 , 1,   77,  0 ) \
+      macro(CODIMENSION                           , 0,    8,  1 ) \
       macro(COMMON                                , 0,   77,  0 ) \
       macro(COMPUTEDGOTO                          , 0,   77,  0 ) \
       macro(CONTAINS                              , 0,   90,  0 ) \
