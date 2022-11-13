@@ -193,6 +193,7 @@ my @x = qw[
   section                                                        SECTION
   sections                                                       SECTIONS
   selectcase                                                     SELECTCASE
+  selectrank                                                     SELECTRANK
   selector                                                       SELECTOR
   select                                                         SELECT
   selecttype                                                     SELECTTYPE

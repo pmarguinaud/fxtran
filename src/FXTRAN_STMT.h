@@ -66,6 +66,7 @@ extern const int FXTRAN_types_intrinsic[];
       macro(ENDPROCEDURE                          , 0,    8,  0 ) \
       macro(ENDPROGRAM                            , 0,   77,  0 ) \
       macro(ENDSELECTCASE                         , 1,   90,  0 ) \
+      macro(ENDSELECTRANK                         , 1,   18,  0 ) \
       macro(ENDSELECTTYPE                         , 1,    3,  0 ) \
       macro(ENDSUBMODULE                          , 0,    8,  0 ) \
       macro(ENDSUBROUTINE                         , 0,   77,  0 ) \
@@ -115,11 +116,13 @@ extern const int FXTRAN_types_intrinsic[];
       macro(PRIVATE                               , 0,   90,  1 ) \
       macro(PROTECTED                             , 0,    3,  1 ) \
       macro(PUBLIC                                , 0,   90,  1 ) \
+      macro(SELECTRANKCASE                        , 1,   18,  0 ) \
       macro(READ                                  , 1,   77,  0 ) \
       macro(RETURN                                , 1,   77,  0 ) \
       macro(REWIND                                , 1,   77,  0 ) \
       macro(SAVE                                  , 0,   77,  1 ) \
       macro(SELECTCASE                            , 1,   90,  0 ) \
+      macro(SELECTRANK                            , 1,   18,  0 ) \
       macro(SELECTTYPE                            , 1,    3,  0 ) \
       macro(SEQUENCE                              , 0,   90,  0 ) \
       macro(STOP                                  , 1,   77,  0 ) \
