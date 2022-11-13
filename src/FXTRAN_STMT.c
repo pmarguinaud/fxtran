@@ -185,9 +185,12 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_EQUIVALENCE                       :  return _T(_S(EQUIVALENCE)                      H _S(STMT));
       case FXTRAN_EXIT                              :  return _T(_S(EXIT)                             H _S(STMT));
       case FXTRAN_EXTERNAL                          :  return _T(_S(EXTERNAL)                         H _S(STMT));
+      case FXTRAN_EVENTPOST                         :  return _T(_S(EVENT) H _S(POST)                 H _S(STMT));
+      case FXTRAN_EVENTWAIT                         :  return _T(_S(EVENT) H _S(WAIT)                 H _S(STMT));
       case FXTRAN_FINAL                             :  return _T(_S(FINAL)                            H _S(STMT));
       case FXTRAN_FLUSH                             :  return _T(_S(FLUSH)                            H _S(STMT));
       case FXTRAN_FORALLCONSTRUCT                   :  return _T(_S(FORALL) H _S(CONSTRUCT)           H _S(STMT));
+      case FXTRAN_FORMTEAM                          :  return _T(_S(FORM) H _S(TEAM)                  H _S(STMT));
       case FXTRAN_FORMAT                            :  return _T(_S(FORMAT)                           H _S(STMT));
       case FXTRAN_FUNCTION                          :  return _T(_S(FUNCTION)                         H _S(STMT));
       case FXTRAN_GENERIC                           :  return _T(_S(GENERIC)                          H _S(STMT));
@@ -229,6 +232,8 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_SUBROUTINE                        :  return _T(_S(SUBROUTINE)                       H _S(STMT));
       case FXTRAN_SYNCALL                           :  return _T(_S(SYNC) H _S(ALL)                   H _S(STMT));
       case FXTRAN_SYNCIMAGES                        :  return _T(_S(SYNC) H _S(IMAGES)                H _S(STMT));
+      case FXTRAN_SYNCMEMORY                        :  return _T(_S(SYNC) H _S(MEMORY)                H _S(STMT));
+      case FXTRAN_SYNCTEAM                          :  return _T(_S(SYNC) H _S(TEAM)                  H _S(STMT));
       case FXTRAN_TARGET                            :  return _T(_S(TARGET)                           H _S(STMT));
       case FXTRAN_TYPE                              :  return _T(_S(TYPE)                             H _S(STMT));
       case FXTRAN_TYPEIS                            :  return _T(_S(TYPE) H _S(IS)                    H _S(STMT));
@@ -3327,7 +3332,7 @@ other:
        
 	case 'F':
        
-        tt(FINAL);          tt(FLUSH);         
+        tt(FINAL);          tt(FLUSH);          tt(FORMTEAM);
 
 	if (zstrcmp("FORALL",t))
           {
@@ -3434,7 +3439,8 @@ other:
 	case 'S':
        
         tt(SAVE);           tt(SELECTTYPE);     tt(SELECTCASE);     tt(SEQUENCE);       
-	tt(STOP);           tt(SYNCALL);        tt(SYNCIMAGES);
+	tt(STOP);           tt(SYNCALL);        tt(SYNCIMAGES);     tt(SYNCMEMORY);
+        tt(SYNCTEAM);
        
         break;
 
@@ -4312,24 +4318,51 @@ def_extra_proto (SYNCIMAGES)
 {
   XAD(10);
 
+  stmt_actual_args (t, ci, ctx, &saap_sync);
+}
+
+def_extra_proto (SYNCMEMORY)
+{
+  XAD(10);
+
   if (t[0])
     stmt_actual_args (t, ci, ctx, &saap_sync);
+}
+
+def_extra_proto (SYNCTEAM)
+{
+  XAD(8);
+  stmt_actual_args (t, ci, ctx, &saap_sync);
+}
+
+def_extra_proto (FORMTEAM)
+{
+  XAD(8);
+  stmt_actual_args (t, ci, ctx, &saap_sync);
+}
+
+def_extra_proto (EVENTPOST)
+{
+  XAD(9);
+  stmt_actual_args (t, ci, ctx, &saap_sync);
+}
+
+def_extra_proto (EVENTWAIT)
+{
+  XAD(9);
+  stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (LOCK)
 {
   XAD(4);
-
-  if (t[0])
-    stmt_actual_args (t, ci, ctx, &saap_sync);
+  stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (UNLOCK)
 {
   XAD(6);
-
-  if (t[0])
-    stmt_actual_args (t, ci, ctx, &saap_sync);
+  stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (PAUSE)

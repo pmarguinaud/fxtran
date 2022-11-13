@@ -92,6 +92,7 @@ my @x = qw[
   enumerator                                                     ENUMERATOR
   equivalence                                                    EQUIVALENCE
   error                                                          ERROR
+  event                                                          EVENT
   exit                                                           EXIT
   explicit                                                       EXPLICIT
   extends                                                        EXTENDS
@@ -102,6 +103,7 @@ my @x = qw[
   finalizer                                                      FINALIZER
   flush                                                          FLUSH
   forall                                                         FORALL
+  form                                                           FORM
   format                                                         FORMAT
   function                                                       FUNCTION
   generic                                                        GENERIC
@@ -144,6 +146,7 @@ my @x = qw[
   mark                                                           MARK
   mask                                                           MASK
   master                                                         MASTER
+  memory                                                         MEMORY
   module                                                         MODULE
   named                                                          NAMED
   namelist                                                       NAMELIST
@@ -173,6 +176,7 @@ my @x = qw[
   pointee                                                        POINTEE
   pointer                                                        POINTER
   pos                                                            POS
+  post                                                           POST
   prefix                                                         PREFIX
   print                                                          PRINT
   private                                                        PRIVATE
@@ -226,6 +230,7 @@ my @x = qw[
   subscript                                                      SUBSCRIPT
   sync                                                           SYNC
   target                                                         TARGET
+  team                                                           TEAM
   test                                                           TEST
   then                                                           THEN
   thread                                                         THREAD

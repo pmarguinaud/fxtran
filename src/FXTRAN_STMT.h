@@ -82,6 +82,8 @@ extern const int FXTRAN_types_intrinsic[];
       macro(ENUM                                  , 0,    3,  0 ) \
       macro(ENUMERATOR                            , 0,    3,  0 ) \
       macro(EQUIVALENCE                           , 0,   77,  0 ) \
+      macro(EVENTPOST                             , 1,    8,  0 ) \
+      macro(EVENTWAIT                             , 1,    8,  0 ) \
       macro(ERRORSTOP                             , 0,    3,  0 ) \
       macro(EXIT                                  , 1,   90,  0 ) \
       macro(EXTERNAL                              , 0,   77,  1 ) \
@@ -89,6 +91,7 @@ extern const int FXTRAN_types_intrinsic[];
       macro(FLUSH                                 , 1,    3,  0 ) \
       macro(FORALLCONSTRUCT                       , 1,   95,  0 ) \
       macro(FORMAT                                , 0,   77,  0 ) \
+      macro(FORMTEAM                              , 1,    8,  0 ) \
       macro(FUNCTION                              , 0,   77,  0 ) \
       macro(GENERIC                               , 0,    3,  0 ) \
       macro(GOTO                                  , 1,   77,  0 ) \
@@ -129,6 +132,8 @@ extern const int FXTRAN_types_intrinsic[];
       macro(SUBROUTINE                            , 0,   77,  0 ) \
       macro(SYNCALL                               , 1,    8,  0 ) \
       macro(SYNCIMAGES                            , 1,    8,  0 ) \
+      macro(SYNCMEMORY                            , 1,    8,  0 ) \
+      macro(SYNCTEAM                              , 1,    8,  0 ) \
       macro(TARGET                                , 0,   90,  1 ) \
       macro(TYPE                                  , 0,   90,  0 ) \
       macro(TYPEIS                                , 1,    3,  0 ) \
