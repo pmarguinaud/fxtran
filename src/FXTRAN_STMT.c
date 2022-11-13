@@ -201,6 +201,7 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_INTENT                            :  return _T(_S(INTENT)                           H _S(STMT));
       case FXTRAN_INTERFACE                         :  return _T(_S(INTERFACE)                        H _S(STMT));
       case FXTRAN_INTRINSIC                         :  return _T(_S(INTRINSIC)                        H _S(STMT));
+      case FXTRAN_LOCK                              :  return _T(_S(LOCK)                             H _S(STMT));
       case FXTRAN_PROCEDURE                         :  return _T(_S(PROCEDURE)                        H _S(STMT));
       case FXTRAN_MODULE                            :  return _T(_S(MODULE)                           H _S(STMT));
       case FXTRAN_NAMELIST                          :  return _T(_S(NAMELIST)                         H _S(STMT));
@@ -226,9 +227,12 @@ static const char * stmt_as_str (FXTRAN_stmt_type type)
       case FXTRAN_ERRORSTOP                         :  return _T(_S(ERROR) H _S(STOP)                 H _S(STMT));
       case FXTRAN_SUBMODULE                         :  return _T(_S(SUBMODULE)                        H _S(STMT));
       case FXTRAN_SUBROUTINE                        :  return _T(_S(SUBROUTINE)                       H _S(STMT));
+      case FXTRAN_SYNCALL                           :  return _T(_S(SYNC) H _S(ALL)                   H _S(STMT));
+      case FXTRAN_SYNCIMAGES                        :  return _T(_S(SYNC) H _S(IMAGES)                H _S(STMT));
       case FXTRAN_TARGET                            :  return _T(_S(TARGET)                           H _S(STMT));
       case FXTRAN_TYPE                              :  return _T(_S(TYPE)                             H _S(STMT));
       case FXTRAN_TYPEIS                            :  return _T(_S(TYPE) H _S(IS)                    H _S(STMT));
+      case FXTRAN_UNLOCK                            :  return _T(_S(UNLOCK)                           H _S(STMT));
       case FXTRAN_USE                               :  return _T(_S(USE)                              H _S(STMT));
       case FXTRAN_VALUE                             :  return _T(_S(VALUE)                            H _S(STMT));
       case FXTRAN_VOLATILE                          :  return _T(_S(VOLATILE)                         H _S(STMT));
@@ -412,6 +416,7 @@ static stmt_actual_args_parms saap_##n = \
 
 def_actual_args (  actual,                             _S(ARG), 0, 0, 1, 0);
 def_actual_args (allocate,                             _S(ARG), 0, 1, 1, 0);
+def_actual_args (    sync,                             _S(ARG), 0, 1, 1, 1);
 def_actual_args ( filepos,                  _S(POS) H _S(SPEC), 0, 0, 1, 0);
 def_actual_args (   close,                _S(CLOSE) H _S(SPEC), 0, 0, 1, 0);
 def_actual_args (    open,              _S(CONNECT) H _S(SPEC), 0, 0, 1, 0);
@@ -3382,6 +3387,7 @@ other:
         if (zstrcmp ("LOGICAL",t))
           ret(FXTRAN_TYPEDECL);
         
+        tt(LOCK);
 
 	break;
        
@@ -3428,7 +3434,7 @@ other:
 	case 'S':
        
         tt(SAVE);           tt(SELECTTYPE);     tt(SELECTCASE);     tt(SEQUENCE);       
-	tt(STOP);           
+	tt(STOP);           tt(SYNCALL);        tt(SYNCIMAGES);
        
         break;
 
@@ -3449,7 +3455,7 @@ other:
        
 	case 'U':
        
-        tt(USE);
+        tt(UNLOCK);         tt(USE);
 
 	break;
 
@@ -4292,6 +4298,38 @@ def_extra_proto (STOP)
       FXTRAN_xml_word_tag (_T(_S(STOP) H _S(CODE)), 
 		           ci->offset, ci[k-1].offset+1, ctx);
     }
+}
+
+def_extra_proto (SYNCALL)
+{
+  XAD(7);
+
+  if (t[0] == '(')
+    stmt_actual_args (t, ci, ctx, &saap_sync);
+}
+
+def_extra_proto (SYNCIMAGES)
+{
+  XAD(10);
+
+  if (t[0])
+    stmt_actual_args (t, ci, ctx, &saap_sync);
+}
+
+def_extra_proto (LOCK)
+{
+  XAD(4);
+
+  if (t[0])
+    stmt_actual_args (t, ci, ctx, &saap_sync);
+}
+
+def_extra_proto (UNLOCK)
+{
+  XAD(6);
+
+  if (t[0])
+    stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (PAUSE)

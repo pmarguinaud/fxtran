@@ -101,6 +101,7 @@ extern const int FXTRAN_types_intrinsic[];
       macro(INTENT                                , 0,   90,  1 ) \
       macro(INTERFACE                             , 0,   90,  0 ) \
       macro(INTRINSIC                             , 0,   77,  1 ) \
+      macro(LOCK                                  , 1,    8,  0 ) \
       macro(PROCEDURE                             , 0,   90,  0 ) \
       macro(MODULE                                , 0,   90,  0 ) \
       macro(NAMELIST                              , 0,   77,  0 ) \
@@ -126,9 +127,12 @@ extern const int FXTRAN_types_intrinsic[];
       macro(STOP                                  , 1,   77,  0 ) \
       macro(SUBMODULE                             , 0,    8,  0 ) \
       macro(SUBROUTINE                            , 0,   77,  0 ) \
+      macro(SYNCALL                               , 1,    8,  0 ) \
+      macro(SYNCIMAGES                            , 1,    8,  0 ) \
       macro(TARGET                                , 0,   90,  1 ) \
       macro(TYPE                                  , 0,   90,  0 ) \
       macro(TYPEIS                                , 1,    3,  0 ) \
+      macro(UNLOCK                                , 1,    8,  0 ) \
       macro(USE                                   , 0,   90,  0 ) \
       macro(VALUE                                 , 0,    3,  1 ) \
       macro(VOLATILE                              , 0,    3,  1 ) \

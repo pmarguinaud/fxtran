@@ -10,6 +10,7 @@ my @x = qw[
   ac                                                             AC
   access                                                         ACCESS
   action                                                         ACTION
+  all                                                            ALL
   allocatable                                                    ALLOCATABLE
   allocate                                                       ALLOCATE
   alt                                                            ALT
@@ -111,6 +112,7 @@ my @x = qw[
   host                                                           HOST
   identifier                                                     IDENTIFIER
   if                                                             IF
+  images                                                         IMAGES
   implicit                                                       IMPLICIT
   import                                                         IMPORT
   include                                                        INCLUDE
@@ -134,6 +136,7 @@ my @x = qw[
   len                                                            LEN
   letter                                                         LETTER
   literal                                                        LITERAL
+  lock                                                           LOCK
   logical                                                        LOGICAL
   loop                                                           LOOP
   lower                                                          LOWER
@@ -221,6 +224,7 @@ my @x = qw[
   submodule                                                      SUBMODULE
   subroutine                                                     SUBROUTINE
   subscript                                                      SUBSCRIPT
+  sync                                                           SYNC
   target                                                         TARGET
   test                                                           TEST
   then                                                           THEN
@@ -228,6 +232,7 @@ my @x = qw[
   triplet                                                        TRIPLET
   T                                                              TYPE
   unit                                                           UNIT
+  unlock                                                         UNLOCK
   unknown                                                        UNKNOWN
   update                                                         UPDATE
   upper                                                          UPPER
