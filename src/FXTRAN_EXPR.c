@@ -285,7 +285,7 @@ static int coarray_ref (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
 {
   const char * T = t;
   int lev = ci[0].parens;
-  int k, kpl;
+  int k, kpl, kpa;
 
   if (t[0] == '[')
     {
@@ -310,8 +310,9 @@ static int coarray_ref (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
                 FXTRAN_ABORT ("Expected '='");
               XAD (1);
               k = FXTRAN_str_at_level (t, ci, ",", ci[0].parens);
-	      if (k == 0)
-                k = FXTRAN_str_at_level (t, ci, "]", ci[0].parens-1);
+              kpa = FXTRAN_str_at_level (t, ci, "]", ci[0].parens-1);
+	      if ((kpa < k) || (k == 0))
+                k = kpa;
               FXTRAN_expr (t, ci, k-1, ctx);
 	      XAD (k-1);
 	      XET ();
