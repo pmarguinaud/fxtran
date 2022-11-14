@@ -175,6 +175,11 @@ def_process_list_elt_proto (cosection_subscript)
   int itag = 0;
   int lev = ci->parens;
 
+  k = FXTRAN_str_at_level_ir (t, ci, "=", lev, kmax);
+
+  if (k > 0)
+    return -1;
+
   XST (_T(_S(COSECTION) H _S(SUBSCRIPT)));
 
   k = FXTRAN_str_at_level_ir (t, ci, ":", lev, kmax);
@@ -280,7 +285,7 @@ static int coarray_ref (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
 {
   const char * T = t;
   int lev = ci[0].parens;
-  int k;
+  int k, kpl;
 
   if (t[0] == '[')
     {
@@ -289,10 +294,29 @@ static int coarray_ref (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlc
       if ((k = FXTRAN_str_at_level (t, ci, "]", lev)))
         {
 
-          FXTRAN_process_list (t, ci, ctx, ",", 
-			       _T(_S(COSECTION) H _S(SUBSCRIPT) H _S(LIST)), 
-			       k-1, cosection_subscript, NULL);
-	  XAD(k-1);
+          kpl = FXTRAN_process_list (t, ci, ctx, ",", 
+			             _T(_S(COSECTION) H _S(SUBSCRIPT) H _S(LIST)), 
+			             k-1, cosection_subscript, NULL);
+	  XAD(kpl);
+
+          while (t[0] == ',')
+            {
+              XAD (1);
+              k = FXTRAN_eat_word (t);
+	      XST (_S(ARG));
+              XNW (_T(_S(ARG) H _S(NAME)), k); 
+	      XAD (k);
+	      if (t[0] != '=')
+                FXTRAN_ABORT ("Expected '='");
+              XAD (1);
+              k = FXTRAN_str_at_level (t, ci, ",", ci[0].parens);
+	      if (k == 0)
+                k = FXTRAN_str_at_level (t, ci, "]", ci[0].parens-1);
+              FXTRAN_expr (t, ci, k-1, ctx);
+	      XAD (k-1);
+	      XET ();
+	    }
+
           XAD(1);
           XET ();
         }
