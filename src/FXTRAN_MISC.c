@@ -369,9 +369,9 @@ char * FXTRAN_slurp (const char * f)
   if ((fp = fopen (f, "r")) == NULL)
     return NULL;
 
-  size_t n = fread (text, size, 1, fp);
+  size_t n = fread (text, 1, size, fp);
 
-  if (n != 1)
+  if (n != size)
     {
       printf ("Unexpected end of file encountered while reading `%s'\n", f);
       abort ();
