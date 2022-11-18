@@ -113,7 +113,7 @@ static void FXTRAN_load_nocpp0 (f_buffer * fb, const char * filename, char * tex
       filename_r = resolve_filename (filename, ctx->opts.includes);
       if (filename_r == NULL)
         FXTRAN_ABORT ("Cannot find included file `%s'", filename);
-      t0 = FXTRAN_slurp (filename_r);
+      t0 = FXTRAN_slurp (ctx, filename_r);
       FXTRAN_file_enter (filename_r, t0, pcurrent, proot);
     }
   else if (text)

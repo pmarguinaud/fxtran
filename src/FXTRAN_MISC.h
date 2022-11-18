@@ -6,6 +6,7 @@
 #define _FXTRAN_MISC_H
 
 #include "FXTRAN_CHARINFO.h"
+#include "FXTRAN_XML.h"
 
 void FXTRAN_remove_tabs (char **, int, int);
 void FXTRAN_remove_cr (char **);
@@ -16,7 +17,7 @@ int FXTRAN_eat_word (const char *);
 int FXTRAN_restrict_tci (char *, FXTRAN_char_info *, 
 		          const char *, const FXTRAN_char_info *, 
 		          int);
-char * FXTRAN_slurp (const char *);
+char * FXTRAN_slurp (FXTRAN_xmlctx *, const char *);
 
 int FXTRAN_str_at_level (const char *, const FXTRAN_char_info *, const char *, int);
 

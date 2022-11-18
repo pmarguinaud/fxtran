@@ -101,6 +101,7 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (name-attr, name_attr, Add an attribute for N tags);
       FXTRAN_handle_flag (construct-tag, construct_tag, Display program units and constructs);
       FXTRAN_handle_flag (cray-pointer, cray_pointer, Allow Cray pointers);
+      FXTRAN_handle_flag (dump-stmt-list, dump_stmt_list, Dump statement list);
       FXTRAN_handle_flag (help, help, Print help message);
 
       FXTRAN_handle_charopt (directive, directive, Directive name);
@@ -164,6 +165,9 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
 
   if (opts->namelist_diff)
     opts->namelist = 1;
+
+  if (opts->dump_stmt_list)
+    return 0;
 
   if (help)
     return 0;

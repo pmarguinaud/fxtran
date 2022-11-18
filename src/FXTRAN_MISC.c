@@ -12,7 +12,7 @@
 
 #include "FXTRAN_MISC.h"
 #include "FXTRAN_MASK.h"
-#include "FXTRAN_XML.h"
+#include "FXTRAN_ERROR.h"
 
 /* Remove margin tabs and \r (CR), add an extra '\n' if it is missing */
 void FXTRAN_remove_tabs (char ** ptext, int N, int margin_width)
@@ -350,7 +350,7 @@ int FXTRAN_restrict_tci (char * t1, FXTRAN_char_info * ci1,
   return j;
 }
 
-char * FXTRAN_slurp (const char * f)
+char * FXTRAN_slurp (FXTRAN_xmlctx * ctx, const char * f)
 {
   struct stat st;
   char * text;
@@ -372,10 +372,7 @@ char * FXTRAN_slurp (const char * f)
   size_t n = fread (text, size, 1, fp);
 
   if (n != 1)
-    {
-      printf ("Unexpected end of file encountered while reading `%s'\n", f);
-      abort ();
-    }
+    FXTRAN_ABORT ("Unexpected end of file encountered while reading `%s'\n", f);
 
   fclose (fp);
 
