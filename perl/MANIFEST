@@ -8,3 +8,4 @@ t/fxtran.t
 lib/fxtran.pm
 lib/fxtran/alpha.pm
 lib/fxtran/xpath.pm
+lib/fxtran/stmt.pm
