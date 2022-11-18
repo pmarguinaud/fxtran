@@ -24,3 +24,11 @@ eval
 
 $fh->print ($@, "\n");
 
+my ($p) = &fxtran::parse (program => << "EOF");
+SUBROUTINE SUB
+
+END SUBROUTINE
+EOF
+
+$fh->print ("$p\n");
+

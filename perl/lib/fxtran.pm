@@ -64,6 +64,16 @@ sub parse
       my $doc = 'XML::LibXML'->load_xml (location => $fh->filename . '.xml', @xopts);     
       return $doc;     
     }     
+  elsif ($args{program})     
+    {     
+      chomp (my $program = $args{program});     
+      my $xml = eval { &run ('-construct-tag', '-no-include', @fopts, $program) };
+      $@ && &croak ($@);
+      my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);     
+      $doc = $doc->lastChild->firstChild;     
+      my @c = $doc->childNodes ();     
+      return @c;     
+    }     
   elsif ($args{fragment})     
     {     
       chomp (my $fragment = $args{fragment});     
