@@ -8,7 +8,7 @@
 
 
 int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len, 
-                                 int uppercase, int strip_linefeed)
+                                 int uppercase, int code, int strip_linefeed, int strip_spaces)
 {
   int i;
 
@@ -18,6 +18,10 @@ int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len,
       char c = str[i];
       switch (c)
         {
+          case ' ':
+            if (! strip_spaces)
+              f_buffer_putc (buf, ' ');
+          break;
           case '\n':
             {
               if (strip_linefeed)
@@ -37,7 +41,8 @@ int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len,
                         break;
                       }
                 }
-              f_buffer_putc (buf, '\n');
+//     if ((! code) && strip_linefeed)
+                f_buffer_putc (buf, '\n');
             }
             break;
           case '"':

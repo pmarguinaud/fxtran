@@ -28,6 +28,8 @@ typedef struct FXTRAN_opts
   int strip_comments;
   int strip_exec;
   int strip_linefeed;
+  int strip_continue;
+  int strip_spaces;
   int uppercase;
   int dump_mask;
 

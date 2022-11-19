@@ -95,6 +95,8 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (strip-comments, strip_comments, Strip comments);
       FXTRAN_handle_flag (strip-executable-statements, strip_exec, Strip executable statements);
       FXTRAN_handle_flag (strip-linefeed, strip_linefeed, Strip multiple linefeed);
+      FXTRAN_handle_flag (strip-continue, strip_continue, Strip continuation lines);
+      FXTRAN_handle_flag (strip-spaces, strip_spaces, Strip spaces);
       FXTRAN_handle_flag (uppercase, uppercase, Turn all language and identifiers into uppercase);
       FXTRAN_handle_flag (code-tag, code_tag, Add a tag for source code);
       FXTRAN_handle_flag (name-attr, name_attr, Add an attribute for N tags);

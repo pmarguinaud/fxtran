@@ -54,7 +54,7 @@ f_buffer;
   do { (b)->cur = (b)->str; (b)->cur[0] = 0; } while (0)
 
 
-int f_buffer_append_escaped_str (f_buffer *, const char *, int, int, int);
+int f_buffer_append_escaped_str (f_buffer *, const char *, int, int, int, int, int);
 
 int f_buffer_printf (f_buffer *, const char *, ...);
 
