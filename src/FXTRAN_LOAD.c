@@ -21,7 +21,7 @@
 typedef struct FXTRAN_cpp_helper
 {
   FXTRAN_xmlctx * ctx;
-  f_buffer fb;
+  FXTRAN_f_buffer fb;
 }
 FXTRAN_cpp_helper;
 
@@ -100,7 +100,7 @@ static const char * resolve_filename (const char * filename, char ** includes)
   return NULL;
 }
 
-static void FXTRAN_load_nocpp0 (f_buffer * fb, const char * filename, char * text,
+static void FXTRAN_load_nocpp0 (FXTRAN_f_buffer * fb, const char * filename, char * text,
                                 FXTRAN_xmlctx * ctx, FXTRAN_cpp2loc_array * pcla, 
                                 FXTRAN_file ** pcurrent, FXTRAN_file ** proot)
 {
@@ -175,7 +175,7 @@ static void FXTRAN_load_nocpp0 (f_buffer * fb, const char * filename, char * tex
 char * FXTRAN_load_nocpp (const char * f, FXTRAN_xmlctx * ctx)
 {
   FXTRAN_file * current = NULL;
-  f_buffer fb;
+  FXTRAN_f_buffer fb;
   char * text;
   FXTRAN_cpp2loc_array cla;
 
@@ -196,7 +196,7 @@ char * FXTRAN_load_nocpp (const char * f, FXTRAN_xmlctx * ctx)
 char * FXTRAN_load_text (char * text, FXTRAN_xmlctx * ctx)
 {
   FXTRAN_file * current = NULL;
-  f_buffer fb;
+  FXTRAN_f_buffer fb;
   FXTRAN_cpp2loc_array cla;
 
   FXTRAN_init_cpp2loc_array (&cla);

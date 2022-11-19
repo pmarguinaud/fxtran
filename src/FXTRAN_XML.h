@@ -36,7 +36,7 @@ typedef struct FXTRAN_xmlctx
   char err[FXTRAN_XML_MAXERR];
 
   /* buffer where XML is stored */
-  f_buffer fb;
+  FXTRAN_f_buffer fb;
 
   /* current position in text and ci */
   int pos;    /* in output from cpp */
