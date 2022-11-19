@@ -4708,6 +4708,7 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
           dump_otu (tu.xml_otu1, ci1->offset, ctx);
 
           FXTRAN_xml_start_tag (str, ci1->offset, ctx);
+          ctx->in_stmt++;
    
           switch (type)
             {
@@ -4722,6 +4723,7 @@ case FXTRAN_##t: stmt_##t##_extra(text1, ci1, stack, ctx); break;
               break;
             }
 
+          ctx->in_stmt--;
           FXTRAN_xml_end_tag (ci1[len-1].offset+1, ctx);
 
           if (tu.xml_ctu2)
@@ -4742,7 +4744,6 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
   int I1 = -1, I2 = -1;  /* actual bounds */
   int omp, acc, ddd;
 
-  ctx->in_stmt++;
 
   FXTRAN_char_info_init (ci1, len);
 
@@ -4769,7 +4770,6 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
 
   FXTRAN_stmt (t, ci1, stack, ctx, omp, acc, ddd, label);
 
-  ctx->in_stmt--;
 }
 
 

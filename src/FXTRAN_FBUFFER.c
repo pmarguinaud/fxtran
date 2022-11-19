@@ -11,7 +11,8 @@
 
 int FXTRAN_FBUFFER_append_escaped_str 
 (FXTRAN_FBUFFER * buf, const char * str, int len, 
- int uppercase, int code, int strip_linefeed, int strip_spaces)
+ int uppercase, int code, int strip_linefeed, int strip_spaces,
+ int in_stmt)
 {
   int i;
 
@@ -43,7 +44,8 @@ int FXTRAN_FBUFFER_append_escaped_str
                       {
                         break;
                       }
-                  FXTRAN_FBUFFER_putc (buf, '\n');
+		  if (! in_stmt)
+                    FXTRAN_FBUFFER_putc (buf, '\n');
                 }
 	      else
                 {

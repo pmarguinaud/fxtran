@@ -49,7 +49,7 @@ static void dump_txt (FXTRAN_xmlctx * ctx, int pos1, int pos2, int code, int in_
   int uc = code && ctx->opts.uppercase;
   int sl = ctx->opts.strip_linefeed;
   int sp = ctx->opts.strip_spaces;
-  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, code, sl, sp);
+  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, code, sl, sp, ctx->in_stmt);
 }
 
 static int check_id (const char * t, int len, FXTRAN_xmlctx * ctx)
@@ -101,7 +101,7 @@ static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const 
   int sp = ctx->opts.strip_spaces;
 
   FXTRAN_FBUFFER_printf (&ctx->fb, "<%s>", tag);
-  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, cod, sl, sp);
+  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, cod, sl, sp, ctx->in_stmt);
   FXTRAN_FBUFFER_printf (&ctx->fb, "</%s>", tag);
 }
 
@@ -376,7 +376,7 @@ static void adv_pos1 (FXTRAN_xmlctx * ctx, int pos, int noendtag, int print)
                       int c1_text = cpp_mask->code[c1_code].c1 - 1;
                       int c2_text = cpp_mask->code[c1_code].c2 - 1;
                       FXTRAN_FBUFFER_printf (&ctx->fb, "<cpp-section id=\"0x%llx\">", id);
-                      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &Loc->file->text_cur[c1_text], c2_text-c1_text+1, 0, 0, 0, 0);
+                      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &Loc->file->text_cur[c1_text], c2_text-c1_text+1, 0, 0, 0, 0, 0);
                       FXTRAN_FBUFFER_printf (&ctx->fb, "</cpp-section>");
 		    }
                 }
@@ -445,7 +445,7 @@ static void xml_start_tag (const char * tag, int pos, FXTRAN_xmlctx * ctx, const
           const char * k = attr[i].name;
           const char * v = attr[i].value;
           FXTRAN_FBUFFER_printf (&ctx->fb, " %s=\"", k);
-          FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, v, strlen (v), 0, 0, 0, 0);
+          FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, v, strlen (v), 0, 0, 0, 0, 0);
           FXTRAN_FBUFFER_printf (&ctx->fb, "\"");
 	}
 
@@ -559,7 +559,7 @@ void FXTRAN_xml_word_tag_op (const char * tag, int pos1, int pos2,
   if (ctx->opts.name_attr)
     {
       FXTRAN_FBUFFER_printf (&ctx->fb, "<%s n=\"", tag, len, len, n);
-      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, n, len, 0, 0, 0, 0);
+      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, n, len, 0, 0, 0, 0, 0);
       FXTRAN_FBUFFER_printf (&ctx->fb, "\">");
     }
   else
