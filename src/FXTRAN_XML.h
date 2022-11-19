@@ -55,6 +55,7 @@ typedef struct FXTRAN_xmlctx
   FXTRAN_file * root;
   FXTRAN_cpp2loc * c2l;
 
+  int in_stmt;
 } FXTRAN_xmlctx;
 
 typedef struct FXTRAN_XML_ATTR 

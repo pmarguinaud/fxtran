@@ -42,14 +42,14 @@ const char
 ;
 
 
-static void dump_txt (FXTRAN_xmlctx * ctx, int pos1, int pos2, int code)
+static void dump_txt (FXTRAN_xmlctx * ctx, int pos1, int pos2, int code, int in_stmt)
 {
   if (pos1 == pos2)
     return;
   int uc = code && ctx->opts.uppercase;
   int sl = ctx->opts.strip_linefeed;
   int sp = ctx->opts.strip_spaces;
-  FXTRAN_f_buffer_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, 0, sl, sp);
+  FXTRAN_f_buffer_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, code, sl, sp);
 }
 
 static int check_id (const char * t, int len, FXTRAN_xmlctx * ctx)
@@ -210,13 +210,13 @@ static int adv_pos0 (FXTRAN_xmlctx * ctx, int pos, int noendtag, int print)
               {
                 case '\n':
                 case FXTRAN_SPC:
-                  dump_txt (ctx, pos1+i1, pos1+i2, 1);
+                  dump_txt (ctx, pos1+i1, pos1+i2, 1, ctx->in_stmt);
                   break;
                 case FXTRAN_COD:
 		  if (ctx->opts.code_tag)
                     dump_txt_tag (ctx, pos1+i1, pos1+i2, FXTRAN_COD, FXTRAN_COD_TAG);
 		  else
-                    dump_txt (ctx, pos1+i1, pos1+i2, 1);
+                    dump_txt (ctx, pos1+i1, pos1+i2, 1, ctx->in_stmt);
                   break;
 		case FXTRAN_CPP:
                     if (ctx->opts.noinclude)

@@ -4742,6 +4742,7 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
   int I1 = -1, I2 = -1;  /* actual bounds */
   int omp, acc, ddd;
 
+  ctx->in_stmt++;
 
   FXTRAN_char_info_init (ci1, len);
 
@@ -4767,6 +4768,8 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
   ddd = FXTRAN_check_ddd (text, ci, I1, I2, ctx);
 
   FXTRAN_stmt (t, ci1, stack, ctx, omp, acc, ddd, label);
+
+  ctx->in_stmt--;
 }
 
 

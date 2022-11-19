@@ -40,9 +40,12 @@ int f_buffer_append_escaped_str (f_buffer * buf, const char * str, int len,
                       {
                         break;
                       }
+                  f_buffer_putc (buf, '\n');
                 }
-//     if ((! code) && strip_linefeed)
-                f_buffer_putc (buf, '\n');
+	      else
+                {
+                  f_buffer_putc (buf, '\n');
+		}
             }
             break;
           case '"':
