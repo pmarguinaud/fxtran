@@ -21,15 +21,15 @@
 typedef struct FXTRAN_cpp_helper
 {
   FXTRAN_xmlctx * ctx;
-  FXTRAN_f_buffer fb;
+  FXTRAN_FBUFFER fb;
 }
 FXTRAN_cpp_helper;
 
 static void FXTRAN_cpp_helper_append (void * obj, char * text, int len)
 {
   FXTRAN_cpp_helper * h = (FXTRAN_cpp_helper*)obj;
-  FXTRAN_f_buffer_ncat (&h->fb, len, text);
-  FXTRAN_f_buffer_ncat (&h->fb, 1, "\n");
+  FXTRAN_FBUFFER_ncat (&h->fb, len, text);
+  FXTRAN_FBUFFER_ncat (&h->fb, 1, "\n");
 }
 
 static void text_cleanup (FXTRAN_xmlctx * ctx, char ** ptext)
@@ -63,7 +63,7 @@ char * FXTRAN_load_cpp (const char * f, FXTRAN_xmlctx * ctx)
 
 
   h.ctx = ctx;
-  FXTRAN_f_buffer_init (&h.fb);
+  FXTRAN_FBUFFER_init (&h.fb);
 
   ret = FXTRAN_cpp_intf (f, &ctx->root, &ctx->c2l, &ctx->opts,
 		         (void*)&h, FXTRAN_cpp_helper_append);
@@ -71,7 +71,7 @@ char * FXTRAN_load_cpp (const char * f, FXTRAN_xmlctx * ctx)
   if (ret < 0)
     FXTRAN_ABORT ("Cannot cpp %s", f);
 
-  FXTRAN_f_buffer_take (&h.fb, &text);
+  FXTRAN_FBUFFER_take (&h.fb, &text);
 
   text_cleanup (ctx, &text);
 
@@ -100,7 +100,7 @@ static const char * resolve_filename (const char * filename, char ** includes)
   return NULL;
 }
 
-static void FXTRAN_load_nocpp0 (FXTRAN_f_buffer * fb, const char * filename, char * text,
+static void FXTRAN_load_nocpp0 (FXTRAN_FBUFFER * fb, const char * filename, char * text,
                                 FXTRAN_xmlctx * ctx, FXTRAN_cpp2loc_array * pcla, 
                                 FXTRAN_file ** pcurrent, FXTRAN_file ** proot)
 {
@@ -148,7 +148,7 @@ static void FXTRAN_load_nocpp0 (FXTRAN_f_buffer * fb, const char * filename, cha
         {
           if (ctx->opts.noinclude)
             {
-              FXTRAN_f_buffer_ncat (fb, ll+1, t0bol);
+              FXTRAN_FBUFFER_ncat (fb, ll+1, t0bol);
 	      FXTRAN_incr_cpp2loc_array (pcla);
             }
 	  else
@@ -158,7 +158,7 @@ static void FXTRAN_load_nocpp0 (FXTRAN_f_buffer * fb, const char * filename, cha
         }
       else
         {
-          FXTRAN_f_buffer_ncat (fb, ll+1, t0bol);
+          FXTRAN_FBUFFER_ncat (fb, ll+1, t0bol);
 	  FXTRAN_incr_cpp2loc_array (pcla);
         }
 
@@ -175,17 +175,17 @@ static void FXTRAN_load_nocpp0 (FXTRAN_f_buffer * fb, const char * filename, cha
 char * FXTRAN_load_nocpp (const char * f, FXTRAN_xmlctx * ctx)
 {
   FXTRAN_file * current = NULL;
-  FXTRAN_f_buffer fb;
+  FXTRAN_FBUFFER fb;
   char * text;
   FXTRAN_cpp2loc_array cla;
 
   FXTRAN_init_cpp2loc_array (&cla);
  
-  FXTRAN_f_buffer_init (&fb);
+  FXTRAN_FBUFFER_init (&fb);
 
   FXTRAN_load_nocpp0 (&fb, f, NULL, ctx, &cla, &current, &ctx->root);
 
-  FXTRAN_f_buffer_take (&fb, &text);
+  FXTRAN_FBUFFER_take (&fb, &text);
   FXTRAN_take_cpp2loc_array (&cla, &ctx->c2l);
 
   text_cleanup (ctx, &text);
@@ -196,16 +196,16 @@ char * FXTRAN_load_nocpp (const char * f, FXTRAN_xmlctx * ctx)
 char * FXTRAN_load_text (char * text, FXTRAN_xmlctx * ctx)
 {
   FXTRAN_file * current = NULL;
-  FXTRAN_f_buffer fb;
+  FXTRAN_FBUFFER fb;
   FXTRAN_cpp2loc_array cla;
 
   FXTRAN_init_cpp2loc_array (&cla);
  
-  FXTRAN_f_buffer_init (&fb);
+  FXTRAN_FBUFFER_init (&fb);
 
   FXTRAN_load_nocpp0 (&fb, NULL, text, ctx, &cla, &current, &ctx->root);
 
-  FXTRAN_f_buffer_take (&fb, &text);
+  FXTRAN_FBUFFER_take (&fb, &text);
   FXTRAN_take_cpp2loc_array (&cla, &ctx->c2l);
 
   text_cleanup (ctx, &text);
