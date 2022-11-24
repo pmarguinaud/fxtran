@@ -92,9 +92,10 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (flat-op-expr, flat_op_expr, Flatten op exprs);
       FXTRAN_handle_flag (flat-expr, flat_expr, Flatten all expr);
       FXTRAN_handle_flag (show-lines, show_lines, Show beginning of lines tags);
-      FXTRAN_handle_flag (strip-comments, strip_comments, Strip comments);
       FXTRAN_handle_flag (strip-executable-statements, strip_exec, Strip executable statements);
-      FXTRAN_handle_flag (strip-linefeed, strip_linefeed, Strip multiple linefeed);
+      FXTRAN_handle_flag (strip, strip, Strip comments & multiple linefeeds & spaces);
+      FXTRAN_handle_flag (strip-comments, strip_comments, Strip comments);
+      FXTRAN_handle_flag (strip-linefeed, strip_linefeed, Strip multiple linefeeds);
       FXTRAN_handle_flag (strip-continue, strip_continue, Strip continuation lines);
       FXTRAN_handle_flag (strip-spaces, strip_spaces, Strip spaces);
       FXTRAN_handle_flag (uppercase, uppercase, Turn all language and identifiers into uppercase);
@@ -104,6 +105,11 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (cray-pointer, cray_pointer, Allow Cray pointers);
       FXTRAN_handle_flag (dump-mask, dump_mask, Print character mask and exit);
       FXTRAN_handle_flag (help, help, Print help message);
+
+      opts->strip_comments = opts->strip_comments || opts->strip;
+      opts->strip_linefeed = opts->strip_linefeed || opts->strip;
+      opts->strip_continue = opts->strip_continue || opts->strip;
+      opts->strip_spaces   = opts->strip_spaces   || opts->strip;
 
       FXTRAN_handle_charopt (xml-stylesheet, xml_stylesheet, Path to XML stylesheet);
       FXTRAN_handle_charopt (directive, directive, Directive name);

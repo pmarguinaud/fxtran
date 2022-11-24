@@ -100,9 +100,16 @@ static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const 
   int sl = ctx->opts.strip_linefeed;
   int sp = ctx->opts.strip_spaces && (m != FXTRAN_STR);
 
-  FXTRAN_FBUFFER_printf (&ctx->fb, "<%s>", tag);
-  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, cod, sl, sp, ctx->in_stmt);
-  FXTRAN_FBUFFER_printf (&ctx->fb, "</%s>", tag);
+  if (ctx->opts.strip_linefeed && (m == FXTRAN_SMC))
+    {
+      FXTRAN_FBUFFER_printf (&ctx->fb, "\n");
+    }
+  else
+    {
+      FXTRAN_FBUFFER_printf (&ctx->fb, "<%s>", tag);
+      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, cod, sl, sp, ctx->in_stmt);
+      FXTRAN_FBUFFER_printf (&ctx->fb, "</%s>", tag);
+    }
 }
 
 
