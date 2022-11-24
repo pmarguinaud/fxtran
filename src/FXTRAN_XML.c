@@ -100,7 +100,11 @@ static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const 
   int sl = ctx->opts.strip_linefeed;
   int sp = ctx->opts.strip_spaces && (m != FXTRAN_STR);
 
-  if (ctx->opts.strip_linefeed && (m == FXTRAN_SMC))
+  if (ctx->opts.strip_spaces && ((m == FXTRAN_MAR) || (m == FXTRAN_MAL)))
+    {
+      /* Do nothing */
+    }
+  else if (ctx->opts.strip_linefeed && (m == FXTRAN_SMC))
     {
       FXTRAN_FBUFFER_printf (&ctx->fb, "\n");
     }
