@@ -6,6 +6,7 @@ use warnings;
 
 use base qw (Exporter);
 use XML::LibXML;
+use File::Basename;
 use XSLoader;
 
 our @EXPORT = qw (parse s t e n);
