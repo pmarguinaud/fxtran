@@ -20,6 +20,8 @@ typedef struct FXTRAN_FBUFFER
   char * cur;
   int len;
   int len0;
+  int pos0oflaststr;
+  int pos1oflaststr;
 }
 FXTRAN_FBUFFER;
 

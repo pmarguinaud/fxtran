@@ -49,7 +49,8 @@ static void dump_txt (FXTRAN_xmlctx * ctx, int pos1, int pos2, int code)
   int uc = code && ctx->opts.uppercase;
   int sl = ctx->opts.strip_linefeed;
   int sp = ctx->opts.strip_spaces;
-  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, code, sl, sp, ctx->in_stmt);
+  FXTRAN_FBUFFER_append_escaped_str 
+    (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, code, sl, sp, ctx->in_stmt);
 }
 
 static int check_id (const char * t, int len, FXTRAN_xmlctx * ctx)
@@ -81,6 +82,25 @@ static int check_op (const char * t, int len, FXTRAN_xmlctx * ctx)
   return 2 + check_id (t+1, len-2, ctx);
 }
 
+
+static void handle_canonic_space (FXTRAN_xmlctx * ctx)
+{
+  if (ctx->opts.canonic && ctx->fb.pos1oflaststr)
+    {
+      char c1 = ctx->fb.str[ctx->fb.pos1oflaststr-1];
+      char c2 = ctx->text[ctx->pos];
+      if (isalnum (c1) && (isalnum (c2) && (c2 != '_')))
+        FXTRAN_FBUFFER_putc (&ctx->fb, ' ');
+      if ((c1 == ',') && (isalnum (c2)))
+        FXTRAN_FBUFFER_putc (&ctx->fb, ' ');
+      if (isalnum (c1) && (c2 == '('))
+        FXTRAN_FBUFFER_putc (&ctx->fb, ' ');
+      if ((c1 == ')') && isalnum (c2))
+        FXTRAN_FBUFFER_putc (&ctx->fb, ' ');
+      ctx->fb.pos1oflaststr = 0;
+    }
+}
+
 static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const char * tag)
 {
   if (pos1 == pos2)
@@ -96,7 +116,6 @@ static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const 
      ((m == FXTRAN_NAM) || (m == FXTRAN_CPT) || (m == FXTRAN_COD) 
       || (m == FXTRAN_KWD) || (m == FXTRAN_OPR) || (m == FXTRAN_OMD) || (m == FXTRAN_OMC));
   int uc = ctx->opts.uppercase && cod;
-
   int sl = ctx->opts.strip_linefeed;
   int sp = ctx->opts.strip_spaces && (m != FXTRAN_STR);
 
@@ -110,8 +129,25 @@ static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const 
     }
   else
     {
+      if (ctx->opts.canonic)
+        {
+          int len = strlen (tag);
+          if (FXTRAN_FBUFFER_len(&ctx->fb) > len + 3)
+            {
+              if ((ctx->fb.cur[-3-len] == '<') && 
+                  (ctx->fb.cur[-2-len] == '/') &&
+                  (ctx->fb.cur[-1]     == '>') &&
+                  (0 == strncmp (tag, &ctx->fb.cur[-len-1], len)))
+                {
+                  ctx->fb.cur = ctx->fb.cur - len - 3;
+                  goto print_escaped_str;
+                }
+            }
+        }
       FXTRAN_FBUFFER_printf (&ctx->fb, "<%s>", tag);
-      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, cod, sl, sp, ctx->in_stmt);
+print_escaped_str:
+      FXTRAN_FBUFFER_append_escaped_str 
+        (&ctx->fb, &ctx->text[pos1], pos2-pos1, uc, cod, sl, sp, ctx->in_stmt);
       FXTRAN_FBUFFER_printf (&ctx->fb, "</%s>", tag);
     }
 }
@@ -437,9 +473,10 @@ static void adv_pos_noendtag (FXTRAN_xmlctx * ctx, int pos, int print)
 
 static void xml_start_tag (const char * tag, int pos, FXTRAN_xmlctx * ctx, const FXTRAN_XML_ATTR * attr)
 {
-
   if (pos >= 0)
     adv_pos (ctx, pos, 1);
+
+  handle_canonic_space (ctx);
 
   if (attr == NULL)
     {

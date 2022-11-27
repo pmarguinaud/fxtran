@@ -31,6 +31,7 @@ typedef struct FXTRAN_opts
   int strip_linefeed;
   int strip_continue;
   int strip_spaces;
+  int canonic;
   int uppercase;
   int dump_mask;
 

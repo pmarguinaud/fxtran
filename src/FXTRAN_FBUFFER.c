@@ -11,11 +11,11 @@
 
 int FXTRAN_FBUFFER_append_escaped_str 
 (FXTRAN_FBUFFER * buf, const char * str, int len, 
- int uppercase, int code, int strip_linefeed, int strip_spaces,
- int in_stmt)
+ int uppercase, int code, int strip_linefeed, 
+ int strip_spaces, int in_stmt)
 {
   int i;
-
+  int pos0 = FXTRAN_FBUFFER_len (buf), pos1;
   for (i = 0; i < len; i++)
     {
       unsigned char u;
@@ -87,6 +87,12 @@ int FXTRAN_FBUFFER_append_escaped_str
 next:
       continue;
 
+    }
+  pos1 = FXTRAN_FBUFFER_len (buf);
+  if (pos0 < pos1)
+    {
+      buf->pos0oflaststr = pos0;
+      buf->pos1oflaststr = pos1;
     }
   return 0;
 }

@@ -98,6 +98,7 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (strip-linefeed, strip_linefeed, Strip multiple linefeeds);
       FXTRAN_handle_flag (strip-continue, strip_continue, Strip continuation lines);
       FXTRAN_handle_flag (strip-spaces, strip_spaces, Strip spaces);
+      FXTRAN_handle_flag (canonic, canonic, Canonic form : uppercase & no spaces)
       FXTRAN_handle_flag (uppercase, uppercase, Turn all language and identifiers into uppercase);
       FXTRAN_handle_flag (code-tag, code_tag, Add a tag for source code);
       FXTRAN_handle_flag (name-attr, name_attr, Add an attribute for N tags);
@@ -105,6 +106,12 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (cray-pointer, cray_pointer, Allow Cray pointers);
       FXTRAN_handle_flag (dump-mask, dump_mask, Print character mask and exit);
       FXTRAN_handle_flag (help, help, Print help message);
+
+      if (opts->canonic)
+        {
+          opts->strip = 1;
+          opts->uppercase = 1;
+        }
 
       opts->strip_comments = opts->strip_comments || opts->strip;
       opts->strip_linefeed = opts->strip_linefeed || opts->strip;
