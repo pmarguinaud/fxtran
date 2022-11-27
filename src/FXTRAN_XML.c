@@ -42,7 +42,7 @@ const char
 ;
 
 
-static void dump_txt (FXTRAN_xmlctx * ctx, int pos1, int pos2, int code, int in_stmt)
+static void dump_txt (FXTRAN_xmlctx * ctx, int pos1, int pos2, int code)
 {
   if (pos1 == pos2)
     return;
@@ -221,13 +221,13 @@ static int adv_pos0 (FXTRAN_xmlctx * ctx, int pos, int noendtag, int print)
               {
                 case '\n':
                 case FXTRAN_SPC:
-                  dump_txt (ctx, pos1+i1, pos1+i2, 1, ctx->in_stmt);
+                  dump_txt (ctx, pos1+i1, pos1+i2, 1);
                   break;
                 case FXTRAN_COD:
 		  if (ctx->opts.code_tag)
                     dump_txt_tag (ctx, pos1+i1, pos1+i2, FXTRAN_COD, FXTRAN_COD_TAG);
 		  else
-                    dump_txt (ctx, pos1+i1, pos1+i2, 1, ctx->in_stmt);
+                    dump_txt (ctx, pos1+i1, pos1+i2, 1);
                   break;
 		case FXTRAN_CPP:
                     if (ctx->opts.noinclude)
