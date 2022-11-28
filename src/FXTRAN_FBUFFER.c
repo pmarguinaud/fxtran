@@ -12,7 +12,7 @@
 int FXTRAN_FBUFFER_append_escaped_str 
 (FXTRAN_FBUFFER * buf, const char * str, int len, 
  int uppercase, int code, int strip_linefeed, 
- int strip_spaces, int in_stmt)
+ int strip_spaces, int in_stmt, int canonic)
 {
   int i;
   int pos0 = FXTRAN_FBUFFER_len (buf), pos1;
@@ -71,6 +71,14 @@ int FXTRAN_FBUFFER_append_escaped_str
               {
                 if (uppercase)
                   c = toupper (c);
+		if (canonic && code)
+                  {
+                    char c1 = i == 0 ? buf->str[buf->pos1oflaststr-1] : buf->cur[-1], c2 = c;
+                    if (isalnum (c1) && (c2 == '('))
+                      FXTRAN_FBUFFER_putc (buf, ' ');
+                    if ((c1 == ')') && isalnum (c2))
+                      FXTRAN_FBUFFER_putc (buf, ' ');
+                  }
                 FXTRAN_FBUFFER_putc (buf, c);
               }
             else if ((u >= 127) || (u == 9) || (u == 10) || (u == 13))

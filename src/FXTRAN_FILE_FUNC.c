@@ -49,7 +49,7 @@ void FXTRAN_dump_uns (FXTRAN_file * f, int line, FXTRAN_xmlctx * ctx)
         FXTRAN_ABORT ("Could not skip line in file `%s'", f->name);
       if (ctx->opts.show_lines)
         FXTRAN_FBUFFER_printf (&ctx->fb, "<L/>");
-      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, t, len, 0, 0, 0, 0, 0);
+      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, t, len, 0, 0, 0, 0, 0, 0);
     }
   FXTRAN_FBUFFER_printf (&ctx->fb, "</unseen>");
 }
@@ -106,25 +106,25 @@ int FXTRAN_dump_include (FXTRAN_file * f, FXTRAN_xmlctx * ctx, int do_abort, int
 
   if (n1omp >= 0)
     {
-      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[0], n1omp, 0, 0, 0, 0, 0);
+      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[0], n1omp, 0, 0, 0, 0, 0, 0);
       FXTRAN_FBUFFER_printf (&ctx->fb, "<%s>", FXTRAN_OMC_TAG);
-      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n1omp], 2, 0, 0, 0, 0, 0);
+      FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n1omp], 2, 0, 0, 0, 0, 0, 0);
       FXTRAN_FBUFFER_printf (&ctx->fb, "</%s>", FXTRAN_OMC_TAG);
     }
 
-  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n0], n1-n0, 0, 0, 0, 0, 0);
+  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n0], n1-n0, 0, 0, 0, 0, 0, 0);
 
   FXTRAN_FBUFFER_printf (&ctx->fb, "<include>");
 
-  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n1], n2-n1, 0, 0, 0, 0, 0);
+  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n1], n2-n1, 0, 0, 0, 0, 0, 0);
 
   FXTRAN_FBUFFER_printf (&ctx->fb, "<filename>");
 
-  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n2], n3-n2, 0, 0, 0, 0, 0);
+  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n2], n3-n2, 0, 0, 0, 0, 0, 0);
 
   FXTRAN_FBUFFER_printf (&ctx->fb, "</filename>");
 
-  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n3], 1, 0, 0, 0, 0, 0);
+  FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n3], 1, 0, 0, 0, 0, 0, 0);
 
   FXTRAN_FBUFFER_printf (&ctx->fb, "</include>");
 
@@ -133,13 +133,13 @@ int FXTRAN_dump_include (FXTRAN_file * f, FXTRAN_xmlctx * ctx, int do_abort, int
       if (f->text_cur[n3+1+i] == '!')
         {
           FXTRAN_FBUFFER_printf (&ctx->fb, "<%s>", FXTRAN_COM_TAG);
-          FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n3+1+i], n4-n3-i, 0, 0, 0, 0, 0);
+          FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n3+1+i], n4-n3-i, 0, 0, 0, 0, 0, 0);
           FXTRAN_FBUFFER_printf (&ctx->fb, "</%s>", FXTRAN_COM_TAG);
           break;
         }
       if (! isspc (f->text_cur[n3+1+i]))
         {
-          FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n3+1+i], n4-n3-i, 0, 0, 0, 0, 0);
+          FXTRAN_FBUFFER_append_escaped_str (&ctx->fb, &f->text_cur[n3+1+i], n4-n3-i, 0, 0, 0, 0, 0, 0);
           break;
         }
       FXTRAN_FBUFFER_printf (&ctx->fb, "%c", f->text_cur[n3+1+i]);
