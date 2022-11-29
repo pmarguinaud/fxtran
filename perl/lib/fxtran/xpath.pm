@@ -7,7 +7,7 @@ use XML::LibXML;
 use Carp qw (croak);
 
 use base qw (Exporter);
-our @EXPORT = qw (F);
+our @EXPORT = qw (F f);
 
 use fxtran::alpha;
 
