@@ -17,8 +17,6 @@ $fh->print ("\n" x 3, $doc, "\n" x 3);
 
 $fh->print (&F ('//EN-decl', $doc), "\n");
 
-$fh->print (&F ('//entity-decl', $doc), "\n");
-
 eval
 {
   &s ('X = ..');
@@ -26,4 +24,11 @@ eval
 
 $fh->print ($@, "\n");
 
+my ($p) = &fxtran::parse (program => << "EOF");
+SUBROUTINE SUB
+
+END SUBROUTINE
+EOF
+
+$fh->print ("$p\n");
 

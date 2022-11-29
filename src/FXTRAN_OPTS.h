@@ -34,6 +34,7 @@ typedef struct FXTRAN_opts
   int canonic;
   int uppercase;
   int dump_mask;
+  int dump_stmt_list;
 
   char * ffile;
   char * xfile;

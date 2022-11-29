@@ -17,6 +17,7 @@
 #include "FXTRAN_ERROR.h"
 #include "FXTRAN_MISC.h"
 #include "FXTRAN_LOAD.h"
+#include "FXTRAN_STMT.h"
 #include "FXTRAN_NS.h"
 
 static const char * form_str (int form)
@@ -67,12 +68,16 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 
   FXTRAN_parse_opts (ctx, argc, argv);
 
+  if (ctx->opts.dump_stmt_list)
+    {
+      FXTRAN_dump_stmt_list ();
+      goto cleanup;
+    }
+
   if (ctx->opts.help)
     {
       FXTRAN_help_opts (ctx);
-      FXTRAN_free_opts (ctx);
-      FXTRAN_xmlctx_free (ctx);
-      return 0;
+      goto cleanup;
     }
 
   if (Text)

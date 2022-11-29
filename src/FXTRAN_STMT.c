@@ -4838,4 +4838,23 @@ void FXTRAN_final_check_stack_empty (FXTRAN_xmlctx * ctx, FXTRAN_stmt_stack * st
 
 }
 
+void FXTRAN_dump_stmt_list ()
+{
+  int i;
+
+#define macro_print_stmt(t,x,nn,isatt) \
+  do {                                                              \
+    const char * str = stmt_as_str (FXTRAN_##t);                    \
+    int len  = strlen (str);                                        \
+    printf ("\"%s\"", str);                                         \
+    for (i = len; i < 50; i++)                                      \
+      printf (" ");                                                 \
+    printf (", %4.4d, %d,\n", nn > 50 ? nn + 1900 : nn + 2000, x);  \
+  } while (0);
+
+FXTRAN_statement_list(macro_print_stmt)
+
+#undef macro_print_stmt
+}
+
   
