@@ -161,10 +161,11 @@ sub F
   return &f ($xpath, @_); 
 }
 
+my $xpc = 'XML::LibXML::XPathContext'->new ();
+$xpc->registerNs (f => 'http://fxtran.net/#syntax');
+
 sub f
 {
-  my $xpc = 'XML::LibXML::XPathContext'->new ();
-  $xpc->registerNs (f => 'http://fxtran.net/#syntax');
 
   my $xpath = shift (@_);
 
