@@ -137,6 +137,11 @@ EOF
   &croak ("@_");
 }      
 
+sub help
+{
+  return &fxtran::run ('-help-xml', '');
+}
+
 1;
 
 =pod

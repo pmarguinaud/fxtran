@@ -3,11 +3,16 @@ use warnings;
 use Data::Dumper;
 use XML::LibXML;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 BEGIN { use_ok('fxtran') };
 BEGIN { use_ok('fxtran::xpath') };
+BEGIN { use_ok('fxtran::parser') };
 
 use FileHandle;
+
+my $help = &fxtran::help ();
+print STDERR $help;
+
 
 my $doc = &s ('REAL (KIND=JPRB) :: X (10)');
 
@@ -31,4 +36,6 @@ END SUBROUTINE
 EOF
 
 $fh->print ("$p\n");
+
+
 
