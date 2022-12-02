@@ -15,6 +15,10 @@
   if (help)                                                \
     FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : F : %s\n", \
                            #opt, #doc);                    \
+  else if (help_xml)                                       \
+    FXTRAN_FBUFFER_printf (&ctx->fb,                       \
+    "<option><name>%s</name><type>%s</type>"               \
+    "<help>%s</help></option>\n", #opt, "FLAG", #doc);     \
   else if (strcmp (argv[i], "-"#opt) == 0)                 \
     {                                                      \
       opts->var++;                                         \
@@ -26,6 +30,10 @@
   if (help)                                                \
     FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : S : %s\n", \
                            #opt, #doc);                    \
+  else if (help_xml)                                       \
+    FXTRAN_FBUFFER_printf (&ctx->fb,                       \
+    "<option><name>%s</name><type>%s</type>"               \
+    "<help>%s</help></option>\n", #opt, "STRING", #doc);   \
   else if (strcmp (argv[i], "-"#opt) == 0)                 \
     {                                                      \
       if (i+1 < argc)                                      \
@@ -43,6 +51,10 @@
   if (help)                                                \
     FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : I : %s\n", \
                            #opt, #doc);                    \
+  else if (help_xml)                                       \
+    FXTRAN_FBUFFER_printf (&ctx->fb,                       \
+    "<option><name>%s</name><type>%s</type>"               \
+    "<help>%s</help></option>\n", #opt, "INTEGER", #doc);  \
   else if (strcmp (argv[i], "-"#opt) == 0)                 \
     {                                                      \
       if (i+1 < argc)                                      \
@@ -72,6 +84,9 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
   int len;
   int i;
 
+  if (help_xml)
+    FXTRAN_FBUFFER_printf (&ctx->fb, "<?xml version=\"1.0\"?><fxtran-options>");
+
   memset (opts, '\0', sizeof (FXTRAN_opts));
 
   opts->includes = (char**)calloc (1, sizeof (char*));
@@ -97,12 +112,12 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (flat-expr, flat_expr, Flatten all expr);
       FXTRAN_handle_flag (show-lines, show_lines, Show beginning of lines tags);
       FXTRAN_handle_flag (strip-executable-statements, strip_exec, Strip executable statements);
-      FXTRAN_handle_flag (strip, strip, Strip comments & multiple linefeeds & spaces);
+      FXTRAN_handle_flag (strip, strip, Strip comments + multiple linefeeds + spaces);
       FXTRAN_handle_flag (strip-comments, strip_comments, Strip comments);
       FXTRAN_handle_flag (strip-linefeed, strip_linefeed, Strip multiple linefeeds);
       FXTRAN_handle_flag (strip-continue, strip_continue, Strip continuation lines);
       FXTRAN_handle_flag (strip-spaces, strip_spaces, Strip spaces);
-      FXTRAN_handle_flag (canonic, canonic, Canonic form : uppercase & no spaces)
+      FXTRAN_handle_flag (canonic, canonic, Canonic form : uppercase + no spaces)
       FXTRAN_handle_flag (uppercase, uppercase, Turn all language and identifiers into uppercase);
       FXTRAN_handle_flag (code-tag, code_tag, Add a tag for source code);
       FXTRAN_handle_flag (name-attr, name_attr, Add an attribute for N tags);
@@ -140,6 +155,12 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
           strcpy (opts->directive_ct, "$");
           strcat (opts->directive_ct, opts->directive); 
           strcat (opts->directive_ct, "&");
+        }
+
+      if (help_xml)
+        {
+          FXTRAN_FBUFFER_printf (&ctx->fb, "</fxtran-options>");
+          return 0;
         }
 
       if (help)
@@ -190,10 +211,10 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
   if (opts->dump_stmt_list)
     return 0;
 
-  if (help)
+  if (help || help_xml)
     return 0;
 
-  if (opts->help)
+  if (opts->help || opts->help_xml)
     return 0;
 
   if (opts->gdb)

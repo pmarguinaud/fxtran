@@ -53,6 +53,15 @@ static void FXTRAN_restore_stack_size (FXTRAN_xmlctx * ctx)
     setrlimit (RLIMIT_STACK, &ctx->rlim);
 }
 
+static void fb2xml (FXTRAN_FBUFFER * fb, char ** Xml)
+{
+  int len = FXTRAN_FBUFFER_len (fb);
+  char * buf = FXTRAN_FBUFFER_str (fb);
+  *Xml = (char *)malloc (len + 1);
+  memcpy (*Xml, buf, len);
+  (*Xml)[len] = '\0';
+}
+
 int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 {
   FXTRAN_xmlctx * ctx = FXTRAN_xmlctx_new ();
@@ -73,7 +82,10 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
   if (ctx->opts.help || ctx->opts.help_xml)
     {
       FXTRAN_help_opts (ctx);
-      printf ("%s", ctx->fb.str);
+      if (Xml)
+        fb2xml (&ctx->fb, Xml);
+      else
+        printf ("%s", ctx->fb.str);
       goto cleanup;
     }
 
@@ -125,11 +137,7 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 
   if (Xml)
     {
-      int len = FXTRAN_FBUFFER_len (&ctx->fb);
-      char * buf = FXTRAN_FBUFFER_str (&ctx->fb);
-      *Xml = (char *)malloc (len + 1);
-      memcpy (*Xml, buf, len);
-      (*Xml)[len] = '\0';
+      fb2xml (&ctx->fb, Xml);
     }
   else
     {
