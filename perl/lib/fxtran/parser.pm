@@ -1,9 +1,10 @@
 package fxtran::parser;
 
 use strict;
-use fxtran qw ();
 use XML::LibXML;
 use Carp qw (croak);
+
+our $PARSER = __PACKAGE__->new ();
 
 my %opts;
 
@@ -63,7 +64,7 @@ sub setOption
 
 {
 
-my $help = 'XML::LibXML'->load_xml (string =>  &fxtran::help ());
+my $help = 'XML::LibXML'->load_xml (string =>  &fxtran::run ('-help-xml', ''));
 
 my $xpc = 'XML::LibXML::XPathContext'->new ();
 
@@ -127,7 +128,7 @@ sub parseProgram
   my $self = shift;
 
   chomp (my $program = $_[0]);
-  my $xml = eval { &run (@{ $self->{optionsProgram} }, $program) };
+  my $xml = eval { &fxtran::run (@{ $self->{optionsProgram} }, $program) };
   $@ && &croak ($@);
   my $doc = 'XML::LibXML'->load_xml (string => $xml);
   $doc = $doc->lastChild->firstChild;     
@@ -144,7 +145,7 @@ sub parseFragment
 $fragment      
 END      
 EOF
-  my $xml = eval { &run (@{ $self->{optionsFragment} }, $program) };
+  my $xml = eval { &fxtran::run (@{ $self->{optionsFragment} }, $program) };
   $@ && &croak ($@);
   my $doc = 'XML::LibXML'->load_xml (string => $xml);
   $doc = $doc->lastChild->firstChild;     
@@ -161,7 +162,7 @@ sub parseStatement
 $_[0]
 END      
 EOF
-   my $xml = eval { &run (@{ $self->{optionsStatement} }, $program) };
+   my $xml = eval { &fxtran::run (@{ $self->{optionsStatement} }, $program) };
    $@ && &croak ($@);
    my $doc = 'XML::LibXML'->load_xml (string => $xml);
    my $n = $doc->documentElement->firstChild->firstChild;     
@@ -177,7 +178,7 @@ X = $_[0]
 END      
 EOF
 
-  my $xml = eval { &run (@{ $self->{optionsExpression} }, $program) };
+  my $xml = eval { &fxtran::run (@{ $self->{optionsExpression} }, $program) };
   $@ && &croak ($@);
   my $doc = 'XML::LibXML'->load_xml (string => $xml);
   my $n = $doc->documentElement->firstChild->firstChild->lastChild->firstChild;     
