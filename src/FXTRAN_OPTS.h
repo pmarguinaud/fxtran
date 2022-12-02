@@ -25,6 +25,7 @@ typedef struct FXTRAN_opts
   int construct_tag;
   int cray_pointer;
   int help;
+  int help_xml;
   int strip_exec;
   int strip;
   int strip_comments;

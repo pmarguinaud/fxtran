@@ -55,11 +55,7 @@ static void FXTRAN_restore_stack_size (FXTRAN_xmlctx * ctx)
 
 int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
 {
-  FILE * fpx;
-  FXTRAN_xmlctx * ctx;
-  int err;
-
-  ctx = FXTRAN_xmlctx_new ();
+  FXTRAN_xmlctx * ctx = FXTRAN_xmlctx_new ();
 
   if (FXTRAN_xmlctx_eval (ctx))
     goto cleanup;
@@ -74,9 +70,10 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
       goto cleanup;
     }
 
-  if (ctx->opts.help)
+  if (ctx->opts.help || ctx->opts.help_xml)
     {
       FXTRAN_help_opts (ctx);
+      printf ("%s", ctx->fb.str);
       goto cleanup;
     }
 
@@ -136,6 +133,8 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
     }
   else
     {
+      FILE * fpx = NULL;
+
       if (strcmp (ctx->opts.xfile, "-") == 0)
         fpx = stdout;
       else
@@ -153,7 +152,8 @@ cleanup:
 
   FXTRAN_restore_stack_size (ctx);
 
-  err = ctx->err[0];
+{
+  int err = ctx->err[0];
   if (err)
     {
       if (Err)
@@ -166,6 +166,7 @@ cleanup:
   FXTRAN_xmlctx_free (ctx);
 
   return err;
+}
 }
 
 

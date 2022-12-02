@@ -6,50 +6,54 @@
 #include "FXTRAN_GDB.h"
 #include "FXTRAN_ERROR.h"
 #include "FXTRAN_XML.h"
+#include "FXTRAN_FBUFFER.h"
 
 #include <string.h>
 
 
 #define FXTRAN_handle_flag(opt, var, doc) \
-  if (help)                                    \
-    printf (" -%-40s : F : %s\n", #opt, #doc); \
-  else if (strcmp (argv[i], "-"#opt) == 0)     \
-    {                                          \
-      opts->var++;                             \
-      i++;                                     \
-      continue;                                \
+  if (help)                                                \
+    FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : F : %s\n", \
+                           #opt, #doc);                    \
+  else if (strcmp (argv[i], "-"#opt) == 0)                 \
+    {                                                      \
+      opts->var++;                                         \
+      i++;                                                 \
+      continue;                                            \
     }  
 
 #define FXTRAN_handle_charopt(opt, var, doc) \
-  if (help)                                    \
-    printf (" -%-40s : S : %s\n", #opt, #doc); \
-  else if (strcmp (argv[i], "-"#opt) == 0)     \
-    {                                          \
-      if (i+1 < argc)                          \
-        {                                      \
-          opts->var = strdup (argv[i+1]);      \
-          i += 2;                              \
-          continue;                            \
-        }                                      \
-      else                                     \
-        FXTRAN_THROW ("Option `%s' "           \
-       "requires an argument", argv[i]);       \
+  if (help)                                                \
+    FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : S : %s\n", \
+                           #opt, #doc);                    \
+  else if (strcmp (argv[i], "-"#opt) == 0)                 \
+    {                                                      \
+      if (i+1 < argc)                                      \
+        {                                                  \
+          opts->var = strdup (argv[i+1]);                  \
+          i += 2;                                          \
+          continue;                                        \
+        }                                                  \
+      else                                                 \
+        FXTRAN_THROW ("Option `%s' "                       \
+       "requires an argument", argv[i]);                   \
     }
 
 #define FXTRAN_handle_intopt(opt, var, doc) \
-  if (help)                                    \
-    printf (" -%-40s : I : %s\n", #opt, #doc); \
-  else if (strcmp (argv[i], "-"#opt) == 0)     \
-    {                                          \
-      if (i+1 < argc)                          \
-        {                                      \
-          opts->var = atoi (argv[i+1]);        \
-          i += 2;                              \
-          continue;                            \
-        }                                      \
-      else                                     \
-        FXTRAN_THROW ("Option `%s' "           \
-       "requires an argument", argv[i]);       \
+  if (help)                                                \
+    FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : I : %s\n", \
+                           #opt, #doc);                    \
+  else if (strcmp (argv[i], "-"#opt) == 0)                 \
+    {                                                      \
+      if (i+1 < argc)                                      \
+        {                                                  \
+          opts->var = atoi (argv[i+1]);                    \
+          i += 2;                                          \
+          continue;                                        \
+        }                                                  \
+      else                                                 \
+        FXTRAN_THROW ("Option `%s' "                       \
+       "requires an argument", argv[i]);                   \
     }
 
 static char ** push (char ** list, char * s)
@@ -63,7 +67,7 @@ static char ** push (char ** list, char * s)
 }
 
 static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts, 
-		               int argc, char * argv[], int help)
+		               int argc, char * argv[], int help, int help_xml)
 {
   int len;
   int i;
@@ -107,6 +111,7 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (dump-mask, dump_mask, Print character mask and exit);
       FXTRAN_handle_flag (dump-stmt-list, dump_stmt_list, Dump statement list);
       FXTRAN_handle_flag (help, help, Print help message);
+      FXTRAN_handle_flag (help-xml, help_xml, Print help message in XML format);
 
       if (opts->canonic)
         {
@@ -277,7 +282,7 @@ form_found:
 
 int FXTRAN_parse_opts (FXTRAN_xmlctx * ctx, int argc, char * argv[])
 {
-  return FXTRAN_parse_opts0 (ctx, &ctx->opts, argc, argv, 0);
+  return FXTRAN_parse_opts0 (ctx, &ctx->opts, argc, argv, 0, 0);
 }
 
 void FXTRAN_free_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts)
@@ -316,7 +321,7 @@ void FXTRAN_free_opts (FXTRAN_xmlctx * ctx)
 void FXTRAN_help_opts (FXTRAN_xmlctx * ctx)
 {
   FXTRAN_opts opts;
-  FXTRAN_parse_opts0 (ctx, &opts, 2, NULL, 1);
+  FXTRAN_parse_opts0 (ctx, &opts, 2, NULL, ctx->opts.help, ctx->opts.help_xml);
   FXTRAN_free_opts0 (ctx, &opts);
 }
 
