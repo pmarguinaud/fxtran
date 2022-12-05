@@ -10,8 +10,7 @@ BEGIN { use_ok('fxtran::parser') };
 
 use FileHandle;
 
-my $help = &fxtran::help ();
-print STDERR $help;
+print STDERR &fxtran::help (), "\n";
 
 
 my $doc = &s ('REAL (KIND=JPRB) :: X (10)');
@@ -38,4 +37,16 @@ EOF
 $fh->print ("$p\n");
 
 
+my $parser = 'fxtran::parser'->new ();
 
+print STDERR $parser->parseExpression ('N + 1'), "\n";
+
+$parser->setOptions ('Expression', '-canonic');
+
+print STDERR $parser->parseExpression ('N + 1'), "\n";
+
+$parser->setOptions ('Expression', '+canonic');
+
+print STDERR $parser->parseExpression ('N + 1'), "\n";
+
+print STDERR &fxtran::parse (expr => 'SIN (X)'), "\n";

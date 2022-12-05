@@ -52,6 +52,13 @@ sub parse
   return $fxtran::parser::PARSER->parse (@_);
 }      
 
+sub setOptions
+{
+  eval "use fxtran::parser";
+  $@ && die $@;
+  return $fxtran::parser::PARSER->setOptions (@_);
+}
+
 sub help
 {
   return &fxtran::run ('-help-xml', '');
