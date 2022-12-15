@@ -3812,6 +3812,8 @@ def_program_construct_end (PROCEDURE, ENDPROCEDURE)
           switch (Type)
             {
 def_program_construct_opn (PROCEDURE)
+	      case FXTRAN_INCLUDE:
+	      break;
               default:
               FXTRAN_ABORT ("Expected program unit statement", ctx);
             }
