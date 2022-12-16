@@ -125,6 +125,17 @@ void FXTRAN_xml_skip (FXTRAN_xmlctx *, int);
       FXTRAN_xml_end_tag (ci[-1].offset+1, ctx);    \
   } while (0)
 
+#define XSP() \
+  do {                                              \
+    if (FXTRAN_XML_dump && ctx->opts.canonic)       \
+      {                                             \
+        int pos = ci[-1].offset+1;                  \
+        if (pos >= 0)                               \
+          FXTRAN_xml_advance (ctx, pos);            \
+        FXTRAN_FBUFFER_printf (&ctx->fb, " ");      \
+      }                                             \
+  } while (0)
+
 #define XSA(S) XST("_"S"_")
 #define XEA() XET()
 

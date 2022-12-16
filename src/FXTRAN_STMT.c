@@ -4107,6 +4107,8 @@ def_extra_proto (IMPLICITNONE)
 {
   int k;
   XAD(12);
+//XSP();
+//XAD(4);
 
   if (t[0] == '\0')
     return;
