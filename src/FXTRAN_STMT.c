@@ -306,6 +306,8 @@ static int stmt_eos_named_label (const char * t, const FXTRAN_char_info * ci, FX
   if (k == 0)
     return 0;
 
+  XSP();
+
   XNT (_T(_S(NAME)), k);
 
   return k+1;
@@ -1483,7 +1485,9 @@ def_extra_proto (CHANGETEAM)
 
   k = stmt_bos_named_label (t, ci, ctx);
   XAD(k);
-  XAD(10);
+  XAD(6);
+  XSP();
+  XAD(4);
   if (t[0] != '(')
     FXTRAN_ABORT ("Expected '('");
   XAD (1);
@@ -4106,9 +4110,9 @@ def_extra_proto (IMPLICIT)
 def_extra_proto (IMPLICITNONE)
 {
   int k;
-  XAD(12);
-//XSP();
-//XAD(4);
+  XAD(8);
+  XSP();
+  XAD(4);
 
   if (t[0] == '\0')
     return;
@@ -4548,45 +4552,59 @@ def_extra_proto (STOP)
 
 def_extra_proto (SYNCALL)
 {
-  XAD(7);
+  XAD(4);
+  XSP();
+  XAD(3);
   if (t[0] == '(')
     stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (SYNCIMAGES)
 {
-  XAD(10);
+  XAD(4);
+  XSP();
+  XAD(6);
   stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (SYNCMEMORY)
 {
-  XAD(10);
+  XAD(4);
+  XSP();
+  XAD(6);
   if (t[0])
     stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (SYNCTEAM)
 {
-  XAD(8);
+  XAD(4);
+  XSP();
+  XAD(4);
   stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (FORMTEAM)
 {
-  XAD(8);
+  XAD(4);
+  XSP();
+  XAD(4);
   stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (EVENTPOST)
 {
-  XAD(9);
+  XAD(4);
+  XSP();
+  XAD(5);
   stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
 def_extra_proto (EVENTWAIT)
 {
-  XAD(9);
+  XAD(4);
+  XSP();
+  XAD(5);
   stmt_actual_args (t, ci, ctx, &saap_sync);
 }
 
@@ -4727,8 +4745,8 @@ case FXTRAN_##t: stmt_##t##_extra(text1, ci1, stack, ctx); break;
               break;
             }
 
-          ctx->in_stmt--;
           FXTRAN_xml_end_tag (ci1[len-1].offset+1, ctx);
+          ctx->in_stmt--;
 
           if (tu.xml_ctu2)
             dump_ctu (&tu.xml_ctu2, ci1[len-1].offset+1, ctx);

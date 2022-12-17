@@ -132,7 +132,7 @@ void FXTRAN_xml_skip (FXTRAN_xmlctx *, int);
         int pos = ci[-1].offset+1;                  \
         if (pos >= 0)                               \
           FXTRAN_xml_advance (ctx, pos);            \
-        FXTRAN_FBUFFER_printf (&ctx->fb, " ");      \
+        FXTRAN_FBUFFER_putc (&ctx->fb, ' ');        \
       }                                             \
   } while (0)
 
