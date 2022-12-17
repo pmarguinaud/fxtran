@@ -1806,6 +1806,7 @@ def_extra_proto (INTERFACE)
       XAD(8);
       XET ();
       XET ();
+      XSP ();
     }
 
   XAD(9);
@@ -1980,6 +1981,8 @@ def_extra_proto (FUNCTION)
   int k3;
   const char * prefix[] = { "MODULE", "RECURSIVE", "NON_RECURSIVE", "IMPURE", "PURE", "ELEMENTAL", NULL };
   int seen_ts = 0;
+  int seen_prefix = 0;
+  int seen_attr = 0;
 
  
 #define skip_comma \
@@ -2003,6 +2006,7 @@ def_extra_proto (FUNCTION)
 	    XAD(len);
 	    ad++;
 	    prefix[i] = "!";
+            seen_prefix++;
           }
       if (!seen_ts && (k = FXTRAN_typespec (t, ci, ctx)))
         {
@@ -2021,6 +2025,7 @@ def_extra_proto (FUNCTION)
             {
               XAD(k);
 	      skip_comma;
+              seen_attr++;
             }
 	  else
             break;
@@ -2028,6 +2033,8 @@ def_extra_proto (FUNCTION)
     }
 #undef skip_comma
 
+  if (seen_prefix || seen_ts || seen_attr)
+    XSP ();
 
   k2 = stmt_unit_name (t, ci, "FUNCTION", _T(_S(FUNCTION) H _S(NAME)), ctx);
   XAD(k2);
@@ -3106,6 +3113,7 @@ def_extra_proto (ENTRY)
 
 def_extra_proto (SUBROUTINE)
 {
+  int seen_prefix = 0;
   int k2;
   int k3;
   const char * prefix[] = { "MODULE", "RECURSIVE", "NON_RECURSIVE", "IMPURE", "PURE", "ELEMENTAL", NULL };
@@ -3123,6 +3131,7 @@ def_extra_proto (SUBROUTINE)
 	    XAD(len);
 	    ad++;
 	    prefix[i] = "!";
+            seen_prefix++;
           }
 
       if (zstrcmp ("SUBROUTINE", t))
@@ -3132,6 +3141,9 @@ def_extra_proto (SUBROUTINE)
         break;
 
     }
+
+  if (seen_prefix)
+    XSP ();
 
   k2 = stmt_unit_name (t, ci, "SUBROUTINE", _T(_S(SUBROUTINE) H _S(NAME)), ctx);
   XAD(k2);
