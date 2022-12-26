@@ -1,0 +1,9 @@
+.debhelper/
+debhelper-build-stamp
+files
+*.substvars
+fxtran/
+libfxtran-perl/
+python3-fxtran/
+tmp/
+
