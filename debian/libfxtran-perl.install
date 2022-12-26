@@ -1,0 +1,5 @@
+#!/usr/bin/dh-exec
+usr/lib/${DEB_HOST_MULTIARCH}/perl5/*/*.pm
+usr/lib/${DEB_HOST_MULTIARCH}/perl5/*/*/*.pm
+usr/lib/${DEB_HOST_MULTIARCH}/perl5/*/auto/fxtran/fxtran.so
+usr/share/man/man3/fxtran.3pm

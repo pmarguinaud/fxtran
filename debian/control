@@ -1,0 +1,39 @@
+Source: fxtran
+Section: science
+Priority: optional
+Maintainer: Debian Science Maintainers <debian-science-maintainers@lists.alioth.debian.org>
+Uploaders: Pierre Gruet <pgt@debian.org>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.1
+Vcs-Browser: https://salsa.debian.org/science-team/fxtran
+Vcs-Git: https://salsa.debian.org/science-team/fxtran.git
+Homepage: https://github.com/pmarguinaud/fxtran
+Rules-Requires-Root: no
+
+Package: fxtran
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Description: Parse FORTRAN source code into XML documents.
+ Parse Fortran source code. Decorate source code with XML tags. The result is an XML file 
+ which you can search with XPath, modify with the DOM API. Round tripping is supported : 
+ get back your original or modified source code just by stripping XML tags.
+ Provided under the terms of the GNU GPL license.
+
+Package: libfxtran-perl
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         ${perl:Depends},
+         perl
+Description: Parse FORTRAN source code into XML documents using fxtran (Perl bindings).
+ fxtran is a module providing full access to fxtran capabilities to the Perl interpreter.
+
+Package: python3-fxtran
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         python3
+Description: Display GRIB2 fields using OpenGL (glgrib Python3 bindings).
+ fxtran is a module providing full access to fxtran capabilities to the Python interpreter.

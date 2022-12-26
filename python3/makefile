@@ -1,6 +1,11 @@
+all: build
 
-fxtran.so: fxtran.c
-	gcc -g -fPIC --shared `python3-config --includes` -I../src fxtran.c -L../lib -lfxtran -o fxtran.so
+install:
+	python3 setup.py install 
+
+build:
+	python3 setup.py build
 
 clean:
-	\rm -f *.so
+	\rm -rf build dist *.egg-info
+

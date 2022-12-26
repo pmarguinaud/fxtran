@@ -8,7 +8,7 @@ static PyObject * run (PyObject * self, PyObject * args)
   Py_ssize_t items = PyTuple_Size (args);
   int argc = items + 1;
   char * argv[argc];
-  char * Text, * Xml = NULL, * Err = NULL;
+  char * Text = NULL, * Xml = NULL, * Err = NULL;
   PyObject * str[items], * ret = NULL;
 
   argv[0] = "";
