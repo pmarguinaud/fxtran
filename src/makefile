@@ -22,7 +22,7 @@ $(TOP)/lib/libfxtran.so.0: $(OBJ)
 	cd cpp && make
 	@mkdir -p ../lib
 	$(CC) -shared -Wl,-soname,libfxtran.so.0 -o $(TOP)/lib/libfxtran.so.0 $(OBJ) cpp/*.o $(LDFLAGS)
-	@ln -s libfxtran.so.0 $(TOP)/lib/libfxtran.so
+	@ln -sf libfxtran.so.0 $(TOP)/lib/libfxtran.so
 
 FXTRAN_ALPHA.h: FXTRAN_ALPHA.pl
 	@./FXTRAN_ALPHA.pl

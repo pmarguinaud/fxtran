@@ -12,60 +12,69 @@
 
 
 #define FXTRAN_handle_flag(opt, var, doc) \
-  if (help)                                                \
-    FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : F : %s\n", \
-                           #opt, #doc);                    \
-  else if (help_xml)                                       \
-    FXTRAN_FBUFFER_printf (&ctx->fb,                       \
-    "<option><name>%s</name><type>%s</type>"               \
-    "<help>%s</help></option>\n", #opt, "FLAG", #doc);     \
-  else if (strcmp (argv[i], "-"#opt) == 0)                 \
-    {                                                      \
-      opts->var++;                                         \
-      i++;                                                 \
-      continue;                                            \
+  if (help)                                                         \
+    FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : F : %s\n",          \
+                           #opt, #doc);                             \
+  else if (help_xml)                                                \
+    FXTRAN_FBUFFER_printf (&ctx->fb,                                \
+    "<option><name>%s</name><type>%s</type>"                        \
+    "<help>%s</help></option>\n", #opt, "FLAG", #doc);              \
+  else if (help_pod)                                                \
+    FXTRAN_FBUFFER_printf (&ctx->fb,                                \
+    "=item C<-%s>\n\n\nType : %s\n\n%s\n\n", #opt, "FLAG", #doc);   \
+  else if (strcmp (argv[i], "-"#opt) == 0)                          \
+    {                                                               \
+      opts->var++;                                                  \
+      i++;                                                          \
+      continue;                                                     \
     }  
 
 #define FXTRAN_handle_charopt(opt, var, doc) \
-  if (help)                                                \
-    FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : S : %s\n", \
-                           #opt, #doc);                    \
-  else if (help_xml)                                       \
-    FXTRAN_FBUFFER_printf (&ctx->fb,                       \
-    "<option><name>%s</name><type>%s</type>"               \
-    "<help>%s</help></option>\n", #opt, "STRING", #doc);   \
-  else if (strcmp (argv[i], "-"#opt) == 0)                 \
-    {                                                      \
-      if (i+1 < argc)                                      \
-        {                                                  \
-          opts->var = strdup (argv[i+1]);                  \
-          i += 2;                                          \
-          continue;                                        \
-        }                                                  \
-      else                                                 \
-        FXTRAN_THROW ("Option `%s' "                       \
-       "requires an argument", argv[i]);                   \
+  if (help)                                                         \
+    FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : S : %s\n",          \
+                           #opt, #doc);                             \
+  else if (help_xml)                                                \
+    FXTRAN_FBUFFER_printf (&ctx->fb,                                \
+    "<option><name>%s</name><type>%s</type>"                        \
+    "<help>%s</help></option>\n", #opt, "STRING", #doc);            \
+  else if (help_pod)                                                \
+    FXTRAN_FBUFFER_printf (&ctx->fb,                                \
+    "=item C<-%s>\n\n\nType : %s\n\n%s\n\n", #opt, "STRING", #doc); \
+  else if (strcmp (argv[i], "-"#opt) == 0)                          \
+    {                                                               \
+      if (i+1 < argc)                                               \
+        {                                                           \
+          opts->var = strdup (argv[i+1]);                           \
+          i += 2;                                                   \
+          continue;                                                 \
+        }                                                           \
+      else                                                          \
+        FXTRAN_THROW ("Option `%s' "                                \
+       "requires an argument", argv[i]);                            \
     }
 
 #define FXTRAN_handle_intopt(opt, var, doc) \
-  if (help)                                                \
-    FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : I : %s\n", \
-                           #opt, #doc);                    \
-  else if (help_xml)                                       \
-    FXTRAN_FBUFFER_printf (&ctx->fb,                       \
-    "<option><name>%s</name><type>%s</type>"               \
-    "<help>%s</help></option>\n", #opt, "INTEGER", #doc);  \
-  else if (strcmp (argv[i], "-"#opt) == 0)                 \
-    {                                                      \
-      if (i+1 < argc)                                      \
-        {                                                  \
-          opts->var = atoi (argv[i+1]);                    \
-          i += 2;                                          \
-          continue;                                        \
-        }                                                  \
-      else                                                 \
-        FXTRAN_THROW ("Option `%s' "                       \
-       "requires an argument", argv[i]);                   \
+  if (help)                                                         \
+    FXTRAN_FBUFFER_printf (&ctx->fb, " -%-40s : I : %s\n",          \
+                           #opt, #doc);                             \
+  else if (help_xml)                                                \
+    FXTRAN_FBUFFER_printf (&ctx->fb,                                \
+    "<option><name>%s</name><type>%s</type>"                        \
+    "<help>%s</help></option>\n", #opt, "INTEGER", #doc);           \
+  else if (help_pod)                                                \
+    FXTRAN_FBUFFER_printf (&ctx->fb,                                \
+    "=item C<-%s>\n\n\nType : %s\n\n%s\n\n", #opt, "INTEGER", #doc);\
+  else if (strcmp (argv[i], "-"#opt) == 0)                          \
+    {                                                               \
+      if (i+1 < argc)                                               \
+        {                                                           \
+          opts->var = atoi (argv[i+1]);                             \
+          i += 2;                                                   \
+          continue;                                                 \
+        }                                                           \
+      else                                                          \
+        FXTRAN_THROW ("Option `%s' "                                \
+       "requires an argument", argv[i]);                            \
     }
 
 static char ** push (char ** list, char * s)
@@ -79,13 +88,38 @@ static char ** push (char ** list, char * s)
 }
 
 static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts, 
-		               int argc, char * argv[], int help, int help_xml)
+		               int argc, char * argv[], int help, int help_xml, int help_pod)
 {
   int len;
   int i;
 
   if (help_xml)
     FXTRAN_FBUFFER_printf (&ctx->fb, "<?xml version=\"1.0\"?><fxtran-options>");
+
+  if (help_pod)
+    FXTRAN_FBUFFER_printf (&ctx->fb, "%s",
+"=head1 NAME\n"
+"\n"
+"fxtran - Parse FORTRAN source code into XML documents\n"
+"\n"
+"=head1 SYNOPSYS\n"
+"\n"
+"  fxtran [OPTION].. file.F90\n"
+"\n"
+"=head1 DESCRIPTION\n"
+"\n"
+"Parse Fortran source code. Decorate source code with XML tags. The result is  \n"
+"an XML file which you can search with XPath, modify with the DOM API. \n"
+"Round tripping is supported : get back your original or modified source code \n"
+"just by stripping XML tags.  Provided under the terms of the GNU GPL license.\n"
+"\n"
+"=head1 OPTIONS\n"
+"\n"
+"=over 4\n"
+"\n"
+  );
+
+
 
   memset (opts, '\0', sizeof (FXTRAN_opts));
 
@@ -127,6 +161,7 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (dump-stmt-list, dump_stmt_list, Dump statement list);
       FXTRAN_handle_flag (help, help, Print help message);
       FXTRAN_handle_flag (help-xml, help_xml, Print help message in XML format);
+      FXTRAN_handle_flag (help-pod, help_pod, Print help message in POD format);
 
       if (opts->canonic)
         {
@@ -158,12 +193,27 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
         }
 
       if (help_xml)
-        {
-          FXTRAN_FBUFFER_printf (&ctx->fb, "</fxtran-options>");
-          return 0;
-        }
+        FXTRAN_FBUFFER_printf (&ctx->fb, "</fxtran-options>");
 
-      if (help)
+      if (help_pod)
+        FXTRAN_FBUFFER_printf (&ctx->fb, "%s",
+"\n"
+"=back\n"
+"\n"
+"=head1 AUTHOR\n"
+"\n"
+"Philippe Marguinaud pmarguinaud@hotmail.com\n"
+"\n"
+"=head1 SEE ALSO\n"
+"\n"
+"https://github.com/pmarguinaud/fxtran\n"
+"\n"
+"https://www.iso.org/standard/72320.html\n"
+"\n"
+"=cut\n"
+        );
+
+      if (help || help_xml || help_pod)
         return 0;
 
       if ((strcmp (argv[i], "-I") == 0) && (i+1 < argc))
@@ -211,10 +261,10 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
   if (opts->dump_stmt_list)
     return 0;
 
-  if (help || help_xml)
+  if (help || help_xml || help_pod)
     return 0;
 
-  if (opts->help || opts->help_xml)
+  if (opts->help || opts->help_xml || opts->help_pod)
     return 0;
 
   if (opts->gdb)
@@ -303,7 +353,7 @@ form_found:
 
 int FXTRAN_parse_opts (FXTRAN_xmlctx * ctx, int argc, char * argv[])
 {
-  return FXTRAN_parse_opts0 (ctx, &ctx->opts, argc, argv, 0, 0);
+  return FXTRAN_parse_opts0 (ctx, &ctx->opts, argc, argv, 0, 0, 0);
 }
 
 void FXTRAN_free_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts)
@@ -342,7 +392,7 @@ void FXTRAN_free_opts (FXTRAN_xmlctx * ctx)
 void FXTRAN_help_opts (FXTRAN_xmlctx * ctx)
 {
   FXTRAN_opts opts;
-  FXTRAN_parse_opts0 (ctx, &opts, 2, NULL, ctx->opts.help, ctx->opts.help_xml);
+  FXTRAN_parse_opts0 (ctx, &opts, 2, NULL, ctx->opts.help, ctx->opts.help_xml, ctx->opts.help_pod);
   FXTRAN_free_opts0 (ctx, &opts);
 }
 

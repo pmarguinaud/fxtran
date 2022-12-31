@@ -79,7 +79,7 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
       goto cleanup;
     }
 
-  if (ctx->opts.help || ctx->opts.help_xml)
+  if (ctx->opts.help || ctx->opts.help_xml || ctx->opts.help_pod)
     {
       FXTRAN_help_opts (ctx);
       if (Xml)
@@ -175,6 +175,8 @@ cleanup:
 
   return err;
 }
+
+  return 0;
 }
 
 

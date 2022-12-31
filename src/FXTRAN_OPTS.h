@@ -26,6 +26,7 @@ typedef struct FXTRAN_opts
   int cray_pointer;
   int help;
   int help_xml;
+  int help_pod;
   int strip_exec;
   int strip;
   int strip_comments;
