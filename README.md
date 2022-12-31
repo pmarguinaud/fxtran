@@ -4,6 +4,6 @@ Round tripping is supported : get back your original or modified source code jus
 
 Provided under the terms of the GNU GPL license.
 
-[Short presentation of fxtran](doc/fxtran.pdf)
+[Short presentation of fxtran](share/doc/fxtran/fxtran.pdf)
 
-[Parsing and refactoring FORTRAN code with XML](ARTICLE.md)
+[Parsing and refactoring FORTRAN code with XML](share/doc/fxtran/ARTICLE.md)
