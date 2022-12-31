@@ -16,29 +16,55 @@ Rules-Requires-Root: no
 Package: fxtran
 Architecture: any
 Depends: ${shlibs:Depends},
-         ${misc:Depends}
-Description: Parse FORTRAN source code into XML documents.
+         ${misc:Depends},
+         libfxtran0
+Description: Parse FORTRAN source code into XML documents
  Parse Fortran source code. Decorate source code with XML tags. The result is 
  an XML file which you can search with XPath, modify with the DOM API. 
  Round tripping is supported : get back your original or modified source code 
  just by stripping XML tags.  Provided under the terms of the GNU GPL license.
 
-Package: libfxtran-perl
+Package: fxtran-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: Parse FORTRAN source code into XML documents
+ Documentation (in markdown & pdf format) for fxtran.
+
+Package: libfxtran0
 Section: libs
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Description: Parse FORTRAN source using fxtran (shared library)
+ Shared library for fxtran.
+
+Package: libfxtran-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}
+Description: Parse FORTRAN source using fxtran (shared library)
+ Development library and headers for fxtran library.
+
+Package: libfxtran-perl
+Section: perl
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          ${perl:Depends},
+         libfxtran0,
          perl
-Description: Parse FORTRAN source using fxtran (Perl bindings).
+Description: Parse FORTRAN source using fxtran (Perl bindings)
  fxtran is a module providing full access to fxtran capabilities to the Perl 
  interpreter.
 
 Package: python3-fxtran
+Section: python
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
+         libfxtran0,
          python3
-Description: Display GRIB2 fields using OpenGL (glgrib Python3 bindings).
+Description: Display GRIB2 fields using OpenGL (glgrib Python3 bindings)
  fxtran is a module providing full access to fxtran capabilities to the 
  Python interpreter.

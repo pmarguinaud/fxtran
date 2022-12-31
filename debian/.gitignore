@@ -5,5 +5,8 @@ files
 fxtran/
 libfxtran-perl/
 python3-fxtran/
+fxtran-doc/
+libfxtran-dev/
+libfxtran0/
 tmp/
 

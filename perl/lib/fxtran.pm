@@ -68,11 +68,11 @@ sub help
 
 =pod
 
-=head NAME
+=head1 NAME
 
 fxtran - Perl bindings for fxtran parser
 
-=head AUTHOR
+=head1 AUTHOR
 
 pmarguinaud@hotmail.com
 

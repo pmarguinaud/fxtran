@@ -40,7 +40,6 @@ if ($debian)
     $LDFLAGS = $ENV{DEB_LDFLAGS};
   }
 
-
 &WriteMakefile
 (
   LD                => "gcc $LDFLAGS",
