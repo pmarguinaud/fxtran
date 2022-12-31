@@ -6,4 +6,4 @@ bin/*
 lib/*
 *.swp
 .gdb_history
-usr/share
+share/man
