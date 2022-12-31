@@ -1,3 +1,6 @@
+
+export ROOT=$(shell pwd)
+
 all: 
 	cd src && make
 	cd perl && make

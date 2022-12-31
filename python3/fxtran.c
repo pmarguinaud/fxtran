@@ -1,5 +1,5 @@
 #include <Python.h>
-#include "FXTRAN_RUN.h"
+#include "FXTRAN/RUN.h"
 
 static PyObject * fxtran_Error = NULL;
 

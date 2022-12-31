@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "FXTRAN_RUN.h"
+#include "FXTRAN/RUN.h"
 
 int main (int argc, char * argv[])
 {

@@ -5,7 +5,7 @@
 
 #include "ppport.h"
 
-#include "FXTRAN_RUN.h"
+#include "FXTRAN/RUN.h"
 
 
 MODULE = fxtran		PACKAGE = fxtran		

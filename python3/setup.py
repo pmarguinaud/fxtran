@@ -18,7 +18,7 @@ setup (
     name = "fxtran",
     version = "0.1",
     ext_modules = [Extension ("fxtran", ["fxtran.c"], 
-    include_dirs=[TOP + '/src'], 
+    include_dirs=[TOP + '/include'], 
     libraries=['fxtran'],
     library_dirs=[prefix + "/lib", TOP + "/lib"])],
   );

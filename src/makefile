@@ -1,37 +1,33 @@
+TOP=..
+
+include $(TOP)/makefile.inc
+
 OBJ=FXTRAN_EXPR.o FXTRAN_FBUFFER.o FXTRAN_FIXED.o FXTRAN_FREE.o FXTRAN_GDB.o \
     FXTRAN_MISC.o FXTRAN_OMP.o FXTRAN_STMT.o FXTRAN_XML.o FXTRAN_OPTS.o      \
     FXTRAN_FILE_FUNC.o FXTRAN_LOAD.o FXTRAN_CPP_INTF.o FXTRAN_XCP.o          \
     FXTRAN_BBT.o FXTRAN_FILE.o FXTRAN_NAMELIST.o FXTRAN_ACC.o FXTRAN_DDD.o   \
     FXTRAN_RUN.o FXTRAN_ERROR.o FXTRAN_CHARINFO.o
 
-EXE=../bin/fxtran
-LIB=../lib/libfxtran.a
-
-
-OPT=2
-
-ifeq ($(DEBUG), 1)
-  OPT=0
+ifeq ($(DEB_BUILD_ARCH), )
+RPATH=-Wl,-rpath,$(ROOT)/lib
 endif
 
-CFLAGS=-Wall -g -fPIC -I cpp -O$(OPT)
+all: $(TOP)/bin/fxtran
 
-all: $(EXE) $(LIB)
-
-
-$(EXE): FXTRAN_ALPHA.h fxtran.o $(OBJ) 
+$(TOP)/bin/fxtran: FXTRAN_ALPHA.h fxtran.o $(TOP)/lib/libfxtran.so.0
 	@mkdir -p ../bin
-	cd cpp && make
-	$(CC) -o $(EXE) fxtran.o $(OBJ) -Lcpp -lcpp -liberty
+	$(CC) -o $(TOP)/bin/fxtran fxtran.o $(RPATH) -L$(TOP)/lib -lfxtran $(LDFLAGS)
 
-$(LIB): $(OBJ)
+$(TOP)/lib/libfxtran.so.0: $(OBJ)
+	cd cpp && make
 	@mkdir -p ../lib
-	ar crv $(LIB) $(OBJ) cpp/*.o
+	$(CC) -shared -Wl,-soname,libfxtran.so.0 -o $(TOP)/lib/libfxtran.so.0 $(OBJ) cpp/*.o $(LDFLAGS)
+	@ln -s libfxtran.so.0 $(TOP)/lib/libfxtran.so
 
 FXTRAN_ALPHA.h: FXTRAN_ALPHA.pl
 	@./FXTRAN_ALPHA.pl
 clean:
-	\rm -f *.o $(EXE) *~ $(LIB)
+	\rm -f *.o *~ $(TOP)/bin/fxtran $(TOP)/lib/libfxtran.so.0 $(TOP)/lib/libfxtran.so
 	cd cpp && make clean
 
 
