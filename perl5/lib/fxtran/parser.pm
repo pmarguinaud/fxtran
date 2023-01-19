@@ -235,7 +235,7 @@ sub parseLocation
   use File::Basename;
   return unless (-f $location);     
      
-  my $dir = $self->{dir} || &dirname ($location); 
+  my $dir = $args{dir} || &dirname ($location); 
   my $xml = "$dir/" . &basename ($location) . '.xml';     
      
   my @cmd = ('fxtran', @fopts, -o => $xml, $location);     
