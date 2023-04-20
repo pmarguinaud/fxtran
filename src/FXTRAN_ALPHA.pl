@@ -257,7 +257,7 @@ my @x = qw[
 
 
 {
-  my $fhp = 'FileHandle'->new ('>../perl/lib/fxtran/alpha.pm');
+  my $fhp = 'FileHandle'->new ('>../perl5/lib/fxtran/alpha.pm');
   $fhp->print (<< 'EOF');
 package fxtran::alpha;
 
