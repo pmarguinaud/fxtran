@@ -1813,7 +1813,7 @@ def_extra_proto (INTERFACE)
 
   if (t[0])
     {
-      XST (_T(_S(NAME)));
+      XST (_T(_S(INTERFACE)) H _T(_S(NAME)));
       k = FXTRAN_generic_spec (t, ci, ctx);
       XAD(k);
       XET ();
