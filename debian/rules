@@ -16,7 +16,7 @@ export DEB_LDFLAGS=$(LDFLAGS)
 
 override_dh_auto_install:
 	./scripts/debian/install.pl 
-	cd perl && make install 
+	cd perl5 && make install 
 	cd python3 && make install
 	./scripts/debian/cleanInstall.pl
 
