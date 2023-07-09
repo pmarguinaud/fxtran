@@ -71,8 +71,12 @@ apt-get -y update
 apt-get -y dist-upgrade
 apt-get -y install git vim ssh screen sudo
 apt-get -y install debhelper-compat
-apt-get -y install g++ make build-essential debhelper \
+apt-get -y install g++ make build-essential debhelper dpkg-dev \
   python3-dev python3-setuptools dh-exec python3-pip devscripts lintian
+
+cat > /etc/apt/sources.list.d/fxtran.list << EOC
+deb [trusted=yes] file:/home/$USER /
+EOC
 
 echo 'X11UseLocalhost no' >> /etc/ssh/sshd_config
 
@@ -103,4 +107,30 @@ IP=$(sudo docker inspect -f "{{ .NetworkSettings.IPAddress }}" fxtran_build)
 ssh-keygen -f "$HOME/.ssh/known_hosts" -R ${IP}
 
 echo "${IP}" > fxtran_build.txt
+
+cat > $SHARED/fxtran-build.sh << EOF
+#!/bin/bash
+
+set -x
+set -e
+
+git config --global user.email "$EMAIL"
+git config --global user.name "$NAME"
+git config --global credential.helper cache
+git config --global credential.helper 'cache --timeout=3600'
+
+cd fxtran
+
+./scripts/debian/tar.pl
+debuild -us -uc
+
+cd ..
+
+dpkg-scanpackages -m . > Packages
+
+EOF
+ 
+chmod 755 $SHARED/fxtran-build.sh 
+
+
 
