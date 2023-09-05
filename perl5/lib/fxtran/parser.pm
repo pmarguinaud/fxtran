@@ -99,27 +99,27 @@ sub parse
   my $self = shift;
   my %args = @_;
 
-  if (my $string = delete $args{string})
+  if (defined (my $string = delete $args{string}))
     {
       return $self->parseString ($string, %args);
     }
-  elsif (my $program = delete $args{program})   
+  elsif (defined (my $program = delete $args{program}))   
     {
       return $self->parseProgram ($program, %args);
     }
-  elsif (my $location = delete $args{location})
+  elsif (defined (my $location = delete $args{location}))
     {
       return $self->parseLocation ($location, %args);
     }
-  elsif (my $fragment = delete $args{fragment})
+  elsif (defined (my $fragment = delete $args{fragment}))
     {
       return $self->parseFragment ($fragment, %args);
     }
-  elsif (my $statement = delete $args{statement})
+  elsif (defined (my $statement = delete $args{statement}))
     {
       return $self->parseStatement ($statement, %args);
     }
-  elsif (my $expr = delete $args{expr})
+  elsif (defined (my $expr = delete $args{expr}))
     {
       return $self->parseExpression ($expr, %args);
     }
