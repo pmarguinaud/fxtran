@@ -6,10 +6,10 @@ static PyObject * fxtran_Error = NULL;
 static PyObject * run (PyObject * self, PyObject * args, PyObject * kwargs)
 {
   if(!kwargs)
-	{
+    {
     PyErr_SetString(PyExc_RuntimeError, "Need to specify either 'code=' or 'file=' argument");
     return NULL;
-  }
+    }
 
   Py_ssize_t items = PyTuple_Size (args);
   int argc = items + 2;
@@ -19,37 +19,33 @@ static PyObject * run (PyObject * self, PyObject * args, PyObject * kwargs)
 
   argv[0] = "";
   for(Py_ssize_t i=0;i<items;i++)
-	{
+    {
     PyObject * arg = PyTuple_GetItem (args, i);
     str[i] = PyObject_Str (arg);
     argv[i+1] = (char*)PyUnicode_AsUTF8 (str[i]);
-  }
+    }
 
   PyObject *file_item = Py_BuildValue("s", "file");
   PyObject *file = PyDict_GetItem(kwargs, file_item);
   if(file)
-	{
+    {
     PyObject *file_str = PyObject_Str(file);
     argv[argc-1] = (char*)PyUnicode_AsUTF8(file_str);
-  }
+    }
 
   PyObject *code_item = Py_BuildValue("s", "code");
   PyObject *code = PyDict_GetItem(kwargs, code_item);
   if(code)
-	{
+    {
     PyObject *code_str = PyObject_Str(code);
     Text = (char*)PyUnicode_AsUTF8(code_str);
     argv[argc-1] = "_.F90";
-  }
+    }
 
   if(Text)
-	{
     FXTRAN_RUN (argc, argv, Text, &Xml, &Err);
-  }
-	else
-	{
+  else
     FXTRAN_RUN (argc, argv, NULL, &Xml, &Err);
-  }
 
   for (Py_ssize_t i = 0; i < items; i++)
     Py_DECREF (str[i]);
