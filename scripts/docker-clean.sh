@@ -3,6 +3,6 @@
 set -x
 set -e 
 
-sudo docker stop ubuntu_fxtran
-sudo docker rm ubuntu_fxtran 
-sudo docker image rm ubuntu:latest 
+sudo docker stop fxtran_build
+sudo docker rm fxtran_build
+sudo docker image rm debian:unstable

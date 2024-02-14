@@ -50,3 +50,5 @@ $parser->setOptions ('Expression', '+canonic');
 print STDERR $parser->parseExpression ('N + 1'), "\n";
 
 print STDERR &fxtran::parse (expr => 'SIN (X)'), "\n";
+
+print STDERR &e ('0'), "\n";

@@ -188,11 +188,12 @@ def_process_list_elt_proto (cosection_subscript)
     {
       if (k > 1)
         {
-          XST (tags[itag++]);
+          XST (tags[itag]);
           FXTRAN_expr (t, ci, k-1, ctx);
           XAD(k-1);
           XET ();
         }
+      itag++;
       XAD(1);
 
     }
@@ -203,11 +204,12 @@ def_process_list_elt_proto (cosection_subscript)
     {
       if (k > 1)
         {
-          XST (tags[itag++]);
+          XST (tags[itag]);
           FXTRAN_expr (t, ci, k-1, ctx);
           XAD(k-1);
           XET ();
         }
+      itag++;
       XAD(1);
   
     }
@@ -215,7 +217,7 @@ def_process_list_elt_proto (cosection_subscript)
 
   if (kmax-(t-T))
     {
-      XST (tags[itag++]);
+      XST (tags[itag]);
       FXTRAN_expr (t, ci, kmax-(t-T), ctx);
       XAD(kmax-(t-T));
       XET ();
@@ -244,11 +246,12 @@ def_process_list_elt_proto (section_subscript)
     {
       if (k > 1)
         {
-          XST (tags[itag++]);
+          XST (tags[itag]);
           FXTRAN_expr (t, ci, k-1, ctx);
           XAD(k-1);
           XET ();
         }
+      itag++;
       XAD(1);
 
     }
@@ -259,11 +262,12 @@ def_process_list_elt_proto (section_subscript)
     {
       if (k > 1)
         {
-          XST (tags[itag++]);
+          XST (tags[itag]);
           FXTRAN_expr (t, ci, k-1, ctx);
           XAD(k-1);
           XET ();
         }
+      itag++;
       XAD(1);
   
     }
@@ -271,7 +275,7 @@ def_process_list_elt_proto (section_subscript)
 
   if (kmax-(t-T))
     {
-      XST (tags[itag++]);
+      XST (tags[itag]);
       FXTRAN_expr (t, ci, kmax-(t-T), ctx);
       XAD(kmax-(t-T));
       XET ();

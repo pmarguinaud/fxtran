@@ -10,9 +10,10 @@ static PyObject * run (PyObject * self, PyObject * args)
   char * argv[argc];
   char * Text = NULL, * Xml = NULL, * Err = NULL;
   PyObject * str[items], * ret = NULL;
+  Py_ssize_t i;
 
   argv[0] = "";
-  for (Py_ssize_t i = 0; i < items; i++) 
+  for (i = 0; i < items; i++) 
     {   
       PyObject * arg = PyTuple_GetItem (args, i); 
 
@@ -30,7 +31,7 @@ static PyObject * run (PyObject * self, PyObject * args)
 
   FXTRAN_RUN (argc, argv, Text, &Xml, &Err);
 
-  for (Py_ssize_t i = 0; i < items; i++)
+  for (i = 0; i < items; i++)
     Py_DECREF (str[i]);
 
   if (Err)

@@ -42,7 +42,7 @@ if ($debian)
 
 &WriteMakefile
 (
-  LD                => "gcc $LDFLAGS",
+  LD                => "gcc $LDFLAGS $rpath",
   CC                => "gcc $CFLAGS",
   NAME              => 'fxtran',
   VERSION_FROM      => 'lib/fxtran.pm', 
@@ -50,7 +50,7 @@ if ($debian)
   ABSTRACT_FROM     => 'lib/fxtran.pm', 
   AUTHOR            => 'Philippe Marguinaud <pmarguinaud@hotmail.com>',
   LICENSE           => 'GPL',
-  LIBS              => ["$rpath -L$TOP/lib -lfxtran"], 
+  LIBS              => ["-L$TOP/lib -lfxtran"], 
   DEFINE            => '', 
   INC               => "-I$TOP/include", 
   $debian 
