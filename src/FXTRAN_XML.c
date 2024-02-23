@@ -117,7 +117,7 @@ static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const 
       || (m == FXTRAN_KWD) || (m == FXTRAN_OPR) || (m == FXTRAN_OMD) || (m == FXTRAN_OMC));
   int uc = ctx->opts.uppercase && cod;
   int sl = ctx->opts.strip_linefeed;
-  int sp = ctx->opts.strip_spaces && (m != FXTRAN_STR);
+  int sp = ctx->opts.strip_spaces && (m != FXTRAN_STR) && (m != FXTRAN_CPP);
 
   if (ctx->opts.strip_spaces && ((m == FXTRAN_MAR) || (m == FXTRAN_MAL)))
     {
