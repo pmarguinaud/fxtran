@@ -361,13 +361,13 @@ static int FXTRAN_acc_REDUCTION (const char * t, const FXTRAN_char_info * ci,
   return t - T;
 }
 
-static int FXTRAN_acc_expr_clause (const char * t, const FXTRAN_char_info * ci, 
+static int FXTRAN_acc_expr_clause (const char * t, const char * name, const FXTRAN_char_info * ci, 
 		                   FXTRAN_xmlctx * ctx, int optional, int list,
                                    int prefix, int star, const char * list_tag)
 {
   const char * T = t;
   int k, s;
-  k = FXTRAN_eat_word (t);
+  k = strlen (name);
   XST (_T(_S(CLAUSE)));
   XST (_T(_S(NAME)));
   XAD(k);
@@ -531,7 +531,7 @@ static int FXTRAN_acc_simple (const char * t, const char * C, const FXTRAN_char_
 static int FXTRAN_acc_TILE (const char * t, const FXTRAN_char_info * ci, 
 		            FXTRAN_xmlctx * ctx)                         
 {                                                                       
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 1, 0, 1, 
+  return FXTRAN_acc_expr_clause (t, "TILE", ci, ctx, 0, 1, 0, 1, 
                                  _T (_S(SIZE) H _S(EXPR) H _S(LIST)));                     
 }
 
@@ -542,54 +542,46 @@ static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
   return FXTRAN_acc_simple (t, #T, ci, ctx);                            \
 }
 
-
-#define def_FXTRAN_acc_ktype(T) \
-static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
-		           FXTRAN_xmlctx * ctx)                         \
-{                                                                       \
-  return FXTRAN_acc_ktype (t, ci, ctx);                                 \
-}
-
 #define def_FXTRAN_acc_expr(T) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 0, 0, 0, NULL);         \
+  return FXTRAN_acc_expr_clause (t, #T, ci, ctx, 0, 0, 0, 0, NULL);     \
 }
 
 #define def_FXTRAN_acc_optional_expr(T) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 1, 0, 0, 0, NULL);         \
+  return FXTRAN_acc_expr_clause (t, #T, ci, ctx, 1, 0, 0, 0, NULL);     \
 }
 
 #define def_FXTRAN_acc_prefix_expr_list(T,N) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 1, 1, 0, N);            \
+  return FXTRAN_acc_expr_clause (t, #T, ci, ctx, 0, 1, 1, 0, N);        \
 }
 
 #define def_FXTRAN_acc_expr_list(T,N) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 0, 1, 0, 0, N);            \
+  return FXTRAN_acc_expr_clause (t, #T, ci, ctx, 0, 1, 0, 0, N);        \
 }
 
 #define def_FXTRAN_acc_optional_expr_list(T) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 1, 1, 0, 0, NULL);         \
+  return FXTRAN_acc_expr_clause (t, #T, ci, ctx, 1, 1, 0, 0, NULL);     \
 }
 
 #define def_FXTRAN_acc_optional_prefix_expr(T) \
 static int FXTRAN_acc_##T (const char * t, const FXTRAN_char_info * ci, \
 		           FXTRAN_xmlctx * ctx)                         \
 {                                                                       \
-  return FXTRAN_acc_expr_clause (t, ci, ctx, 1, 0, 2, 0, NULL);         \
+  return FXTRAN_acc_expr_clause (t, #T, ci, ctx, 1, 0, 2, 0, NULL);     \
 }
 
 def_FXTRAN_acc_expr (DEFAULT_ASYNC)
@@ -604,6 +596,8 @@ def_FXTRAN_acc_expr (IF)
 def_FXTRAN_acc_expr (COLLAPSE)
 def_FXTRAN_acc_optional_expr (SELF)
 def_FXTRAN_acc_expr_list (COPY, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_expr_list (DEVICE, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_expr_list (HOST, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (COPYIN, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (COPYOUT, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (CREATE, _T (_S(VARIABLE) H _S(LIST)))
@@ -744,7 +738,6 @@ void FXTRAN_dump_accd (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlct
   const char * str = type == FXTRAN_ACCD_NONE ? _T(_S(BROKEN) H _S(OPENACC)) : accd_as_str (type);
 
   XST (str);
-
 
 #define case_macro(T) \
   case FXTRAN_ACCD_##T: accd_##T##_extra (t, ci, ctx); break;
