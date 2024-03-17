@@ -2666,6 +2666,7 @@ def_extra_proto (DO)
   if (zstrcmp ("WHILE(", t))
     {
       int k;
+      XSP ();
       XAD(6);
       XST (_T(_S(TEST) H _S(EXPR)));
       k = FXTRAN_str_at_level (t, ci, ")", 0);
