@@ -61,6 +61,8 @@ typedef enum {
 
 
 #define FXTRAN_accc_list(macro) \
+  macro (DEVICE                    )       \
+  macro (HOST                      )       \
   macro (BIND                      )       \
   macro (NOHOST                    )       \
   macro (LINK                      )       \
