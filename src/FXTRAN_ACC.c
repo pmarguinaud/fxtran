@@ -366,18 +366,20 @@ static int FXTRAN_acc_expr_clause (const char * t, const char * name, const FXTR
                                    int prefix, int star, const char * list_tag)
 {
   const char * T = t;
-  int k, s;
+  int k;
   k = strlen (name);
   XST (_T(_S(CLAUSE)));
   XST (_T(_S(NAME)));
   XAD(k);
   XET ();
 
-  s = (t - T) + FXTRAN_acc_expr (t, ci, ctx, optional, list, prefix, star, 0, list_tag);
+  k = FXTRAN_acc_expr (t, ci, ctx, optional, list, prefix, star, 0, list_tag);
+
+  XAD(k);
 
   XET ();
 
-  return s;
+  return t - T;
 }
 
 static int FXTRAN_acc_DEFAULT (const char * t, const FXTRAN_char_info * ci, 
