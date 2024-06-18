@@ -326,11 +326,11 @@ int FXTRAN_cpp_intf (const char * f, FXTRAN_file ** pf,
 	}
     }  
 
+  /* Empty file ? */
   if (cla.base == NULL)
     {
-      int len; 
-
-      record_cpploc ();
+      FXTRAN_grow_cpp2loc_array (&cla, 1);                            
+      FXTRAN_curr_cpp2loc_array (&cla)->file = data->current;    
     }
 
 #undef record_cpploc
