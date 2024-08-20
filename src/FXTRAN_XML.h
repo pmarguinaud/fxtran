@@ -127,7 +127,7 @@ void FXTRAN_xml_skip (FXTRAN_xmlctx *, int);
 
 #define XSP() \
   do {                                              \
-    if (FXTRAN_XML_dump && ctx->opts.canonic)       \
+    if (FXTRAN_XML_dump && ctx->opts.strip_spaces)  \
       {                                             \
         int pos = ci[-1].offset+1;                  \
         if (pos >= 0)                               \

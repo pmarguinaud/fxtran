@@ -61,7 +61,7 @@ FXTRAN_FBUFFER;
   do { (b)->cur = (b)->str; (b)->cur[0] = 0; } while (0)
 
 
-int FXTRAN_FBUFFER_append_escaped_str (FXTRAN_FBUFFER *, const char *, int, int, int, int, int, int, int);
+int FXTRAN_FBUFFER_append_escaped_str (FXTRAN_FBUFFER *, const char *, int, int, int, int, int, int);
 
 int FXTRAN_FBUFFER_printf (FXTRAN_FBUFFER *, const char *, ...);
 
