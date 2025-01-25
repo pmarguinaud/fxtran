@@ -39,7 +39,7 @@ struct token_spelling
 };
 
 static const unsigned char *const digraph_spellings[] =
-{ U"%:", U"%:%:", U"<:", U":>", U"<%", U"%>" };
+{ (const unsigned char*)U"%:", (const unsigned char*)U"%:%:", (const unsigned char*)U"<:", (const unsigned char*)U":>", (const unsigned char*)U"<%", (const unsigned char*)U"%>" };
 
 #define OP(e, s) { SPELL_OPERATOR, U s  },
 #define TK(e, s) { SPELL_ ## s,    U #e },

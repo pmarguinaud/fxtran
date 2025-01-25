@@ -226,8 +226,8 @@ _cpp_builtin_macro_text (cpp_reader *pfile, cpp_hashnode *node)
 	      cpp_errno (pfile, CPP_DL_WARNING,
 			 "could not determine date and time");
 		
-	      pfile->date = U"\"??? ?? ????\"";
-	      pfile->time = U"\"??:??:??\"";
+	      pfile->date = (const unsigned char *)U"\"??? ?? ????\"";
+	      pfile->time = (const unsigned char *)U"\"??:??:??\"";
 	    }
 	}
 

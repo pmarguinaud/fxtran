@@ -128,6 +128,8 @@ cd ..
 
 dpkg-scanpackages -m . > Packages
 
+sudo apt-get update
+
 EOF
  
 chmod 755 $SHARED/fxtran-build.sh 

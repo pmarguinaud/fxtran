@@ -189,7 +189,7 @@ DIRECTIVE_TABLE
    did use this notation in its preprocessed output.  */
 static const directive linemarker_dir =
 {
-  do_linemarker, U"#", 1, KANDR, IN_I
+  do_linemarker, (const unsigned char*)U"#", 1, KANDR, IN_I
 };
 
 #define SEEN_EOL() (pfile->cur_token[-1].type == CPP_EOF)
@@ -644,7 +644,7 @@ parse_include (cpp_reader *pfile, int *pangle_brackets)
       const unsigned char *dir;
 
       if (pfile->directive == &dtable[T_PRAGMA])
-	dir = U"pragma dependency";
+	dir = (const unsigned char*)U"pragma dependency";
       else
 	dir = pfile->directive->name;
       cpp_error (pfile, CPP_DL_ERROR, "#%s expects \"FILENAME\" or <FILENAME>",
