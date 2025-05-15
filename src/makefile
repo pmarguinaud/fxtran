@@ -12,7 +12,7 @@ ifeq ($(DEB_BUILD_ARCH), )
 RPATH=-Wl,-rpath,$(ROOT)/lib
 endif
 
-all: $(TOP)/bin/fxtran
+all: $(TOP)/bin/fxtran $(TOP)/bin/fxtran_stat
 
 $(TOP)/bin/fxtran: FXTRAN_ALPHA.h fxtran.o $(TOP)/lib/libfxtran.so.0
 	@mkdir -p ../bin
@@ -28,6 +28,15 @@ FXTRAN_ALPHA.h: FXTRAN_ALPHA.pl
 	@./FXTRAN_ALPHA.pl
 clean:
 	\rm -f *.o *~ $(TOP)/bin/fxtran $(TOP)/lib/libfxtran.so.0 $(TOP)/lib/libfxtran.so
+	\rm -f $(TOP)/bin/fxtran_stat $(TOP)/lib/libfxtran_stat.a
 	cd cpp && make clean
 
+$(TOP)/bin/fxtran_stat: FXTRAN_ALPHA.h fxtran.o $(TOP)/lib/libfxtran_stat.a
+	@mkdir -p ../bin
+	$(CC) -o $(TOP)/bin/fxtran_stat fxtran.o $(RPATH) -L$(TOP)/lib -lfxtran_stat $(LDFLAGS)
+
+$(TOP)/lib/libfxtran_stat.a: $(OBJ)
+	cd cpp && make
+	@mkdir -p ../lib
+	ar -rs $(TOP)/lib/libfxtran_stat.a $(OBJ) cpp/*.o
 
