@@ -12,11 +12,21 @@ ifeq ($(DEB_BUILD_ARCH), )
 RPATH=-Wl,-rpath,$(ROOT)/lib
 endif
 
-all: $(TOP)/bin/fxtran
+all: $(TOP)/bin/fxtran $(TOP)/lib/libfxtran.so.0
+
+ifeq ($(STATIC), 1)
+
+$(TOP)/bin/fxtran: FXTRAN_ALPHA.h fxtran.o $(TOP)/lib/libfxtran.so.0
+	@mkdir -p ../bin
+	$(CC) -o $(TOP)/bin/fxtran fxtran.o $(OBJ) cpp/*.o -L$(TOP)/lib $(LDFLAGS)
+
+else
 
 $(TOP)/bin/fxtran: FXTRAN_ALPHA.h fxtran.o $(TOP)/lib/libfxtran.so.0
 	@mkdir -p ../bin
 	$(CC) -o $(TOP)/bin/fxtran fxtran.o $(RPATH) -L$(TOP)/lib -lfxtran $(LDFLAGS)
+
+endif
 
 $(TOP)/lib/libfxtran.so.0: $(OBJ)
 	cd cpp && make
