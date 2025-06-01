@@ -16,3 +16,7 @@ endif
 CFLAGS=-Wall -g -fPIC -I$(ROOT)/src/obstack -I$(ROOT)/src/cpp -I$(ROOT)/include -O$(OPT) $(CFLAGS_USER)
 LDFLAGS=$(LDFLAGS_USER)
 
+ifeq ($(NO_OBSTACK), 1)
+CFLAGS+=-DNO_OBSTACK
+endif
+
