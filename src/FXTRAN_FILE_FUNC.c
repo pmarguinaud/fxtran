@@ -95,7 +95,19 @@ int FXTRAN_dump_include (FXTRAN_file * f, FXTRAN_xmlctx * ctx, int do_abort, int
     }
 
   for (; isspc (f->text_cur[n2]); n2++);
+
   q = f->text_cur[n2++];
+
+  switch (q)
+    {
+      case '<':
+        q = '>';
+      case '"':
+      case '\'':
+        break;
+      default:
+        goto malformed;
+    }
 
   for (n3 = n2 + 1; f->text_cur[n3] && (f->text_cur[n3] != q); n3++);
 
