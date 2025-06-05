@@ -897,7 +897,7 @@ other:
 #define i_isalnum(c) \
   ((((c) >= 'A') && ((c) <= 'Z')) || (((c) >= '0') && ((c) <= '9')))
 
-static void op_chrs (const char * t, int len, int unary, int * rank, int * order)
+static void op_chrs (const char * t, int len, int unary, float * rank, int * order)
 {
 /*
  *  13          defined unary
@@ -923,8 +923,8 @@ static void op_chrs (const char * t, int len, int unary, int * rank, int * order
     }
 
   opcmp ("**",  12, -1)
-  opcmp ("*",   11, +1)
-  opcmp ("/",   11, +1)
+  opcmp ("*",   11.0, +1)
+  opcmp ("/",   11.5, +1)
 
   if (unary)
     {
@@ -933,8 +933,8 @@ static void op_chrs (const char * t, int len, int unary, int * rank, int * order
     }
   else
     {
-      opcmp ("+",    9, +1)
-      opcmp ("-",    9, +1)
+      opcmp ("+",    9.0, +1)
+      opcmp ("-",    9.5, +1)
     }
 
   opcmp ("//",    8, +1)
@@ -975,10 +975,10 @@ static void op_chrs (const char * t, int len, int unary, int * rank, int * order
 
 static void FXTRAN_expr1 (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx,
 		          const int * K1, const int * K2, const int * OP, 
-			  const int * R,  const int * O,  int kop)
+			  const float * R,  const int * O,  int kop)
 {
   int imin1 = -1, imin2 = -1, i;
-  int rankmin = 9999;
+  float rankmin = 9999.0;
 
   for (i = 0; i < kop; i++)
     if (OP[i] && ((i == 0) || OP[i-1] == 0))
@@ -1039,7 +1039,8 @@ static void FXTRAN_expr0 (const char * t, const FXTRAN_char_info * ci, FXTRAN_xm
 		          const int * K1, const int * K2, const int * OP, int kop)
 {
   int i;
-  int R[kop], O[kop];
+  float R[kop];
+  int O[kop];
 
   for (i = 0; i < kop; i++)
     if (OP[i])
