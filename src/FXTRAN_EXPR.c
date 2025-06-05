@@ -924,7 +924,7 @@ static void op_chrs (const char * t, int len, int unary, float * rank, int * ord
 
   opcmp ("**",  12, -1)
   opcmp ("*",   11.0, +1)
-  opcmp ("/",   11.5, +1)
+  opcmp ("/",   11.5, -1)
 
   if (unary)
     {
@@ -934,7 +934,7 @@ static void op_chrs (const char * t, int len, int unary, float * rank, int * ord
   else
     {
       opcmp ("+",    9.0, +1)
-      opcmp ("-",    9.5, +1)
+      opcmp ("-",    9.5, -1)
     }
 
   opcmp ("//",    8, +1)
