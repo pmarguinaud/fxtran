@@ -24,6 +24,8 @@ void FXTRAN_dump_ompd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *);
   macro (ENDPARALLELSECTIONS        )        \
   macro (PARALLELWORKSHARE          )        \
   macro (ENDPARALLELWORKSHARE       )        \
+  macro (DOSIMD                     )        \
+  macro (ENDDOSIMD                  )        \
   macro (DO                         )        \
   macro (ENDDO                      )        \
   macro (SINGLE                     )        \

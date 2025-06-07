@@ -142,6 +142,8 @@ static const char * ompd_as_str (FXTRAN_ompd_type type)
       case FXTRAN_OMPD_ENDPARALLELSECTIONS     :  return _T(_S(END) H _S(PARALLEL) H _S(SECTIONS) H _S(OPENMP))            ;
       case FXTRAN_OMPD_PARALLELWORKSHARE       :  return _T(_S(PARALLEL) H _S(WORK) H _S(SHARE) H _S(OPENMP))              ;
       case FXTRAN_OMPD_ENDPARALLELWORKSHARE    :  return _T(_S(END) H _S(PARALLEL) H _S(WORK) H _S(SHARE) H _S(OPENMP))    ;
+      case FXTRAN_OMPD_DOSIMD                  :  return _T(_S(DO) H _S(SIMD) H _S(OPENMP))                                ;
+      case FXTRAN_OMPD_ENDDOSIMD               :  return _T(_S(END) H _S(DO) H _S(SIMD) H _S(OPENMP))                      ;
       case FXTRAN_OMPD_DO                      :  return _T(_S(DO) H _S(OPENMP))                                           ;
       case FXTRAN_OMPD_ENDDO                   :  return _T(_S(END) H _S(DO) H _S(OPENMP))                                 ;
       case FXTRAN_OMPD_SINGLE                  :  return _T(_S(SINGLE) H _S(OPENMP))                                       ;
@@ -531,6 +533,8 @@ def_ompd_extra_clause_list (PARALLELSECTIONS)
 def_ompd_extra_clause_list (ENDPARALLELSECTIONS)
 def_ompd_extra_clause_list (PARALLELWORKSHARE)
 def_ompd_extra_clause_list (ENDPARALLELWORKSHARE)
+def_ompd_extra_clause_list (DOSIMD)
+def_ompd_extra_clause_list (ENDDOSIMD)   
 def_ompd_extra_clause_list (DO)
 def_ompd_extra_clause_list (ENDDO)   
 def_ompd_extra_clause_list (SINGLE)

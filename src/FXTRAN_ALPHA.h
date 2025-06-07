@@ -215,6 +215,7 @@
 #define FXTRAN_STRING_SET                            "set"
 #define FXTRAN_STRING_SHAPE                          "shape"
 #define FXTRAN_STRING_SHARE                          "share"
+#define FXTRAN_STRING_SIMD                           "simd"
 #define FXTRAN_STRING_SHUTDOWN                       "shutdown"
 #define FXTRAN_STRING_SINGLE                         "single"
 #define FXTRAN_STRING_SIZE                           "size"
