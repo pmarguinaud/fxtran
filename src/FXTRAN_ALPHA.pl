@@ -214,7 +214,8 @@ my @x = qw[
   set                                                            SET
   shape                                                          SHAPE
   share                                                          SHARE
-  shutdown                                                       SHUTDOWN
+  shutdown                                                       SHUTDOWN 
+  simd                                                           SIMD
   single                                                         SINGLE
   size                                                           SIZE
   specific                                                       SPECIFIC
