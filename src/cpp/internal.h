@@ -397,11 +397,11 @@ struct cpp_reader
 
   /* Obstack holding all macro hash nodes.  This never shrinks.
      See identifiers.c */
-  struct obstack hash_ob;
+  fxtran_obstack_t hash_ob;
 
   /* Obstack holding buffer and conditional structures.  This is a
      real stack.  See directives.c.  */
-  struct obstack buffer_ob;
+  fxtran_obstack_t buffer_ob;
 
   /* Pragma table - dynamic, because a library user can add to the
      list of recognized pragmas.  */

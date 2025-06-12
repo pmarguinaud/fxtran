@@ -24,7 +24,7 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #include "cpplib.h"
 #include "internal.h"
 #include "mkdeps.h"
-#include "obstack.h"
+#include "fxtran-obstack.h"
 
 /* Stack of conditionals currently in progress
    (including both successful and failing conditionals).  */
@@ -1627,7 +1627,7 @@ do_endif (cpp_reader *pfile)
 
       buffer->if_stack = ifs->next;
       pfile->state.skipping = ifs->was_skipping;
-      obstack_free (&pfile->buffer_ob, ifs);
+      fxtran_obstack_free (&pfile->buffer_ob, ifs);
     }
 }
 
@@ -2073,7 +2073,7 @@ _cpp_pop_buffer (cpp_reader *pfile)
 
   /* Free the buffer object now; we may want to push a new buffer
      in _cpp_push_next_include_file.  */
-  obstack_free (&pfile->buffer_ob, buffer);
+  fxtran_obstack_free (&pfile->buffer_ob, buffer);
 
   if (inc)
     {

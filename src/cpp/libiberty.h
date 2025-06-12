@@ -278,7 +278,7 @@ extern double physmem_available PARAMS ((void));
 
 /* Type-safe obstack allocator.  */
 
-#define XOBNEW(O, T)		((T *) obstack_alloc ((O), sizeof (T)))
+#define XOBNEW(O, T)		((T *) fxtran_obstack_alloc ((O), sizeof (T)))
 
 
 /* hex character manipulation routines */

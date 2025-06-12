@@ -59,11 +59,11 @@ ht_create (unsigned int order)
   table = xcalloc (1, sizeof (hash_table));
 
   /* Strings need no alignment.  */
-  _obstack_begin (&table->stack, 0, 0,
+  _fxtran_obstack_begin (&table->stack, 0, 0,
 		  (void *(*) (long)) xmalloc,
 		  (void (*) (void *)) free);
 
-  obstack_alignment_mask (&table->stack) = 0;
+  fxtran_obstack_alignment_mask (&table->stack) = 0;
 
   table->entries = xcalloc (nslots, sizeof (hashnode));
   table->entries_owned = true;
@@ -76,7 +76,7 @@ ht_create (unsigned int order)
 void
 ht_destroy (hash_table *table)
 {
-  obstack_free (&table->stack, NULL);
+  fxtran_obstack_free (&table->stack, NULL);
   if (table->entries_owned)
     free (table->entries);
   free (table);
@@ -123,7 +123,7 @@ ht_lookup_with_hash (hash_table *table, const unsigned char *str,
 	  if (insert == HT_ALLOCED)
 	    /* The string we search for was placed at the end of the
 	       obstack.  Release it.  */
-	    obstack_free (&table->stack, (void *) str);
+	    fxtran_obstack_free (&table->stack, (void *) str);
 	  return node;
 	}
 
@@ -146,7 +146,7 @@ ht_lookup_with_hash (hash_table *table, const unsigned char *str,
 	      if (insert == HT_ALLOCED)
 	      /* The string we search for was placed at the end of the
 		 obstack.  Release it.  */
-		obstack_free (&table->stack, (void *) str);
+		fxtran_obstack_free (&table->stack, (void *) str);
 	      return node;
 	    }
 	}
@@ -161,7 +161,7 @@ ht_lookup_with_hash (hash_table *table, const unsigned char *str,
   HT_LEN (node) = (unsigned int) len;
   node->hash_value = hash;
   if (insert == HT_ALLOC)
-    HT_STR (node) = obstack_copy0 (&table->stack, str, len);
+    HT_STR (node) = fxtran_obstack_copy0 (&table->stack, str, len);
   else
     HT_STR (node) = str;
 
@@ -280,7 +280,7 @@ ht_dump_statistics (hash_table *table)
   while (++p < limit);
 
   nelts = table->nelements;
-  overhead = obstack_memory_used (&table->stack) - total_bytes;
+  overhead = fxtran_obstack_memory_used (&table->stack) - total_bytes;
   headers = table->nslots * sizeof (hashnode);
 
   fprintf (stderr, "\nString pool\nentries\t\t%lu\n",

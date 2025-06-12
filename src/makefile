@@ -18,7 +18,7 @@ ifeq ($(STATIC), 1)
 
 $(TOP)/bin/fxtran: FXTRAN_ALPHA.h fxtran.o $(TOP)/lib/libfxtran.so.0
 	@mkdir -p ../bin
-	$(CC) -o $(TOP)/bin/fxtran fxtran.o $(OBJ) cpp/*.o -L$(TOP)/lib $(LDFLAGS)
+	$(CC) -o $(TOP)/bin/fxtran fxtran.o $(OBJ) cpp/*.o obstack/*.o -L$(TOP)/lib $(LDFLAGS)
 
 else
 
@@ -30,8 +30,9 @@ endif
 
 $(TOP)/lib/libfxtran.so.0: $(OBJ)
 	cd cpp && make
+	cd obstack && make
 	@mkdir -p ../lib
-	$(CC) -shared -Wl,-soname,libfxtran.so.0 -o $(TOP)/lib/libfxtran.so.0 $(OBJ) cpp/*.o $(LDFLAGS)
+	$(CC) -shared -Wl,-soname,libfxtran.so.0 -o $(TOP)/lib/libfxtran.so.0 $(OBJ) cpp/*.o obstack/*.o $(LDFLAGS)
 	@ln -sf libfxtran.so.0 $(TOP)/lib/libfxtran.so
 
 FXTRAN_ALPHA.h: FXTRAN_ALPHA.pl
@@ -39,5 +40,6 @@ FXTRAN_ALPHA.h: FXTRAN_ALPHA.pl
 clean:
 	\rm -f *.o *~ $(TOP)/bin/fxtran $(TOP)/lib/libfxtran.so.0 $(TOP)/lib/libfxtran.so
 	cd cpp && make clean
+	cd obstack && make clean
 
 

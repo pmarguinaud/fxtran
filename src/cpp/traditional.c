@@ -354,6 +354,10 @@ _cpp_scan_out_logical_line (cpp_reader *pfile, cpp_macro *macro)
   const uchar *start_of_input_line;
   int nspace = 0;
 
+  fmacro.args = 0;
+  fmacro.argc = 0;
+  fmacro.node = 0;
+  fmacro.offset = 0;
   fmacro.buff = NULL;
 
   quote = 0;

@@ -37,7 +37,7 @@ alloc_node (hash_table *table)
 {
   cpp_hashnode *node;
 
-  node = obstack_alloc (&table->pfile->hash_ob, sizeof (cpp_hashnode));
+  node = fxtran_obstack_alloc (&table->pfile->hash_ob, sizeof (cpp_hashnode));
   memset (node, 0, sizeof (cpp_hashnode));
   return node;
 }
@@ -55,7 +55,7 @@ _cpp_init_hashtable (cpp_reader *pfile, hash_table *table)
       table = ht_create (13);	/* 8K (=2^13) entries.  */
       table->alloc_node = (hashnode (*) (hash_table *)) alloc_node;
 
-      _obstack_begin (&pfile->hash_ob, 0, 0,
+      _fxtran_obstack_begin (&pfile->hash_ob, 0, 0,
 		      (void *(*) (long)) xmalloc,
 		      (void (*) (void *)) free);
     }
@@ -82,7 +82,7 @@ _cpp_destroy_hashtable (cpp_reader *pfile)
   if (pfile->our_hashtable)
     {
       ht_destroy (pfile->hash_table);
-      obstack_free (&pfile->hash_ob, 0);
+      fxtran_obstack_free (&pfile->hash_ob, 0);
     }
 }
 

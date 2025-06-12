@@ -207,7 +207,7 @@ cpp_create_reader (enum c_lang lang, hash_table *table,
   _cpp_expand_op_stack (pfile);
 
   /* Initialize the buffer obstack.  */
-  _obstack_begin (&pfile->buffer_ob, 0, 0,
+  _fxtran_obstack_begin (&pfile->buffer_ob, 0, 0,
 		  (void *(*) (long)) xmalloc,
 		  (void (*) (void *)) free);
 
@@ -243,7 +243,7 @@ cpp_destroy (cpp_reader *pfile)
 
   if (pfile->deps)
     deps_free (pfile->deps);
-  obstack_free (&pfile->buffer_ob, 0);
+  fxtran_obstack_free (&pfile->buffer_ob, 0);
 
   _cpp_destroy_hashtable (pfile);
   _cpp_cleanup_files (pfile);

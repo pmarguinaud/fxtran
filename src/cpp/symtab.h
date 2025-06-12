@@ -18,7 +18,7 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #ifndef LIBCPP_SYMTAB_H
 #define LIBCPP_SYMTAB_H
 
-#include "obstack.h"
+#include "fxtran-obstack.h"
 #define GTY(x) /* nothing */
 
 /* This is what each hash table entry points to.  It may be embedded
@@ -43,7 +43,7 @@ enum ht_lookup_option {HT_NO_INSERT = 0, HT_ALLOC, HT_ALLOCED};
 struct ht
 {
   /* Identifiers are allocated from here.  */
-  struct obstack stack;
+  fxtran_obstack_t stack;
 
   hashnode *entries;
   /* Call back, allocate a node.  */
