@@ -13,7 +13,7 @@ ifeq ($(DEBUG), 1)
   OPT=0
 endif
 
-CFLAGS=-Wall -g -fPIC -I$(ROOT)/src/obstack -I$(ROOT)/src/cpp -I$(ROOT)/include -O$(OPT) $(CFLAGS_USER)
+CFLAGS=-Wall -g -fPIC -I$(ROOT)/src/obstack -I$(ROOT)/src/cpp -I$(ROOT)/include -O$(OPT) $(CFLAGS_USER) -fsigned-char
 LDFLAGS=$(LDFLAGS_USER)
 
 ifeq ($(NO_OBSTACK), )
