@@ -10,7 +10,7 @@ use File::Basename;
 
 use XSLoader;
 our @EXPORT = qw (parse s t e n);
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 &XSLoader::load ('fxtran', $VERSION);
 
 sub t

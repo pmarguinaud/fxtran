@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use Data::Dumper;
 use XML::LibXML;
+use FileHandle;
 
 use Test::More tests => 3;
 BEGIN { use_ok('fxtran') };
@@ -13,13 +14,13 @@ use FileHandle;
 print STDERR &fxtran::help (), "\n";
 
 
-my $doc = &s ('REAL (KIND=JPRB) :: X (10)');
+my $stmt = &s ('REAL (KIND=JPRB) :: X (10)');
 
 my $fh = \*STDERR; # 'FileHandle'->new (">fxtran.log");
 
-$fh->print ("\n" x 3, $doc, "\n" x 3);
+$fh->print ("\n" x 3, $stmt, "\n" x 3);
 
-$fh->print (&F ('//EN-decl', $doc), "\n");
+$fh->print (&F ('//EN-decl', $stmt), "\n");
 
 eval
 {
@@ -52,3 +53,22 @@ print STDERR $parser->parseExpression ('N + 1'), "\n";
 print STDERR &fxtran::parse (expr => 'SIN (X)'), "\n";
 
 print STDERR &e ('0'), "\n";
+
+'FileHandle'->new ('>test.F90')->print (<< 'EOF');
+PROGRAM MAIN
+
+CALL SS ()
+
+END
+EOF
+
+&fxtran::setOptions ('Location', -line_numbers => 1);
+my $d = &fxtran::parse (location => 'test.F90'); 
+
+print STDERR $d->toString . "\n";
+
+my @stmt = &F ('.//ANY-stmt', $d);
+
+print STDERR &Dumper ([map { ($_, $_->line_number ()) } @stmt]);
+
+unlink ($_) for ('test.F90', 'test.F90.xml');

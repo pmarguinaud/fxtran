@@ -13,12 +13,12 @@ sub new
   my $class = shift;
   my $self = bless 
     {
-      optionsString     => [qw (-construct-tag -no-include)],
-      optionsProgram    => [qw (-construct-tag -no-include)],
-      optionsLocation   => [qw (-construct-tag -no-include)],
-      optionsFragment   => [qw (-construct-tag -no-include)],
-      optionsStatement  => [qw (-line-length 512)],
-      optionsExpression => [qw (-line-length 512)],
+      optionsString     => [qw (-construct-tag -no-include)],      optionsXmlString     => {},
+      optionsProgram    => [qw (-construct-tag -no-include)],      optionsXmlProgram    => {},
+      optionsLocation   => [qw (-construct-tag -no-include)],      optionsXmlLocation   => {},
+      optionsFragment   => [qw (-construct-tag -no-include)],      optionsXmlFragment   => {},
+      optionsStatement  => [qw (-line-length 512)],                optionsXmlStatement  => {},
+      optionsExpression => [qw (-line-length 512)],                optionsXmlExpression => {},
     }, $class;
   return $self;
 }
@@ -26,7 +26,7 @@ sub new
 sub setOptions
 {
   my $self = shift;
-  
+
   my @what;
 
   while ($_[0] !~ m/^[+-]/o)
@@ -44,7 +44,7 @@ sub setOptions
 
   for my $what (@what)
     {
-      my $list = $self->{"options$what"};
+      my ($list, $hashXml) = @{ $self }{("options$what", "optionsXml$what")};
 
       my @o = @opt;     
 
@@ -52,31 +52,48 @@ sub setOptions
         {
           my $opt = shift (@o);
           my ($c, $name) = ($opt =~ m/^([+-])(\w\S+\w)$/o);
-          if ($opts{$name}[0] eq 'FLAG')
+
+          if ($opts{$name})
             {
-              @$list = grep { $_ ne "-$name" } @$list;
-              if ($c eq '-')
+              if ($opts{$name}[0] eq 'FLAG')
                 {
-                  push @$list, "-$name";
+                  @$list = grep { $_ ne "-$name" } @$list;
+                  if ($c eq '-')
+                    {
+                      push @$list, "-$name";
+                    }
+                }
+              else
+                {
+                  for my $i (0 .. $#{$list})
+                    {
+                      if ($list->[$i] eq "-$name")
+                        {
+                          splice (@$list, $i, 2);
+                          last;
+                        }
+                    }
+                  if ($c eq '-')
+                    {
+                      push @$list, "-$name", shift (@o);
+                    }
                 }
             }
           else
             {
-              for my $i (0 .. $#{$list})
-                {
-                  if ($list->[$i] eq "-$name")
-                    {
-                      splice (@$list, $i, 2);
-                      last;
-                    }
-                }
               if ($c eq '-')
                 {
-                  push @$list, "-$name", shift (@o);
+                  $hashXml->{$name} = shift (@o);
+                }
+              else
+                {
+                  delete $hashXml->{$name};
                 }
             }
         }
     }
+
+
 }
 
 
@@ -134,6 +151,7 @@ sub parseString
 
   my %args = @_;
   my @fopts = @{ $args{fopts} || $self->{optionsString} };
+  my @xopts = $args{xopts} ? @{ $args{xopts} } : %{ $self->{optionsXmlString} };
 
   use File::Temp;     
   my $fh = 'File::Temp'->new (SUFFIX => '.F90');     
@@ -141,7 +159,7 @@ sub parseString
   $fh->flush ();     
   system ('fxtran', @fopts, $fh->filename)     
     && die ($string);
-  my $doc = 'XML::LibXML'->load_xml (location => $fh->filename . '.xml');
+  my $doc = 'XML::LibXML'->load_xml (location => $fh->filename . '.xml', @xopts);
   return $doc;     
 }
 
@@ -152,11 +170,12 @@ sub parseProgram
 
   my %args = @_;
   my @fopts = @{ $args{fopts} || $self->{optionsProgram} };
+  my @xopts = $args{xopts} ? @{ $args{xopts} } : %{ $self->{optionsXmlProgram} };
 
   chomp ($program);
   my $xml = eval { &fxtran::run (@fopts, $program) };
   $@ && &croak ($@);
-  my $doc = 'XML::LibXML'->load_xml (string => $xml);
+  my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);
   $doc = $doc->lastChild->firstChild;     
   my @c = $doc->childNodes ();     
   return @c;     
@@ -169,6 +188,7 @@ sub parseFragment
 
   my %args = @_;
   my @fopts = @{ $args{fopts} || $self->{optionsFragment} };
+  my @xopts = $args{xopts} ? @{ $args{xopts} } : %{ $self->{optionsXmlFragment} };
 
   chomp ($fragment);
   my $program = << "EOF";      
@@ -177,7 +197,7 @@ END
 EOF
   my $xml = eval { &fxtran::run (@fopts, $program) };
   $@ && &croak ($@);
-  my $doc = 'XML::LibXML'->load_xml (string => $xml);
+  my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);
   $doc = $doc->lastChild->firstChild;     
   $doc->lastChild->unbindNode () for (1 .. 2);     
   my @c = $doc->childNodes ();     
@@ -191,6 +211,7 @@ sub parseStatement
 
   my %args = @_;
   my @fopts = @{ $args{fopts} || $self->{optionsStatement} };
+  my @xopts = $args{xopts} ? @{ $args{xopts} } : %{ $self->{optionsXmlStatement} };
 
   my $program = << "EOF";      
 $statement
@@ -198,7 +219,7 @@ END
 EOF
    my $xml = eval { &fxtran::run (@fopts, $program) };
    $@ && &croak ($@);
-   my $doc = 'XML::LibXML'->load_xml (string => $xml);
+   my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);
    my $n = $doc->documentElement->firstChild->firstChild;     
    return $n;     
 }
@@ -210,6 +231,7 @@ sub parseExpression
 
   my %args = @_;
   my @fopts = @{ $args{fopts} || $self->{optionsExpression} };
+  my @xopts = $args{xopts} ? @{ $args{xopts} } : %{ $self->{optionsXmlExpression} };
 
   my $program = << "EOF";      
 X = $expression
@@ -218,7 +240,7 @@ EOF
 
   my $xml = eval { &fxtran::run (@fopts, $program) };
   $@ && &croak ($@);
-  my $doc = 'XML::LibXML'->load_xml (string => $xml);
+  my $doc = 'XML::LibXML'->load_xml (string => $xml, @xopts);
   my $n = $doc->documentElement->firstChild->firstChild->lastChild->firstChild;     
   return $n;     
 }
@@ -230,6 +252,7 @@ sub parseLocation
 
   my %args = @_;
   my @fopts = @{ $args{fopts} || $self->{optionsLocation} };
+  my @xopts = $args{xopts} ? @{ $args{xopts} } : %{ $self->{optionsXmlLocation} };
 
   use File::stat;     
   use File::Basename;
@@ -242,7 +265,7 @@ sub parseLocation
   system (@cmd)     
      && &croak ("`@cmd' failed\n");     
      
-  my $doc = 'XML::LibXML'->load_xml (location => $xml);
+  my $doc = 'XML::LibXML'->load_xml (location => $xml, @xopts);
   return $doc;
 }     
 
