@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://github.com/pmarguinaud/fxtran/share/doc/fxtran/ARTICLE.md</loc>
+    <loc>https://pmarguinaud.github.io/fxtran/share/doc/fxtran/ARTICLE.md</loc>
     <lastmod>2025-02-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://github.com/pmarguinaud/fxtran/share/doc/fxtran/fxtran.pdf</loc>
+    <loc>https://pmarguinaud.github.io/fxtran/share/doc/fxtran/fxtran.pdf</loc>
     <lastmod>2025-02-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://github.com/pmarguinaud/fxtran/README.md</loc>
-    <lastmod>2025-02-01</lastmod>
+    <loc>https://pmarguinaud.github.io/fxtran/README.md</loc>
+    <lastmod>2025-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1</priority>
   </url>
