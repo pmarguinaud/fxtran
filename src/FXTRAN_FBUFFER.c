@@ -73,11 +73,32 @@ int FXTRAN_FBUFFER_append_escaped_str
                   c = toupper (c);
 		if (strip_spaces && code)
                   {
-                    char c1 = i == 0 ? buf->str[buf->pos1oflaststr-1] : buf->cur[-1], c2 = c;
-                    if (isalnum (c1) && (c2 == '('))
-                      FXTRAN_FBUFFER_putc (buf, ' ');
-                    if ((c1 == ')') && isalnum (c2))
-                      FXTRAN_FBUFFER_putc (buf, ' ');
+                    int ok = 1;
+                    char c1, c2 = c;
+
+                    if (i == 0)
+                      {
+                        if (buf->pos1oflaststr > 0)
+                          {
+                            c1 = buf->str[buf->pos1oflaststr-1];
+                          }
+                        else
+                          {
+                            ok = 0;
+                          }
+                      }
+                    else
+                      {
+                        c1 = buf->cur[-1];
+                      }
+                    
+                    if (ok)
+                      {
+                        if (isalnum (c1) && (c2 == '('))
+                          FXTRAN_FBUFFER_putc (buf, ' ');
+                        if ((c1 == ')') && isalnum (c2))
+                          FXTRAN_FBUFFER_putc (buf, ' ');
+                      }
                   }
                 FXTRAN_FBUFFER_putc (buf, c);
               }
