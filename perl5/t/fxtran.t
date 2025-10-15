@@ -3,6 +3,8 @@ use warnings;
 use Data::Dumper;
 use XML::LibXML;
 use FileHandle;
+use FindBin qw ($Bin);
+
 
 use Test::More tests => 3;
 BEGIN { use_ok('fxtran') };
@@ -61,6 +63,8 @@ CALL SS ()
 
 END
 EOF
+
+$ENV{PATH} = "$Bin/../../bin:$ENV{PATH}";
 
 &fxtran::setOptions ('Location', -line_numbers => 1);
 my $d = &fxtran::parse (location => 'test.F90'); 
