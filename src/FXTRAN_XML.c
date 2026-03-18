@@ -37,6 +37,7 @@ const char
    * FXTRAN_OMD_TAG=  "omp",
    * FXTRAN_OMC_TAG=  "omp",
    * FXTRAN_ACC_TAG=  "acc",
+   * FXTRAN_OTD_TAG=  "omptarget",
    * FXTRAN_BOZ_TAG=  "boz",
    * FXTRAN_ZER_TAG=  "zer"
 ;
@@ -292,6 +293,7 @@ static int adv_pos0 (FXTRAN_xmlctx * ctx, int pos, int noendtag, int print)
                 dump_txt_by_mask (FXTRAN_OMD);
                 dump_txt_by_mask (FXTRAN_OMC);
                 dump_txt_by_mask (FXTRAN_ACC);
+                dump_txt_by_mask (FXTRAN_OTD);
 #undef dump_txt_by_mask
                 case FXTRAN_DDD:
                   dump_txt_tag (ctx, pos1+i1, pos1+i2, FXTRAN_DDD, ctx->opts.directive);

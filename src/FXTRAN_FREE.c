@@ -20,6 +20,7 @@
 #include "FXTRAN_ERROR.h"
 #include "FXTRAN_OMP.h"
 #include "FXTRAN_ACC.h"
+#include "FXTRAN_OMP_TARGET.h"
 #include "FXTRAN_DDD.h"
 
 
@@ -56,6 +57,7 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
      {                                   \
        omp = 0;                          \
        acc = 0;                          \
+       otd = 0;                          \
        ddd = 0;                          \
        S = 1;                            \
      }                                   \
@@ -63,15 +65,17 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
      {                                   \
        S = S && (fc_isspace (text[i]));  \
      }                                   \
-   if ((!omp) && (!acc) && (!ddd) && c   \
+   if ((!omp) && (!acc) && (!otd) && (!ddd) && c \
     && (ci[i].mask != FXTRAN_SPC)        \
     && (ci[i].mask != FXTRAN_COM)        \
     && (ci[i].mask != FXTRAN_OMD)        \
     && (ci[i].mask != FXTRAN_ACC)        \
+    && (ci[i].mask != FXTRAN_OTD)        \
     && (ci[i].mask != FXTRAN_OMC))       \
      {                                   \
        OMP = 0;                          \
        ACC = 0;                          \
+       OTD = 0;                          \
        DDD = 0;                          \
      }                                   \
    i++;                                  \
@@ -89,7 +93,12 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
 #define CASE_FXTRAN_HANDLE_NEW_BANG \
    case '!':                                       \
      {                                             \
-       int komp = ctx->opts.openmp &&              \
+       int kotd = ctx->opts.openmp_target &&        \
+     ((strncasecmp (&text[i+1], "$omp ", 5) == 0)  \
+   || (strncasecmp (&text[i+1], "$omp&", 5) == 0)) \
+	 ? FXTRAN_handle_omp_target (text, ci, i, OTD) \
+	          : 0;                             \
+       int komp = ctx->opts.openmp && !kotd &&      \
      ((strncmp (&text[i+1], "$ ", 2) == 0)         \
    || (strncmp (&text[i+1], "$&", 2) == 0)         \
    || (strncasecmp (&text[i+1], "$omp ", 5) == 0)  \
@@ -106,7 +115,15 @@ static int fixup_fc_label (const char * text, FXTRAN_char_info * ci, int i1, int
    || (strncasecmp (&text[i+1], ctx->opts.directive_ct, ctx->opts.directive_ln) == 0)) \
 	 ? FXTRAN_handle_ddd (text, ci, i, DDD, &ctx->opts)                            \
 	          : 0;                             \
-       if (komp != 0)                              \
+       if (kotd != 0)                              \
+         {                                         \
+           kotd--;                                 \
+           for (; kotd; kotd--)                    \
+             FXTRAN_NEXT_CHAR;                     \
+           otd = 1;                                \
+           OTD = 1;                                \
+         }                                         \
+       else if (komp != 0)                         \
          {                                         \
            komp--;                                 \
            for (; komp; komp--)                    \
@@ -212,6 +229,8 @@ void FXTRAN_FREE_decode (FXTRAN_xmlctx * ctx)
   char omp = 0; /* true if current line starts with OMP sentinel */
   char ACC = 0; /* true if inside ACC directive */
   char acc = 0; /* true if current line starts with ACC sentinel */
+  char OTD = 0; /* true if inside OMP Target directive */
+  char otd = 0; /* true if current line starts with OMP Target sentinel */
   char DDD = 0;
   char ddd = 0;
 
@@ -397,6 +416,7 @@ void FXTRAN_FREE_decode (FXTRAN_xmlctx * ctx)
             case FXTRAN_LAB:
             case FXTRAN_OMD:
             case FXTRAN_ACC:
+            case FXTRAN_OTD:
             case FXTRAN_DDD:
             case FXTRAN_OPT:
             case FXTRAN_CPP:
