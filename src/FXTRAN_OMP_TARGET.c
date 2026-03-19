@@ -143,7 +143,7 @@ done:
       k = i + 5;
       while (fc_isspace (text[k])) k++;
 
-      if (is_omp_target_directive (text, k))
+      if (is_omp_target_directive (text, k) || (OTD && (text[k] == '&')))
         {
           ci[i+0].mask = FXTRAN_OTD;
           ci[i+1].mask = FXTRAN_OTD;
