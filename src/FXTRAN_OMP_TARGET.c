@@ -610,7 +610,7 @@ static int FXTRAN_omptc_ktype (const char * t, const FXTRAN_char_info * ci,
   if (t[0] != '(')
     FXTRAN_THROW ("Malformed OpenMP Target clause");
 
-  t++;
+  XAD(1);
 
   k = FXTRAN_eat_word (t);
   if (k == 0)
@@ -623,7 +623,7 @@ static int FXTRAN_omptc_ktype (const char * t, const FXTRAN_char_info * ci,
   if (t[0] != ')')
     FXTRAN_THROW ("Malformed OpenMP Target clause");
 
-  t++;
+  XAD(1);
 
   XET ();
   return t - T;
