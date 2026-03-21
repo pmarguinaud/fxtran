@@ -410,7 +410,7 @@ directive handlers but with a configurable pattern string.
 
 ## Statement Parsing
 
-### Statement Types
+### Statement Type Table
 
 `FXTRAN_STMT.c` defines more than 150 Fortran statement types through a single
 `FXTRAN_statement_list` macro:
@@ -433,6 +433,65 @@ The four arguments per statement are: name, whether it is executable (1) or
 declarative (0), the Fortran standard that introduced it, and whether it is
 an attribute statement.
 
+The macro is instantiated several times to build parallel tables:
+
+| Table | Type | Purpose |
+|-------|------|---------|
+| `FXTRAN_stmt_exec[]` | `char` | 1 = executable, 0 = declarative |
+| `FXTRAN_stmt_attr[]` | `char` | non-zero = attribute statement |
+| `FXTRAN_stmt_std[]`  | `int`  | Year of standard (1977, 1990, 2003 …) |
+| `FXTRAN_stmt_name[]` | `const char *` | Statement name string |
+
+The XML tag name for each statement type is produced by `stmt_as_str()`, which
+maps each `FXTRAN_stmt_type` enum value to a hyphenated string built from the
+`FXTRAN_ALPHA.h` macros, e.g. `FXTRAN_POINTERASSIGNMENT` →
+`"pointer-assignment-stmt"`.
+
+### Statement Identification (`get_FXTRAN_stmt_type`)
+
+`get_FXTRAN_stmt_type()` identifies the statement type from the normalised text
+(whitespace removed, case-folded). It proceeds in three tiers:
+
+**Tier 1 — fast structural checks (at parenthesis level 0).**
+Before looking at keywords, the function searches for `=`, `=>`, or `:` at
+nesting level 0:
+
+- `=>` at level 0 → `POINTER_ASSIGNMENT` (unless after `IF(…)`, `WHERE(…)`,
+  `FORALL(…)`)
+- `=` at level 0 → `ASSIGNMENT` (same caveat)
+- `word:` at level 0 → named construct label; recurse on the suffix
+
+**Tier 2 — program-unit and interface context.**
+When a program unit is expected (after `CONTAINS`, or at the top level), the
+function calls `grok_fs()` to recognise `FUNCTION` / `SUBROUTINE` headers
+(including prefix keywords like `PURE`, `ELEMENTAL`, `RECURSIVE`). Inside an
+`INTERFACE` block, `MODULE PROCEDURE` is handled separately.
+
+**Tier 3 — keyword switch.**
+All remaining statements are matched by a switch on the first character of the
+normalised text, with `strncmp` for disambiguation:
+
+```c
+switch (t[0]) {
+  case 'A':
+    if (ystrcmp("ABSTRACTINTERFACE", t)) ret(FXTRAN_INTERFACE);
+    tt(ALLOCATABLE); tt(ALLOCATE); tt(ASSIGN); tt(ASSOCIATE);
+    tt(ASYNCHRONOUS);
+    break;
+  case 'D':
+    if (zstrcmp("DO", t)) {
+      if (isdigit(t[2])) ret(FXTRAN_DOLABEL);
+      else               ret(FXTRAN_DO);
+    }
+    …
+```
+
+`ystrcmp` is an exact match; `zstrcmp` is a prefix match. The switch reduces
+the number of comparisons from O(150) to O(10) in the common case.
+
+When no type is identified, the statement is tagged `<broken-stmt>` and parsing
+continues (best-effort mode).
+
 ### Construct Stack
 
 Nested constructs (`DO`, `IF`, `SELECT CASE`, etc.) are tracked by
@@ -453,64 +512,208 @@ typedef struct FXTRAN_stmt_stack_state {
 } FXTRAN_stmt_stack_state;
 ```
 
-On encountering `DO`, `IF`, `SELECT`, etc., the parser pushes a new entry; on
-encountering `END DO`, `END IF`, etc., it pops and validates that the type
-matches.
+`stmt_block_handle()` is called for every statement and manages the stack:
 
-### Statement Dispatcher
+- Opening statements (`DO`, `IF … THEN`, `SELECT CASE`, `TYPE`, `MODULE`, …)
+  push a new entry with `FXTRAN_stmt_stack_incr()`.
+- `CONTAINS` sets the `seen_contains` flag on the current entry; this switches
+  the context from specification to internal subprogram mode.
+- Closing statements (`END DO`, `END IF`, …) pop the stack with
+  `FXTRAN_stmt_stack_decr()` after validating that the type matches.
+- A mismatch sets the `broken` flag and throws via `FXTRAN_stmt_stack_break()`,
+  which unwinds to the `setjmp` recovery point.
 
-The main entry `FXTRAN_stmt()` receives five position indices (`i1`–`i5`) that
-delimit the label, the statement keyword, the first continuation, the last
-continuation, and the end of the statement. It reads ahead just far enough to
-identify the statement type, then calls a specialised emitter for that type.
-Each emitter calls into `FXTRAN_expr()` for sub-expressions and uses the XML
-macros to produce the corresponding tags.
+When `-construct-tag` is active, `stmt_block_handle` additionally emits
+`<do-construct>`, `<if-construct>`, `<select-case-construct>` wrapper elements
+around the statements they enclose, by inserting open/close tags via the
+`xml_tu` structure (a pair of pending tag arrays that are flushed before and
+after the statement tag).
+
+### Statement Dispatcher and Emitters
+
+`FXTRAN_stmt()` is the central dispatch function. For each statement it:
+
+1. Checks for OMP / ACC / OpenMP-Target / custom directive flags set by the
+   tokenizer; if present, delegates to `FXTRAN_dump_ompd()`,
+   `FXTRAN_dump_accd()`, etc.
+2. Otherwise calls `get_FXTRAN_stmt_type()` to identify the type.
+3. Calls `stmt_block_handle()` to update the construct stack and emit any
+   wrapping construct tags.
+4. Opens the statement XML element: `FXTRAN_xml_start_tag(stmt_as_str(type), …)`.
+5. Dispatches to the type-specific emitter via a macro-generated switch:
+   ```c
+   switch (type) {
+   #define macro_cextra(t,x,nn,isatt) \
+     case FXTRAN_##t: stmt_##t##_extra(text1, ci1, stack, ctx); break;
+     FXTRAN_statement_list(macro_cextra)
+   }
+   ```
+   Each `stmt_XXX_extra()` function reads the statement-specific syntax,
+   calling `FXTRAN_expr()` for sub-expressions and the XML macros to emit tags.
+6. Closes the statement element.
+
+The two-function split (`get_FXTRAN_stmt_type` + `stmt_XXX_extra`) keeps
+identification logic separate from XML-generation logic.
+
+### Type Declarations and Attribute Statements
+
+Type declaration statements (`INTEGER`, `REAL`, `CHARACTER`, `TYPE(…)`,
+`CLASS(…)`, …) are all mapped to the single `FXTRAN_TYPEDECL` type. The
+`stmt_TYPEDECL_extra()` emitter handles the full attribute list (`::`
+separator, `INTENT`, `DIMENSION`, `POINTER`, `ALLOCATABLE`, `SAVE`, …) and the
+entity list, including initialisation expressions.
+
+Attribute-only statements (`ALLOCATABLE`, `POINTER`, `TARGET`, `VOLATILE`, …)
+are identified by the `isatt` column in `FXTRAN_statement_list` and share a
+common emitter pattern.
+
+### I/O Statements
+
+`READ`, `WRITE`, `PRINT`, `OPEN`, `CLOSE`, `INQUIRE`, `FLUSH`, `WAIT`,
+`BACKSPACE`, `ENDFILE`, `REWIND` all use a common helper,
+`stmt_actual_args()`, parameterised by a `stmt_actual_args_parms` struct that
+specifies the list element tag name, whether type specifiers are allowed, and
+whether `*` is a valid argument. This allows I/O control specifiers
+(`UNIT=`, `FMT=`, `IOSTAT=`, `IOMSG=`, `ADVANCE=`, …) to be emitted with
+their correct XML element names without duplicating the list-walking code.
 
 ---
 
 ## Expression Parsing
 
-`FXTRAN_expr()` in `FXTRAN_EXPR.c` is a recursive-descent parser. Its top level
-handles the full precedence chain:
+### Overview
+
+`FXTRAN_expr()` in `FXTRAN_EXPR.c` is the single public entry point for
+expression parsing. Rather than a classic recursive-descent parser with
+one function per precedence level, it works in two phases:
+
+1. **Operator scan** — a flat left-to-right scan over the expression text at
+   the current parenthesis nesting level, collecting alternating
+   operand/operator segments into parallel arrays `K1[]`, `K2[]`, `OP[]`.
+2. **Tree construction** — `FXTRAN_expr0` / `FXTRAN_expr1` build the operator
+   tree bottom-up by finding the lowest-precedence operator and recursing.
+
+### Operator Precedence (`op_chrs`)
+
+`op_chrs()` maps each operator token to a floating-point *rank* (lower = binds
+more loosely) and an associativity *order* (+1 = left-to-right, −1 = right-to-left):
+
+| Rank | Operators | Associativity |
+|------|-----------|---------------|
+| 13 | user-defined unary (`.OP.`) | — |
+| 12 | `**` | right-to-left |
+| 11 / 11.5 | `*` / `/` | left-to-right |
+| 10 | unary `+` `-` | — |
+| 9 / 9.5 | binary `+` / `-` | left-to-right |
+| 8 | `//` | left-to-right |
+| 7 | `.EQ.` `.NE.` `.LT.` `.LE.` `.GT.` `.GE.` `==` `/=` `<` `<=` `>` `>=` | non-associative |
+| 6 | `.NOT.` | — |
+| 5 | `.AND.` | left-to-right |
+| 4 | `.OR.` | left-to-right |
+| 3 | `.EQV.` | left-to-right |
+| 2 | `.NEQV.` | left-to-right |
+| 1 | user-defined binary (`.OP.`) | left-to-right |
+
+The half-integer ranks for `/` (11.5) and binary `-` (9.5) force correct
+left-associativity when these appear alongside `*` or `+` at the same nominal
+level: `FXTRAN_expr1` selects the operator with the *lowest* rank; when two
+operators share a rank it picks the leftmost (for left-associative) or
+rightmost (for right-associative) one according to the `order` field.
+
+User-defined operators (`.MYOP.`) are detected by scanning for a leading `.`,
+reading the word between the dots, and verifying the closing `.`. They receive
+rank 13 (unary) or rank 1 (binary) depending on position.
+
+### Tree Construction (`FXTRAN_expr0` / `FXTRAN_expr1`)
 
 ```
-concat-expr   (// operator)
-  add-expr    (+ -)
-    mul-expr  (* /)
-      power-expr  (**)
-        unary-expr  (+ -)
-          primary   (literal, name, function call, (expr))
+FXTRAN_expr(t, ci, kmax, ctx)
+  │
+  ├─ scan left-to-right at level ci->parens
+  │   collect K1[], K2[], OP[] arrays
+  │
+  ├─ if no operators found → FXTRAN_expr_primary()
+  │
+  └─ FXTRAN_expr0()      assign rank + order to each operator slot
+       └─ FXTRAN_expr1() find minimum-rank operator i0
+            ├─ emit <operator-E>
+            ├─ recurse on left sub-array  [0 .. i0-1]
+            ├─ emit <operator> token
+            └─ recurse on right sub-array [i0+1 .. kop-1]
 ```
 
-Operator tokens are looked up in the `FXTRAN_ops[]` table. User-defined operators
-(`.MYOP.`) are handled by scanning for paired dots.
+`FXTRAN_expr1` is called recursively on the left and right sub-arrays, until
+each sub-array contains a single non-operator slot, at which point
+`FXTRAN_expr_primary` is called.
 
-Literals are classified during the scan:
+### Primary Expressions (`FXTRAN_expr_primary`)
 
-| Fortran syntax | XML element | Mask |
-|----------------|-------------|------|
-| `42`, `1_8` | `<literal-E><l>…</l></literal-E>` | `FXTRAN_LIT` |
-| `3.14`, `1.0E-5` | `<literal-E><l>…</l></literal-E>` | `FXTRAN_LIT` |
-| `'hello'`, `"world"` | `<literal-E><l>…</l></literal-E>` | `FXTRAN_STR` |
-| `Z'ABCD'`, `B'101'` | `<literal-E><l>…</l></literal-E>` | `FXTRAN_BOZ` |
-| `.TRUE.`, `.FALSE.` | `<literal-E><l>…</l></literal-E>` | `FXTRAN_LIT` |
+`FXTRAN_expr_primary` classifies the current token and dispatches to the
+appropriate sub-parser:
 
-Named references, array section subscripts, structure component accesses (`%`),
-and function calls are all parsed inside `FXTRAN_expr()`, producing nested XML
-structures such as:
+| Token pattern | Sub-parser | XML element |
+|---------------|-----------|-------------|
+| `(/` or `[` | `FXTRAN_expr_array_constructor` | `<array-constructor-E>` |
+| `B"`, `O"`, `Z"`, `X"` | `FXTRAN_expr_boz_litteral_constant` | `<literal-E>` |
+| `%name(` | `FXTRAN_expr_percent` | `<function>` |
+| identifier | `FXTRAN_expr_named` | `<named-E>` |
+| `id_"` (named kind string) | `FXTRAN_expr_string_with_named_kind` | `<string-E>` |
+| `n_"` (integer kind string) | `FXTRAN_expr_string_with_int_kind` | `<string-E>` |
+| `"` | `FXTRAN_expr_string` | `<string-E>` |
+| `(` | `FXTRAN_expr_parens` | `<parens-E>` |
+| digit or `.` (non-dot context) | `FXTRAN_expr_numeric_litteral_constant` | `<literal-E>` |
+| `.TRUE.` / `.FALSE.` | `FXTRAN_expr_logical_litteral_constant` | `<literal-E>` |
 
+String literals support substring notation via a trailing ref list
+(`"hello"(2:4)`), which is handled by `FXTRAN_ref_list` after the closing
+quote.
+
+### Named References and Subscript Disambiguation
+
+After parsing an identifier, `FXTRAN_ref_list` consumes any trailing
+subscript/component chain:
+
+- `(…)` — parenthesised reference, disambiguated by `FXTRAN_grok_parens`:
+  - `RANGE` — contains `:` at the current level → array section, parsed by
+    `array_ref` into `<array-R>` / `<section-subscript-LT>` / `<lower-bound>` /
+    `<upper-bound>` / `<stride>` elements.
+  - `ARGKW` — contains `name=` at the current level → actual argument list,
+    parsed by `FXTRAN_actual_args` into `<arg>` / `<arg-name>` elements.
+  - `ITRTR` — iterator form (for `FORALL`/`DO CONCURRENT`), parsed by
+    `iterator`.
+  - `UNKNW` — cannot determine statically; emitted as `<parens-R>` /
+    `<element-LT>`.
+- `[…]` — coarray reference, parsed by `coarray_ref` into
+  `<coarray-R>` / `<cosection-subscript-LT>`.
+- `%name` — structure component access, parsed by `FXTRAN_ref_component` into
+  `<component-R>`.
+
+Multiple suffixes chain inside a single `<R-LT>` list:
 ```xml
 <named-E>
   <N><n>A</n></N>
   <R-LT>
-    <parens-R>(<element-LT><element><named-E>…</named-E></element></element-LT>)</parens-R>
+    <array-R>(<section-subscript-LT>…</section-subscript-LT>)</array-R>
+    <component-R>%<N><n>X</n></N></component-R>
   </R-LT>
 </named-E>
 ```
 
-The `-flat-expr` option disables this nesting and produces a flat character
-sequence instead, which is useful when only the structure above the expression
-level matters.
+Array constructors with a type specifier (`[INTEGER(8) :: …]`) parse the type
+prefix before the value list; the type name is emitted as `<type-name>` if it
+is a derived type, or as a full `FXTRAN_typespec` if it is intrinsic.
+
+### Flat-Expression Modes
+
+Two options suppress the nested XML structure:
+
+| Option | Effect |
+|--------|--------|
+| `-flat-expr` | All `XST`/`XET` calls inside the expression parser are no-ops; the expression appears as a flat character sequence. |
+| `-flat-op-expr` | Only operator expressions are flattened; primaries (named refs, literals, parens) still produce their own elements. |
+
+These modes are useful when tools only need to query statement-level structure
+and do not need to navigate into expressions.
 
 ---
 
