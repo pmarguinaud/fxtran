@@ -1,0 +1,116 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_06_alloc_enhanced.f90"><C>! Test: allocatables etendus (F2003)</C>
+<C>! Statements couverts: ALLOCATE avec SOURCE=, ALLOCATE avec MOLD=,</C>
+<C>!                      MOVE_ALLOC, composantes allocatables,</C>
+<C>!                      arguments factices allocatables, resultats allocatables</C>
+
+<module-stmt>MODULE <module-N><N><n>ALLOCMOD</n></N></module-N></module-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <C>! Type avec composantes allocatables</C>
+  <T-stmt>TYPE :: <T-N><N><n>DYNTREE</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>VALUE</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+    <component-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>DYNTREE</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>LEFT</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+    <component-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>DYNTREE</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>RIGHT</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>,          <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>DATA</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></component-decl-stmt>
+  <end-T-stmt>END TYPE <T-N><N><n>DYNTREE</n></N></T-N></end-T-stmt>
+
+  <C>! Type avec pointeurs et allocatables</C>
+  <T-stmt>TYPE :: <T-N><N><n>MATRIX</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec>,<shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></component-decl-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>M</n></N></EN-N> = <init-E><literal-E><l>0</l></literal-E></init-E></EN-decl>, <EN-decl><EN-N><N><n>N</n></N></EN-N> = <init-E><literal-E><l>0</l></literal-E></init-E></EN-decl></EN-decl-LT></component-decl-stmt>
+  <contains-stmt>CONTAINS</contains-stmt>
+    <procedure-stmt>PROCEDURE :: <procedure-N-LT><rename><use-N><n>INIT</n></use-N> =&gt; <N><n>MAT_INIT</n></N></rename></procedure-N-LT></procedure-stmt>
+    <procedure-stmt>PROCEDURE :: <procedure-N-LT><rename><use-N><n>COPY</n></use-N> =&gt; <N><n>MAT_COPY</n></N></rename></procedure-N-LT></procedure-stmt>
+  <end-T-stmt>END TYPE <T-N><N><n>MATRIX</n></N></T-N></end-T-stmt>
+
+<contains-stmt>CONTAINS</contains-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>MAT_INIT</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>THIS</n></N></arg-N>, <arg-N><N><n>M</n></N></arg-N>, <arg-N><N><n>N</n></N></arg-N>, <arg-N><N><n>VAL</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>CLASS(<T-N><N><n>MATRIX</n></N></T-N>)</derived-T-spec></_T-spec_>,  <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>INOUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>THIS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_>,        <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>    :: <EN-decl-LT><EN-decl><EN-N><N><n>M</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>OPTIONAL</attribute-N></attribute>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>    :: <EN-decl-LT><EN-decl><EN-N><N><n>VAL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>M</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>M</n></N></named-E></E-2></a-stmt><smc>;</smc> <a-stmt><E-1><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>N</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>N</n></N></named-E></E-2></a-stmt>
+    <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>A</ct></component-R><parens-R>(<element-LT><element><named-E><N><n>M</n></N></named-E></element>, <element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+    <if-stmt>IF (<condition-E><named-E><N><n>PRESENT</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>VAL</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) <action-stmt><a-stmt><E-1><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>VAL</n></N></named-E></E-2></a-stmt></action-stmt></if-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>MAT_INIT</n></N></subroutine-N></end-subroutine-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>MAT_COPY</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>THIS</n></N></arg-N>, <arg-N><N><n>OTHER</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>CLASS(<T-N><N><n>MATRIX</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>INOUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>THIS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>MATRIX</n></N></T-N>)</derived-T-spec></_T-spec_>,  <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>    :: <EN-decl-LT><EN-decl><EN-N><N><n>OTHER</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <C>! ALLOCATE avec SOURCE= : alloue et initialise en une etape</C>
+    <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E></arg>, <arg><arg-N n="SOURCE"><k>SOURCE</k></arg-N>=<named-E><N><n>OTHER</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+    <a-stmt><E-1><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>M</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>OTHER</n></N><R-LT><component-R>%<ct>M</ct></component-R></R-LT></named-E></E-2></a-stmt><smc>;</smc> <a-stmt><E-1><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>N</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>OTHER</n></N><R-LT><component-R>%<ct>N</ct></component-R></R-LT></named-E></E-2></a-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>MAT_COPY</n></N></subroutine-N></end-subroutine-stmt>
+
+  <C>! Argument factice allocatable</C>
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>RESIZE</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>V</n></N></arg-N>, <arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>INOUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>V</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_>,           <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>    :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>TMP</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>OLDN</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <if-then-stmt>IF (<condition-E><named-E><N><n>ALLOCATED</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>V</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) THEN</if-then-stmt>
+      <a-stmt><E-1><named-E><N><n>OLDN</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>MIN</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>SIZE</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>V</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element>, <element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+      <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>TMP</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+      <a-stmt><E-1><named-E><N><n>TMP</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>1</l></literal-E></lower-bound>:<upper-bound><named-E><N><n>OLDN</n></N></named-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>V</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>1</l></literal-E></lower-bound>:<upper-bound><named-E><N><n>OLDN</n></N></named-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-2></a-stmt>
+      <call-stmt>CALL <procedure-designator><named-E><N><n>MOVE_ALLOC</n></N></named-E></procedure-designator>(<arg-spec><arg><arg-N n="FROM"><k>FROM</k></arg-N>=<named-E><N><n>TMP</n></N></named-E></arg>, <arg><arg-N n="TO"><k>TO</k></arg-N>=<named-E><N><n>V</n></N></named-E></arg></arg-spec>)</call-stmt>
+    <else-stmt>ELSE</else-stmt>
+      <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>V</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+      <a-stmt><E-1><named-E><N><n>V</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0.0</l></literal-E></E-2></a-stmt>
+    <end-if-stmt>END IF</end-if-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>RESIZE</n></N></subroutine-N></end-subroutine-stmt>
+
+  <C>! Resultat de fonction allocatable</C>
+  <function-stmt>FUNCTION <function-N><N><n>LINSPACE</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N>, <arg-N><N><n>B</n></N></arg-N>, <arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>) <result-spec>RESULT(<N><n>V</n></N>)</result-spec></function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>,    <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>V</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>V</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+    <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>V</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N></named-E> <op><o>+</o></op> <op-E><parens-E>(<op-E><named-E><N><n>B</n></N></named-E> <op><o>-</o></op> <named-E><N><n>A</n></N></named-E></op-E>)</parens-E> <op><o>*</o></op> <op-E><named-E><N><n>REAL</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>I</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>/</o></op> <named-E><N><n>REAL</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>N</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></op-E></op-E></E-2></a-stmt>
+    <end-do-stmt>END DO</end-do-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>LINSPACE</n></N></function-N></end-function-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>ALLOCMOD</n></N></module-N></end-module-stmt>
+
+
+<program-stmt>PROGRAM <program-N><N><n>ALLOCTEST</n></N></program-N></program-stmt>
+  <use-stmt>USE <module-N><N><n>ALLOCMOD</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>MATRIX</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>M1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>M2</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>DYNTREE</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>TREE</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>V</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>W</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <C>! ALLOCATE avec SOURCE= (copie et allocation)</C>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>M1</n></N><R-LT><component-R>%<ct>INIT</ct></component-R></R-LT></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>3</l></literal-E></arg>, <arg><literal-E><l>4</l></literal-E></arg>, <arg><literal-E><l>1.0</l></literal-E></arg></arg-spec>)</call-stmt>
+  <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>M2</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E></arg>, <arg><arg-N n="SOURCE"><k>SOURCE</k></arg-N>=<named-E><N><n>M1</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+  <a-stmt><E-1><named-E><N><n>M2</n></N><R-LT><component-R>%<ct>M</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>M1</n></N><R-LT><component-R>%<ct>M</ct></component-R></R-LT></named-E></E-2></a-stmt><smc>;</smc> <a-stmt><E-1><named-E><N><n>M2</n></N><R-LT><component-R>%<ct>N</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>M1</n></N><R-LT><component-R>%<ct>N</ct></component-R></R-LT></named-E></E-2></a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>M2</n></N><R-LT><component-R>%<ct>A</ct></component-R><parens-R>(<element-LT><element><literal-E><l>2</l></literal-E></element>,<element><literal-E><l>3</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! ALLOCATE avec MOLD= (meme forme, non initialise)</C>
+  <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>W</n></N></named-E></arg>, <arg><arg-N n="MOLD"><k>MOLD</k></arg-N>=<named-E><N><n>M1</n></N><R-LT><component-R>%<ct>A</ct></component-R><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>1</l></literal-E></lower-bound></section-subscript>,<section-subscript>:</section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>SIZE</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>W</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! MOVE_ALLOC</C>
+  <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>V</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>5</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+  <a-stmt><E-1><named-E><N><n>V</n></N></named-E></E-1> <a>=</a> <E-2><array-constructor-E>[<ac-value-LT><ac-value><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>REAL</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></iterator-element>, <iterator-element><V-N><V-N><n>I</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><literal-E><l>5</l></literal-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></ac-value></ac-value-LT>]</array-constructor-E></E-2></a-stmt>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>RESIZE</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>V</n></N></named-E></arg>, <arg><literal-E><l>8</l></literal-E></arg></arg-spec>)</call-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>SIZE</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>V</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><named-E><N><n>V</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>1</l></literal-E></lower-bound>:<upper-bound><literal-E><l>5</l></literal-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Composantes allocatables d'un type derive</C>
+  <a-stmt><E-1><named-E><N><n>TREE</n></N><R-LT><component-R>%<ct>VALUE</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>1</l></literal-E></E-2></a-stmt>
+  <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>TREE</n></N><R-LT><component-R>%<ct>LEFT</ct></component-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+  <a-stmt><E-1><named-E><N><n>TREE</n></N><R-LT><component-R>%<ct>LEFT</ct></component-R><component-R>%<ct>VALUE</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>2</l></literal-E></E-2></a-stmt>
+  <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>TREE</n></N><R-LT><component-R>%<ct>DATA</ct></component-R><parens-R>(<element-LT><element><literal-E><l>10</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+  <a-stmt><E-1><named-E><N><n>TREE</n></N><R-LT><component-R>%<ct>DATA</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>0.0</l></literal-E></E-2></a-stmt>
+
+  <C>! Resultat de fonction allocatable</C>
+  <a-stmt><E-1><named-E><N><n>V</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>LINSPACE</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>0.0</l></literal-E></element>, <element><literal-E><l>1.0</l></literal-E></element>, <element><literal-E><l>6</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>V</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <deallocate-stmt>DEALLOCATE(<arg-spec><arg><named-E><N><n>M1</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E></arg>, <arg><named-E><N><n>M2</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E></arg>, <arg><named-E><N><n>W</n></N></named-E></arg>, <arg><named-E><N><n>V</n></N></named-E></arg></arg-spec>)</deallocate-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>ALLOCTEST</n></N></program-N></end-program-stmt>
+</file></object>

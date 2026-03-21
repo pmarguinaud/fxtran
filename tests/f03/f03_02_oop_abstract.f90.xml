@@ -1,0 +1,102 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_02_oop_abstract.f90"><C>! Test: types abstraits et procedures differees</C>
+<C>! Statements couverts: ABSTRACT, DEFERRED, interface abstraite,</C>
+<C>!                      polymorphisme illimite CLASS(*)</C>
+
+<module-stmt>MODULE <module-N><N><n>ABSTRACTMOD</n></N></module-N></module-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <C>! Interface abstraite pour une fonction</C>
+  <interface-stmt><attribute><attribute-N>ABSTRACT</attribute-N></attribute> INTERFACE</interface-stmt>
+    <function-stmt>FUNCTION <function-N><N><n>FUNC1D</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>) <result-spec>RESULT(<N><n>Y</n></N>)</result-spec></function-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-function-stmt>END FUNCTION <function-N><N><n>FUNC1D</n></N></function-N></end-function-stmt>
+  <end-interface-stmt>END INTERFACE</end-interface-stmt>
+
+  <C>! Type abstrait: ne peut pas etre instancie directement</C>
+  <T-stmt>TYPE, <attribute><attribute-N>ABSTRACT</attribute-N></attribute> :: <T-N><N><n>ANIMAL</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>30</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>NAME</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>AGE</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+  <contains-stmt>CONTAINS</contains-stmt>
+    <C>! Procedure differee: doit etre definie dans les types concrets</C>
+    <component-decl-stmt><_T-spec_><procedure-T-spec>PROCEDURE(<procedure-N><N><n>SPEAK_IFACE</n></N></procedure-N>)</procedure-T-spec></_T-spec_>, <attribute><attribute-N>DEFERRED</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>SPEAK</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+    <procedure-stmt>PROCEDURE :: <procedure-N-LT><rename><use-N><n>INTRODUCE</n></use-N></rename></procedure-N-LT></procedure-stmt>
+  <end-T-stmt>END TYPE <T-N><N><n>ANIMAL</n></N></T-N></end-T-stmt>
+
+  <C>! Interface pour la procedure differee</C>
+  <interface-stmt><attribute><attribute-N>ABSTRACT</attribute-N></attribute> INTERFACE</interface-stmt>
+    <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SPEAK_IFACE</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>THIS</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+      <import-stmt>IMPORT :: <import-N-LT><N><n>ANIMAL</n></N></import-N-LT></import-stmt>
+      <T-decl-stmt><_T-spec_><derived-T-spec>CLASS(<T-N><N><n>ANIMAL</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>THIS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SPEAK_IFACE</n></N></subroutine-N></end-subroutine-stmt>
+  <end-interface-stmt>END INTERFACE</end-interface-stmt>
+
+  <C>! Type concret 1</C>
+  <T-stmt>TYPE, <attribute><attribute-N>EXTENDS</attribute-N>(<N><n>ANIMAL</n></N>)</attribute> :: <T-N><N><n>DOG</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>20</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>BREED</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+  <contains-stmt>CONTAINS</contains-stmt>
+    <procedure-stmt>PROCEDURE :: <procedure-N-LT><rename><use-N><n>SPEAK</n></use-N> =&gt; <N><n>DOG_SPEAK</n></N></rename></procedure-N-LT></procedure-stmt>
+  <end-T-stmt>END TYPE <T-N><N><n>DOG</n></N></T-N></end-T-stmt>
+
+  <C>! Type concret 2</C>
+  <T-stmt>TYPE, <attribute><attribute-N>EXTENDS</attribute-N>(<N><n>ANIMAL</n></N>)</attribute> :: <T-N><N><n>CAT</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>LOGICAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>INDOOR</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+  <contains-stmt>CONTAINS</contains-stmt>
+    <procedure-stmt>PROCEDURE :: <procedure-N-LT><rename><use-N><n>SPEAK</n></use-N> =&gt; <N><n>CAT_SPEAK</n></N></rename></procedure-N-LT></procedure-stmt>
+  <end-T-stmt>END TYPE <T-N><N><n>CAT</n></N></T-N></end-T-stmt>
+
+<contains-stmt>CONTAINS</contains-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INTRODUCE</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>THIS</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>CLASS(<T-N><N><n>ANIMAL</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>THIS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'JE M''APPELLE '</S></string-E></output-item>, <output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>NAME</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><string-E><S>', AGE'</S></string-E></output-item>, <output-item><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>AGE</ct></component-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+    <call-stmt>CALL <procedure-designator><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>SPEAK</ct></component-R></R-LT></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>INTRODUCE</n></N></subroutine-N></end-subroutine-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>DOG_SPEAK</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>THIS</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>CLASS(<T-N><N><n>DOG</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>THIS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'WOOF! ('</S></string-E></output-item>, <output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>THIS</n></N><R-LT><component-R>%<ct>BREED</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><string-E><S>')'</S></string-E></output-item></output-item-LT></write-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>DOG_SPEAK</n></N></subroutine-N></end-subroutine-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>CAT_SPEAK</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>THIS</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>CLASS(<T-N><N><n>CAT</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>THIS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'MEOW!'</S></string-E></output-item></output-item-LT></write-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>CAT_SPEAK</n></N></subroutine-N></end-subroutine-stmt>
+
+  <C>! Polymorphisme via CLASS(ANIMAL)</C>
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>PRINT_ANIMAL</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>CLASS(<T-N><N><n>ANIMAL</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <select-T-stmt>SELECT TYPE (<selector><named-E><N><n>X</n></N></named-E></selector>)</select-T-stmt>
+      <T-is-stmt>TYPE IS <T-selector>(<derived-T-spec><T-N><N><n>DOG</n></N></T-N></derived-T-spec>)</T-selector></T-is-stmt>
+        <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'DOG:'</S></string-E></output-item>, <output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N><R-LT><component-R>%<ct>NAME</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+      <T-is-stmt>TYPE IS <T-selector>(<derived-T-spec><T-N><N><n>CAT</n></N></T-N></derived-T-spec>)</T-selector></T-is-stmt>
+        <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'CAT:'</S></string-E></output-item>, <output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N><R-LT><component-R>%<ct>NAME</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+      <class-is-stmt>CLASS <T-selector>DEFAULT</T-selector></class-is-stmt>
+        <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'ANIMAL:'</S></string-E></output-item>, <output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N><R-LT><component-R>%<ct>NAME</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+    <end-select-T-stmt>END SELECT</end-select-T-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>PRINT_ANIMAL</n></N></subroutine-N></end-subroutine-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>ABSTRACTMOD</n></N></module-N></end-module-stmt>
+
+
+<program-stmt>PROGRAM <program-N><N><n>ABSTRACTTEST</n></N></program-N></program-stmt>
+  <use-stmt>USE <module-N><N><n>ABSTRACTMOD</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>DOG</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>D</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>CAT</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>C</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>D</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>DOG</n></N><R-LT><parens-R>(<arg-spec><arg><arg-N n="NAME"><k>NAME</k></arg-N>=<string-E><S>'REX'</S></string-E></arg>, <arg><arg-N n="AGE"><k>AGE</k></arg-N>=<literal-E><l>3</l></literal-E></arg>, <arg><arg-N n="BREED"><k>BREED</k></arg-N>=<string-E><S>'LABRADOR'</S></string-E></arg></arg-spec>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>C</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>CAT</n></N><R-LT><parens-R>(<arg-spec><arg><arg-N n="NAME"><k>NAME</k></arg-N>=<string-E><S>'FELIX'</S></string-E></arg>, <arg><arg-N n="AGE"><k>AGE</k></arg-N>=<literal-E><l>5</l></literal-E></arg>, <arg><arg-N n="INDOOR"><k>INDOOR</k></arg-N>=<literal-E>.TRUE.</literal-E></arg></arg-spec>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+  <call-stmt>CALL <procedure-designator><named-E><N><n>D</n></N><R-LT><component-R>%<ct>INTRODUCE</ct></component-R></R-LT></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>C</n></N><R-LT><component-R>%<ct>INTRODUCE</ct></component-R></R-LT></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+
+  <C>! Polymorphisme</C>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>PRINT_ANIMAL</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>D</n></N></named-E></arg></arg-spec>)</call-stmt>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>PRINT_ANIMAL</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>C</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'ABSTRAIT OK'</S></string-E></output-item></output-item-LT></write-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>ABSTRACTTEST</n></N></program-N></end-program-stmt>
+</file></object>

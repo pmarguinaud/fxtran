@@ -1,0 +1,101 @@
+! Test: types abstraits et procedures differees
+! Statements couverts: ABSTRACT, DEFERRED, interface abstraite,
+!                      polymorphisme illimite CLASS(*)
+
+MODULE ABSTRACTMOD
+  IMPLICIT NONE
+
+  ! Interface abstraite pour une fonction
+  ABSTRACT INTERFACE
+    FUNCTION FUNC1D(X) RESULT(Y)
+      REAL, INTENT(IN) :: X
+      REAL :: Y
+    END FUNCTION FUNC1D
+  END INTERFACE
+
+  ! Type abstrait: ne peut pas etre instancie directement
+  TYPE, ABSTRACT :: ANIMAL
+    CHARACTER(LEN=30) :: NAME
+    INTEGER :: AGE
+  CONTAINS
+    ! Procedure differee: doit etre definie dans les types concrets
+    PROCEDURE(SPEAK_IFACE), DEFERRED :: SPEAK
+    PROCEDURE :: INTRODUCE
+  END TYPE ANIMAL
+
+  ! Interface pour la procedure differee
+  ABSTRACT INTERFACE
+    SUBROUTINE SPEAK_IFACE(THIS)
+      IMPORT :: ANIMAL
+      CLASS(ANIMAL), INTENT(IN) :: THIS
+    END SUBROUTINE SPEAK_IFACE
+  END INTERFACE
+
+  ! Type concret 1
+  TYPE, EXTENDS(ANIMAL) :: DOG
+    CHARACTER(LEN=20) :: BREED
+  CONTAINS
+    PROCEDURE :: SPEAK => DOG_SPEAK
+  END TYPE DOG
+
+  ! Type concret 2
+  TYPE, EXTENDS(ANIMAL) :: CAT
+    LOGICAL :: INDOOR
+  CONTAINS
+    PROCEDURE :: SPEAK => CAT_SPEAK
+  END TYPE CAT
+
+CONTAINS
+
+  SUBROUTINE INTRODUCE(THIS)
+    CLASS(ANIMAL), INTENT(IN) :: THIS
+    WRITE(*,*) 'JE M''APPELLE ', TRIM(THIS%NAME), ', AGE', THIS%AGE
+    CALL THIS%SPEAK()
+  END SUBROUTINE INTRODUCE
+
+  SUBROUTINE DOG_SPEAK(THIS)
+    CLASS(DOG), INTENT(IN) :: THIS
+    WRITE(*,*) 'WOOF! (', TRIM(THIS%BREED), ')'
+  END SUBROUTINE DOG_SPEAK
+
+  SUBROUTINE CAT_SPEAK(THIS)
+    CLASS(CAT), INTENT(IN) :: THIS
+    WRITE(*,*) 'MEOW!'
+  END SUBROUTINE CAT_SPEAK
+
+  ! Polymorphisme via CLASS(ANIMAL)
+  SUBROUTINE PRINT_ANIMAL(X)
+    CLASS(ANIMAL), INTENT(IN) :: X
+    SELECT TYPE (X)
+      TYPE IS (DOG)
+        WRITE(*,*) 'DOG:', TRIM(X%NAME)
+      TYPE IS (CAT)
+        WRITE(*,*) 'CAT:', TRIM(X%NAME)
+      CLASS DEFAULT
+        WRITE(*,*) 'ANIMAL:', TRIM(X%NAME)
+    END SELECT
+  END SUBROUTINE PRINT_ANIMAL
+
+END MODULE ABSTRACTMOD
+
+
+PROGRAM ABSTRACTTEST
+  USE ABSTRACTMOD
+  IMPLICIT NONE
+
+  TYPE(DOG) :: D
+  TYPE(CAT) :: C
+
+  D = DOG(NAME='REX', AGE=3, BREED='LABRADOR')
+  C = CAT(NAME='FELIX', AGE=5, INDOOR=.TRUE.)
+
+  CALL D%INTRODUCE()
+  CALL C%INTRODUCE()
+
+  ! Polymorphisme
+  CALL PRINT_ANIMAL(D)
+  CALL PRINT_ANIMAL(C)
+
+  WRITE(*,*) 'ABSTRAIT OK'
+
+END PROGRAM ABSTRACTTEST

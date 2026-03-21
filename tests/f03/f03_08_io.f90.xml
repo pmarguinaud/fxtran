@@ -1,0 +1,62 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_08_io.f90"><C>! Test: nouvelles fonctionnalites I/O F2003</C>
+<C>! Statements couverts: FLUSH, NEWUNIT=, IOMSG=, ACCESS='STREAM',</C>
+<C>!                      ENCODING=, lecture/ecriture en mode stream</C>
+
+<program-stmt>PROGRAM <program-N><N><n>IOF03TEST</n></N></program-N></program-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>IUNIT</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ISTAT</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>200</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>ERRMSG</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <C>! OPEN avec NEWUNIT= (F2003: numero d'unite automatique)</C>
+  <open-stmt>OPEN(<connect-spec-spec><connect-spec><arg-N n="NEWUNIT"><k>NEWUNIT</k></arg-N>=<named-E><N><n>IUNIT</n></N></named-E></connect-spec>, <connect-spec><arg-N n="FILE"><k>FILE</k></arg-N>=<string-E><S>'test_f03_stream.dat'</S></string-E></connect-spec>, <cnt>&amp;</cnt>
+       <connect-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'REPLACE'</S></string-E></connect-spec>, <connect-spec><arg-N n="FORM"><k>FORM</k></arg-N>=<string-E><S>'UNFORMATTED'</S></string-E></connect-spec>, <cnt>&amp;</cnt>
+       <connect-spec><arg-N n="ACCESS"><k>ACCESS</k></arg-N>=<string-E><S>'STREAM'</S></string-E></connect-spec>, <connect-spec><arg-N n="IOSTAT"><k>IOSTAT</k></arg-N>=<named-E><N><n>ISTAT</n></N></named-E></connect-spec>, <connect-spec><arg-N n="IOMSG"><k>IOMSG</k></arg-N>=<named-E><N><n>ERRMSG</n></N></named-E></connect-spec></connect-spec-spec>)</open-stmt>
+  <if-then-stmt>IF (<condition-E><op-E><named-E><N><n>ISTAT</n></N></named-E> <op><o>/=</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'ERREUR OPEN: '</S></string-E></output-item>, <output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>ERRMSG</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+    <stop-stmt>STOP</stop-stmt>
+  <end-if-stmt>END IF</end-if-stmt>
+
+  <C>! Ecriture en mode stream (acces direct par octet)</C>
+  <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>5</l></literal-E></upper-bound></do-stmt>
+    <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>REAL</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>*</o></op> <literal-E><l>1.1</l></literal-E></op-E></E-2></a-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control><named-E><N><n>IUNIT</n></N></named-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>X</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <end-do-stmt>END DO</end-do-stmt>
+
+  <C>! FLUSH: vide le tampon d'ecriture</C>
+  <flush-stmt>FLUSH(<flush-spec-spec><flush-spec><named-E><N><n>IUNIT</n></N></named-E></flush-spec></flush-spec-spec>)</flush-stmt>
+  <flush-stmt>FLUSH(<flush-spec-spec><flush-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<named-E><N><n>IUNIT</n></N></named-E></flush-spec></flush-spec-spec>)</flush-stmt>
+
+  <rewind-stmt>REWIND(<pos-spec-spec><pos-spec><named-E><N><n>IUNIT</n></N></named-E></pos-spec></pos-spec-spec>)</rewind-stmt>
+
+  <C>! Lecture en mode stream</C>
+  <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>5</l></literal-E></upper-bound></do-stmt>
+    <read-stmt>READ(<io-control-spec><io-control><named-E><N><n>IUNIT</n></N></named-E></io-control>, <io-control><arg-N n="IOSTAT"><k>IOSTAT</k></arg-N>=<named-E><N><n>ISTAT</n></N></named-E></io-control>, <io-control><arg-N n="IOMSG"><k>IOMSG</k></arg-N>=<named-E><N><n>ERRMSG</n></N></named-E></io-control></io-control-spec>) <input-item-LT><input-item><named-E><N><n>X</n></N></named-E></input-item></input-item-LT></read-stmt>
+    <if-stmt>IF (<condition-E><op-E><named-E><N><n>ISTAT</n></N></named-E> <op><o>/=</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) <action-stmt><exit-stmt>EXIT</exit-stmt></action-stmt></if-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>X</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <end-do-stmt>END DO</end-do-stmt>
+
+  <close-stmt>CLOSE(<close-spec-spec><close-spec><named-E><N><n>IUNIT</n></N></named-E></close-spec>, <close-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'DELETE'</S></string-E></close-spec></close-spec-spec>)</close-stmt>
+
+  <C>! OPEN fichier formate avec NEWUNIT=</C>
+  <open-stmt>OPEN(<connect-spec-spec><connect-spec><arg-N n="NEWUNIT"><k>NEWUNIT</k></arg-N>=<named-E><N><n>IUNIT</n></N></named-E></connect-spec>, <connect-spec><arg-N n="FILE"><k>FILE</k></arg-N>=<string-E><S>'test_f03_fmt.txt'</S></string-E></connect-spec>, <cnt>&amp;</cnt>
+       <connect-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'REPLACE'</S></string-E></connect-spec>, <connect-spec><arg-N n="FORM"><k>FORM</k></arg-N>=<string-E><S>'FORMATTED'</S></string-E></connect-spec>, <cnt>&amp;</cnt>
+       <connect-spec><arg-N n="IOSTAT"><k>IOSTAT</k></arg-N>=<named-E><N><n>ISTAT</n></N></named-E></connect-spec>, <connect-spec><arg-N n="IOMSG"><k>IOMSG</k></arg-N>=<named-E><N><n>ERRMSG</n></N></named-E></connect-spec></connect-spec-spec>)</open-stmt>
+  <if-then-stmt>IF (<condition-E><op-E><named-E><N><n>ISTAT</n></N></named-E> <op><o>==</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control><named-E><N><n>IUNIT</n></N></named-E></io-control>, <io-control><string-E><S>'(A)'</S></string-E></io-control>, <io-control><arg-N n="IOSTAT"><k>IOSTAT</k></arg-N>=<named-E><N><n>ISTAT</n></N></named-E></io-control>, <io-control><arg-N n="IOMSG"><k>IOMSG</k></arg-N>=<named-E><N><n>ERRMSG</n></N></named-E></io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'LIGNE TEST'</S></string-E></output-item></output-item-LT></write-stmt>
+    <flush-stmt>FLUSH(<flush-spec-spec><flush-spec><named-E><N><n>IUNIT</n></N></named-E></flush-spec></flush-spec-spec>)</flush-stmt>
+    <close-stmt>CLOSE(<close-spec-spec><close-spec><named-E><N><n>IUNIT</n></N></named-E></close-spec>, <close-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'DELETE'</S></string-E></close-spec></close-spec-spec>)</close-stmt>
+  <end-if-stmt>END IF</end-if-stmt>
+
+  <C>! IOMSG= sur READ avec erreur</C>
+  <open-stmt>OPEN(<connect-spec-spec><connect-spec><arg-N n="NEWUNIT"><k>NEWUNIT</k></arg-N>=<named-E><N><n>IUNIT</n></N></named-E></connect-spec>, <connect-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'SCRATCH'</S></string-E></connect-spec></connect-spec-spec>)</open-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control><named-E><N><n>IUNIT</n></N></named-E></io-control>, <io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'PAS UN ENTIER'</S></string-E></output-item></output-item-LT></write-stmt>
+  <rewind-stmt>REWIND(<pos-spec-spec><pos-spec><named-E><N><n>IUNIT</n></N></named-E></pos-spec></pos-spec-spec>)</rewind-stmt>
+  <read-stmt>READ(<io-control-spec><io-control><named-E><N><n>IUNIT</n></N></named-E></io-control>, <io-control>*</io-control>, <io-control><arg-N n="IOSTAT"><k>IOSTAT</k></arg-N>=<named-E><N><n>ISTAT</n></N></named-E></io-control>, <io-control><arg-N n="IOMSG"><k>IOMSG</k></arg-N>=<named-E><N><n>ERRMSG</n></N></named-E></io-control></io-control-spec>) <input-item-LT><input-item><named-E><N><n>I</n></N></named-E></input-item></input-item-LT></read-stmt>
+  <if-stmt>IF (<condition-E><op-E><named-E><N><n>ISTAT</n></N></named-E> <op><o>/=</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) <action-stmt><write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'ERREUR: '</S></string-E></output-item>, <output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>ERRMSG</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt></action-stmt></if-stmt>
+  <close-stmt>CLOSE(<close-spec-spec><close-spec><named-E><N><n>IUNIT</n></N></named-E></close-spec></close-spec-spec>)</close-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>IOF03TEST</n></N></program-N></end-program-stmt>
+</file></object>

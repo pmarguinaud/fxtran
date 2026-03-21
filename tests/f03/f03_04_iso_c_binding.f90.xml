@@ -1,0 +1,93 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_04_iso_c_binding.f90"><C>! Test: interoperabilite avec C (ISO_C_BINDING)</C>
+<C>! Statements couverts: USE ISO_C_BINDING, BIND(C), types C,</C>
+<C>!                      C_PTR, C_NULL_PTR, C_ASSOCIATED, VALUE</C>
+
+<module-stmt>MODULE <module-N><N><n>CBINDMOD</n></N></module-N></module-stmt>
+  <use-stmt>USE <module-N><N><n>ISO_C_BINDING</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <C>! Types de base C</C>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>C_INT</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>        :: <EN-decl-LT><EN-decl><EN-N><N><n>CI</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>C_LONG</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>       :: <EN-decl-LT><EN-decl><EN-N><N><n>CL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>C_SHORT</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>      :: <EN-decl-LT><EN-decl><EN-N><N><n>CS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>C_SIZE_T</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>     :: <EN-decl-LT><EN-decl><EN-N><N><n>CST</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>C_FLOAT</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>         :: <EN-decl-LT><EN-decl><EN-N><N><n>CF</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>C_DOUBLE</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>        :: <EN-decl-LT><EN-decl><EN-N><N><n>CD</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>C_LONG_DOUBLE</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>CLD</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>COMPLEX</T-N><K-selector>(<K-spec><named-E><N><n>C_FLOAT_COMPLEX</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>  :: <EN-decl-LT><EN-decl><EN-N><N><n>CFC</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>COMPLEX</T-N><K-selector>(<K-spec><named-E><N><n>C_DOUBLE_COMPLEX</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>CDC</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>LOGICAL</T-N><K-selector>(<K-spec><named-E><N><n>C_BOOL</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>       :: <EN-decl-LT><EN-decl><EN-N><N><n>CB</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="KIND"><k>KIND</k></arg-N>=<named-E><N><n>C_CHAR</n></N></named-E></char-spec>,<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>1</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>CCH</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <C>! Pointeur C opaque</C>
+  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>C_PTR</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>CPTR</n></N></EN-N> = <init-E><named-E><N><n>C_NULL_PTR</n></N></named-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <C>! Interface vers une fonction C avec BIND(C)</C>
+  <interface-stmt>INTERFACE</interface-stmt>
+    <function-stmt>FUNCTION <function-N><N><n>C_SQRT</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>) <bind-spec>BIND(C, NAME=<string-E><S>'sqrt'</S></string-E>)</bind-spec> <result-spec>RESULT(<N><n>Y</n></N>)</result-spec></function-stmt>
+      <use-stmt>USE <module-N><N><n>ISO_C_BINDING</n></N></module-N></use-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>C_DOUBLE</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>VALUE</attribute-N></attribute>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>C_DOUBLE</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-function-stmt>END FUNCTION <function-N><N><n>C_SQRT</n></N></function-N></end-function-stmt>
+
+    <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>C_MEMSET</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>PTR</n></N></arg-N>, <arg-N><N><n>VAL</n></N></arg-N>, <arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>) <bind-spec>BIND(C, NAME=<string-E><S>'memset'</S></string-E>)</bind-spec></subroutine-stmt>
+      <use-stmt>USE <module-N><N><n>ISO_C_BINDING</n></N></module-N></use-stmt>
+      <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>C_PTR</n></N></T-N>)</derived-T-spec></_T-spec_>,    <attribute><attribute-N>VALUE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>PTR</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>C_INT</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>VALUE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>VAL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>C_SIZE_T</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>VALUE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>C_MEMSET</n></N></subroutine-N></end-subroutine-stmt>
+  <end-interface-stmt>END INTERFACE</end-interface-stmt>
+
+  <C>! Structure interoperable avec C</C>
+  <T-stmt>TYPE, <attribute><attribute-N>BIND</attribute-N>(C)</attribute> :: <T-N><N><n>C_POINT</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>C_FLOAT</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>C_FLOAT</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+  <end-T-stmt>END TYPE <T-N><N><n>C_POINT</n></N></T-N></end-T-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>CBINDMOD</n></N></module-N></end-module-stmt>
+
+<C>! Subroutine exportable vers C (hors module)</C>
+<subroutine-stmt>SUBROUTINE <subroutine-N><N><n>FORTRAN_SUB</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>) <bind-spec>BIND(C, NAME=<string-E><S>'fortran_sub'</S></string-E>)</bind-spec></subroutine-stmt>
+  <use-stmt>USE <module-N><N><n>ISO_C_BINDING</n></N></module-N></use-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>C_DOUBLE</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>INOUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>C_INT</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>VALUE</attribute-N></attribute>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>X</n></N></named-E> <op><o>*</o></op> <named-E><N><n>REAL</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element>, <element><named-E><N><n>C_DOUBLE</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+<end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>FORTRAN_SUB</n></N></subroutine-N></end-subroutine-stmt>
+
+
+<program-stmt>PROGRAM <program-N><N><n>CBINDTEST</n></N></program-N></program-stmt>
+  <use-stmt>USE <module-N><N><n>ISO_C_BINDING</n></N></module-N></use-stmt>
+  <use-stmt>USE <module-N><N><n>CBINDMOD</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>C_POINT</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>PT</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>C_PTR</n></N></T-N>)</derived-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>P</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>C_DOUBLE</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>D</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <C>! Verification de l'interoperabilite</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>C_INT</n></N></named-E></output-item>, <output-item><named-E><N><n>C_DOUBLE</n></N></named-E></output-item>, <output-item><named-E><N><n>C_FLOAT</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Utilisation de types C</C>
+  <a-stmt><E-1><named-E><N><n>CI</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>42</l><K-spec>_<N><n>C_INT</n></N></K-spec></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>CD</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>3.14</l><K-spec>_<N><n>C_DOUBLE</n></N></K-spec></literal-E></E-2></a-stmt>
+
+  <C>! Pointeur C</C>
+  <a-stmt><E-1><named-E><N><n>P</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>C_NULL_PTR</n></N></named-E></E-2></a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>C_ASSOCIATED</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>P</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Structure BIND(C)</C>
+  <a-stmt><E-1><named-E><N><n>PT</n></N><R-LT><component-R>%<ct>X</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>1.0</l><K-spec>_<N><n>C_FLOAT</n></N></K-spec></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>PT</n></N><R-LT><component-R>%<ct>Y</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>2.0</l><K-spec>_<N><n>C_FLOAT</n></N></K-spec></literal-E></E-2></a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>PT</n></N><R-LT><component-R>%<ct>X</ct></component-R></R-LT></named-E></output-item>, <output-item><named-E><N><n>PT</n></N><R-LT><component-R>%<ct>Y</ct></component-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Constantes de caracteres C</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>C_NULL_CHAR</n></N></named-E></output-item>, <output-item><named-E><N><n>C_NEW_LINE</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Tableau de caracteres C (chaine C)</C>
+  <block-stmt>BLOCK</block-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="KIND"><k>KIND</k></arg-N>=<named-E><N><n>C_CHAR</n></N></named-E></char-spec>, <char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>1</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>CSTR</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>6</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>CSTR</n></N></named-E></E-1> <a>=</a> <E-2><array-constructor-E>[<intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="KIND"><k>KIND</k></arg-N>=<named-E><N><n>C_CHAR</n></N></named-E></char-spec>,<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>1</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec> :: <ac-value-LT><ac-value><string-E><S>'H'</S></string-E></ac-value>,<ac-value><string-E><S>'E'</S></string-E></ac-value>,<ac-value><string-E><S>'L'</S></string-E></ac-value>,<ac-value><string-E><S>'L'</S></string-E></ac-value>,<ac-value><string-E><S>'O'</S></string-E></ac-value>,<ac-value><named-E><N><n>C_NULL_CHAR</n></N></named-E></ac-value></ac-value-LT>]</array-constructor-E></E-2></a-stmt>
+  <end-block-stmt>END BLOCK</end-block-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>CBINDTEST</n></N></program-N></end-program-stmt>
+</file></object>

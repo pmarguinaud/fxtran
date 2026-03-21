@@ -1,0 +1,61 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_11_iso_fortran_env.f90"><C>! Test: ISO_FORTRAN_ENV et IEEE_ARITHMETIC</C>
+<C>! Statements couverts: USE ISO_FORTRAN_ENV, constantes de l'environnement,</C>
+<C>!                      unites standard INPUT_UNIT, OUTPUT_UNIT, ERROR_UNIT</C>
+
+<program-stmt>PROGRAM <program-N><N><n>ISOENVTEST</n></N></program-N></program-stmt>
+  <use-stmt>USE <module-N><N><n>ISO_FORTRAN_ENV</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>    :: <EN-decl-LT><EN-decl><EN-N><N><n>R</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>REAL32</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>  :: <EN-decl-LT><EN-decl><EN-N><N><n>R32</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>REAL64</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>  :: <EN-decl-LT><EN-decl><EN-N><N><n>R64</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>REAL128</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>R128</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>INT8</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>  :: <EN-decl-LT><EN-decl><EN-N><N><n>I8</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>INT16</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I16</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>INT32</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I32</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>INT64</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I64</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <C>! Constantes de ISO_FORTRAN_ENV</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'FORTRAN VERSION:'</S></string-E></output-item>, <output-item><named-E><N><n>COMPILER_VERSION</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'COMPILER OPTIONS:'</S></string-E></output-item>, <output-item><named-E><N><n>COMPILER_OPTIONS</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Unites d'I/O standard</C>
+  <write-stmt>WRITE(<io-control-spec><io-control><named-E><N><n>OUTPUT_UNIT</n></N></named-E></io-control>, <io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'VERS STDOUT'</S></string-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control><named-E><N><n>ERROR_UNIT</n></N></named-E></io-control>,  <io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'VERS STDERR'</S></string-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Tailles des types</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'NUMERIC_STORAGE_SIZE:'</S></string-E></output-item>, <output-item><named-E><N><n>NUMERIC_STORAGE_SIZE</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'CHARACTER_STORAGE_SIZE:'</S></string-E></output-item>, <output-item><named-E><N><n>CHARACTER_STORAGE_SIZE</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'FILE_STORAGE_SIZE:'</S></string-E></output-item>, <output-item><named-E><N><n>FILE_STORAGE_SIZE</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Kinds garantis</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'REAL32 KIND:'</S></string-E></output-item>, <output-item><named-E><N><n>REAL32</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'REAL64 KIND:'</S></string-E></output-item>, <output-item><named-E><N><n>REAL64</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'INT32 KIND:'</S></string-E></output-item>, <output-item><named-E><N><n>INT32</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'INT64 KIND:'</S></string-E></output-item>, <output-item><named-E><N><n>INT64</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Utilisation des types a precision garantie</C>
+  <a-stmt><E-1><named-E><N><n>R32</n></N></named-E></E-1>  <a>=</a> <E-2><literal-E><l>3.14</l><K-spec>_<N><n>REAL32</n></N></K-spec></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>R64</n></N></named-E></E-1>  <a>=</a> <E-2><literal-E><l>3.14159265358979</l><K-spec>_<N><n>REAL64</n></N></K-spec></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>R128</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>3.14159265358979323846</l><K-spec>_<N><n>REAL128</n></N></K-spec></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>I8</n></N></named-E></E-1>   <a>=</a> <E-2><literal-E><l>127</l><K-spec>_<N><n>INT8</n></N></K-spec></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>I16</n></N></named-E></E-1>  <a>=</a> <E-2><literal-E><l>32767</l><K-spec>_<N><n>INT16</n></N></K-spec></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>I32</n></N></named-E></E-1>  <a>=</a> <E-2><literal-E><l>2147483647</l><K-spec>_<N><n>INT32</n></N></K-spec></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>I64</n></N></named-E></E-1>  <a>=</a> <E-2><literal-E><l>9223372036854775807</l><K-spec>_<N><n>INT64</n></N></K-spec></literal-E></E-2></a-stmt>
+
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>R32</n></N></named-E></output-item>, <output-item><named-E><N><n>R64</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>I8</n></N></named-E></output-item>, <output-item><named-E><N><n>I16</n></N></named-E></output-item>, <output-item><named-E><N><n>I32</n></N></named-E></output-item>, <output-item><named-E><N><n>I64</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Tableaux des kinds disponibles</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'INTEGER KINDS:'</S></string-E></output-item>, <output-item><named-E><N><n>INTEGER_KINDS</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'REAL KINDS:'</S></string-E></output-item>, <output-item><named-E><N><n>REAL_KINDS</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'LOGICAL KINDS:'</S></string-E></output-item>, <output-item><named-E><N><n>LOGICAL_KINDS</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'CHARACTER KINDS:'</S></string-E></output-item>, <output-item><named-E><N><n>CHARACTER_KINDS</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! IOSTAT predefinies</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'IOSTAT_END:'</S></string-E></output-item>, <output-item><named-E><N><n>IOSTAT_END</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'IOSTAT_EOR:'</S></string-E></output-item>, <output-item><named-E><N><n>IOSTAT_EOR</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>ISOENVTEST</n></N></program-N></end-program-stmt>
+</file></object>
