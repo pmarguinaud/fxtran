@@ -129,42 +129,42 @@ FXTRAN_BBT.o   FXTRAN_CHARINFO.o  FXTRAN_ERROR.o
 
 ```
  ┌───────────┐     ┌──────────────────────────────┐     ┌──────────────┐
- │  fxtran   │────▶│       FXTRAN_RUN()            │────▶│ XML string   │
- │  (main)   │     │  FXTRAN_RUN.c                 │     │  output      │
+ │  fxtran   │────▶│         FXTRAN_RUN()          │────▶│ XML string   │
+ │  (main)   │     │         FXTRAN_RUN.c          │     │  output      │
  └───────────┘     └──────────────────────────────┘     └──────────────┘
-                         │
-          ┌──────────────┼──────────────────────────┐
-          ▼              ▼                           ▼
-   Parse options    Load source                Emit XML header
-   FXTRAN_OPTS.c   FXTRAN_LOAD.c              <object …>
-          │              │
-          │    ┌─────────┴──────────┐
-          │    ▼                    ▼
-          │  With CPP           Without CPP
-          │  FXTRAN_load_cpp()  FXTRAN_load_nocpp()
-          │    │                    │
-          │    └─────────┬──────────┘
-          │              ▼
-          │    text[] + FXTRAN_char_info ci[]
-          │              │
-          │    ┌─────────┴──────────┐
-          │    ▼                    ▼
-          │  FREE form          FIXED form
-          │  FXTRAN_FREE_decode  FXTRAN_FIXED_decode
-          │    │                    │
-          │    └─────────┬──────────┘
-          │              ▼
-          │    Statement loop → FXTRAN_stmt()
-          │              │
-          │    ┌─────────┴──────────┐
-          │    ▼                    ▼
-          │  Directive?         Regular stmt?
-          │  FXTRAN_dump_omp/   FXTRAN_stmt()
-          │  FXTRAN_dump_acc/   FXTRAN_STMT.c
-          │  FXTRAN_dump_omptd
-          │              │
-          └──────────────▼
-                   </object>
+                                  │
+                   ┌──────────────┼──────────────────────────┐
+                   ▼              ▼                           ▼
+            Parse options    Load source                Emit XML header
+            FXTRAN_OPTS.c   FXTRAN_LOAD.c               <object …>
+                   │              │
+                   │    ┌─────────┴──────────┐
+                   │    ▼                    ▼
+                   │  With CPP          Without CPP
+                   │  FXTRAN_load_cpp()  FXTRAN_load_nocpp()
+                   │    │                    │
+                   │    └─────────┬──────────┘
+                   │              ▼
+                   │    text[] + FXTRAN_char_info ci[]
+                   │              │
+                   │    ┌─────────┴──────────┐
+                   │    ▼                    ▼
+                   │  FREE form          FIXED form
+                   │  FXTRAN_FREE_decode  FXTRAN_FIXED_decode
+                   │    │                    │
+                   │    └─────────┬──────────┘
+                   │              ▼
+                   │    Statement loop → FXTRAN_stmt()
+                   │              │
+                   │    ┌─────────┴──────────┐
+                   │    ▼                    ▼
+                   │  Directive?         Regular stmt?
+                   │  FXTRAN_dump_omp/   FXTRAN_stmt()
+                   │  FXTRAN_dump_acc/   FXTRAN_STMT.c
+                   │  FXTRAN_dump_omptd
+                   │              │
+                   └──────────────▼
+                              </object>
 ```
 
 `FXTRAN_RUN()` is the single public entry point for both the standalone binary and
