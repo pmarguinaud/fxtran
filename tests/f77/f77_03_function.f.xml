@@ -1,0 +1,32 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="0"><file name="f77_03_function.f"><C>C     Test: FUNCTION / RETURN / END</C>
+<C>C     Statements couverts: FUNCTION, RETURN, END</C>
+<m>      </m><function-stmt><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>SQUARE</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>SQUARE</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>X</n></N></named-E> <op><o>*</o></op> <named-E><N><n>X</n></N></named-E></op-E></E-2></a-stmt>
+<m>      </m><return-stmt>RETURN</return-stmt>
+<m>      </m><end-function-stmt>END</end-function-stmt>
+
+<m>      </m><function-stmt><intrinsic-T-spec><T-N>DOUBLE PRECISION</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>DPFUNC</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>D</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>DOUBLE PRECISION</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>D</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>DPFUNC</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>D</n></N></named-E> <op><o>*</o></op> <literal-E><l>2.0D0</l></literal-E></op-E></E-2></a-stmt>
+<m>      </m><return-stmt>RETURN</return-stmt>
+<m>      </m><end-function-stmt>END</end-function-stmt>
+
+<m>      </m><function-stmt><intrinsic-T-spec><T-N>LOGICAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>ISPOS</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>ISPOS</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>X</n></N></named-E> <op><o>.GT.</o></op> <literal-E><l>0.0</l></literal-E></op-E></E-2></a-stmt>
+<m>      </m><return-stmt>RETURN</return-stmt>
+<m>      </m><end-function-stmt>END</end-function-stmt>
+
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>TESTFUNC</n></N></program-N></program-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>SQUARE</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>DOUBLE PRECISION</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>DPFUNC</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>D</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>LOGICAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>ISPOS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><external-stmt>EXTERNAL <EN-decl-LT><EN-decl><EN-N><N><n>SQUARE</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>DPFUNC</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ISPOS</n></N></EN-N></EN-decl></EN-decl-LT></external-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>Y</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>SQUARE</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>3.0</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>D</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>DPFUNC</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1.5D0</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m><if-then-stmt>IF (<condition-E><named-E><N><n>ISPOS</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>Y</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) THEN</if-then-stmt>
+<m>      </m>  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'POSITIVE'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>      </m><end-if-stmt>END IF</end-if-stmt>
+<m>      </m><end-program-stmt>END</end-program-stmt>
+</file></object>

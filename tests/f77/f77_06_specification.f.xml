@@ -1,0 +1,27 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="0"><file name="f77_06_specification.f"><C>C     Test: enonces de specification</C>
+<C>C     Statements couverts: IMPLICIT, PARAMETER, DIMENSION, COMMON,</C>
+<C>C                          EQUIVALENCE, EXTERNAL, INTRINSIC, SAVE</C>
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>SPECTEST</n></N></program-N></program-stmt>
+<m>      </m><implicit-stmt>IMPLICIT <implicit-spec-LT><implicit-spec><T-spec>REAL</T-spec> (<letter-spec-LT><letter-spec>A-H</letter-spec>, <letter-spec>O-Z</letter-spec></letter-spec-LT>)</implicit-spec></implicit-spec-LT></implicit-stmt>
+<m>      </m><implicit-stmt>IMPLICIT <implicit-spec-LT><implicit-spec><T-spec>INTEGER</T-spec> (<letter-spec-LT><letter-spec>I-N</letter-spec></letter-spec-LT>)</implicit-spec></implicit-spec-LT></implicit-stmt>
+<m>      </m><parameter-stmt>PARAMETER (<EN-decl-LT><EN-decl><EN-N><N><n>MAXN</n></N></EN-N>=<init-E><literal-E><l>100</l></literal-E></init-E></EN-decl>, <EN-decl><EN-N><N><n>PI</n></N></EN-N>=<init-E><literal-E><l>3.14159265</l></literal-E></init-E></EN-decl></EN-decl-LT>)</parameter-stmt>
+<m>      </m><DIM-stmt>DIMENSION <EN-decl-LT><EN-decl><EN-N><N><n>ARR</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>MAXN</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>MAT</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>10</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>10</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></DIM-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>ARR</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>MAT</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><common-stmt>COMMON /<common-block-N><n>SHARED</n></common-block-N>/ <common-block-obj-LT><common-block-obj><common-block-obj-N><N><n>ARR</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>NSIZE</n></N></common-block-obj-N></common-block-obj></common-block-obj-LT></common-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>NSIZE</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><equivalence-stmt>EQUIVALENCE <equivalence-set-LT><equivalence-set>(<equivalence-obj-LT><equivalence-obj><named-E><N><n>A</n></N></named-E></equivalence-obj>, <equivalence-obj><named-E><N><n>MAT</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element>,<element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></equivalence-obj></equivalence-obj-LT>)</equivalence-set></equivalence-set-LT></equivalence-stmt>
+<m>      </m><external-stmt>EXTERNAL <EN-decl-LT><EN-decl><EN-N><N><n>MYSUB</n></N></EN-N></EN-decl></EN-decl-LT></external-stmt>
+<m>      </m><intrinsic-stmt>INTRINSIC <EN-decl-LT><EN-decl><EN-N><N><n>SIN</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>COS</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ABS</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>SQRT</n></N></EN-N></EN-decl></EN-decl-LT></intrinsic-stmt>
+<m>      </m><save-stmt>SAVE <saved-EN-LT><saved-EN><EN-N><N><n>ARR</n></N></EN-N></saved-EN>, <saved-EN><EN-N><N><n>NSIZE</n></N></EN-N></saved-EN></saved-EN-LT></save-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>A</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>SIN</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>PI</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>B</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>COS</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>PI</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>NSIZE</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>MAXN</n></N></named-E></E-2></a-stmt>
+<m>      </m><end-program-stmt>END</end-program-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>MYSUB</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>ABS</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m><return-stmt>RETURN</return-stmt>
+<m>      </m><end-subroutine-stmt>END</end-subroutine-stmt>
+</file></object>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="0"><file name="f77_07_control_if.f"><C>C     Test: enonces de controle - IF</C>
+<C>C     Statements couverts: IF arithmetique, IF logique, IF/THEN/END IF,</C>
+<C>C                          IF/THEN/ELSE/END IF, IF/THEN/ELSE IF/ELSE/END IF</C>
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>IFTEST</n></N></program-N></program-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>J</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>I</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>5</l></literal-E></E-2></a-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>J</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><op-E><op><o>-</o></op><literal-E><l>3.7</l></literal-E></op-E></E-2></a-stmt>
+
+<C>C     IF arithmetique (3 branches: neg, zero, pos)</C>
+<m>      </m><arithmetic-if-stmt>IF (<numeric-E><op-E><named-E><N><n>I</n></N></named-E><op><o>-</o></op><literal-E><l>5</l></literal-E></op-E></numeric-E>) <label-LT><label>10</label>, <label>20</label>, <label>30</label></label-LT></arithmetic-if-stmt>
+<m>   </m><label>10</label><m> </m><write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'NEGATIF'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>      </m><goto-stmt>GOTO <label>40</label></goto-stmt>
+<m>   </m><label>20</label><m> </m><write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'ZERO'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>      </m><goto-stmt>GOTO <label>40</label></goto-stmt>
+<m>   </m><label>30</label><m> </m><write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'POSITIF'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>   </m><label>40</label><m> </m><continue-stmt>CONTINUE</continue-stmt>
+
+<C>C     IF logique (une seule instruction)</C>
+<m>      </m><if-stmt>IF (<condition-E><op-E><named-E><N><n>X</n></N></named-E> <op><o>.LT.</o></op> <literal-E><l>0.0</l></literal-E></op-E></condition-E>) <action-stmt><a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><op-E><op><o>-</o></op><named-E><N><n>X</n></N></named-E></op-E></E-2></a-stmt></action-stmt></if-stmt>
+
+<C>C     IF / THEN / END IF</C>
+<m>      </m><if-then-stmt>IF (<condition-E><op-E><named-E><N><n>I</n></N></named-E> <op><o>.GT.</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>J</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>I</n></N></named-E> <op><o>*</o></op> <literal-E><l>2</l></literal-E></op-E></E-2></a-stmt>
+<m>      </m><end-if-stmt>END IF</end-if-stmt>
+
+<C>C     IF / THEN / ELSE / END IF</C>
+<m>      </m><if-then-stmt>IF (<condition-E><op-E><named-E><N><n>I</n></N></named-E> <op><o>.EQ.</o></op> <literal-E><l>5</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+<m>      </m>  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'CINQ'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>      </m><else-stmt>ELSE</else-stmt>
+<m>      </m>  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'PAS CINQ'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>      </m><end-if-stmt>END IF</end-if-stmt>
+
+<C>C     IF / THEN / ELSE IF / ELSE / END IF</C>
+<m>      </m><if-then-stmt>IF (<condition-E><op-E><named-E><N><n>I</n></N></named-E> <op><o>.LT.</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+<m>      </m>  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'NEGATIF'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>      </m><else-if-stmt>ELSE IF (<condition-E><op-E><named-E><N><n>I</n></N></named-E> <op><o>.EQ.</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) THEN</else-if-stmt>
+<m>      </m>  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'NUL'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>      </m><else-if-stmt>ELSE IF (<condition-E><op-E><named-E><N><n>I</n></N></named-E> <op><o>.LT.</o></op> <literal-E><l>10</l></literal-E></op-E></condition-E>) THEN</else-if-stmt>
+<m>      </m>  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'PETIT POSITIF'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>      </m><else-stmt>ELSE</else-stmt>
+<m>      </m>  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'GRAND POSITIF'</S></string-E></output-item></output-item-LT></write-stmt>
+<m>      </m><end-if-stmt>END IF</end-if-stmt>
+
+<m>      </m><end-program-stmt>END</end-program-stmt>
+</file></object>

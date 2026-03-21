@@ -1,0 +1,30 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="0"><file name="f77_14_equivalence.f"><C>C     Test: EQUIVALENCE et SAVE</C>
+<C>C     Statements couverts: EQUIVALENCE, SAVE (avec et sans liste)</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>EQTEST</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>IBUF</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>10</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>RBUF</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>5</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>DOUBLE PRECISION</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>DBUF</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>2</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><equivalence-stmt>EQUIVALENCE <equivalence-set-LT><equivalence-set>(<equivalence-obj-LT><equivalence-obj><named-E><N><n>IBUF</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></equivalence-obj>, <equivalence-obj><named-E><N><n>RBUF</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></equivalence-obj></equivalence-obj-LT>)</equivalence-set></equivalence-set-LT></equivalence-stmt>
+<m>      </m><equivalence-stmt>EQUIVALENCE <equivalence-set-LT><equivalence-set>(<equivalence-obj-LT><equivalence-obj><named-E><N><n>DBUF</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></equivalence-obj>, <equivalence-obj><named-E><N><n>IBUF</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></equivalence-obj></equivalence-obj-LT>)</equivalence-set></equivalence-set-LT></equivalence-stmt>
+<m>      </m><save-stmt>SAVE <saved-EN-LT><saved-EN><EN-N><N><n>IBUF</n></N></EN-N></saved-EN></saved-EN-LT></save-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>IBUF</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>N</n></N></named-E></E-2></a-stmt>
+<m>      </m><return-stmt>RETURN</return-stmt>
+<m>      </m><end-subroutine-stmt>END</end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SAVEALL</n></N></subroutine-N></subroutine-stmt>
+<C>C     SAVE sans liste (sauvegarde tout)</C>
+<m>      </m><save-stmt>SAVE</save-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>COUNT</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><data-stmt>DATA <data-stmt-set><data-stmt-obj-LT><data-stmt-obj><named-E><N><n>COUNT</n></N></named-E></data-stmt-obj></data-stmt-obj-LT> /<data-stmt-value-LT><data-stmt-value><data-stmt-constant><literal-E><l>0</l></literal-E></data-stmt-constant></data-stmt-value></data-stmt-value-LT>/</data-stmt-set></data-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>COUNT</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>COUNT</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+<m>      </m><write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'APPEL'</S></string-E></output-item>, <output-item><named-E><N><n>COUNT</n></N></named-E></output-item></output-item-LT></write-stmt>
+<m>      </m><return-stmt>RETURN</return-stmt>
+<m>      </m><end-subroutine-stmt>END</end-subroutine-stmt>
+
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>EQMAIN</n></N></program-N></program-stmt>
+<m>      </m><call-stmt>CALL <procedure-designator><named-E><N><n>EQTEST</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>42</l></literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m><call-stmt>CALL <procedure-designator><named-E><N><n>SAVEALL</n></N></named-E></procedure-designator></call-stmt>
+<m>      </m><call-stmt>CALL <procedure-designator><named-E><N><n>SAVEALL</n></N></named-E></procedure-designator></call-stmt>
+<m>      </m><end-program-stmt>END</end-program-stmt>
+</file></object>

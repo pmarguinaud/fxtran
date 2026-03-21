@@ -1,0 +1,12 @@
+C     Test: BLOCK DATA / END
+C     Statements couverts: BLOCK DATA, COMMON, DATA, REAL, INTEGER, END
+      BLOCK DATA INITBLK
+      COMMON /NUMBLK/ IVAL, RVAL
+      COMMON /STRBLK/ FLAG
+      INTEGER IVAL
+      REAL RVAL
+      LOGICAL FLAG
+      DATA IVAL /10/
+      DATA RVAL /3.14/
+      DATA FLAG /.TRUE./
+      END
