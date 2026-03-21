@@ -1,0 +1,80 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_15_async.f90"><C>! Test: E/S asynchrones (Fortran 2003)</C>
+<C>! Statements couverts: ASYNCHRONOUS, WAIT, READ/WRITE ASYNCHRONOUS='YES',</C>
+<C>!                      ID= specifier, PENDING=</C>
+
+<program-stmt>PROGRAM <program-N><N><n>ASYNCTEST</n></N></program-N></program-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <C>! Tableau avec attribut ASYNCHRONOUS</C>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>ASYNCHRONOUS</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>BUFFER</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>1000</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>ASYNCHRONOUS</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>SENDBUF</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>RECVBUF</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>ID1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ID2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ISTAT</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>LOGICAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>PENDING_FLAG</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>UNIT1</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <C>! Remplissage du buffer</C>
+  <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+    <a-stmt><E-1><named-E><N><n>SENDBUF</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>REAL</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-do-stmt>END DO</end-do-stmt>
+
+  <C>! Ouverture d'un fichier pour test</C>
+  <a-stmt><E-1><named-E><N><n>UNIT1</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>10</l></literal-E></E-2></a-stmt>
+  <open-stmt>OPEN(<connect-spec-spec><connect-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<named-E><N><n>UNIT1</n></N></named-E></connect-spec>, <connect-spec><arg-N n="FILE"><k>FILE</k></arg-N>=<string-E><S>'async_test.tmp'</S></string-E></connect-spec>, <connect-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'REPLACE'</S></string-E></connect-spec>, <cnt>&amp;</cnt>
+       <connect-spec><arg-N n="ACCESS"><k>ACCESS</k></arg-N>=<string-E><S>'SEQUENTIAL'</S></string-E></connect-spec>, <connect-spec><arg-N n="ACTION"><k>ACTION</k></arg-N>=<string-E><S>'READWRITE'</S></string-E></connect-spec></connect-spec-spec>)</open-stmt>
+
+  <C>! Ecriture synchrone pour initialisation</C>
+  <write-stmt>WRITE(<io-control-spec><io-control><named-E><N><n>UNIT1</n></N></named-E></io-control>, <io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>SENDBUF</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></iterator-element>, <iterator-element><V-N><V-N><n>I</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><literal-E><l>100</l></literal-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></output-item></output-item-LT></write-stmt>
+  <rewind-stmt>REWIND(<pos-spec-spec><pos-spec><named-E><N><n>UNIT1</n></N></named-E></pos-spec></pos-spec-spec>)</rewind-stmt>
+
+  <C>! Lecture asynchrone avec ID=</C>
+  <read-stmt>READ(<io-control-spec><io-control><named-E><N><n>UNIT1</n></N></named-E></io-control>, <io-control>*</io-control>, <io-control><arg-N n="ASYNCHRONOUS"><k>ASYNCHRONOUS</k></arg-N>=<string-E><S>'YES'</S></string-E></io-control>, <io-control><arg-N n="ID"><k>ID</k></arg-N>=<named-E><N><n>ID1</n></N></named-E></io-control></io-control-spec>) <input-item-LT><input-item><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>BUFFER</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></iterator-element>, <iterator-element><V-N><V-N><n>I</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><literal-E><l>100</l></literal-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></input-item></input-item-LT></read-stmt>
+
+  <C>! ... calcul pendant le transfert ...</C>
+  <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>1000</l></literal-E></upper-bound></do-stmt>
+    <a-stmt><E-1><named-E><N><n>BUFFER</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>I</n></N></named-E> <op><o>+</o></op> <literal-E><l>100</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>0.0</l></literal-E></E-2></a-stmt>
+  <end-do-stmt>END DO</end-do-stmt>
+
+  <C>! Attente de la completion avec WAIT</C>
+  <wait-stmt>WAIT(<wait-spec-spec><wait-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<named-E><N><n>UNIT1</n></N></named-E></wait-spec>, <wait-spec><arg-N n="ID"><k>ID</k></arg-N>=<named-E><N><n>ID1</n></N></named-E></wait-spec></wait-spec-spec>)</wait-stmt>
+
+  <C>! Verifier que le transfert est termine</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Lecture asynchrone terminee'</S></string-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Premier element:'</S></string-E></output-item>, <output-item><named-E><N><n>BUFFER</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Ecriture asynchrone</C>
+  <rewind-stmt>REWIND(<pos-spec-spec><pos-spec><named-E><N><n>UNIT1</n></N></named-E></pos-spec></pos-spec-spec>)</rewind-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control><named-E><N><n>UNIT1</n></N></named-E></io-control>, <io-control>*</io-control>, <io-control><arg-N n="ASYNCHRONOUS"><k>ASYNCHRONOUS</k></arg-N>=<string-E><S>'YES'</S></string-E></io-control>, <io-control><arg-N n="ID"><k>ID</k></arg-N>=<named-E><N><n>ID2</n></N></named-E></io-control></io-control-spec>) <output-item-LT><output-item><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>BUFFER</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></iterator-element>, <iterator-element><V-N><V-N><n>I</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><literal-E><l>100</l></literal-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></output-item></output-item-LT></write-stmt>
+
+  <C>! WAIT sans ID= attend tous les transferts en attente sur l'unite</C>
+  <wait-stmt>WAIT(<wait-spec-spec><wait-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<named-E><N><n>UNIT1</n></N></named-E></wait-spec></wait-spec-spec>)</wait-stmt>
+
+  <C>! WAIT avec IOSTAT= et PENDING=</C>
+  <rewind-stmt>REWIND(<pos-spec-spec><pos-spec><named-E><N><n>UNIT1</n></N></named-E></pos-spec></pos-spec-spec>)</rewind-stmt>
+  <read-stmt>READ(<io-control-spec><io-control><named-E><N><n>UNIT1</n></N></named-E></io-control>, <io-control>*</io-control>, <io-control><arg-N n="ASYNCHRONOUS"><k>ASYNCHRONOUS</k></arg-N>=<string-E><S>'YES'</S></string-E></io-control>, <io-control><arg-N n="ID"><k>ID</k></arg-N>=<named-E><N><n>ID1</n></N></named-E></io-control></io-control-spec>) <input-item-LT><input-item><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>RECVBUF</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></iterator-element>, <iterator-element><V-N><V-N><n>I</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><literal-E><l>100</l></literal-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></input-item></input-item-LT></read-stmt>
+  <wait-stmt>WAIT(<wait-spec-spec><wait-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<named-E><N><n>UNIT1</n></N></named-E></wait-spec>, <wait-spec><arg-N n="ID"><k>ID</k></arg-N>=<named-E><N><n>ID1</n></N></named-E></wait-spec>, <wait-spec><arg-N n="IOSTAT"><k>IOSTAT</k></arg-N>=<named-E><N><n>ISTAT</n></N></named-E></wait-spec>, <wait-spec><arg-N n="PENDING"><k>PENDING</k></arg-N>=<named-E><N><n>PENDING_FLAG</n></N></named-E></wait-spec></wait-spec-spec>)</wait-stmt>
+  <if-then-stmt>IF (<condition-E><op-E><op><o>.NOT.</o></op> <named-E><N><n>PENDING_FLAG</n></N></named-E></op-E></condition-E>) THEN</if-then-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Transfert complete, IOSTAT='</S></string-E></output-item>, <output-item><named-E><N><n>ISTAT</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <end-if-stmt>END IF</end-if-stmt>
+
+  <close-stmt>CLOSE(<close-spec-spec><close-spec><named-E><N><n>UNIT1</n></N></named-E></close-spec>, <close-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'DELETE'</S></string-E></close-spec></close-spec-spec>)</close-stmt>
+
+  <C>! Variable avec attribut ASYNCHRONOUS dans un sous-programme</C>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>ASYNC_SUB</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+
+<contains-stmt>CONTAINS</contains-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>ASYNC_SUB</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>ASYNCHRONOUS</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>LOCAL_BUF</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>50</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>LID</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>LU</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+    <a-stmt><E-1><named-E><N><n>LU</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>20</l></literal-E></E-2></a-stmt>
+    <open-stmt>OPEN(<connect-spec-spec><connect-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<named-E><N><n>LU</n></N></named-E></connect-spec>, <connect-spec><arg-N n="FILE"><k>FILE</k></arg-N>=<string-E><S>'async2.tmp'</S></string-E></connect-spec>, <connect-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'REPLACE'</S></string-E></connect-spec>, <connect-spec><arg-N n="ACTION"><k>ACTION</k></arg-N>=<string-E><S>'READWRITE'</S></string-E></connect-spec></connect-spec-spec>)</open-stmt>
+    <a-stmt><E-1><named-E><N><n>LOCAL_BUF</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>1.0</l></literal-E></E-2></a-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control><named-E><N><n>LU</n></N></named-E></io-control>, <io-control>*</io-control>, <io-control><arg-N n="ASYNCHRONOUS"><k>ASYNCHRONOUS</k></arg-N>=<string-E><S>'YES'</S></string-E></io-control>, <io-control><arg-N n="ID"><k>ID</k></arg-N>=<named-E><N><n>LID</n></N></named-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>LOCAL_BUF</n></N></named-E></output-item></output-item-LT></write-stmt>
+    <wait-stmt>WAIT(<wait-spec-spec><wait-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<named-E><N><n>LU</n></N></named-E></wait-spec></wait-spec-spec>)</wait-stmt>
+    <close-stmt>CLOSE(<close-spec-spec><close-spec><named-E><N><n>LU</n></N></named-E></close-spec>, <close-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'DELETE'</S></string-E></close-spec></close-spec-spec>)</close-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'ASYNC_SUB terminee'</S></string-E></output-item></output-item-LT></write-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>ASYNC_SUB</n></N></subroutine-N></end-subroutine-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>ASYNCTEST</n></N></program-N></end-program-stmt>
+</file></object>

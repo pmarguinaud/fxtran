@@ -1,0 +1,85 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_14_associate.f90"><C>! Test: construct ASSOCIATE (Fortran 2003)</C>
+<C>! Statements couverts: ASSOCIATE/END ASSOCIATE, aliases de composantes,</C>
+<C>!                      aliases de tableaux, ASSOCIATE imbriques</C>
+
+<module-stmt>MODULE <module-N><N><n>ASSOCMOD</n></N></module-N></module-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-stmt>TYPE :: <T-N><N><n>POINT3D</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Z</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+  <end-T-stmt>END TYPE <T-N><N><n>POINT3D</n></N></T-N></end-T-stmt>
+
+  <T-stmt>TYPE :: <T-N><N><n>SEGMENT</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>POINT3D</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+  <end-T-stmt>END TYPE <T-N><N><n>SEGMENT</n></N></T-N></end-T-stmt>
+
+<contains-stmt>CONTAINS</contains-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>PROCESS_SEGMENT</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>SEG</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>SEGMENT</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>INOUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>SEG</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+    <C>! ASSOCIATE permet de creer des alias pour des expressions complexes</C>
+    <associate-stmt>ASSOCIATE (<associate-LT><associate><associate-N><n>PA</n></associate-N> =&gt; <selector><named-E><N><n>SEG</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E></selector></associate>, <associate><associate-N><n>PB</n></associate-N> =&gt; <selector><named-E><N><n>SEG</n></N><R-LT><component-R>%<ct>B</ct></component-R></R-LT></named-E></selector></associate></associate-LT>)</associate-stmt>
+      <a-stmt><E-1><named-E><N><n>PA</n></N><R-LT><component-R>%<ct>X</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>1.0</l></literal-E></E-2></a-stmt>
+      <a-stmt><E-1><named-E><N><n>PA</n></N><R-LT><component-R>%<ct>Y</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>2.0</l></literal-E></E-2></a-stmt>
+      <a-stmt><E-1><named-E><N><n>PA</n></N><R-LT><component-R>%<ct>Z</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>3.0</l></literal-E></E-2></a-stmt>
+      <a-stmt><E-1><named-E><N><n>PB</n></N><R-LT><component-R>%<ct>X</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>4.0</l></literal-E></E-2></a-stmt>
+      <a-stmt><E-1><named-E><N><n>PB</n></N><R-LT><component-R>%<ct>Y</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>5.0</l></literal-E></E-2></a-stmt>
+      <a-stmt><E-1><named-E><N><n>PB</n></N><R-LT><component-R>%<ct>Z</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>6.0</l></literal-E></E-2></a-stmt>
+      <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Longueur au carre:'</S></string-E></output-item>, <cnt>&amp;</cnt>
+        <output-item><op-E><op-E><parens-E>(<op-E><named-E><N><n>PB</n></N><R-LT><component-R>%<ct>X</ct></component-R></R-LT></named-E> <op><o>-</o></op> <named-E><N><n>PA</n></N><R-LT><component-R>%<ct>X</ct></component-R></R-LT></named-E></op-E>)</parens-E><op><o>**</o></op><literal-E><l>2</l></literal-E></op-E> <op><o>+</o></op> <op-E><op-E><parens-E>(<op-E><named-E><N><n>PB</n></N><R-LT><component-R>%<ct>Y</ct></component-R></R-LT></named-E> <op><o>-</o></op> <named-E><N><n>PA</n></N><R-LT><component-R>%<ct>Y</ct></component-R></R-LT></named-E></op-E>)</parens-E><op><o>**</o></op><literal-E><l>2</l></literal-E></op-E> <op><o>+</o></op> <op-E><parens-E>(<op-E><named-E><N><n>PB</n></N><R-LT><component-R>%<ct>Z</ct></component-R></R-LT></named-E> <op><o>-</o></op> <named-E><N><n>PA</n></N><R-LT><component-R>%<ct>Z</ct></component-R></R-LT></named-E></op-E>)</parens-E><op><o>**</o></op><literal-E><l>2</l></literal-E></op-E></op-E></op-E></output-item></output-item-LT></write-stmt>
+    <end-associate-stmt>END ASSOCIATE</end-associate-stmt>
+
+    <C>! ASSOCIATE avec un alias sur une composante scalaire</C>
+    <associate-stmt>ASSOCIATE (<associate-LT><associate><associate-N><n>DX</n></associate-N> =&gt; <selector><op-E><named-E><N><n>SEG</n></N><R-LT><component-R>%<ct>B</ct></component-R><component-R>%<ct>X</ct></component-R></R-LT></named-E> <op><o>-</o></op> <named-E><N><n>SEG</n></N><R-LT><component-R>%<ct>A</ct></component-R><component-R>%<ct>X</ct></component-R></R-LT></named-E></op-E></selector></associate>, <cnt>&amp;</cnt>
+               <associate><associate-N><n>DY</n></associate-N> =&gt; <selector><op-E><named-E><N><n>SEG</n></N><R-LT><component-R>%<ct>B</ct></component-R><component-R>%<ct>Y</ct></component-R></R-LT></named-E> <op><o>-</o></op> <named-E><N><n>SEG</n></N><R-LT><component-R>%<ct>A</ct></component-R><component-R>%<ct>Y</ct></component-R></R-LT></named-E></op-E></selector></associate>, <cnt>&amp;</cnt>
+               <associate><associate-N><n>DZ</n></associate-N> =&gt; <selector><op-E><named-E><N><n>SEG</n></N><R-LT><component-R>%<ct>B</ct></component-R><component-R>%<ct>Z</ct></component-R></R-LT></named-E> <op><o>-</o></op> <named-E><N><n>SEG</n></N><R-LT><component-R>%<ct>A</ct></component-R><component-R>%<ct>Z</ct></component-R></R-LT></named-E></op-E></selector></associate></associate-LT>)</associate-stmt>
+      <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Delta:'</S></string-E></output-item>, <output-item><named-E><N><n>DX</n></N></named-E></output-item>, <output-item><named-E><N><n>DY</n></N></named-E></output-item>, <output-item><named-E><N><n>DZ</n></N></named-E></output-item></output-item-LT></write-stmt>
+    <end-associate-stmt>END ASSOCIATE</end-associate-stmt>
+
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>PROCESS_SEGMENT</n></N></subroutine-N></end-subroutine-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>ASSOCMOD</n></N></module-N></end-module-stmt>
+
+
+<program-stmt>PROGRAM <program-N><N><n>ASSOCIATETEST</n></N></program-N></program-stmt>
+  <use-stmt>USE <module-N><N><n>ASSOCMOD</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>SEGMENT</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>S</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>MATRIX</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>3</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>3</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>J</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <C>! Initialisation du tableau</C>
+  <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>3</l></literal-E></upper-bound></do-stmt>
+    <do-stmt>DO <do-V><named-E><N><n>J</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>3</l></literal-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element>,<element><named-E><N><n>J</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>REAL</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>*</o></op> <literal-E><l>10.0</l></literal-E></op-E> <op><o>+</o></op> <named-E><N><n>REAL</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>J</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+    <end-do-stmt>END DO</end-do-stmt>
+  <end-do-stmt>END DO</end-do-stmt>
+
+  <C>! ASSOCIATE sur des elements de tableau et expressions</C>
+  <associate-stmt>ASSOCIATE (<associate-LT><associate><associate-N><n>M11</n></associate-N> =&gt; <selector><named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element>,<element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></selector></associate>, <cnt>&amp;</cnt>
+             <associate><associate-N><n>M22</n></associate-N> =&gt; <selector><named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>2</l></literal-E></element>,<element><literal-E><l>2</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></selector></associate>, <cnt>&amp;</cnt>
+             <associate><associate-N><n>M33</n></associate-N> =&gt; <selector><named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>3</l></literal-E></element>,<element><literal-E><l>3</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></selector></associate>, <cnt>&amp;</cnt>
+             <associate><associate-N><n>TRACE</n></associate-N> =&gt; <selector><op-E><named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element>,<element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <op-E><named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>2</l></literal-E></element>,<element><literal-E><l>2</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>3</l></literal-E></element>,<element><literal-E><l>3</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></op-E></selector></associate></associate-LT>)</associate-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Diagonale:'</S></string-E></output-item>, <output-item><named-E><N><n>M11</n></N></named-E></output-item>, <output-item><named-E><N><n>M22</n></N></named-E></output-item>, <output-item><named-E><N><n>M33</n></N></named-E></output-item></output-item-LT></write-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Trace:'</S></string-E></output-item>, <output-item><named-E><N><n>TRACE</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <end-associate-stmt>END ASSOCIATE</end-associate-stmt>
+
+  <C>! ASSOCIATE imbriques</C>
+  <associate-stmt>ASSOCIATE (<associate-LT><associate><associate-N><n>ROW1</n></associate-N> =&gt; <selector><named-E><N><n>MATRIX</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>1</l></literal-E></lower-bound></section-subscript>,<section-subscript>:</section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></selector></associate></associate-LT>)</associate-stmt>
+    <associate-stmt>ASSOCIATE (<associate-LT><associate><associate-N><n>ELEM</n></associate-N> =&gt; <selector><named-E><N><n>ROW1</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>2</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></selector></associate></associate-LT>)</associate-stmt>
+      <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Element (1,2):'</S></string-E></output-item>, <output-item><named-E><N><n>ELEM</n></N></named-E></output-item></output-item-LT></write-stmt>
+    <end-associate-stmt>END ASSOCIATE</end-associate-stmt>
+  <end-associate-stmt>END ASSOCIATE</end-associate-stmt>
+
+  <C>! Appel de la subroutine</C>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>PROCESS_SEGMENT</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>S</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+  <C>! ASSOCIATE avec un tableau entier (alias de section)</C>
+  <associate-stmt>ASSOCIATE (<associate-LT><associate><associate-N><n>DIAG</n></associate-N> =&gt; <selector><array-constructor-E>[<ac-value-LT><ac-value><named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element>,<element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></ac-value>, <ac-value><named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>2</l></literal-E></element>,<element><literal-E><l>2</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></ac-value>, <ac-value><named-E><N><n>MATRIX</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>3</l></literal-E></element>,<element><literal-E><l>3</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></ac-value></ac-value-LT>]</array-constructor-E></selector></associate></associate-LT>)</associate-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Diagonale via ASSOCIATE:'</S></string-E></output-item>, <output-item><named-E><N><n>DIAG</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <end-associate-stmt>END ASSOCIATE</end-associate-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>ASSOCIATETEST</n></N></program-N></end-program-stmt>
+</file></object>
