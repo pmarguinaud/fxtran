@@ -16,7 +16,8 @@ SOURCES = \
   f77_12_io_file.f \
   f77_13_data_common.f \
   f77_14_equivalence.f \
-  f77_15_intrinsic.f
+  f77_15_intrinsic.f \
+  f77_16_character.f
 
 XMLS = $(SOURCES:.f=.f.xml)
 

@@ -15,7 +15,8 @@ SOURCES = \
   f95_11_namelist.f90 \
   f95_12_intrinsics.f90 \
   f95_13_io.f90 \
-  f95_14_contains.f90
+  f95_14_contains.f90 \
+  f95_15_transfer.f90
 
 XMLS = $(SOURCES:.f90=.f90.xml)
 

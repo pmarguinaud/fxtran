@@ -14,7 +14,10 @@ SOURCES = \
   f03_10_import.f90 \
   f03_11_iso_fortran_env.f90 \
   f03_12_intrinsics.f90 \
-  f03_13_param_derived.f90
+  f03_13_param_derived.f90 \
+  f03_14_associate.f90 \
+  f03_15_async.f90 \
+  f03_16_ieee.f90
 
 XMLS = $(SOURCES:.f90=.f90.xml)
 
