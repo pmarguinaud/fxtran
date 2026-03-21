@@ -1,0 +1,36 @@
+! Test: NAMELIST
+! Statements couverts: NAMELIST, READ avec NML=, WRITE avec NML=
+
+PROGRAM NAMELISTTEST
+  IMPLICIT NONE
+
+  INTEGER :: NSTEP, NOUT
+  REAL    :: DT, TMAX
+  LOGICAL :: VERBOSE
+  CHARACTER(LEN=20) :: OUTFILE
+
+  NAMELIST /PARAMS/ NSTEP, DT, TMAX, VERBOSE, OUTFILE
+  NAMELIST /IO/     NOUT, OUTFILE
+
+  ! Valeurs par defaut
+  NSTEP   = 100
+  DT      = 0.01
+  TMAX    = 1.0
+  VERBOSE = .FALSE.
+  OUTFILE = 'output.dat'
+  NOUT    = 10
+
+  ! WRITE avec NML=
+  WRITE(*, NML=PARAMS)
+  WRITE(*, NML=IO)
+
+  ! READ depuis fichier avec NML=
+  OPEN(10, FILE='namelist_input.nml', STATUS='UNKNOWN')
+  WRITE(10, NML=PARAMS)
+  REWIND(10)
+  READ(10, NML=PARAMS)
+  CLOSE(10, STATUS='DELETE')
+
+  WRITE(*,*) NSTEP, DT, TMAX
+
+END PROGRAM NAMELISTTEST

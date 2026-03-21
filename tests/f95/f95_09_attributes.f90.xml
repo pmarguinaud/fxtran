@@ -1,0 +1,103 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f95_09_attributes.f90"><C>! Test: attributs de procedures et d'arguments</C>
+<C>! Statements couverts: INTENT(IN/OUT/INOUT), OPTIONAL,</C>
+<C>!                      RECURSIVE, PURE (F95), ELEMENTAL (F95),</C>
+<C>!                      VALUE, arguments par mot-cle</C>
+
+<module-stmt>MODULE <module-N><N><n>ATTRMOD</n></N></module-N></module-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+<contains-stmt>CONTAINS</contains-stmt>
+
+  <C>! RECURSIVE: procedure qui s'appelle elle-meme</C>
+  <function-stmt><prefix>RECURSIVE</prefix> <intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>FACTORIAL</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>) <result-spec>RESULT(<N><n>RES</n></N>)</result-spec></function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <if-then-stmt>IF (<condition-E><op-E><named-E><N><n>N</n></N></named-E> <op><o>&lt;=</o></op> <literal-E><l>1</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+      <a-stmt><E-1><named-E><N><n>RES</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>1</l></literal-E></E-2></a-stmt>
+    <else-stmt>ELSE</else-stmt>
+      <a-stmt><E-1><named-E><N><n>RES</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>N</n></N></named-E> <op><o>*</o></op> <named-E><N><n>FACTORIAL</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>N</n></N></named-E> <op><o>-</o></op> <literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+    <end-if-stmt>END IF</end-if-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>FACTORIAL</n></N></function-N></end-function-stmt>
+
+  <C>! PURE: procedure sans effets de bord (F95)</C>
+  <function-stmt><prefix>PURE</prefix> <intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>PURE_ADD</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N>, <arg-N><N><n>B</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>PURE_ADD</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N></named-E> <op><o>+</o></op> <named-E><N><n>B</n></N></named-E></op-E></E-2></a-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>PURE_ADD</n></N></function-N></end-function-stmt>
+
+  <C>! ELEMENTAL: s'applique element par element (F95)</C>
+  <function-stmt><prefix>ELEMENTAL</prefix> <intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>CLAMP</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>LO</n></N></arg-N>, <arg-N><N><n>HI</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>LO</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>HI</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>CLAMP</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>MIN</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>MAX</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element>, <element><named-E><N><n>LO</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element>, <element><named-E><N><n>HI</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>CLAMP</n></N></function-N></end-function-stmt>
+
+  <C>! OPTIONAL: arguments optionnels</C>
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>GREET</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>NAME</n></N></arg-N>, <arg-N><N><n>TITLE</n></N></arg-N>, <arg-N><N><n>LOUD</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<star-E>*</star-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>           :: <EN-decl-LT><EN-decl><EN-N><N><n>NAME</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<star-E>*</star-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>, <attribute><attribute-N>OPTIONAL</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>TITLE</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>LOGICAL</T-N></intrinsic-T-spec></_T-spec_>,          <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>, <attribute><attribute-N>OPTIONAL</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>LOUD</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>60</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>MSG</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <if-then-stmt>IF (<condition-E><named-E><N><n>PRESENT</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>TITLE</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) THEN</if-then-stmt>
+      <a-stmt><E-1><named-E><N><n>MSG</n></N></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>TITLE</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>//</o></op> <string-E><S>' '</S></string-E></op-E> <op><o>//</o></op> <named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>NAME</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+    <else-stmt>ELSE</else-stmt>
+      <a-stmt><E-1><named-E><N><n>MSG</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>NAME</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+    <end-if-stmt>END IF</end-if-stmt>
+    <if-then-stmt>IF (<condition-E><named-E><N><n>PRESENT</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>LOUD</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) THEN</if-then-stmt>
+      <if-stmt>IF (<condition-E><named-E><N><n>LOUD</n></N></named-E></condition-E>) <action-stmt><a-stmt><E-1><named-E><N><n>MSG</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>MSG</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>//</o></op> <string-E><S>'!'</S></string-E></op-E></E-2></a-stmt></action-stmt></if-stmt>
+    <end-if-stmt>END IF</end-if-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>MSG</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>GREET</n></N></subroutine-N></end-subroutine-stmt>
+
+  <C>! INTENT(OUT) et INTENT(INOUT)</C>
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SWAP</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N>, <arg-N><N><n>B</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>INOUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>TMP</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>TMP</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>A</n></N></named-E></E-2></a-stmt><smc>;</smc> <a-stmt><E-1><named-E><N><n>A</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>B</n></N></named-E></E-2></a-stmt><smc>;</smc> <a-stmt><E-1><named-E><N><n>B</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>TMP</n></N></named-E></E-2></a-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SWAP</n></N></subroutine-N></end-subroutine-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INIT</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>ARR</n></N></arg-N>, <arg-N><N><n>VAL</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>OUT</intent-spec>)</attribute>  :: <EN-decl-LT><EN-decl><EN-N><N><n>ARR</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>   :: <EN-decl-LT><EN-decl><EN-N><N><n>VAL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>ARR</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>VAL</n></N></named-E></E-2></a-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>INIT</n></N></subroutine-N></end-subroutine-stmt>
+
+  <C>! PURE SUBROUTINE (F95)</C>
+  <subroutine-stmt><prefix>PURE</prefix> SUBROUTINE <subroutine-N><N><n>PURE_COPY</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>DST</n></N></arg-N>, <arg-N><N><n>SRC</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>OUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>DST</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>  :: <EN-decl-LT><EN-decl><EN-N><N><n>SRC</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>DST</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>SRC</n></N></named-E></E-2></a-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>PURE_COPY</n></N></subroutine-N></end-subroutine-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>ATTRMOD</n></N></module-N></end-module-stmt>
+
+
+<program-stmt>PROGRAM <program-N><N><n>ATTRTEST</n></N></program-N></program-stmt>
+  <use-stmt>USE <module-N><N><n>ATTRMOD</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>    :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>5</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>5</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>N</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>5</l></literal-E></E-2></a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>FACTORIAL</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>PURE_ADD</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1.0</l></literal-E></element>, <element><literal-E><l>2.0</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>X</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! ELEMENTAL applique a un scalaire et a un tableau</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>CLAMP</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>5.0</l></literal-E></element>, <element><literal-E><l>0.0</l></literal-E></element>, <element><literal-E><l>3.0</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+  <a-stmt><E-1><named-E><N><n>A</n></N></named-E></E-1> <a>=</a> <E-2><array-constructor-E>[<ac-value-LT><ac-value><op-E><op><o>-</o></op><literal-E><l>1.0</l></literal-E></op-E></ac-value>, <ac-value><literal-E><l>0.5</l></literal-E></ac-value>, <ac-value><literal-E><l>1.5</l></literal-E></ac-value>, <ac-value><literal-E><l>2.5</l></literal-E></ac-value>, <ac-value><literal-E><l>4.0</l></literal-E></ac-value></ac-value-LT>]</array-constructor-E></E-2></a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>CLAMP</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>A</n></N></named-E></element>, <element><literal-E><l>0.0</l></literal-E></element>, <element><literal-E><l>2.0</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Arguments par mot-cle (keyword arguments)</C>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>GREET</n></N></named-E></procedure-designator>(<arg-spec><arg><arg-N n="NAME"><k>NAME</k></arg-N>=<string-E><S>'ALICE'</S></string-E></arg></arg-spec>)</call-stmt>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>GREET</n></N></named-E></procedure-designator>(<arg-spec><arg><arg-N n="NAME"><k>NAME</k></arg-N>=<string-E><S>'BOB'</S></string-E></arg>, <arg><arg-N n="TITLE"><k>TITLE</k></arg-N>=<string-E><S>'DR.'</S></string-E></arg></arg-spec>)</call-stmt>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>GREET</n></N></named-E></procedure-designator>(<arg-spec><arg><arg-N n="LOUD"><k>LOUD</k></arg-N>=<literal-E>.TRUE.</literal-E></arg>, <arg><arg-N n="NAME"><k>NAME</k></arg-N>=<string-E><S>'CHARLIE'</S></string-E></arg>, <arg><arg-N n="TITLE"><k>TITLE</k></arg-N>=<string-E><S>'PROF.'</S></string-E></arg></arg-spec>)</call-stmt>
+
+  <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>1.0</l></literal-E></E-2></a-stmt><smc>;</smc> <a-stmt><E-1><named-E><N><n>Y</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>2.0</l></literal-E></E-2></a-stmt>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>SWAP</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>X</n></N></named-E></arg>, <arg><named-E><N><n>Y</n></N></named-E></arg></arg-spec>)</call-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>X</n></N></named-E></output-item>, <output-item><named-E><N><n>Y</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <call-stmt>CALL <procedure-designator><named-E><N><n>INIT</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>B</n></N></named-E></arg>, <arg><literal-E><l>0.0</l></literal-E></arg></arg-spec>)</call-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>B</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>ATTRTEST</n></N></program-N></end-program-stmt>
+</file></object>
