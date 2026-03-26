@@ -16,8 +16,9 @@ if (debian is not None):
 
 setup (
     name = "fxtran",
+    packages = ["fxtran"],
     version = "0.1",
-    ext_modules = [Extension ("fxtran", ["fxtran.c"], 
+    ext_modules = [Extension ("_fxtran", ["fxtran.c"],
     include_dirs=[TOP + '/include'], 
     libraries=['fxtran'],
     library_dirs=[prefix + "/lib", TOP + "/lib"])],

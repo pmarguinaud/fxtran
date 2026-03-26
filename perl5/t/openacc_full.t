@@ -78,7 +78,6 @@ SRC
 
 # ============================================================
 # PARALLEL -- data clauses: COPY, COPYOUT, NO_CREATE, PRESENT, ATTACH
-# (COPY before COPYOUT to avoid known parser limitation with COPYIN->COPYOUT)
 # ============================================================
 
 {
@@ -145,7 +144,7 @@ SRC
 }
 
 # ============================================================
-# PARALLEL -- DTYPE (device-type alias, works; DEVICE_TYPE is broken)
+# PARALLEL -- DTYPE (device-type alias)
 # ============================================================
 
 {
@@ -855,18 +854,8 @@ SRC
   hasnt ('//f:broken-stmt',       $doc);
 }
 
-# ============================================================
-# Known parser bugs -- these tests FAIL intentionally until
-# FXTRAN_ACC.c is fixed:
-#   - DEVICE_NUM, DEVICE_TYPE, DEVICE_RESIDENT, DEVICEPTR : le
-#     préfixe DEVICE (6 chars) est matché en premier dans la boucle
-#     de clauses (accd_clause_list), avant DEVICE_NUM etc.
-#   - COPYIN suivi de COPYOUT : COPY (4 chars) re-matche COPYOUT
-#     dans la même itération while, après que COPYIN a avancé t.
-# ============================================================
-
 {
-  my $doc = eval { parse_acc (<< 'SRC') };
+  my $doc = parse_acc (<< 'SRC');
 PROGRAM MAIN
 !$ACC INIT DEVICE_NUM(0)
 END PROGRAM
@@ -875,7 +864,7 @@ SRC
 }
 
 {
-  my $doc = eval { parse_acc (<< 'SRC') };
+  my $doc = parse_acc (<< 'SRC');
 PROGRAM MAIN
 !$ACC INIT DEVICE_TYPE(nvidia)
 END PROGRAM
@@ -884,7 +873,7 @@ SRC
 }
 
 {
-  my $doc = eval { parse_acc (<< 'SRC') };
+  my $doc = parse_acc (<< 'SRC');
 PROGRAM MAIN
 !$ACC DECLARE DEVICE_RESIDENT(A)
 END PROGRAM
@@ -893,7 +882,7 @@ SRC
 }
 
 {
-  my $doc = eval { parse_acc (<< 'SRC') };
+  my $doc = parse_acc (<< 'SRC');
 PROGRAM MAIN
 !$ACC PARALLEL DEVICEPTR(A)
 !$ACC END PARALLEL
@@ -903,7 +892,7 @@ SRC
 }
 
 {
-  my $doc = eval { parse_acc (<< 'SRC') };
+  my $doc = parse_acc (<< 'SRC');
 PROGRAM MAIN
 !$ACC DATA COPYIN(A) COPYOUT(B)
 !$ACC END DATA

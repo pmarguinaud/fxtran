@@ -59,18 +59,18 @@ static PyMethodDef fxtran_Methods[] =
 static struct PyModuleDef fxtran_Module =
 {
   PyModuleDef_HEAD_INIT,
-  "fxtran", 
-  "",          
-  -1,          
+  "_fxtran",
+  "",
+  -1,
   fxtran_Methods
 };
 
-PyMODINIT_FUNC 
-PyInit_fxtran ()
+PyMODINIT_FUNC
+PyInit__fxtran ()
 {
   PyObject * m = PyModule_Create (&fxtran_Module);
 
-  fxtran_Error = PyErr_NewException ("fxtran.error", NULL, NULL);
+  fxtran_Error = PyErr_NewException ("_fxtran.error", NULL, NULL);
   Py_XINCREF (fxtran_Error);
 
   PyModule_AddObject (m, "error", fxtran_Error);
