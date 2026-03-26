@@ -7,3 +7,5 @@ lib/*
 *.swp
 .gdb_history
 share/man
+__pycache__/
+*.pyc
