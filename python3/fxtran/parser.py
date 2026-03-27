@@ -150,10 +150,10 @@ class Parser:
         program = fragment + '\nEND\n'
         xml = _fxtran.run(*fopts, program)
         doc = _xml_parser.load_xml(string=xml)
-        program_unit = doc.documentElement.firstChild.firstChild  # object → file → program-unit
+        file_element = doc.documentElement.firstChild  # object → file
         for _ in range(2):
-            program_unit.lastChild.unbindNode()
-        return list(program_unit.childNodes())
+            file_element.lastChild.unbindNode()
+        return list(file_element.childNodes())
 
     def parse_statement(self, statement, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['Statement'])
