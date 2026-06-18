@@ -564,6 +564,10 @@ void FXTRAN_dump_ompd (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlct
 
   XST (str);
 
+  if (ctx->in_stmt)
+    FXTRAN_ABORT ("Expected ctx->in_stmt == 0");
+
+  ctx->in_stmt = 1;
 
 #define case_macro(T) \
   case FXTRAN_OMPD_##T: ompd_##T##_extra (t, ci, ctx); break;
@@ -582,6 +586,8 @@ void FXTRAN_dump_ompd (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlct
     XAD(strlen (t));
 
   XET ();
+
+  ctx->in_stmt = 0;
 
 }
 

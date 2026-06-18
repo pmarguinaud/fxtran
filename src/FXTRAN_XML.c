@@ -114,16 +114,16 @@ static void dump_txt_tag (FXTRAN_xmlctx * ctx, int pos1, int pos2, int m, const 
     return;
 
   int cod = 
-     ((m == FXTRAN_NAM) || (m == FXTRAN_CPT) || (m == FXTRAN_COD) 
-      || (m == FXTRAN_KWD) || (m == FXTRAN_OPR) || (m == FXTRAN_OMD) || (m == FXTRAN_OMC));
+     ((m == FXTRAN_NAM) || (m == FXTRAN_CPT) || (m == FXTRAN_COD) || (m == FXTRAN_ACC) 
+      || (m == FXTRAN_KWD) || (m == FXTRAN_OPR) || (m == FXTRAN_OMD) || (m == FXTRAN_DDD));
   int uc = ctx->opts.uppercase && cod;
   int sl = ctx->opts.strip_linefeed;
   int sp = ctx->opts.strip_spaces && (m != FXTRAN_STR) && (m != FXTRAN_CPP) && (m != FXTRAN_COM);
 
-  if (ctx->opts.strip_spaces && ((m == FXTRAN_MAR) || (m == FXTRAN_MAL)))
-    {
-      /* Do nothing */
-    }
+  if (ctx->opts.strip_spaces && ((m == FXTRAN_MAR) || (m == FXTRAN_MAL))) { /* Do nothing */ }
+  else if ((ctx->opts.strip_linefeed && (m == FXTRAN_ACC)) && ctx->in_stmt) { /* Do nothing */ }
+  else if ((ctx->opts.strip_linefeed && (m == FXTRAN_OMD)) && ctx->in_stmt) { /* Do nothing */ }
+  else if ((ctx->opts.strip_linefeed && (m == FXTRAN_DDD)) && ctx->in_stmt) { /* Do nothing */ }
   else if (ctx->opts.strip_linefeed && (m == FXTRAN_SMC))
     {
       FXTRAN_FBUFFER_printf (&ctx->fb, "\n");

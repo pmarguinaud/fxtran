@@ -741,6 +741,11 @@ void FXTRAN_dump_accd (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlct
 
   XST (str);
 
+  if (ctx->in_stmt)
+    FXTRAN_ABORT ("Expected ctx->in_stmt == 0");
+
+  ctx->in_stmt = 1;
+
 #define case_macro(T) \
   case FXTRAN_ACCD_##T: accd_##T##_extra (t, ci, ctx); break;
 
@@ -758,6 +763,8 @@ void FXTRAN_dump_accd (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlct
     XAD(strlen (t));
 
   XET ();
+
+  ctx->in_stmt = 0;
 
 }
 

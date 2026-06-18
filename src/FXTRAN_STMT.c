@@ -4692,27 +4692,19 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
     
   if (otd == 2)
     {
-      ctx->in_stmt++;
       FXTRAN_dump_omptd (text1, ci1, ctx);
-      ctx->in_stmt--;
     }
   else if (omp == 2)
     {
-      ctx->in_stmt++;
       FXTRAN_dump_ompd (text1, ci1, ctx);
-      ctx->in_stmt--;
     }
   else if (acc == 2)
     {
-      ctx->in_stmt++;
       FXTRAN_dump_accd (text1, ci1, ctx);
-      ctx->in_stmt--;
     }
   else if (ddd == 2)
     {
-      ctx->in_stmt++;
       FXTRAN_dump_dddd (text1, ci1, ctx);
-      ctx->in_stmt--;
     }
   else
     {

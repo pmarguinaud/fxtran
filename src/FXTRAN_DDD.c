@@ -120,9 +120,16 @@ void FXTRAN_dump_dddd (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlct
 
   XST (tag);
 
+  if (ctx->in_stmt)
+    FXTRAN_ABORT ("Expected ctx->in_stmt == 0");
+
+  ctx->in_stmt = 1;
+
   XAD(strlen (t));
 
   XET ();
+
+  ctx->in_stmt = 0;
 
 }
 
