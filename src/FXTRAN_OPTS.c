@@ -137,6 +137,7 @@ static int FXTRAN_parse_opts0 (FXTRAN_xmlctx * ctx, FXTRAN_opts * opts,
       FXTRAN_handle_flag (namelist-diff, namelist_diff, Allow diff namelist);
       FXTRAN_handle_flag (openmp, openmp, Handle OpenMP directives);
       FXTRAN_handle_flag (openacc, openacc, Handle OpenACC directives);
+      FXTRAN_handle_flag (openmp-target, openmp_target, Handle OpenMP Target offloading directives);
       FXTRAN_handle_flag (cpp, cpp, Preprocess source code);
       FXTRAN_handle_flag (no-cpp, nocpp, Do not preprocess source code);
       FXTRAN_handle_flag (no-include, noinclude, Do not handle include lines);

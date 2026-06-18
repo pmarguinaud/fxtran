@@ -1,0 +1,76 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_10_import.f90"><C>! Test: IMPORT dans les blocs d'interface</C>
+<C>! Statements couverts: IMPORT (importe les entites du scope englobant</C>
+<C>!                      dans un bloc d'interface)</C>
+
+<module-stmt>MODULE <module-N><N><n>IMPORTMOD</n></N></module-N></module-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>PARAMETER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>WP</n></N></EN-N> = <init-E><named-E><N><n>SELECTED_REAL_KIND</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>15</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <T-stmt>TYPE :: <T-N><N><n>CONFIG</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>WP</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>TOL</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+  <end-T-stmt>END TYPE <T-N><N><n>CONFIG</n></N></T-N></end-T-stmt>
+
+  <C>! IMPORT permet au bloc d'interface de voir CONFIG et WP</C>
+  <interface-stmt>INTERFACE</interface-stmt>
+    <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SOLVER</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>CFG</n></N></arg-N>, <arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>IERR</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+      <import-stmt>IMPORT :: <import-N-LT><N><n>CONFIG</n></N>, <N><n>WP</n></N></import-N-LT></import-stmt>
+      <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>CONFIG</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>  :: <EN-decl-LT><EN-decl><EN-N><N><n>CFG</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>WP</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>,     <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>OUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_>,      <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>OUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>IERR</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SOLVER</n></N></subroutine-N></end-subroutine-stmt>
+
+    <function-stmt>FUNCTION <function-N><N><n>OBJECTIVE</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>) <result-spec>RESULT(<N><n>F</n></N>)</result-spec></function-stmt>
+      <import-stmt>IMPORT :: <import-N-LT><N><n>WP</n></N></import-N-LT></import-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>WP</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>WP</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>F</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-function-stmt>END FUNCTION <function-N><N><n>OBJECTIVE</n></N></function-N></end-function-stmt>
+  <end-interface-stmt>END INTERFACE</end-interface-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>IMPORTMOD</n></N></module-N></end-module-stmt>
+
+
+<module-stmt>MODULE <module-N><N><n>IMPL_MOD</n></N></module-N></module-stmt>
+  <use-stmt>USE <module-N><N><n>IMPORTMOD</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+<contains-stmt>CONTAINS</contains-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SOLVER</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>CFG</n></N></arg-N>, <arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>IERR</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>CONFIG</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>  :: <EN-decl-LT><EN-decl><EN-N><N><n>CFG</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>WP</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>,     <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>OUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_>,      <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>OUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>IERR</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1>    <a>=</a> <E-2><literal-E><l>0.0</l><K-spec>_<N><n>WP</n></N></K-spec></literal-E></E-2></a-stmt>
+    <a-stmt><E-1><named-E><N><n>IERR</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'SOLVER N='</S></string-E></output-item>, <output-item><named-E><N><n>CFG</n></N><R-LT><component-R>%<ct>N</ct></component-R></R-LT></named-E></output-item>, <output-item><string-E><S>' TOL='</S></string-E></output-item>, <output-item><named-E><N><n>CFG</n></N><R-LT><component-R>%<ct>TOL</ct></component-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SOLVER</n></N></subroutine-N></end-subroutine-stmt>
+
+  <function-stmt>FUNCTION <function-N><N><n>OBJECTIVE</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>) <result-spec>RESULT(<N><n>F</n></N>)</result-spec></function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>WP</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>WP</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>F</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>F</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>SUM</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>X</n></N></named-E><op><o>**</o></op><literal-E><l>2</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>OBJECTIVE</n></N></function-N></end-function-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>IMPL_MOD</n></N></module-N></end-module-stmt>
+
+
+<program-stmt>PROGRAM <program-N><N><n>IMPORTTEST</n></N></program-N></program-stmt>
+  <use-stmt>USE <module-N><N><n>IMPORTMOD</n></N></module-N></use-stmt>
+  <use-stmt>USE <module-N><N><n>IMPL_MOD</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>CONFIG</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>CFG</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N><K-selector>(<K-spec><named-E><N><n>WP</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>IERR</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>CFG</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>CONFIG</n></N><R-LT><parens-R>(<arg-spec><arg><arg-N n="N"><k>N</k></arg-N>=<literal-E><l>10</l></literal-E></arg>, <arg><arg-N n="TOL"><k>TOL</k></arg-N>=<literal-E><l>1.0E-8</l><K-spec>_<N><n>WP</n></N></K-spec></literal-E></arg></arg-spec>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>X</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>CFG</n></N><R-LT><component-R>%<ct>N</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+
+  <call-stmt>CALL <procedure-designator><named-E><N><n>SOLVER</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>CFG</n></N></named-E></arg>, <arg><named-E><N><n>X</n></N></named-E></arg>, <arg><named-E><N><n>IERR</n></N></named-E></arg></arg-spec>)</call-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'IERR ='</S></string-E></output-item>, <output-item><named-E><N><n>IERR</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'OBJ ='</S></string-E></output-item>, <output-item><named-E><N><n>OBJECTIVE</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <deallocate-stmt>DEALLOCATE(<arg-spec><arg><named-E><N><n>X</n></N></named-E></arg></arg-spec>)</deallocate-stmt>
+<end-program-stmt>END PROGRAM <program-N><N><n>IMPORTTEST</n></N></program-N></end-program-stmt>
+</file></object>

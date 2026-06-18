@@ -633,7 +633,7 @@ static void accd_clause_list (const char * t, const FXTRAN_char_info * ci,
       k = 0;
 #define test_macro(T) \
     len = strlen (#T);      \
-    if (strncmp (#T, t, len) == 0)      \
+    if ((k == 0) && (strncmp (#T, t, len) == 0))      \
       {                                 \
         k = FXTRAN_acc_##T(t, ci, ctx); \
         XAD(k);                         \

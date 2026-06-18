@@ -1,0 +1,13 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="0"><file name="f77_04_block_data.f"><C>C     Test: BLOCK DATA / END</C>
+<C>C     Statements couverts: BLOCK DATA, COMMON, DATA, REAL, INTEGER, END</C>
+<m>      </m><block-data-stmt>BLOCK DATA <block-data-N><N><n>INITBLK</n></N></block-data-N></block-data-stmt>
+<m>      </m><common-stmt>COMMON /<common-block-N><n>NUMBLK</n></common-block-N>/ <common-block-obj-LT><common-block-obj><common-block-obj-N><N><n>IVAL</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>RVAL</n></N></common-block-obj-N></common-block-obj></common-block-obj-LT></common-stmt>
+<m>      </m><common-stmt>COMMON /<common-block-N><n>STRBLK</n></common-block-N>/ <common-block-obj-LT><common-block-obj><common-block-obj-N><N><n>FLAG</n></N></common-block-obj-N></common-block-obj></common-block-obj-LT></common-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>IVAL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>RVAL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>LOGICAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>FLAG</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><data-stmt>DATA <data-stmt-set><data-stmt-obj-LT><data-stmt-obj><named-E><N><n>IVAL</n></N></named-E></data-stmt-obj></data-stmt-obj-LT> /<data-stmt-value-LT><data-stmt-value><data-stmt-constant><literal-E><l>10</l></literal-E></data-stmt-constant></data-stmt-value></data-stmt-value-LT>/</data-stmt-set></data-stmt>
+<m>      </m><data-stmt>DATA <data-stmt-set><data-stmt-obj-LT><data-stmt-obj><named-E><N><n>RVAL</n></N></named-E></data-stmt-obj></data-stmt-obj-LT> /<data-stmt-value-LT><data-stmt-value><data-stmt-constant><literal-E><l>3.14</l></literal-E></data-stmt-constant></data-stmt-value></data-stmt-value-LT>/</data-stmt-set></data-stmt>
+<m>      </m><data-stmt>DATA <data-stmt-set><data-stmt-obj-LT><data-stmt-obj><named-E><N><n>FLAG</n></N></named-E></data-stmt-obj></data-stmt-obj-LT> /<data-stmt-value-LT><data-stmt-value><data-stmt-constant><literal-E>.TRUE.</literal-E></data-stmt-constant></data-stmt-value></data-stmt-value-LT>/</data-stmt-set></data-stmt>
+<m>      </m><end-block-data-stmt>END</end-block-data-stmt>
+</file></object>

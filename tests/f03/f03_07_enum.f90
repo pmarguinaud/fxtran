@@ -1,0 +1,57 @@
+! Test: ENUM, BIND(C) / ENUMERATOR / END ENUM
+! Statements couverts: ENUM BIND(C), ENUMERATOR, END ENUM
+
+PROGRAM ENUMTEST
+  USE ISO_C_BINDING
+  IMPLICIT NONE
+
+  ! Enumerateur simple compatible C
+  ENUM, BIND(C)
+    ENUMERATOR :: RED   = 0
+    ENUMERATOR :: GREEN = 1
+    ENUMERATOR :: BLUE  = 2
+  END ENUM
+
+  ! Enumerateur avec valeurs automatiques (increment de 1)
+  ENUM, BIND(C)
+    ENUMERATOR :: SUNDAY    = 0
+    ENUMERATOR :: MONDAY
+    ENUMERATOR :: TUESDAY
+    ENUMERATOR :: WEDNESDAY
+    ENUMERATOR :: THURSDAY
+    ENUMERATOR :: FRIDAY
+    ENUMERATOR :: SATURDAY
+  END ENUM
+
+  ! Enumerateur avec valeurs mixtes
+  ENUM, BIND(C)
+    ENUMERATOR :: ERR_OK     = 0
+    ENUMERATOR :: ERR_IO     = 1
+    ENUMERATOR :: ERR_MEM    = 2
+    ENUMERATOR :: ERR_RANGE  = 4
+    ENUMERATOR :: ERR_FATAL  = 8
+  END ENUM
+
+  INTEGER(KIND(RED))  :: COLOR
+  INTEGER(KIND(MONDAY)) :: DAY
+  INTEGER(KIND(ERR_OK)) :: STATUS
+
+  COLOR  = GREEN
+  DAY    = WEDNESDAY
+  STATUS = ERR_OK
+
+  SELECT CASE (COLOR)
+    CASE (RED)
+      WRITE(*,*) 'ROUGE'
+    CASE (GREEN)
+      WRITE(*,*) 'VERT'
+    CASE (BLUE)
+      WRITE(*,*) 'BLEU'
+  END SELECT
+
+  WRITE(*,*) 'JOUR:', DAY
+  WRITE(*,*) 'STATUS:', STATUS
+
+  IF (STATUS == ERR_OK) WRITE(*,*) 'OK'
+
+END PROGRAM ENUMTEST

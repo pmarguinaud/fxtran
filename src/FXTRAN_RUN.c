@@ -105,8 +105,8 @@ int FXTRAN_RUN (int argc, char * argv[], char * Text, char ** Xml, char ** Err)
     FXTRAN_FBUFFER_printf (&ctx->fb, "<namelist xmlns=\"" FXT_NS_NAM "\">");
   else
     FXTRAN_FBUFFER_printf (&ctx->fb, "<object xmlns=\"" FXT_NS_SYN "\" source-form=\"%s\""
-             " source-width=\"%d\" openmp=\"%d\" openacc=\"%d\">",
-             form_str (ctx->opts.form), ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc);
+             " source-width=\"%d\" openmp=\"%d\" openacc=\"%d\" openmp-target=\"%d\">",
+             form_str (ctx->opts.form), ctx->opts.line_length, ctx->opts.openmp, ctx->opts.openacc, ctx->opts.openmp_target);
 
   ctx->fb.len0 = FXTRAN_FBUFFER_len (&ctx->fb);
 

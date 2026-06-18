@@ -1,0 +1,31 @@
+C     Test: FUNCTION / RETURN / END
+C     Statements couverts: FUNCTION, RETURN, END
+      REAL FUNCTION SQUARE(X)
+      REAL X
+      SQUARE = X * X
+      RETURN
+      END
+
+      DOUBLE PRECISION FUNCTION DPFUNC(D)
+      DOUBLE PRECISION D
+      DPFUNC = D * 2.0D0
+      RETURN
+      END
+
+      LOGICAL FUNCTION ISPOS(X)
+      REAL X
+      ISPOS = X .GT. 0.0
+      RETURN
+      END
+
+      PROGRAM TESTFUNC
+      REAL SQUARE, Y
+      DOUBLE PRECISION DPFUNC, D
+      LOGICAL ISPOS
+      EXTERNAL SQUARE, DPFUNC, ISPOS
+      Y = SQUARE(3.0)
+      D = DPFUNC(1.5D0)
+      IF (ISPOS(Y)) THEN
+        WRITE(*,*) 'POSITIVE'
+      END IF
+      END

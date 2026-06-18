@@ -61,13 +61,15 @@ typedef enum {
 
 
 #define FXTRAN_accc_list(macro) \
+  macro (DEVICEPTR                 )       \
+  macro (DEVICE_RESIDENT           )       \
+  macro (DEVICE_TYPE               )       \
+  macro (DEVICE_NUM                )       \
   macro (DEVICE                    )       \
   macro (HOST                      )       \
   macro (BIND                      )       \
   macro (NOHOST                    )       \
   macro (LINK                      )       \
-  macro (DEVICE_NUM                )       \
-  macro (DEVICE_RESIDENT           )       \
   macro (TILE                      )       \
   macro (SEQ                       )       \
   macro (INDEPENDENT               )       \
@@ -80,13 +82,11 @@ typedef enum {
   macro (DETACH                    )       \
   macro (DELETE                    )       \
   macro (DTYPE                     )       \
-  macro (DEVICE_TYPE               )       \
   macro (DEFAULT_ASYNC             )       \
   macro (DEFAULT                   )       \
   macro (ATTACH                    )       \
-  macro (PRIVATE                   )       \
   macro (FIRSTPRIVATE              )       \
-  macro (DEVICEPTR                 )       \
+  macro (PRIVATE                   )       \
   macro (PRESENT                   )       \
   macro (NO_CREATE                 )       \
   macro (CREATE                    )       \
@@ -102,7 +102,7 @@ typedef enum {
   macro (VECTOR                    )       \
   macro (GANG                      )       \
   macro (NUM_WORKERS               )       \
-  macro (NUM_GANGS                 )       
+  macro (NUM_GANGS                 )
 
 /* TODO ACC INTRINSICS */
 

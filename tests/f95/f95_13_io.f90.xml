@@ -1,0 +1,55 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f95_13_io.f90"><C>! Test: I/O avancee F90/F95</C>
+<C>! Statements couverts: READ/WRITE avec ADVANCE=, EOR=, PENDING=,</C>
+<C>!                      lecture interne (internal READ/WRITE),</C>
+<C>!                      OPEN avec nouveaux parametres</C>
+
+<program-stmt>PROGRAM <program-N><N><n>IOTEST</n></N></program-N></program-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>80</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>LINE</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>20</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>WORD</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>IVAL</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ISTAT</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>    :: <EN-decl-LT><EN-decl><EN-N><N><n>RVAL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>40</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>BUFFER</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <C>! Lecture/ecriture interne (internal file)</C>
+  <a-stmt><E-1><named-E><N><n>BUFFER</n></N></named-E></E-1> <a>=</a> <E-2><string-E><S>'42 3.14159 HELLO'</S></string-E></E-2></a-stmt>
+  <read-stmt>READ(<io-control-spec><io-control><named-E><N><n>BUFFER</n></N></named-E></io-control>, <io-control>*</io-control></io-control-spec>) <input-item-LT><input-item><named-E><N><n>IVAL</n></N></named-E></input-item>, <input-item><named-E><N><n>RVAL</n></N></named-E></input-item>, <input-item><named-E><N><n>WORD</n></N></named-E></input-item></input-item-LT></read-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>IVAL</n></N></named-E></output-item>, <output-item><named-E><N><n>RVAL</n></N></named-E></output-item>, <output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>WORD</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Ecriture interne avec format</C>
+  <write-stmt>WRITE(<io-control-spec><io-control><named-E><N><n>BUFFER</n></N></named-E></io-control>, <io-control><string-E><S>'(I5,F10.4)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><literal-E><l>123</l></literal-E></output-item>, <output-item><literal-E><l>4.567</l></literal-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>BUFFER</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! OPEN avec STATUS='SCRATCH' (fichier temporaire)</C>
+  <open-stmt>OPEN(<connect-spec-spec><connect-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<literal-E><l>20</l></literal-E></connect-spec>, <connect-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'SCRATCH'</S></string-E></connect-spec>, <connect-spec><arg-N n="FORM"><k>FORM</k></arg-N>=<string-E><S>'FORMATTED'</S></string-E></connect-spec></connect-spec-spec>)</open-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control><literal-E><l>20</l></literal-E></io-control>, <io-control><string-E><S>'(A)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'LIGNE 1'</S></string-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control><literal-E><l>20</l></literal-E></io-control>, <io-control><string-E><S>'(A)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'LIGNE 2'</S></string-E></output-item></output-item-LT></write-stmt>
+  <rewind-stmt>REWIND(<pos-spec-spec><pos-spec><literal-E><l>20</l></literal-E></pos-spec></pos-spec-spec>)</rewind-stmt>
+  <read-stmt>READ(<io-control-spec><io-control><literal-E><l>20</l></literal-E></io-control>, <io-control><string-E><S>'(A)'</S></string-E></io-control></io-control-spec>) <input-item-LT><input-item><named-E><N><n>LINE</n></N></named-E></input-item></input-item-LT></read-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>LINE</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+  <close-stmt>CLOSE(<close-spec-spec><close-spec><literal-E><l>20</l></literal-E></close-spec></close-spec-spec>)</close-stmt>
+
+  <C>! OPEN avec ACTION= et POSITION=</C>
+  <open-stmt>OPEN(<connect-spec-spec><connect-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<literal-E><l>21</l></literal-E></connect-spec>, <connect-spec><arg-N n="FILE"><k>FILE</k></arg-N>=<string-E><S>'test_io_f95.dat'</S></string-E></connect-spec>, <connect-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'UNKNOWN'</S></string-E></connect-spec>, <cnt>&amp;</cnt>
+       <connect-spec><arg-N n="ACTION"><k>ACTION</k></arg-N>=<string-E><S>'READWRITE'</S></string-E></connect-spec>, <connect-spec><arg-N n="POSITION"><k>POSITION</k></arg-N>=<string-E><S>'REWIND'</S></string-E></connect-spec>, <connect-spec><arg-N n="IOSTAT"><k>IOSTAT</k></arg-N>=<named-E><N><n>ISTAT</n></N></named-E></connect-spec></connect-spec-spec>)</open-stmt>
+  <if-then-stmt>IF (<condition-E><op-E><named-E><N><n>ISTAT</n></N></named-E> <op><o>==</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control><literal-E><l>21</l></literal-E></io-control>, <io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><literal-E><l>1.0</l></literal-E></output-item>, <output-item><literal-E><l>2.0</l></literal-E></output-item>, <output-item><literal-E><l>3.0</l></literal-E></output-item></output-item-LT></write-stmt>
+    <close-stmt>CLOSE(<close-spec-spec><close-spec><literal-E><l>21</l></literal-E></close-spec>, <close-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'DELETE'</S></string-E></close-spec></close-spec-spec>)</close-stmt>
+  <end-if-stmt>END IF</end-if-stmt>
+
+  <C>! WRITE avec ADVANCE='NO' (pas de saut de ligne)</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>, <io-control><string-E><S>'(A)'</S></string-E></io-control>, <io-control><arg-N n="ADVANCE"><k>ADVANCE</k></arg-N>=<string-E><S>'NO'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'SANS RETOUR '</S></string-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>, <io-control><string-E><S>'(A)'</S></string-E></io-control>, <io-control><arg-N n="ADVANCE"><k>ADVANCE</k></arg-N>=<string-E><S>'YES'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'AVEC RETOUR'</S></string-E></output-item></output-item-LT></write-stmt>
+
+  <C>! INQUIRE etendu</C>
+  <block-stmt>BLOCK</block-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>RECL_VAL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>20</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>FORM_VAL</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ACCESS_VAL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>LOGICAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>LEXIST</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>LOPEN</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <inquire-stmt>INQUIRE(<inquiry-spec-spec><inquiry-spec><arg-N n="FILE"><k>FILE</k></arg-N>=<string-E><S>'test_io_f95.dat'</S></string-E></inquiry-spec>, <inquiry-spec><arg-N n="EXIST"><k>EXIST</k></arg-N>=<named-E><N><n>LEXIST</n></N></named-E></inquiry-spec></inquiry-spec-spec>)</inquire-stmt>
+    <inquire-stmt>INQUIRE(<inquiry-spec-spec><inquiry-spec><arg-N n="UNIT"><k>UNIT</k></arg-N>=<literal-E><l>21</l></literal-E></inquiry-spec>, <inquiry-spec><arg-N n="OPENED"><k>OPENED</k></arg-N>=<named-E><N><n>LOPEN</n></N></named-E></inquiry-spec>, <inquiry-spec><arg-N n="FORM"><k>FORM</k></arg-N>=<named-E><N><n>FORM_VAL</n></N></named-E></inquiry-spec>, <inquiry-spec><arg-N n="IOSTAT"><k>IOSTAT</k></arg-N>=<named-E><N><n>ISTAT</n></N></named-E></inquiry-spec></inquiry-spec-spec>)</inquire-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>LEXIST</n></N></named-E></output-item>, <output-item><named-E><N><n>LOPEN</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <end-block-stmt>END BLOCK</end-block-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>IOTEST</n></N></program-N></end-program-stmt>
+</file></object>

@@ -20,6 +20,7 @@
 #include "FXTRAN_XML.h"
 #include "FXTRAN_OMP.h"
 #include "FXTRAN_ACC.h"
+#include "FXTRAN_OMP_TARGET.h"
 
 
 #define fc_isspace(c) (((c) == ' ') || ((c) == '\t'))
@@ -32,16 +33,18 @@
       { l++; c = 0; }                     \
     else                                  \
       { c++; }                            \
-    if ((!omp) && (!acc) & c       &&     \
+    if ((!omp) && (!acc) && (!otd) & c &&  \
         (ci[i].mask != FXTRAN_SPC) &&     \
         (ci[i].mask != FXTRAN_COM) &&     \
         (ci[i].mask != FXTRAN_OMD) &&     \
         (ci[i].mask != FXTRAN_ACC) &&     \
+        (ci[i].mask != FXTRAN_OTD) &&     \
         (ci[i].mask != FXTRAN_MAL) &&     \
         (ci[i].mask != FXTRAN_OMC))       \
       {                                   \
         OMP = 0;                          \
         ACC = 0;                          \
+        OTD = 0;                          \
       }                                   \
     i++;                                  \
   } while (0)
@@ -61,10 +64,15 @@
 #define CASE_FXTRAN_HANDLE_NEW_BANG \
    case '!':                                       \
      {                                             \
+       int kotd =                                  \
+        (strncasecmp (&text[i+1], "$omp", 4) == 0) \
+	       &&  ctx->opts.openmp_target  ?      \
+	   FXTRAN_handle_omp_target (text, ci, i, OTD) \
+	          : 0;                             \
        int komp =                                  \
           ((strncmp (&text[i+1], "$ ", 2) == 0) || \
        (strncasecmp (&text[i+1], "$omp", 4) == 0)) \
-	       &&  ctx->opts.openmp  ?             \
+	       &&  ctx->opts.openmp  && !kotd ?    \
 	   FXTRAN_handle_omp (text, ci, i, OMP)    \
 	          : 0;                             \
        int kacc =                                  \
@@ -72,7 +80,15 @@
 	       &&  ctx->opts.openacc  ?            \
 	   FXTRAN_handle_acc (text, ci, i, ACC)    \
 	          : 0;                             \
-       if (komp != 0)                              \
+       if (kotd != 0)                              \
+         {                                         \
+           kotd--;                                 \
+           for (; kotd; kotd--)                    \
+             FXTRAN_NEXT_CHAR;                     \
+           otd = 1;                                \
+           OTD = 1;                                \
+         }                                         \
+       else if (komp != 0)                         \
          {                                         \
            komp--;                                 \
            for (; komp; komp--)                    \
@@ -198,6 +214,8 @@ void FXTRAN_FIXED_decode (FXTRAN_xmlctx * ctx)
   int omp = 0;  /* true if current line starts with an OpenMP sentinel */
   int ACC = 0;  /* true if we are in an OpenACC directive */
   int acc = 0;  /* true if current line starts with an OpenACC sentinel */
+  int OTD = 0;  /* true if we are in an OpenMP Target directive */
+  int otd = 0;  /* true if current line starts with an OpenMP Target sentinel */
 
 
   len = strlen (text);
@@ -366,6 +384,7 @@ void FXTRAN_FIXED_decode (FXTRAN_xmlctx * ctx)
             break;
             case FXTRAN_OMD:
             case FXTRAN_ACC:
+            case FXTRAN_OTD:
             case FXTRAN_OMC:
             case FXTRAN_OPT:
             case FXTRAN_COM:

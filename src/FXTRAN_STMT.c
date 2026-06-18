@@ -16,6 +16,7 @@
 #include "FXTRAN_ERROR.h"
 #include "FXTRAN_OMP.h"
 #include "FXTRAN_ACC.h"
+#include "FXTRAN_OMP_TARGET.h"
 #include "FXTRAN_DDD.h"
 #include "FXTRAN_ALPHA.h"
 
@@ -3967,7 +3968,7 @@ static void stmt_simple_extra (const char * t, const FXTRAN_char_info * ci,
   XST (_T(_S(ACTION) H _S(STMT)));
   k = strlen (t);
 
-  FXTRAN_stmt (t, ci, stack, ctx, 0, 0, 0, 0);
+  FXTRAN_stmt (t, ci, stack, ctx, 0, 0, 0, 0, 0);
 
   XAD(k);
   XET ();
@@ -4285,7 +4286,7 @@ static void stmt_forall_extra (const char * t, const FXTRAN_char_info * ci, FXTR
       XST (_T(_S(ACTION) H _S(STMT)));
       k = strlen (t);
      
-      FXTRAN_stmt (t, ci, stack, ctx, 0, 0, 0, 0);
+      FXTRAN_stmt (t, ci, stack, ctx, 0, 0, 0, 0, 0);
      
       XAD(k);
       XET ();
@@ -4665,9 +4666,9 @@ static void dump_otu (const char ** otu, int offset, FXTRAN_xmlctx * ctx)
     }
 }
 
-void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci, 
+void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
 		  FXTRAN_stmt_stack * stack, FXTRAN_xmlctx * ctx,
-		  int omp, int acc, int ddd, int label)
+		  int omp, int acc, int ddd, int otd, int label)
 {
   int len = strlen (text);
   const int ncharmargin = 32;
@@ -4689,17 +4690,29 @@ void FXTRAN_stmt (const char * text, const FXTRAN_char_info * ci,
   if (FXTRAN_check_dpb (text1, ci1, len))
     FXTRAN_THROW ("Unbalanced parens or dots in `%s'\n", text);
     
-  if (omp == 2)
+  if (otd == 2)
     {
+      ctx->in_stmt++;
+      FXTRAN_dump_omptd (text1, ci1, ctx);
+      ctx->in_stmt--;
+    }
+  else if (omp == 2)
+    {
+      ctx->in_stmt++;
       FXTRAN_dump_ompd (text1, ci1, ctx);
+      ctx->in_stmt--;
     }
   else if (acc == 2)
     {
+      ctx->in_stmt++;
       FXTRAN_dump_accd (text1, ci1, ctx);
+      ctx->in_stmt--;
     }
   else if (ddd == 2)
     {
+      ctx->in_stmt++;
       FXTRAN_dump_dddd (text1, ci1, ctx);
+      ctx->in_stmt--;
     }
   else
     {
@@ -4777,7 +4790,7 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
   FXTRAN_char_info ci1[len+1];
   int i, j;
   int I1 = -1, I2 = -1;  /* actual bounds */
-  int omp, acc, ddd;
+  int omp, acc, ddd, otd;
 
 
   FXTRAN_char_info_init (ci1, len);
@@ -4802,8 +4815,9 @@ void FXTRAN_dump_fc_stmt (const char * text, const FXTRAN_char_info * ci, int i1
   omp = FXTRAN_check_omp (text, ci, I1, I2, ctx);
   acc = FXTRAN_check_acc (text, ci, I1, I2, ctx);
   ddd = FXTRAN_check_ddd (text, ci, I1, I2, ctx);
+  otd = FXTRAN_check_omp_target (text, ci, I1, I2, ctx);
 
-  FXTRAN_stmt (t, ci1, stack, ctx, omp, acc, ddd, label);
+  FXTRAN_stmt (t, ci1, stack, ctx, omp, acc, ddd, otd, label);
 
 }
 

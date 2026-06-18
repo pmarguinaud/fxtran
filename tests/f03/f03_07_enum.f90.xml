@@ -1,0 +1,58 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_07_enum.f90"><C>! Test: ENUM, BIND(C) / ENUMERATOR / END ENUM</C>
+<C>! Statements couverts: ENUM BIND(C), ENUMERATOR, END ENUM</C>
+
+<program-stmt>PROGRAM <program-N><N><n>ENUMTEST</n></N></program-N></program-stmt>
+  <use-stmt>USE <module-N><N><n>ISO_C_BINDING</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <C>! Enumerateur simple compatible C</C>
+  <enum-stmt>ENUM, <bind-spec>BIND(C)</bind-spec></enum-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>RED</n></N></named-constant>   = <init-E><literal-E><l>0</l></literal-E></init-E></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>GREEN</n></N></named-constant> = <init-E><literal-E><l>1</l></literal-E></init-E></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>BLUE</n></N></named-constant>  = <init-E><literal-E><l>2</l></literal-E></init-E></enumerator></enumerator-LT></enumerator-stmt>
+  <end-enum-stmt>END ENUM</end-enum-stmt>
+
+  <C>! Enumerateur avec valeurs automatiques (increment de 1)</C>
+  <enum-stmt>ENUM, <bind-spec>BIND(C)</bind-spec></enum-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>SUNDAY</n></N></named-constant>    = <init-E><literal-E><l>0</l></literal-E></init-E></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>MONDAY</n></N></named-constant></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>TUESDAY</n></N></named-constant></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>WEDNESDAY</n></N></named-constant></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>THURSDAY</n></N></named-constant></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>FRIDAY</n></N></named-constant></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>SATURDAY</n></N></named-constant></enumerator></enumerator-LT></enumerator-stmt>
+  <end-enum-stmt>END ENUM</end-enum-stmt>
+
+  <C>! Enumerateur avec valeurs mixtes</C>
+  <enum-stmt>ENUM, <bind-spec>BIND(C)</bind-spec></enum-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>ERR_OK</n></N></named-constant>     = <init-E><literal-E><l>0</l></literal-E></init-E></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>ERR_IO</n></N></named-constant>     = <init-E><literal-E><l>1</l></literal-E></init-E></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>ERR_MEM</n></N></named-constant>    = <init-E><literal-E><l>2</l></literal-E></init-E></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>ERR_RANGE</n></N></named-constant>  = <init-E><literal-E><l>4</l></literal-E></init-E></enumerator></enumerator-LT></enumerator-stmt>
+    <enumerator-stmt>ENUMERATOR :: <enumerator-LT><enumerator><named-constant><N><n>ERR_FATAL</n></N></named-constant>  = <init-E><literal-E><l>8</l></literal-E></init-E></enumerator></enumerator-LT></enumerator-stmt>
+  <end-enum-stmt>END ENUM</end-enum-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>KIND</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>RED</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>  :: <EN-decl-LT><EN-decl><EN-N><N><n>COLOR</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>KIND</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>MONDAY</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>DAY</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>KIND</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>ERR_OK</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>STATUS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>COLOR</n></N></named-E></E-1>  <a>=</a> <E-2><named-E><N><n>GREEN</n></N></named-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>DAY</n></N></named-E></E-1>    <a>=</a> <E-2><named-E><N><n>WEDNESDAY</n></N></named-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>STATUS</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>ERR_OK</n></N></named-E></E-2></a-stmt>
+
+  <select-case-stmt>SELECT CASE (<case-E><named-E><N><n>COLOR</n></N></named-E></case-E>)</select-case-stmt>
+    <case-stmt>CASE <case-selector>(<case-value-range-LT><case-value-range><case-value><named-E><N><n>RED</n></N></named-E></case-value></case-value-range></case-value-range-LT>)</case-selector></case-stmt>
+      <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'ROUGE'</S></string-E></output-item></output-item-LT></write-stmt>
+    <case-stmt>CASE <case-selector>(<case-value-range-LT><case-value-range><case-value><named-E><N><n>GREEN</n></N></named-E></case-value></case-value-range></case-value-range-LT>)</case-selector></case-stmt>
+      <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'VERT'</S></string-E></output-item></output-item-LT></write-stmt>
+    <case-stmt>CASE <case-selector>(<case-value-range-LT><case-value-range><case-value><named-E><N><n>BLUE</n></N></named-E></case-value></case-value-range></case-value-range-LT>)</case-selector></case-stmt>
+      <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'BLEU'</S></string-E></output-item></output-item-LT></write-stmt>
+  <end-select-case-stmt>END SELECT</end-select-case-stmt>
+
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'JOUR:'</S></string-E></output-item>, <output-item><named-E><N><n>DAY</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'STATUS:'</S></string-E></output-item>, <output-item><named-E><N><n>STATUS</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <if-stmt>IF (<condition-E><op-E><named-E><N><n>STATUS</n></N></named-E> <op><o>==</o></op> <named-E><N><n>ERR_OK</n></N></named-E></op-E></condition-E>) <action-stmt><write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'OK'</S></string-E></output-item></output-item-LT></write-stmt></action-stmt></if-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>ENUMTEST</n></N></program-N></end-program-stmt>
+</file></object>

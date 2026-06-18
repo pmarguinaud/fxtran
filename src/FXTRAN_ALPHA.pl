@@ -48,6 +48,7 @@ my @x = qw[
   codimension                                                    CODIMENSION
   coshape                                                        COSHAPE
   code                                                           CODE
+  collapse                                                       COLLAPSE
   common                                                         COMMON
   complex                                                        COMPLEX
   component                                                      COMPONENT
@@ -69,15 +70,18 @@ my @x = qw[
   data                                                           DATA
   deallocate                                                     DEALLOCATE
   declare                                                        DECLARE
+  defaultmap                                                     DEFAULTMAP
   decl                                                           DECL
   deferred                                                       DEFERRED
   defined                                                        DEFINED
   definition                                                     DEFINITION
   delete                                                         DELETE
+  depend                                                         DEPEND
   derived                                                        DERIVED
   designator                                                     DESIGNATOR
   device                                                         DEVICE
   DIM                                                            DIMENSION
+  distribute                                                     DISTRIBUTE
   do                                                             DO
   dtio                                                           DTIO
   dummy                                                          DUMMY
@@ -106,6 +110,7 @@ my @x = qw[
   forall                                                         FORALL
   form                                                           FORM
   format                                                         FORMAT
+  from                                                           FROM
   function                                                       FUNCTION
   generic                                                        GENERIC
   G                                                              GLOBAL
@@ -144,6 +149,7 @@ my @x = qw[
   loop                                                           LOOP
   lower                                                          LOWER
   LT                                                             LIST
+  map                                                            MAP
   mark                                                           MARK
   mask                                                           MASK
   master                                                         MASTER
@@ -156,6 +162,7 @@ my @x = qw[
   none                                                           NONE
   non_overridable                                                NON_OVERRIDABLE
   nopass                                                         NOPASS
+  nowait                                                         NOWAIT
   NS                                                             NAMESPACE
   nullify                                                        NULLIFY
   numeric                                                        NUMERIC
@@ -214,7 +221,8 @@ my @x = qw[
   set                                                            SET
   shape                                                          SHAPE
   share                                                          SHARE
-  shutdown                                                       SHUTDOWN 
+  shared                                                         SHARED
+  shutdown                                                       SHUTDOWN
   simd                                                           SIMD
   single                                                         SINGLE
   size                                                           SIZE
@@ -235,6 +243,7 @@ my @x = qw[
   sync                                                           SYNC
   target                                                         TARGET
   team                                                           TEAM
+  teams                                                          TEAMS
   test                                                           TEST
   then                                                           THEN
   thread                                                         THREAD

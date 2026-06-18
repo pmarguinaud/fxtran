@@ -1,0 +1,37 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f95_11_namelist.f90"><C>! Test: NAMELIST</C>
+<C>! Statements couverts: NAMELIST, READ avec NML=, WRITE avec NML=</C>
+
+<program-stmt>PROGRAM <program-N><N><n>NAMELISTTEST</n></N></program-N></program-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>NSTEP</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>NOUT</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>    :: <EN-decl-LT><EN-decl><EN-N><N><n>DT</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>TMAX</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>LOGICAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>VERBOSE</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>20</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>OUTFILE</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <namelist-stmt>NAMELIST /<namelist-group-N><n>PARAMS</n></namelist-group-N>/ <namelist-group-obj-LT><namelist-group-obj><namelist-group-obj-N><N><n>NSTEP</n></N></namelist-group-obj-N></namelist-group-obj>, <namelist-group-obj><namelist-group-obj-N><N><n>DT</n></N></namelist-group-obj-N></namelist-group-obj>, <namelist-group-obj><namelist-group-obj-N><N><n>TMAX</n></N></namelist-group-obj-N></namelist-group-obj>, <namelist-group-obj><namelist-group-obj-N><N><n>VERBOSE</n></N></namelist-group-obj-N></namelist-group-obj>, <namelist-group-obj><namelist-group-obj-N><N><n>OUTFILE</n></N></namelist-group-obj-N></namelist-group-obj></namelist-group-obj-LT></namelist-stmt>
+  <namelist-stmt>NAMELIST /<namelist-group-N><n>IO</n></namelist-group-N>/     <namelist-group-obj-LT><namelist-group-obj><namelist-group-obj-N><N><n>NOUT</n></N></namelist-group-obj-N></namelist-group-obj>, <namelist-group-obj><namelist-group-obj-N><N><n>OUTFILE</n></N></namelist-group-obj-N></namelist-group-obj></namelist-group-obj-LT></namelist-stmt>
+
+  <C>! Valeurs par defaut</C>
+  <a-stmt><E-1><named-E><N><n>NSTEP</n></N></named-E></E-1>   <a>=</a> <E-2><literal-E><l>100</l></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>DT</n></N></named-E></E-1>      <a>=</a> <E-2><literal-E><l>0.01</l></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>TMAX</n></N></named-E></E-1>    <a>=</a> <E-2><literal-E><l>1.0</l></literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>VERBOSE</n></N></named-E></E-1> <a>=</a> <E-2><literal-E>.FALSE.</literal-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>OUTFILE</n></N></named-E></E-1> <a>=</a> <E-2><string-E><S>'output.dat'</S></string-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>NOUT</n></N></named-E></E-1>    <a>=</a> <E-2><literal-E><l>10</l></literal-E></E-2></a-stmt>
+
+  <C>! WRITE avec NML=</C>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>, <io-control><arg-N n="NML"><k>NML</k></arg-N>=<named-E><N><n>PARAMS</n></N></named-E></io-control></io-control-spec>)</write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>, <io-control><arg-N n="NML"><k>NML</k></arg-N>=<named-E><N><n>IO</n></N></named-E></io-control></io-control-spec>)</write-stmt>
+
+  <C>! READ depuis fichier avec NML=</C>
+  <open-stmt>OPEN(<connect-spec-spec><connect-spec><literal-E><l>10</l></literal-E></connect-spec>, <connect-spec><arg-N n="FILE"><k>FILE</k></arg-N>=<string-E><S>'namelist_input.nml'</S></string-E></connect-spec>, <connect-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'UNKNOWN'</S></string-E></connect-spec></connect-spec-spec>)</open-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control><literal-E><l>10</l></literal-E></io-control>, <io-control><arg-N n="NML"><k>NML</k></arg-N>=<named-E><N><n>PARAMS</n></N></named-E></io-control></io-control-spec>)</write-stmt>
+  <rewind-stmt>REWIND(<pos-spec-spec><pos-spec><literal-E><l>10</l></literal-E></pos-spec></pos-spec-spec>)</rewind-stmt>
+  <read-stmt>READ(<io-control-spec><io-control><literal-E><l>10</l></literal-E></io-control>, <io-control><arg-N n="NML"><k>NML</k></arg-N>=<named-E><N><n>PARAMS</n></N></named-E></io-control></io-control-spec>)</read-stmt>
+  <close-stmt>CLOSE(<close-spec-spec><close-spec><literal-E><l>10</l></literal-E></close-spec>, <close-spec><arg-N n="STATUS"><k>STATUS</k></arg-N>=<string-E><S>'DELETE'</S></string-E></close-spec></close-spec-spec>)</close-stmt>
+
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>NSTEP</n></N></named-E></output-item>, <output-item><named-E><N><n>DT</n></N></named-E></output-item>, <output-item><named-E><N><n>TMAX</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>NAMELISTTEST</n></N></program-N></end-program-stmt>
+</file></object>

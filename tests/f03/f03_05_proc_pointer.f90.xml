@@ -1,0 +1,114 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f03_05_proc_pointer.f90"><C>! Test: pointeurs de procedures</C>
+<C>! Statements couverts: PROCEDURE (declaration), PROCEDURE POINTER,</C>
+<C>!                      association de pointeur de procedure, appel via pointeur</C>
+
+<module-stmt>MODULE <module-N><N><n>PROCPTRMOD</n></N></module-N></module-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <C>! Interface pour les pointeurs de procedures</C>
+  <interface-stmt><attribute><attribute-N>ABSTRACT</attribute-N></attribute> INTERFACE</interface-stmt>
+    <function-stmt><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>REAL_FUNC</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-function-stmt>END FUNCTION <function-N><N><n>REAL_FUNC</n></N></function-N></end-function-stmt>
+
+    <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>REAL_SUB</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>Y</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>  :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>OUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>REAL_SUB</n></N></subroutine-N></end-subroutine-stmt>
+  <end-interface-stmt>END INTERFACE</end-interface-stmt>
+
+  <C>! Pointeur de procedure au niveau module</C>
+  <T-decl-stmt><_T-spec_><procedure-T-spec>PROCEDURE(<procedure-N><N><n>REAL_FUNC</n></N></procedure-N>)</procedure-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>FUNCPTR</n></N></EN-N> =&gt; <init-E><named-E><N><n>NULL</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<contains-stmt>CONTAINS</contains-stmt>
+
+  <function-stmt><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>MY_SIN</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>MY_SIN</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>SIN</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>MY_SIN</n></N></function-N></end-function-stmt>
+
+  <function-stmt><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>MY_COS</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>MY_COS</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>COS</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>MY_COS</n></N></function-N></end-function-stmt>
+
+  <function-stmt><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>MY_EXP</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>MY_EXP</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>EXP</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>MY_EXP</n></N></function-N></end-function-stmt>
+
+  <C>! Procedure prenant un pointeur de procedure en argument</C>
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>APPLY</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>F</n></N></arg-N>, <arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>Y</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><procedure-T-spec>PROCEDURE(<procedure-N><N><n>REAL_FUNC</n></N></procedure-N>)</procedure-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>F</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute>  :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>OUT</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>Y</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>F</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>APPLY</n></N></subroutine-N></end-subroutine-stmt>
+
+  <C>! Procedure retournant un pointeur de procedure</C>
+  <function-stmt>FUNCTION <function-N><N><n>GET_FUNC</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>NAME</n></N></arg-N></dummy-arg-LT>) <result-spec>RESULT(<N><n>PTR</n></N>)</result-spec></function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<star-E>*</star-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>NAME</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><procedure-T-spec>PROCEDURE(<procedure-N><N><n>REAL_FUNC</n></N></procedure-N>)</procedure-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>PTR</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <select-case-stmt>SELECT CASE (<case-E><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>NAME</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></case-E>)</select-case-stmt>
+      <case-stmt>CASE <case-selector>(<case-value-range-LT><case-value-range><case-value><string-E><S>'SIN'</S></string-E></case-value></case-value-range></case-value-range-LT>)</case-selector></case-stmt>
+        <pointer-a-stmt><E-1><named-E><N><n>PTR</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>MY_SIN</n></N></named-E></E-2></pointer-a-stmt>
+      <case-stmt>CASE <case-selector>(<case-value-range-LT><case-value-range><case-value><string-E><S>'COS'</S></string-E></case-value></case-value-range></case-value-range-LT>)</case-selector></case-stmt>
+        <pointer-a-stmt><E-1><named-E><N><n>PTR</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>MY_COS</n></N></named-E></E-2></pointer-a-stmt>
+      <case-stmt>CASE <case-selector>DEFAULT</case-selector></case-stmt>
+        <pointer-a-stmt><E-1><named-E><N><n>PTR</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>MY_EXP</n></N></named-E></E-2></pointer-a-stmt>
+    <end-select-case-stmt>END SELECT</end-select-case-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>GET_FUNC</n></N></function-N></end-function-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>PROCPTRMOD</n></N></module-N></end-module-stmt>
+
+
+<program-stmt>PROGRAM <program-N><N><n>PROCPTRTEST</n></N></program-N></program-stmt>
+  <use-stmt>USE <module-N><N><n>PROCPTRMOD</n></N></module-N></use-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><procedure-T-spec>PROCEDURE(<procedure-N><N><n>REAL_FUNC</n></N></procedure-N>)</procedure-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>F</n></N></EN-N> =&gt; <init-E><named-E><N><n>NULL</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>1.5708</l></literal-E></E-2></a-stmt>  <C>! pi/2</C>
+
+  <C>! Association de pointeur de procedure</C>
+  <pointer-a-stmt><E-1><named-E><N><n>F</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>MY_SIN</n></N></named-E></E-2></pointer-a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>F</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Reassociation</C>
+  <pointer-a-stmt><E-1><named-E><N><n>F</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>MY_COS</n></N></named-E></E-2></pointer-a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>F</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Pointeur vers intrinsique</C>
+  <pointer-a-stmt><E-1><named-E><N><n>F</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>SIN</n></N></named-E></E-2></pointer-a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>F</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Passage en argument</C>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>APPLY</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>MY_SIN</n></N></named-E></arg>, <arg><named-E><N><n>X</n></N></named-E></arg>, <arg><named-E><N><n>Y</n></N></named-E></arg></arg-spec>)</call-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>Y</n></N></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! Tableau de pointeurs de procedures (via tableau de TYPE encapsulant)</C>
+  <block-stmt>BLOCK</block-stmt>
+    <T-stmt>TYPE :: <T-N><N><n>FWRAP</n></N></T-N></T-stmt>
+      <component-decl-stmt><_T-spec_><procedure-T-spec>PROCEDURE(<procedure-N><N><n>REAL_FUNC</n></N></procedure-N>)</procedure-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute>, <attribute><attribute-N>NOPASS</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>PTR</n></N></EN-N> =&gt; <init-E><named-E><N><n>NULL</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></init-E></EN-decl></EN-decl-LT></component-decl-stmt>
+    <end-T-stmt>END TYPE <T-N><N><n>FWRAP</n></N></T-N></end-T-stmt>
+    <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>FWRAP</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>FUNCS</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>3</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <pointer-a-stmt><E-1><named-E><N><n>FUNCS</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R><component-R>%<ct>PTR</ct></component-R></R-LT></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>MY_SIN</n></N></named-E></E-2></pointer-a-stmt>
+    <pointer-a-stmt><E-1><named-E><N><n>FUNCS</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>2</l></literal-E></element></element-LT>)</parens-R><component-R>%<ct>PTR</ct></component-R></R-LT></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>MY_COS</n></N></named-E></E-2></pointer-a-stmt>
+    <pointer-a-stmt><E-1><named-E><N><n>FUNCS</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>3</l></literal-E></element></element-LT>)</parens-R><component-R>%<ct>PTR</ct></component-R></R-LT></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>MY_EXP</n></N></named-E></E-2></pointer-a-stmt>
+    <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>3</l></literal-E></upper-bound></do-stmt>
+      <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>FUNCS</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R><component-R>%<ct>PTR</ct></component-R><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+    <end-do-stmt>END DO</end-do-stmt>
+  <end-block-stmt>END BLOCK</end-block-stmt>
+
+  <C>! Via GET_FUNC</C>
+  <pointer-a-stmt><E-1><named-E><N><n>F</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>GET_FUNC</n></N><R-LT><parens-R>(<element-LT><element><string-E><S>'SIN'</S></string-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></pointer-a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>F</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>X</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+  <C>! NULLIFY</C>
+  <nullify-stmt>NULLIFY(<arg-spec><arg><named-E><N><n>F</n></N></named-E></arg></arg-spec>)</nullify-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>ASSOCIATED</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>F</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>PROCPTRTEST</n></N></program-N></end-program-stmt>
+</file></object>

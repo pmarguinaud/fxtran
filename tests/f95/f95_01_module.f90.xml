@@ -1,0 +1,60 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="0"><file name="f95_01_module.f90"><C>! Test: MODULE / END MODULE / USE / CONTAINS / PUBLIC / PRIVATE</C>
+<C>! Statements couverts: MODULE, END MODULE, USE, USE...ONLY, USE...renaming,</C>
+<C>!                      PUBLIC, PRIVATE, CONTAINS</C>
+
+<module-stmt>MODULE <module-N><N><n>MATHMOD</n></N></module-N></module-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+  <private-stmt>PRIVATE</private-stmt>
+  <public-stmt>PUBLIC :: <EN-LT><EN><N><n>PI</n></N></EN>, <EN><N><n>TWOPI</n></N></EN>, <EN><N><n>SQUARE</n></N></EN>, <EN><N><n>ADD</n></N></EN></EN-LT></public-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>PARAMETER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>PI</n></N></EN-N>    = <init-E><literal-E><l>3.14159265358979</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>PARAMETER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>TWOPI</n></N></EN-N> = <init-E><op-E><literal-E><l>2.0</l></literal-E> <op><o>*</o></op> <named-E><N><n>PI</n></N></named-E></op-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<contains-stmt>CONTAINS</contains-stmt>
+
+  <function-stmt><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>SQUARE</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>SQUARE</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>X</n></N></named-E> <op><o>*</o></op> <named-E><N><n>X</n></N></named-E></op-E></E-2></a-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>SQUARE</n></N></function-N></end-function-stmt>
+
+  <function-stmt><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>ADD</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N>, <arg-N><N><n>B</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>ADD</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N></named-E> <op><o>+</o></op> <named-E><N><n>B</n></N></named-E></op-E></E-2></a-stmt>
+  <end-function-stmt>END FUNCTION <function-N><N><n>ADD</n></N></function-N></end-function-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>MATHMOD</n></N></module-N></end-module-stmt>
+
+
+<module-stmt>MODULE <module-N><N><n>STRMOD</n></N></module-N></module-stmt>
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+  <public-stmt>PUBLIC</public-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<literal-E><l>20</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>DEFAULT_MSG</n></N></EN-N> = <init-E><string-E><S>'HELLO'</S></string-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<contains-stmt>CONTAINS</contains-stmt>
+
+  <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>GREET</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>MSG</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>CHARACTER</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>LEN</k></arg-N>=<star-E>*</star-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>INTENT</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>MSG</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>TRIM</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>MSG</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+  <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>GREET</n></N></subroutine-N></end-subroutine-stmt>
+
+<end-module-stmt>END MODULE <module-N><N><n>STRMOD</n></N></module-N></end-module-stmt>
+
+
+<program-stmt>PROGRAM <program-N><N><n>MODTEST</n></N></program-N></program-stmt>
+  <C>! USE sans restriction</C>
+  <use-stmt>USE <module-N><N><n>MATHMOD</n></N></module-N></use-stmt>
+  <C>! USE avec ONLY</C>
+  <use-stmt>USE <module-N><N><n>STRMOD</n></N></module-N>, ONLY : <rename-LT><rename><use-N><N><n>GREET</n></N></use-N></rename></rename-LT></use-stmt>
+  <C>! USE avec renommage</C>
+  <use-stmt>USE <module-N><N><n>MATHMOD</n></N></module-N>, <rename-LT><rename><use-N><N><n>MYPI</n></N></use-N> =&gt; <N><N><n>PI</n></N></N></rename></rename-LT></use-stmt>
+
+  <implicit-none-stmt>IMPLICIT NONE</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>SQUARE</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>3.0</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>Y</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>ADD</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1.0</l></literal-E></element>, <element><literal-E><l>2.0</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>PI</n></N></named-E></output-item>, <output-item><named-E><N><n>TWOPI</n></N></named-E></output-item>, <output-item><named-E><N><n>MYPI</n></N></named-E></output-item></output-item-LT></write-stmt>
+  <call-stmt>CALL <procedure-designator><named-E><N><n>GREET</n></N></named-E></procedure-designator>(<arg-spec><arg><string-E><S>'BONJOUR'</S></string-E></arg></arg-spec>)</call-stmt>
+<end-program-stmt>END PROGRAM <program-N><N><n>MODTEST</n></N></program-N></end-program-stmt>
+</file></object>
