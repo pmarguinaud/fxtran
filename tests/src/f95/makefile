@@ -1,5 +1,5 @@
 
-FXTRAN ?= ../../bin/fxtran
+FXTRAN ?= ../../../bin/fxtran
 
 SOURCES = \
   f95_01_module.f90 \
@@ -24,6 +24,7 @@ all: $(XMLS)
 
 %.f90.xml: %.f90
 	$(FXTRAN) $< -o $@
+	@diff $@ xml/$@
 
 clean:
 	\rm -f $(XMLS)
