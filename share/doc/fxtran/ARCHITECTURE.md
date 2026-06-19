@@ -129,12 +129,12 @@ FXTRAN_BBT.o   FXTRAN_CHARINFO.o  FXTRAN_ERROR.o
 
 ```
  ┌───────────┐     ┌──────────────────────────────┐     ┌──────────────┐
- │  fxtran   │────▶│         FXTRAN_RUN()          │────▶│ XML string   │
- │  (main)   │     │         FXTRAN_RUN.c          │     │  output      │
+ │  fxtran   │────▶│         FXTRAN_RUN()         │────▶│ XML string   │
+ │  (main)   │     │         FXTRAN_RUN.c         │     │  output      │
  └───────────┘     └──────────────────────────────┘     └──────────────┘
                                   │
                    ┌──────────────┼──────────────────────────┐
-                   ▼              ▼                           ▼
+                   ▼              ▼                          ▼
             Parse options    Load source                Emit XML header
             FXTRAN_OPTS.c   FXTRAN_LOAD.c               <object …>
                    │              │

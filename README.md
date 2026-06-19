@@ -11,6 +11,8 @@ Provided under the terms of the GNU GPL license.
 
 [Parsing and refactoring FORTRAN code with XML](share/doc/fxtran/ARTICLE.md)
 
+[Technical documentation of fxtran](share/doc/fxtran/ARCHITECTURE.md)
+
 [Link to fxtran source repository](https://github.com/pmarguinaud/fxtran)
 
 [.](./googlee67ab9f945bbadc4.html)
