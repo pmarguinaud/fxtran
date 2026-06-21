@@ -17,22 +17,70 @@ int FXTRAN_handle_omp_target (const char *, FXTRAN_char_info *, int, int);
 void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *);
 
 
-/* OpenMP Target directives -- longest match first within each group.
- * DISTRIBUTE, PARALLELDO, PARALLELDOSIMD, SIMD, LOOP, DO are clauses. */
+/* OpenMP Target directives -- please sort in reverse alphabetic order (longest match first) */
 #define FXTRAN_omptd_list(macro) \
-  macro (TARGETENTERDATA                      )   \
-  macro (TARGETEXITDATA                       )   \
-  macro (TARGETPARALLEL                       )   \
+  macro (WORKSHARE                            )   \
+  macro (UNROLL                               )   \
+  macro (TILE                                 )   \
+  macro (THREADPRIVATE                        )   \
+  macro (TEAMS                                )   \
+  macro (TASKYIELD                            )   \
+  macro (TASKWAIT                             )   \
+  macro (TASKGROUP                            )   \
+  macro (TASK                                 )   \
   macro (TARGETUPDATE                         )   \
   macro (TARGETTEAMS                          )   \
+  macro (TARGETPARALLELDO                     )   \
+  macro (TARGETPARALLEL                       )   \
+  macro (TARGETEXITDATA                       )   \
+  macro (TARGETENTERDATA                      )   \
   macro (TARGETDATA                           )   \
   macro (TARGET                               )   \
-  macro (ENDTARGETPARALLEL                    )   \
+  macro (SINGLE                               )   \
+  macro (SIMD                                 )   \
+  macro (SECTIONS                             )   \
+  macro (SECTION                              )   \
+  macro (SCOPE                                )   \
+  macro (REQUIRES                             )   \
+  macro (PARALLELDOSIMD                       )   \
+  macro (PARALLEL                             )   \
+  macro (ORDERED                              )   \
+  macro (MASKED                               )   \
+  macro (LOOP                                 )   \
+  macro (ENDWORKSHARE                         )   \
+  macro (ENDUNROLL                            )   \
+  macro (ENDTILE                              )   \
+  macro (ENDTEAMS                             )   \
+  macro (ENDTASKGROUP                         )   \
+  macro (ENDTASK                              )   \
   macro (ENDTARGETTEAMS                       )   \
+  macro (ENDTARGETPARALLEL                    )   \
   macro (ENDTARGETDATA                        )   \
   macro (ENDTARGET                            )   \
+  macro (ENDSINGLE                            )   \
+  macro (ENDSECTIONS                          )   \
+  macro (ENDSECTION                           )   \
+  macro (ENDSCOPE                             )   \
+  macro (ENDPARALLELDOSIMD                    )   \
+  macro (ENDPARALLEL                          )   \
+  macro (ENDORDERED                           )   \
+  macro (ENDMASKED                            )   \
+  macro (ENDLOOP                              )   \
+  macro (ENDDO                                )   \
+  macro (ENDDISTRIBUTE                        )   \
   macro (ENDDECLARETARGET                     )   \
-  macro (DECLARETARGET                        )
+  macro (ENDCRITICAL                          )   \
+  macro (ENDATOMIC                            )   \
+  macro (ENDALLOCATORS                        )   \
+  macro (DOSIMD                               )   \
+  macro (DO                                   )   \
+  macro (DISTRIBUTE                           )   \
+  macro (DECLARETARGET                        )   \
+  macro (DECLARE                              )   \
+  macro (CRITICAL                             )   \
+  macro (BARRIER                              )   \
+  macro (ATOMIC                               )   \
+  macro (ALLOCATORS                           )   
 
 #define enum_macro(T) \
   FXTRAN_OMPTD_##T,
@@ -46,42 +94,65 @@ typedef enum {
 #undef enum_macro
 
 
-/* OpenMP Target clauses.
- * Ordering rules: DEFAULTMAP before DEFAULT (prefix conflict);
- *                 PARALLELDOSIMD before PARALLELDO (prefix conflict). */
+/* OpenMP Target clauses; please sort in reverse alphabetic order */
 #define FXTRAN_omptc_list(macro) \
+  macro (WRITE            )  \
+  macro (USES_ALLOCATORS  )  \
+  macro (UPDATE           )  \
+  macro (UNTIED           )  \
+  macro (UNIFORM          )  \
+  macro (TO               )  \
+  macro (THREAD_LIMIT     )  \
+  macro (TASK_REDUCTION   )  \
+  macro (TASKLOOP         )  \
+  macro (SIMDLEN          )  \
+  macro (SIMD             )  \
+  macro (SHARED           )  \
+  macro (SECTIONS         )  \
+  macro (SCHEDULE         )  \
+  macro (SAFELEN          )  \
+  macro (RELEASE          )  \
+  macro (REDUCTION        )  \
+  macro (READ             )  \
+  macro (PROC_BIND        )  \
+  macro (PRIORITY         )  \
+  macro (PRIVATE          )  \
+  macro (PARALLEL         )  \
+  macro (ORDERED          )  \
+  macro (NUM_THREADS      )  \
+  macro (NUM_TEAMS        )  \
+  macro (NOWAIT           )  \
+  macro (NOTINBRANCH      )  \
+  macro (NOGROUP          )  \
+  macro (MERGEABLE        )  \
+  macro (MASKED           )  \
+  macro (MAP              )  \
+  macro (LOOP             )  \
+  macro (LINEAR           )  \
+  macro (LASTPRIVATE      )  \
   macro (IS_DEVICE_PTR    )  \
   macro (IN_REDUCTION     )  \
-  macro (USES_ALLOCATORS  )  \
-  macro (PARALLELDOSIMD   )  \
-  macro (PARALLELDO       )  \
-  macro (THREAD_LIMIT     )  \
+  macro (INBRANCH         )  \
+  macro (IF               )  \
+  macro (GRAINSIZE        )  \
+  macro (FROM             )  \
   macro (FIRSTPRIVATE     )  \
-  macro (LASTPRIVATE      )  \
-  macro (DEFAULTMAP       )  \
+  macro (FINAL            )  \
+  macro (ENTER            )  \
+  macro (DO               )  \
   macro (DIST_SCHEDULE    )  \
   macro (DISTRIBUTE       )  \
-  macro (NUM_TEAMS        )  \
-  macro (REDUCTION        )  \
-  macro (COLLAPSE         )  \
-  macro (SCHEDULE         )  \
-  macro (DEFAULT          )  \
-  macro (PRIVATE          )  \
-  macro (SAFELEN          )  \
-  macro (SIMDLEN          )  \
-  macro (ALIGNED          )  \
-  macro (ORDERED          )  \
-  macro (NOWAIT           )  \
-  macro (LINEAR           )  \
-  macro (SHARED           )  \
-  macro (DEPEND           )  \
   macro (DEVICE           )  \
-  macro (SIMD             )  \
-  macro (LOOP             )  \
-  macro (MAP              )  \
-  macro (FROM             )  \
-  macro (TO               )  \
-  macro (DO               )  \
-  macro (IF               )
+  macro (DETACH           )  \
+  macro (DEPEND           )  \
+  macro (DEFAULTMAP       )  \
+  macro (DEFAULT          )  \
+  macro (COPYPRIVATE      )  \
+  macro (COPYIN           )  \
+  macro (COLLAPSE         )  \
+  macro (CAPTURE          )  \
+  macro (ACQUIRE          )  \
+  macro (ALIGNED          )  \
+  macro (AFFINITY         )  
 
 #endif

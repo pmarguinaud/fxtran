@@ -24,41 +24,6 @@
 #define CASE_FXTRAN_SPACE \
 	case ' ': case '\t'
 
-/* Returns 1 if the text at position k starts a TARGET-family directive */
-static int is_omp_target_directive (const char * text, int k)
-{
-  /* !$OMP TARGET ... */
-  if (strncasecmp (text + k, "TARGET", 6) == 0)
-    return 1;
-
-  /* !$OMP DECLARE TARGET ... */
-  if (strncasecmp (text + k, "DECLARE", 7) == 0)
-    {
-      int m = k + 7;
-      while (fc_isspace (text[m])) m++;
-      if (strncasecmp (text + m, "TARGET", 6) == 0)
-        return 1;
-    }
-
-  /* !$OMP END TARGET ..., !$OMP END DECLARE TARGET */
-  if (strncasecmp (text + k, "END", 3) == 0)
-    {
-      int m = k + 3;
-      while (fc_isspace (text[m])) m++;
-      if (strncasecmp (text + m, "TARGET", 6) == 0)
-        return 1;
-      if (strncasecmp (text + m, "DECLARE", 7) == 0)
-        {
-          int n = m + 7;
-          while (fc_isspace (text[n])) n++;
-          if (strncasecmp (text + n, "TARGET", 6) == 0)
-            return 1;
-        }
-    }
-
-  return 0;
-}
-
 int FXTRAN_check_omp_target (const char * t, const FXTRAN_char_info * ci, int i1, int i2,
                               FXTRAN_xmlctx * ctx)
 {
@@ -105,10 +70,9 @@ int FXTRAN_check_omp_target (const char * t, const FXTRAN_char_info * ci, int i1
   return 0;
 }
 
-int FXTRAN_handle_omp_target (const char * text, FXTRAN_char_info * ci, int i, int OTD)
+int FXTRAN_handle_omp_target (const char * text, FXTRAN_char_info * ci, int i, int OMP)
 {
   int omp = 0;
-  int k;
 
   if (text[i+1] == '$')
     {
@@ -132,18 +96,7 @@ done:
 
   if (omp)
     {
-      /* Must be !$OMP */
-      if (!OMP_FXTRAN (text+i+2))
-        return 0;
-      /* Must have space after !$OMP */
-      if (!fc_isspace (text[i+5]))
-        return 0;
-
-      /* Skip spaces and check for TARGET-family directive */
-      k = i + 5;
-      while (fc_isspace (text[k])) k++;
-
-      if (is_omp_target_directive (text, k) || (OTD && (text[k] == '&')))
+      if ((OMP_FXTRAN (text+i+2)) || (OMP && OMP_FXTRAN (text+i+2)))
         {
           ci[i+0].mask = FXTRAN_OTD;
           ci[i+1].mask = FXTRAN_OTD;
@@ -151,7 +104,7 @@ done:
           ci[i+3].mask = FXTRAN_OTD;
           ci[i+4].mask = FXTRAN_OTD;
           return 5;
-        }
+	}
     }
 
   return 0;
@@ -176,32 +129,68 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
 {
   switch (type)
     {
-      case FXTRAN_OMPTD_TARGETENTERDATA  :
-        return _T(_S(TARGET) H _S(ENTER) H _S(DATA) H _S(OPENMP));
-      case FXTRAN_OMPTD_TARGETEXITDATA   :
-        return _T(_S(TARGET) H _S(EXIT) H _S(DATA) H _S(OPENMP));
-      case FXTRAN_OMPTD_TARGETPARALLEL   :
-        return _T(_S(TARGET) H _S(PARALLEL) H _S(OPENMP));
-      case FXTRAN_OMPTD_TARGETUPDATE     :
-        return _T(_S(TARGET) H _S(UPDATE) H _S(OPENMP));
-      case FXTRAN_OMPTD_TARGETTEAMS      :
-        return _T(_S(TARGET) H _S(TEAMS) H _S(OPENMP));
-      case FXTRAN_OMPTD_TARGETDATA       :
-        return _T(_S(TARGET) H _S(DATA) H _S(OPENMP));
-      case FXTRAN_OMPTD_TARGET           :
-        return _T(_S(TARGET) H _S(OPENMP));
-      case FXTRAN_OMPTD_ENDTARGETPARALLEL:
-        return _T(_S(END) H _S(TARGET) H _S(PARALLEL) H _S(OPENMP));
-      case FXTRAN_OMPTD_ENDTARGETTEAMS   :
-        return _T(_S(END) H _S(TARGET) H _S(TEAMS) H _S(OPENMP));
-      case FXTRAN_OMPTD_ENDTARGETDATA    :
-        return _T(_S(END) H _S(TARGET) H _S(DATA) H _S(OPENMP));
-      case FXTRAN_OMPTD_ENDTARGET        :
-        return _T(_S(END) H _S(TARGET) H _S(OPENMP));
-      case FXTRAN_OMPTD_ENDDECLARETARGET :
-        return _T(_S(END) H _S(DECLARE) H _S(TARGET) H _S(OPENMP));
-      case FXTRAN_OMPTD_DECLARETARGET    :
-        return _T(_S(DECLARE) H _S(TARGET) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGET            :  return _T(_S(TARGET) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETENTERDATA   :  return _T(_S(TARGET) H _S(ENTER) H _S(DATA) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETEXITDATA    :  return _T(_S(TARGET) H _S(EXIT) H _S(DATA) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETPARALLEL    :  return _T(_S(TARGET) H _S(PARALLEL) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETPARALLELDO  :  return _T(_S(TARGET) H _S(PARALLEL) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETUPDATE      :  return _T(_S(TARGET) H _S(UPDATE) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETTEAMS       :  return _T(_S(TARGET) H _S(TEAMS) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETDATA        :  return _T(_S(TARGET) H _S(DATA) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTARGETPARALLEL :  return _T(_S(END) H _S(TARGET) H _S(PARALLEL) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTARGETTEAMS    :  return _T(_S(END) H _S(TARGET) H _S(TEAMS) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTARGETDATA     :  return _T(_S(END) H _S(TARGET) H _S(DATA) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTARGET         :  return _T(_S(END) H _S(TARGET) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDDECLARETARGET  :  return _T(_S(END) H _S(DECLARE) H _S(TARGET) H _S(OPENMP));
+      case FXTRAN_OMPTD_DECLARETARGET     :  return _T(_S(DECLARE) H _S(TARGET) H _S(OPENMP));
+      case FXTRAN_OMPTD_DECLARE           :  return _T(_S(DECLARE) H _S(OPENMP));
+      case FXTRAN_OMPTD_PARALLELDOSIMD    :  return _T(_S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLELDOSIMD :  return _T(_S(END) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_PARALLEL          :  return _T(_S(PARALLEL) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLEL       :  return _T(_S(END) H _S(PARALLEL) H _S(OPENMP));
+      case FXTRAN_OMPTD_SIMD              :  return _T(_S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_DOSIMD            :  return _T(_S(SIMD) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_SINGLE            :  return _T(_S(SINGLE) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDSINGLE         :  return _T(_S(END) H _S(SINGLE) H _S(OPENMP));
+      case FXTRAN_OMPTD_TASKGROUP         :  return _T(_S(TASK) H _S(GROUP) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTASKGROUP      :  return _T(_S(END) H _S(TASK) H _S(GROUP) H _S(OPENMP));
+      case FXTRAN_OMPTD_TASK              :  return _T(_S(TASK) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTASK           :  return _T(_S(END) H _S(TASK) H _S(OPENMP));
+      case FXTRAN_OMPTD_MASKED            :  return _T(_S(MASKED) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDMASKED         :  return _T(_S(END) H _S(MASKED) H _S(OPENMP));
+      case FXTRAN_OMPTD_TASKWAIT          :  return _T(_S(TASK) H _S (WAIT) H _S(OPENMP));
+      case FXTRAN_OMPTD_BARRIER           :  return _T(_S(BARRIER) H _S(OPENMP));
+      case FXTRAN_OMPTD_SECTION           :  return _T(_S(SECTION) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDSECTION        :  return _T(_S(END) H _S(SECTION) H _S(OPENMP));
+      case FXTRAN_OMPTD_SECTIONS          :  return _T(_S(SECTIONS) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDSECTIONS       :  return _T(_S(END) H _S(SECTIONS) H _S(OPENMP));
+      case FXTRAN_OMPTD_ATOMIC            :  return _T(_S(ATOMIC) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDATOMIC         :  return _T(_S(END) H _S(ATOMIC) H _S(OPENMP));
+      case FXTRAN_OMPTD_DO                :  return _T(_S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDDO             :  return _T(_S(END) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_CRITICAL          :  return _T(_S(CRITICAL) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDCRITICAL       :  return _T(_S(END) H _S(CRITICAL) H _S(OPENMP));
+      case FXTRAN_OMPTD_SCOPE             :  return _T(_S(SCOPE) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDSCOPE          :  return _T(_S(END) H _S(SCOPE) H _S(OPENMP));
+      case FXTRAN_OMPTD_TEAMS             :  return _T(_S(TEAMS) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTEAMS          :  return _T(_S(END) H _S(TEAMS) H _S(OPENMP));
+      case FXTRAN_OMPTD_DISTRIBUTE        :  return _T(_S(DISTRIBUTE) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDDISTRIBUTE     :  return _T(_S(END) H _S(DISTRIBUTE) H _S(OPENMP));
+      case FXTRAN_OMPTD_REQUIRES          :  return _T(_S(REQUIRES) H _S(OPENMP));
+      case FXTRAN_OMPTD_TILE              :  return _T(_S(TILE) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTILE           :  return _T(_S(END) H _S(TILE) H _S(OPENMP));
+      case FXTRAN_OMPTD_UNROLL            :  return _T(_S(UNROLL) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDUNROLL         :  return _T(_S(END) H _S(UNROLL) H _S(OPENMP));
+      case FXTRAN_OMPTD_ALLOCATORS        :  return _T(_S(ALLOCATORS) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDALLOCATORS     :  return _T(_S(END) H _S(ALLOCATORS) H _S(OPENMP));
+      case FXTRAN_OMPTD_WORKSHARE         :  return _T(_S(WORK) H _S(SHARE) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDWORKSHARE      :  return _T(_S(END) H _S(WORK) H _S(SHARE) H _S(OPENMP));
+      case FXTRAN_OMPTD_ORDERED           :  return _T(_S(ORDERED) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDORDERED        :  return _T(_S(END) H _S(ORDERED) H _S(OPENMP));
+      case FXTRAN_OMPTD_LOOP              :  return _T(_S(LOOP) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDLOOP           :  return _T(_S(END) H _S(LOOP) H _S(OPENMP));
+      case FXTRAN_OMPTD_THREADPRIVATE     :  return _T(_S(THREAD) H _S(PRIVATE) H _S(OPENMP));
+      case FXTRAN_OMPTD_TASKYIELD         :  return _T(_S(TASK) H _S(YIELD) H _S(OPENMP));
       case FXTRAN_OMPTD_NONE:
       case FXTRAN_OMPTD_LAST:
       default:
@@ -229,18 +218,34 @@ static int FXTRAN_omptc_REDUCTION (const char * t, const FXTRAN_char_info * ci,
   XAD(1);
 
   kp = FXTRAN_str_at_level (t, ci, ")", 0);
+
+  if (kp == 0)
+    FXTRAN_THROW ("Malformed OpenMP Target clause; expected terminal `)'");
+
   k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
 
   if (k == 0)
     FXTRAN_THROW ("Malformed OpenMP Target clause; expected `:'");
 
-  if ((kn = FXTRAN_eat_word (t)))
+  kn = FXTRAN_eat_word (t);
+
+  if (kn && (t[kn] == ','))
     {
-      XNT (_T(_S(PROCEDURE) H _S(NAME)), kn);
+      XNT (_T(_S(MODIFIER) H _S(NAME)), kn);
+      XAD(kn);
+      XAD(1);
+    }
+
+  kn = FXTRAN_eat_word (t);
+
+  if (kn)
+    {
+      XNT (_T(_S(OPERATOR)), kn);
       XAD(kn);
     }
   else
     {
+      k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
       XNO (_T(_S(OPERATOR)), k-1);
       XAD(k-1);
     }
@@ -271,13 +276,19 @@ static int FXTRAN_omptc_REDUCTION (const char * t, const FXTRAN_char_info * ci,
 }
 
 static int FXTRAN_omptc_IN_REDUCTION (const char * t, const FXTRAN_char_info * ci,
-                                       FXTRAN_xmlctx * ctx)
+                                      FXTRAN_xmlctx * ctx)
+{
+  return FXTRAN_omptc_REDUCTION (t, ci, ctx);
+}
+
+static int FXTRAN_omptc_TASK_REDUCTION (const char * t, const FXTRAN_char_info * ci,
+                                        FXTRAN_xmlctx * ctx)
 {
   return FXTRAN_omptc_REDUCTION (t, ci, ctx);
 }
 
 static int FXTRAN_omptc_MAP (const char * t, const FXTRAN_char_info * ci,
-                              FXTRAN_xmlctx * ctx)
+                             FXTRAN_xmlctx * ctx)
 {
   const char * T = t;
   int k, kp;
@@ -303,14 +314,20 @@ static int FXTRAN_omptc_MAP (const char * t, const FXTRAN_char_info * ci,
       XAD(k);
     }
 
-  XST (_T(_S(VARIABLE) H _S(LIST)));
+  XST (_T(_S(EXPR) H _S(LIST)));
   while (t[0] != ')')
     {
-      k = FXTRAN_eat_word (t);
-      if (k == 0)
-        break;
-      XNT (_T(_S(VARIABLE)), k);
-      XAD(k);
+      int kp = FXTRAN_str_at_level (t, ci, ")", ci->parens-1);
+      int kc = FXTRAN_str_at_level_ir (t, ci, ",", ci->parens, kp);
+
+      if (! kc)
+        kc = kp;
+
+      XST (_T(_S(EXPR)));
+      FXTRAN_expr (t, ci, kc-1, ctx);
+      XAD (kc-1);
+      XET ();
+      
       if (t[0] == ',')
         XAD(1);
       else if (t[0] != ')')
@@ -536,43 +553,53 @@ static int FXTRAN_omptc_LINEAR (const char * t, const FXTRAN_char_info * ci,
   return FXTRAN_omptc_ALIGNED (t, ci, ctx);
 }
 
-static int omptc_var_list (const char * t, const FXTRAN_char_info * ci,
-                            FXTRAN_xmlctx * ctx)
+static int omp_var_list (const char * t, const FXTRAN_char_info * ci,
+                         FXTRAN_xmlctx * ctx, const char * tag)
 {
   const char * T = t;
   int k;
-
-  k = FXTRAN_eat_word (t);
-  XST (_T(_S(CLAUSE)));
-  XST (_T(_S(NAME)));
-  XAD(k);
-  XET ();
 
   if (t[0] != '(')
     FXTRAN_THROW ("Malformed OpenMP Target clause");
   XAD(1);
 
-  XST (_S(VARIABLE) H _S(LIST));
+  XST (tag);
+
   while (t[0] != ')')
     {
-      k = FXTRAN_eat_word (t);
-      XNT (_T(_S(VARIABLE)), k);
-      XAD(k);
+      if (t[0] == '/') 
+        { 
+          XST (_T(_S(COMMON) H _S(BLOCK)));
+          XAD (1);
+          k = FXTRAN_eat_word (t);
+          XNT (_T(_S(COMMON) H _S(BLOCK) H _S(NAME)), k);
+          XAD (k);
+          if (t[0] != '/')
+            FXTRAN_THROW ("Expected common block name");
+          XAD (1);
+          XET ();
+        }
+      else
+        {
+          k = FXTRAN_eat_word (t);
+          XNT (_T(_S(VARIABLE) H _S(NAME)), k);
+          XAD(k);
+        }
       if (t[0] == ',')
         XAD(1);
       else if (t[0] != ')')
         FXTRAN_THROW ("Malformed OpenMP Target clause");
     }
+
   XET ();
 
   XAD(1);
 
-  XET ();
   return t - T;
 }
 
-static int FXTRAN_omptc_expr (const char * t, const FXTRAN_char_info * ci,
-                               FXTRAN_xmlctx * ctx)
+static int omptc_var_list (const char * t, const FXTRAN_char_info * ci,
+                           FXTRAN_xmlctx * ctx)
 {
   const char * T = t;
   int k;
@@ -581,6 +608,25 @@ static int FXTRAN_omptc_expr (const char * t, const FXTRAN_char_info * ci,
   XST (_T(_S(CLAUSE)));
   XST (_T(_S(NAME)));
   XAD(k);
+  XET ();
+
+  k = omp_var_list (t, ci, ctx, _S(VARIABLE) H _S(LIST));
+
+  XAD (k);
+    
+  XET ();
+  return t - T;
+}
+
+static int FXTRAN_omptc_expr (const char * t, const FXTRAN_char_info * ci,
+                              FXTRAN_xmlctx * ctx, const char * clause)
+{
+  const char * T = t;
+  int k;
+
+  XST (_T(_S(CLAUSE)));
+  XST (_T(_S(NAME)));
+  XAD(strlen(clause));
   XET ();
 
   if (t[0] == '(')
@@ -596,7 +642,7 @@ static int FXTRAN_omptc_expr (const char * t, const FXTRAN_char_info * ci,
 }
 
 static int FXTRAN_omptc_ktype (const char * t, const FXTRAN_char_info * ci,
-                                FXTRAN_xmlctx * ctx)
+                               FXTRAN_xmlctx * ctx)
 {
   const char * T = t;
   int k;
@@ -630,7 +676,7 @@ static int FXTRAN_omptc_ktype (const char * t, const FXTRAN_char_info * ci,
 }
 
 static int FXTRAN_omptc_simple (const char * t, const char * C,
-                                 const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx)
+                                const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx)
 {
   const char * T = t;
   int k;
@@ -645,43 +691,55 @@ static int FXTRAN_omptc_simple (const char * t, const char * C,
 
 #define def_FXTRAN_omptc_simple(T) \
 static int FXTRAN_omptc_##T (const char * t, const FXTRAN_char_info * ci, \
-                              FXTRAN_xmlctx * ctx)                         \
-{                                                                          \
+                              FXTRAN_xmlctx * ctx)                        \
+{                                                                         \
   return FXTRAN_omptc_simple (t, #T, ci, ctx);                            \
 }
 
 #define def_FXTRAN_omptc_expr(T) \
 static int FXTRAN_omptc_##T (const char * t, const FXTRAN_char_info * ci, \
-                              FXTRAN_xmlctx * ctx)                         \
-{                                                                          \
-  return FXTRAN_omptc_expr (t, ci, ctx);                                  \
+                             FXTRAN_xmlctx * ctx)                         \
+{                                                                         \
+  return FXTRAN_omptc_expr (t, ci, ctx, #T);                              \
 }
 
 #define def_FXTRAN_omptc_ktype(T) \
 static int FXTRAN_omptc_##T (const char * t, const FXTRAN_char_info * ci, \
-                              FXTRAN_xmlctx * ctx)                         \
-{                                                                          \
+                             FXTRAN_xmlctx * ctx)                         \
+{                                                                         \
   return FXTRAN_omptc_ktype (t, ci, ctx);                                 \
 }
 
 #define def_FXTRAN_omptc_list(T) \
 static int FXTRAN_omptc_##T (const char * t, const FXTRAN_char_info * ci, \
-                              FXTRAN_xmlctx * ctx)                         \
-{                                                                          \
-  return omptc_var_list (t, ci, ctx);                                      \
+                             FXTRAN_xmlctx * ctx)                         \
+{                                                                         \
+  return omptc_var_list (t, ci, ctx);                                     \
 }
 
 def_FXTRAN_omptc_simple (NOWAIT)
-def_FXTRAN_omptc_simple (ORDERED)
-def_FXTRAN_omptc_simple (PARALLELDOSIMD)
-def_FXTRAN_omptc_simple (PARALLELDO)
 def_FXTRAN_omptc_simple (DISTRIBUTE)
-def_FXTRAN_omptc_simple (SIMD)
 def_FXTRAN_omptc_simple (LOOP)
 def_FXTRAN_omptc_simple (DO)
+def_FXTRAN_omptc_simple (INBRANCH)
+def_FXTRAN_omptc_simple (NOTINBRANCH)
+def_FXTRAN_omptc_simple (MASKED)
+def_FXTRAN_omptc_simple (SECTIONS)
+def_FXTRAN_omptc_simple (CAPTURE)
+def_FXTRAN_omptc_simple (UNTIED)
+def_FXTRAN_omptc_simple (MERGEABLE)
+def_FXTRAN_omptc_simple (NOGROUP)
+def_FXTRAN_omptc_simple (TASKLOOP)
+def_FXTRAN_omptc_simple (UPDATE)
+def_FXTRAN_omptc_simple (WRITE)
+def_FXTRAN_omptc_simple (READ)
+def_FXTRAN_omptc_simple (ACQUIRE)
+def_FXTRAN_omptc_simple (RELEASE)
+def_FXTRAN_omptc_simple (PARALLEL)
 
 def_FXTRAN_omptc_ktype (DEFAULT)
 
+def_FXTRAN_omptc_expr (SIMD)
 def_FXTRAN_omptc_expr (IF)
 def_FXTRAN_omptc_expr (DEVICE)
 def_FXTRAN_omptc_expr (NUM_TEAMS)
@@ -689,7 +747,16 @@ def_FXTRAN_omptc_expr (THREAD_LIMIT)
 def_FXTRAN_omptc_expr (COLLAPSE)
 def_FXTRAN_omptc_expr (SIMDLEN)
 def_FXTRAN_omptc_expr (SAFELEN)
+def_FXTRAN_omptc_expr (NUM_THREADS)
+def_FXTRAN_omptc_expr (PROC_BIND)
+def_FXTRAN_omptc_expr (AFFINITY)
+def_FXTRAN_omptc_expr (FINAL)
+def_FXTRAN_omptc_expr (GRAINSIZE)
+def_FXTRAN_omptc_expr (PRIORITY)
+def_FXTRAN_omptc_expr (DETACH)
+def_FXTRAN_omptc_expr (ORDERED)
 
+def_FXTRAN_omptc_list (UNIFORM)
 def_FXTRAN_omptc_list (PRIVATE)
 def_FXTRAN_omptc_list (FIRSTPRIVATE)
 def_FXTRAN_omptc_list (SHARED)
@@ -698,6 +765,9 @@ def_FXTRAN_omptc_list (IS_DEVICE_PTR)
 def_FXTRAN_omptc_list (USES_ALLOCATORS)
 def_FXTRAN_omptc_list (TO)
 def_FXTRAN_omptc_list (FROM)
+def_FXTRAN_omptc_list (COPYPRIVATE)
+def_FXTRAN_omptc_list (COPYIN)
+def_FXTRAN_omptc_list (ENTER)
 
 static void omptd_clause_list (const char * t, const FXTRAN_char_info * ci,
                                 FXTRAN_xmlctx * ctx)
@@ -728,15 +798,16 @@ static void omptd_clause_list (const char * t, const FXTRAN_char_info * ci,
 
 #define def_omptd_extra_clause_list(T) \
 static void omptd_##T##_extra (const char * t, const FXTRAN_char_info * ci,  \
-                               FXTRAN_xmlctx * ctx)                           \
-{                                                                              \
-  int k = strlen (#T);                                                         \
-  XAD(k);                                                                      \
-  return omptd_clause_list (t, ci, ctx);                                       \
+                               FXTRAN_xmlctx * ctx)                          \
+{                                                                            \
+  int k = strlen (#T);                                                       \
+  XAD(k);                                                                    \
+  return omptd_clause_list (t, ci, ctx);                                     \
 }
 
 def_omptd_extra_clause_list (TARGETENTERDATA)
 def_omptd_extra_clause_list (TARGETEXITDATA)
+def_omptd_extra_clause_list (TARGETPARALLELDO)
 def_omptd_extra_clause_list (TARGETPARALLEL)
 def_omptd_extra_clause_list (TARGETUPDATE)
 def_omptd_extra_clause_list (TARGETTEAMS)
@@ -748,6 +819,97 @@ def_omptd_extra_clause_list (ENDTARGETDATA)
 def_omptd_extra_clause_list (ENDTARGET)
 def_omptd_extra_clause_list (ENDDECLARETARGET)
 def_omptd_extra_clause_list (DECLARETARGET)
+def_omptd_extra_clause_list (DECLARE)
+def_omptd_extra_clause_list (PARALLELDOSIMD)
+def_omptd_extra_clause_list (ENDPARALLELDOSIMD)
+def_omptd_extra_clause_list (TASKWAIT)
+def_omptd_extra_clause_list (TASK)
+def_omptd_extra_clause_list (ENDTASK)
+def_omptd_extra_clause_list (PARALLEL)
+def_omptd_extra_clause_list (ENDPARALLEL)
+def_omptd_extra_clause_list (SIMD)
+def_omptd_extra_clause_list (DOSIMD)
+def_omptd_extra_clause_list (SINGLE)
+def_omptd_extra_clause_list (ENDSINGLE)
+def_omptd_extra_clause_list (MASKED)
+def_omptd_extra_clause_list (ENDMASKED)
+def_omptd_extra_clause_list (BARRIER)
+def_omptd_extra_clause_list (SECTION)
+def_omptd_extra_clause_list (ENDSECTION)
+def_omptd_extra_clause_list (SECTIONS)
+def_omptd_extra_clause_list (ENDSECTIONS)
+def_omptd_extra_clause_list (ATOMIC)
+def_omptd_extra_clause_list (ENDATOMIC)
+def_omptd_extra_clause_list (DO)
+def_omptd_extra_clause_list (ENDDO)
+def_omptd_extra_clause_list (SCOPE)
+def_omptd_extra_clause_list (ENDSCOPE)
+def_omptd_extra_clause_list (TEAMS)
+def_omptd_extra_clause_list (ENDTEAMS)
+def_omptd_extra_clause_list (DISTRIBUTE)
+def_omptd_extra_clause_list (ENDDISTRIBUTE)
+def_omptd_extra_clause_list (REQUIRES)
+def_omptd_extra_clause_list (TILE)
+def_omptd_extra_clause_list (ENDTILE)
+def_omptd_extra_clause_list (UNROLL)
+def_omptd_extra_clause_list (ENDUNROLL)
+def_omptd_extra_clause_list (ALLOCATORS)
+def_omptd_extra_clause_list (ENDALLOCATORS)
+def_omptd_extra_clause_list (WORKSHARE)
+def_omptd_extra_clause_list (ENDWORKSHARE)
+def_omptd_extra_clause_list (ORDERED)
+def_omptd_extra_clause_list (ENDORDERED)
+def_omptd_extra_clause_list (LOOP)
+def_omptd_extra_clause_list (ENDLOOP)
+def_omptd_extra_clause_list (TASKGROUP)
+def_omptd_extra_clause_list (ENDTASKGROUP)
+def_omptd_extra_clause_list (TASKYIELD)
+
+static void omptd_THREADPRIVATE_extra (const char * t, const FXTRAN_char_info * ci, 
+		                       FXTRAN_xmlctx * ctx)                         
+{                                                                          
+  int k;
+
+  XAD(13);                                                                  
+
+  k = omp_var_list (t, ci, ctx, _T(_S(VARIABLE) H _S(LIST)));
+
+  XAD (k);
+}
+
+static void omptd_CRITICAL_extra (const char * t, const FXTRAN_char_info * ci, 
+		                  FXTRAN_xmlctx * ctx)                         
+{                                                                          
+  int k = FXTRAN_eat_word (t);
+
+  XAD(k);                                                                  
+
+  if (t[0] == '(')
+    {
+      XAD (1);
+
+      k = FXTRAN_eat_word (t);
+
+      if (k == 0)
+        FXTRAN_THROW ("Malformed CRITICAL label");
+
+      XST (_T(_S(NAME)));
+      XAD(k);
+      XET ();
+    
+      if (t[0] != ')')
+        FXTRAN_THROW ("Malformed CRITICAL label");
+
+      XAD (1);
+    }
+
+}
+
+static void omptd_ENDCRITICAL_extra (const char * t, const FXTRAN_char_info * ci, 
+		                     FXTRAN_xmlctx * ctx)                         
+{                                                                          
+  omptd_CRITICAL_extra (t, ci, ctx);
+}
 
 void FXTRAN_dump_omptd (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx)
 {
