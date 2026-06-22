@@ -18,7 +18,8 @@
         CALL RANDOM_NUMBER(a)
         b = a + 1.0
 
-        !$acc data copyin(a(1:SMALL_LOOPCOUNT,1:SMALL_LOOPCOUNT), b(1:SMALL_LOOPCOUNT,1:SMALL_LOOPCOUNT)) copy(c(1:SMALL_LOOPCOUNT,1:SMALL_LOOPCOUNT))
+        !$acc data copyin(a(1:SMALL_LOOPCOUNT,1:SMALL_LOOPCOUNT), b(1:SMALL_LOOPCOUNT,1:SMALL_LOOPCOUNT)) &
+        !$acc & copy(c(1:SMALL_LOOPCOUNT,1:SMALL_LOOPCOUNT))
           !$acc parallel loop num_gangs(4,4) gang(dim:2)
           DO x = 1, SMALL_LOOPCOUNT
             !$acc loop gang(dim:1)

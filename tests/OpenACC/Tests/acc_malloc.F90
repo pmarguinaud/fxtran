@@ -16,7 +16,8 @@
         TYPE(C_PTR) :: a
         INTEGER :: errors = 0
 
-        initial_memory = acc_get_property(acc_get_device_num(acc_get_device_type()), acc_get_device_type(), acc_property_free_memory)
+        initial_memory = acc_get_property(acc_get_device_num(acc_get_device_type()), &
+          acc_get_device_type(), acc_property_free_memory)
         
         a = acc_malloc(n * C_SIZEOF(0_C_INT))
 
@@ -24,7 +25,8 @@
             errors = errors + 1
         END IF
 
-        final_memory = acc_get_property(acc_get_device_num(acc_get_device_type()), acc_get_device_type(), acc_property_free_memory)
+        final_memory = acc_get_property(acc_get_device_num(acc_get_device_type()), &
+          acc_get_device_type(), acc_property_free_memory)
 
         IF (initial_memory /= final_memory) THEN
             errors = errors + 1

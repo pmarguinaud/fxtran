@@ -20,7 +20,8 @@
         CALL RANDOM_NUMBER(b)
         CALL RANDOM_NUMBER(c)
 
-        !$acc data copyin(a(1:SMALL_LOOPCOUNT), b(1:SMALL_LOOPCOUNT), c(1:SMALL_LOOPCOUNT)) copyout(d(1:SMALL_LOOPCOUNT,1:SMALL_LOOPCOUNT))
+        !$acc data copyin(a(1:SMALL_LOOPCOUNT), b(1:SMALL_LOOPCOUNT), c(1:SMALL_LOOPCOUNT)) &
+        !$acc & copyout(d(1:SMALL_LOOPCOUNT,1:SMALL_LOOPCOUNT))
           !$acc parallel loop tile(*, *) reduction(+:temp)
           DO x = 1, SMALL_LOOPCOUNT
             DO y = 1, SMALL_LOOPCOUNT 

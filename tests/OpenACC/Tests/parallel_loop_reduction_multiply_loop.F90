@@ -50,7 +50,8 @@
             WRITE(*, *) " "
           END IF
           DO y = 1, LOOPCOUNT 
-            IF (abs(c(x * LOOPCOUNT + y) - ((a(x * LOOPCOUNT + y) + b(x * LOOPCOUNT + y)) / totals(x + 1))) .gt. c(x * LOOPCOUNT + y) * PRECISION) THEN
+            IF (abs(c(x * LOOPCOUNT + y) - ((a(x * LOOPCOUNT + y) + b(x * LOOPCOUNT + y)) &
+              & / totals(x + 1))) .gt. c(x * LOOPCOUNT + y) * PRECISION) THEN
               errors = errors + 1
               WRITE(*, *) c(x * LOOPCOUNT + y)
               WRITE(*, *) a(x * LOOPCOUNT + y) + b(x * LOOPCOUNT + y)

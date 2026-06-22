@@ -115,7 +115,8 @@ END FUNCTION function_test_dev_only
   c = 2
   d = 0
 
-  !$acc data copyin(a(1:LOOPCOUNT, 1:LOOPCOUNT), b(1:LOOPCOUNT, 1:LOOPCOUNT)) copy(c(1:LOOPCOUNT, 1:LOOPCOUNT)) copyout(d(1:LOOPCOUNT, 1:LOOPCOUNT))
+  !$acc data copyin(a(1:LOOPCOUNT, 1:LOOPCOUNT), b(1:LOOPCOUNT, 1:LOOPCOUNT)) &
+  !$acc & copy(c(1:LOOPCOUNT, 1:LOOPCOUNT)) copyout(d(1:LOOPCOUNT, 1:LOOPCOUNT))
     DO x = 1, LOOPCOUNT
       CALL create_as_present(a(x), b(x), c(x), d(x), LOOPCOUNT)
     END DO

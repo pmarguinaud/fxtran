@@ -18,35 +18,36 @@ void FXTRAN_dump_accd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *);
 
 
 #define FXTRAN_accd_list(macro) \
-  macro (ATOMIC                     )        \
-  macro (CACHE                      )        \
-  macro (DATA                       )        \
-  macro (DECLARE                    )        \
-  macro (ENDATOMIC                  )        \
-  macro (ENDDATA                    )        \
-  macro (ENDHOST_DATA               )        \
-  macro (ENDKERNELSLOOP             )        \
-  macro (ENDKERNELS                 )        \
-  macro (ENDPARALLELLOOP            )        \
-  macro (ENDPARALLEL                )        \
-  macro (ENDSERIALLOOP              )        \
-  macro (ENDSERIAL                  )        \
-  macro (ENTERDATA                  )        \
-  macro (EXITDATA                   )        \
-  macro (HOST_DATA                  )        \
-  macro (INIT                       )        \
-  macro (KERNELSLOOP                )        \
-  macro (KERNELS                    )        \
-  macro (LOOP                       )        \
-  macro (PARALLELLOOP               )        \
-  macro (PARALLEL                   )        \
-  macro (ROUTINE                    )        \
+  macro (WAIT                       )        \
+  macro (UPDATE                     )        \
+  macro (SHUTDOWN                   )        \
+  macro (SET                        )        \
   macro (SERIALLOOP                 )        \
   macro (SERIAL                     )        \
-  macro (SET                        )        \
-  macro (SHUTDOWN                   )        \
-  macro (UPDATE                     )        \
-  macro (WAIT                       )        
+  macro (ROUTINE                    )        \
+  macro (PARALLELLOOP               )        \
+  macro (PARALLEL                   )        \
+  macro (LOOP                       )        \
+  macro (KERNELSLOOP                )        \
+  macro (KERNELS                    )        \
+  macro (INIT                       )        \
+  macro (HOST_DATA                  )        \
+  macro (EXITDATA                   )        \
+  macro (ENTERDATA                  )        \
+  macro (ENDSERIALLOOP              )        \
+  macro (ENDSERIAL                  )        \
+  macro (ENDPARALLELLOOP            )        \
+  macro (ENDPARALLEL                )        \
+  macro (ENDLOOP                    )        \
+  macro (ENDKERNELSLOOP             )        \
+  macro (ENDKERNELS                 )        \
+  macro (ENDHOST_DATA               )        \
+  macro (ENDDATA                    )        \
+  macro (ENDATOMIC                  )        \
+  macro (DECLARE                    )        \
+  macro (DATA                       )        \
+  macro (CACHE                      )        \
+  macro (ATOMIC                     )        
 
 #define enum_macro(T) \
   FXTRAN_ACCD_##T,
@@ -61,48 +62,50 @@ typedef enum {
 
 
 #define FXTRAN_accc_list(macro) \
-  macro (DEVICEPTR                 )       \
-  macro (DEVICE_RESIDENT           )       \
-  macro (DEVICE_TYPE               )       \
-  macro (DEVICE_NUM                )       \
-  macro (DEVICE                    )       \
-  macro (HOST                      )       \
-  macro (BIND                      )       \
-  macro (NOHOST                    )       \
-  macro (LINK                      )       \
+  macro (WORKER                    )       \
+  macro (WAIT                      )       \
+  macro (VECTOR_LENGTH             )       \
+  macro (VECTOR                    )       \
+  macro (USE_DEVICE                )       \
   macro (TILE                      )       \
   macro (SEQ                       )       \
+  macro (SELF                      )       \
+  macro (REDUCTION                 )       \
+  macro (PRIVATE                   )       \
+  macro (PRESENT_OR_CREATE         )       \
+  macro (PRESENT                   )       \
+  macro (PCREATE                   )       \
+  macro (NUM_WORKERS               )       \
+  macro (NUM_GANGS                 )       \
+  macro (NOHOST                    )       \
+  macro (NO_CREATE                 )       \
+  macro (LINK                      )       \
   macro (INDEPENDENT               )       \
-  macro (AUTO                      )       \
-  macro (WORKER                    )       \
-  macro (COLLAPSE                  )       \
-  macro (USE_DEVICE                )       \
   macro (IF_PRESENT                )       \
+  macro (IF                        )       \
+  macro (HOST                      )       \
+  macro (GANG                      )       \
+  macro (FIRSTPRIVATE              )       \
   macro (FINALIZE                  )       \
+  macro (DTYPE                     )       \
+  macro (DEVICE_TYPE               )       \
+  macro (DEVICE_RESIDENT           )       \
+  macro (DEVICEPTR                 )       \
+  macro (DEVICE_NUM                )       \
+  macro (DEVICE                    )       \
   macro (DETACH                    )       \
   macro (DELETE                    )       \
-  macro (DTYPE                     )       \
   macro (DEFAULT_ASYNC             )       \
   macro (DEFAULT                   )       \
-  macro (ATTACH                    )       \
-  macro (FIRSTPRIVATE              )       \
-  macro (PRIVATE                   )       \
-  macro (PRESENT                   )       \
-  macro (NO_CREATE                 )       \
   macro (CREATE                    )       \
   macro (COPYOUT                   )       \
   macro (COPYIN                    )       \
   macro (COPY                      )       \
-  macro (REDUCTION                 )       \
-  macro (SELF                      )       \
-  macro (IF                        )       \
-  macro (ASYNC                     )       \
-  macro (WAIT                      )       \
-  macro (VECTOR_LENGTH             )       \
-  macro (VECTOR                    )       \
-  macro (GANG                      )       \
-  macro (NUM_WORKERS               )       \
-  macro (NUM_GANGS                 )
+  macro (COLLAPSE                  )       \
+  macro (BIND                      )       \
+  macro (AUTO                      )       \
+  macro (ATTACH                    )       \
+  macro (ASYNC                     )       
 
 /* TODO ACC INTRINSICS */
 

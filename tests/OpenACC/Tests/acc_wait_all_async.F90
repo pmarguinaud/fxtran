@@ -33,7 +33,8 @@
         d_host = d
         g_host = g
 
-        !$acc data copyin(a(1:LOOPCOUNT), b(1:LOOPCOUNT), d(1:LOOPCOUNT), e(1:LOOPCOUNT), g(1:LOOPCOUNT), h(1:LOOPCOUNT)) create(c(1:LOOPCOUNT), f(1:LOOPCOUNT), i(1:LOOPCOUNT), j(1:LOOPCOUNT)) copyout(k(1:LOOPCOUNT))
+        !$acc data copyin(a(1:LOOPCOUNT), b(1:LOOPCOUNT), d(1:LOOPCOUNT), e(1:LOOPCOUNT), g(1:LOOPCOUNT), &
+        !$acc & h(1:LOOPCOUNT)) create(c(1:LOOPCOUNT), f(1:LOOPCOUNT), i(1:LOOPCOUNT), j(1:LOOPCOUNT)) copyout(k(1:LOOPCOUNT))
           !$acc parallel async(1)
             !$acc loop
             DO x = 1, LOOPCOUNT

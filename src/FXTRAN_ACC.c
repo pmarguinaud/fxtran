@@ -143,6 +143,7 @@ static const char * accd_as_str (FXTRAN_accd_type type)
       case FXTRAN_ACCD_ENDPARALLELLOOP         :  return _T(_S(END) H _S(PARALLEL) H _S(LOOP) H _S(OPENACC))                ;
       case FXTRAN_ACCD_ENDPARALLEL             :  return _T(_S(END) H _S(PARALLEL) H _S(OPENACC))                           ;
       case FXTRAN_ACCD_ENDSERIALLOOP           :  return _T(_S(END) H _S(SERIAL) H _S(LOOP) H _S(OPENACC))                  ;
+      case FXTRAN_ACCD_ENDLOOP                 :  return _T(_S(END) H H _S(OPENACC))                  ;
       case FXTRAN_ACCD_ENDSERIAL               :  return _T(_S(END) H _S(SERIAL) H _S(OPENACC))                             ;
       case FXTRAN_ACCD_ENTERDATA               :  return _T(_S (ENTER) H _S(DATA) H _S(OPENACC))                            ;
       case FXTRAN_ACCD_EXITDATA                :  return _T(_S (EXIT) H _S(DATA) H _S(OPENACC))                             ;
@@ -603,8 +604,10 @@ def_FXTRAN_acc_expr_list (HOST, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (COPYIN, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (COPYOUT, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (CREATE, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (PCREATE, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (NO_CREATE, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (PRESENT, _T (_S(VARIABLE) H _S(LIST)))
+def_FXTRAN_acc_prefix_expr_list (PRESENT_OR_CREATE, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (DEVICEPTR, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (ATTACH, _T (_S(VARIABLE) H _S(LIST)))
 def_FXTRAN_acc_prefix_expr_list (PRIVATE, _T (_S(VARIABLE) H _S(LIST)))
@@ -637,12 +640,18 @@ static void accd_clause_list (const char * t, const FXTRAN_char_info * ci,
       {                                 \
         k = FXTRAN_acc_##T(t, ci, ctx); \
         XAD(k);                         \
+        goto FOUND;                     \
       }
       FXTRAN_accc_list(test_macro)
 #undef test_macro
 
-      if (k == 0)
-        FXTRAN_THROW ("Unknown OpenACC clause");
+      FXTRAN_THROW ("Unknown OpenACC clause");
+
+FOUND:
+      if (t[0] == ',')
+        XAD (1);
+   
+      continue;
 
     }
 }
@@ -718,6 +727,7 @@ def_accd_extra_clause_list (ENDPARALLEL)
 def_accd_extra_clause_list (ENDPARALLELLOOP)
 def_accd_extra_clause_list (ENDSERIAL)
 def_accd_extra_clause_list (ENDSERIALLOOP)
+def_accd_extra_clause_list (ENDLOOP)
 def_accd_extra_clause_list (ENTERDATA)
 def_accd_extra_clause_list (EXITDATA)
 def_accd_extra_clause_list (HOST_DATA)

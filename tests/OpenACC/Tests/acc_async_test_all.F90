@@ -21,7 +21,8 @@
         c = 0
         e = 0
 
-        !$acc enter data create(a(1:LOOPCOUNT,1:10), b(1:LOOPCOUNT,1:10), c(1:LOOPCOUNT,1:10), d(1:LOOPCOUNT,1:10), e(1:LOOPCOUNT,1:10))
+        !$acc enter data create(a(1:LOOPCOUNT,1:10), b(1:LOOPCOUNT,1:10), c(1:LOOPCOUNT,1:10), d(1:LOOPCOUNT,1:10), &
+        !$acc & e(1:LOOPCOUNT,1:10))
         DO y = 1, 10
           !$acc update device(a(1:LOOPCOUNT,y:y), b(1:LOOPCOUNT,y:y), d(1:LOOPCOUNT,y:y)) async(y)
           !$acc parallel present(a(1:LOOPCOUNT,y:y), b(1:LOOPCOUNT,y:y), c(1:LOOPCOUNT,y:y)) async(y)
@@ -82,7 +83,8 @@
         c = 0
         e = 0
 
-        !$acc data copyin(a(1:LOOPCOUNT, 1:10), b(1:LOOPCOUNT,1:10), d(1:LOOPCOUNT, 1:10)) copyout(c(1:LOOPCOUNT, 1:10), e(1:LOOPCOUNT, 1:10))
+        !$acc data copyin(a(1:LOOPCOUNT, 1:10), b(1:LOOPCOUNT,1:10), d(1:LOOPCOUNT, 1:10)) copyout(c(1:LOOPCOUNT, 1:10), &
+        !$acc & e(1:LOOPCOUNT, 1:10))
           DO x = 1, 10
             !$acc parallel present(a(1:LOOPCOUNT, 1:10), b(1:LOOPCOUNT, 1:10), c(1:LOOPCOUNT, 1:10)) async(x)
               !$acc loop
@@ -141,7 +143,8 @@
         c = 0
         e = 0
 
-        !$acc data copyin(a(1:LOOPCOUNT, 1:10), b(1:LOOPCOUNT, 1:10), d(1:LOOPCOUNT, 1:10)) copyout(c(1:LOOPCOUNT, 1:10), e(1:LOOPCOUNT, 1:10))
+        !$acc data copyin(a(1:LOOPCOUNT, 1:10), b(1:LOOPCOUNT, 1:10), d(1:LOOPCOUNT, 1:10)) copyout(c(1:LOOPCOUNT, 1:10), &
+        !$acc & e(1:LOOPCOUNT, 1:10))
           DO x = 1, 10
             CALL acc_set_default_async(x)
             !$acc parallel present(a(1:LOOPCOUNT, 1:10), b(1:LOOPCOUNT, 1:10), c(1:LOOPCOUNT, 1:10)) async
