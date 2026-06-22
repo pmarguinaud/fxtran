@@ -297,24 +297,33 @@ static int FXTRAN_omptc_TASK_REDUCTION (const char * t, const FXTRAN_char_info *
 }
 
 static int omptc_map (const char * t, const FXTRAN_char_info * ci,
-                      FXTRAN_xmlctx * ctx)
+                      FXTRAN_xmlctx * ctx, const char * directive)
 {
   const char * T = t;
-  int k, kp;
+  int kp, k0;
 
   if (t[0] != '(')
-    FXTRAN_THROW ("Malformed OpenMP Target MAP clause; expected `('");
+    FXTRAN_THROW ("Malformed OpenMP Target %s clause; expected `('", directive);
 
   XAD(1);
 
   kp = FXTRAN_str_at_level (t, ci, ")", 0);
+  k0 = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
 
-  /* Look for map-type or map-type-modifier: prefix */
-  k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
-  if (k > 0)
+  if (k0 > 0)
     {
-      XNW (_T(_S(MAP) H _S(TYPE)), k-1);
-      XAD(k);
+      while (t[0] != ':')
+        {
+          int k = FXTRAN_eat_word (t);
+          XST (_T(_S(PREFIX)));
+          XAD(k);
+          XET ();
+          if (t[0] == ',')
+            XAD (1);
+          else if (t[0] != ':')
+            FXTRAN_THROW ("Malformed %s clause", directive);
+        }
+      XAD (1);
     }
 
   XST (_T(_S(EXPR) H _S(LIST)));
@@ -332,12 +341,12 @@ static int omptc_map (const char * t, const FXTRAN_char_info * ci,
       if (t[0] == ',')
         XAD(1);
       else if (t[0] != ')')
-        FXTRAN_THROW ("Malformed OpenMP Target MAP clause");
+        FXTRAN_THROW ("Malformed OpenMP Target %s clause", directive);
     }
   XET ();
 
   if (t[0] != ')')
-    FXTRAN_THROW ("Malformed OpenMP Target MAP clause; expected `)'");
+    FXTRAN_THROW ("Malformed OpenMP Target %s clause; expected `)'", directive);
   XAD(1);
 
   XET ();
@@ -356,9 +365,116 @@ static int FXTRAN_omptc_MAP (const char * t, const FXTRAN_char_info * ci,
   XAD(k);
   XET ();
 
-  k = omptc_map (t, ci, ctx);
+  k = omptc_map (t, ci, ctx, _S(MAP));
   
   XAD (k);
+
+  return t - T;
+}
+
+static int FXTRAN_omptc_single_prefix (const char * t, const FXTRAN_char_info * ci,
+                                       FXTRAN_xmlctx * ctx, const char * clause)
+{
+  const char * T = t;
+  int kp, k;
+
+  k = FXTRAN_eat_word (t);
+  XST (_T(_S(CLAUSE)));
+  XST (_T(_S(NAME)));
+  XAD(k);
+  XET ();
+
+  if (t[0] != '(')
+    FXTRAN_THROW ("Malformed %s clause", clause);
+  XAD (1);
+
+  kp = FXTRAN_str_at_level (t, ci, ")", 0);
+  k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
+
+  if (k)
+    {
+      k = FXTRAN_eat_word (t);
+      XST (_T(_S(PREFIX)));
+      XAD(k);
+      XET ();
+      XAD (1);
+    }
+
+  kp = FXTRAN_str_at_level (t, ci, ")", 0);
+  FXTRAN_expr (t, ci, kp-1, ctx);
+
+  XAD (kp);
+
+  XET ();
+
+  return t - T;
+}
+
+static int FXTRAN_omptc_IF (const char * t, const FXTRAN_char_info * ci,
+                            FXTRAN_xmlctx * ctx)
+{
+  return FXTRAN_omptc_single_prefix (t, ci, ctx, "IF");
+}
+
+static int FXTRAN_omptc_DEVICE (const char * t, const FXTRAN_char_info * ci,
+                                FXTRAN_xmlctx * ctx)
+{
+  return FXTRAN_omptc_single_prefix (t, ci, ctx, "DEVICE");
+}
+
+static int FXTRAN_omptc_LASTPRIVATE (const char * t, const FXTRAN_char_info * ci,
+                                     FXTRAN_xmlctx * ctx)
+{
+  const char * T = t;
+  int kp, k;
+
+  k = FXTRAN_eat_word (t);
+  XST (_T(_S(CLAUSE)));
+  XST (_T(_S(NAME)));
+  XAD(k);
+  XET ();
+
+  if (t[0] != '(')
+    FXTRAN_THROW ("Malformed LASTPRIVATE clause");
+  XAD (1);
+
+  kp = FXTRAN_str_at_level (t, ci, ")", 0);
+  k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
+
+  if (k)
+    {
+      while (t[0] != ':')
+        {
+          k = FXTRAN_eat_word (t);
+          XST (_T(_S(PREFIX)));
+          XAD(k);
+          XET ();
+          if (t[0] == ',')
+            XAD (1);
+          else if (t[0] != ':')
+            FXTRAN_THROW ("Malformed LASTPRIVATE clause");
+        }
+      XAD (1);
+    }
+
+
+  while (t[0] != ')')
+    {
+      kp = FXTRAN_str_at_level (t, ci, ")", 0);
+      k = FXTRAN_str_at_level_ir (t, ci, ",", 1, kp);
+      if (k == 0)
+        k = kp;
+      FXTRAN_expr (t, ci, k-1, ctx);
+      XAD (k-1);
+      if (t[0] == ',')
+        XAD (1);
+      else if (t[0] != ')')
+        FXTRAN_THROW ("Malformed clause");
+    }
+
+  XAD (1);
+
+  XET ();
 
   return t - T;
 }
@@ -425,7 +541,7 @@ static int FXTRAN_omptc_DEFAULTMAP (const char * t, const FXTRAN_char_info * ci,
   XAD(k);
   XET ();
 
-  k = omptc_map (t, ci, ctx);
+  k = omptc_map (t, ci, ctx, _S(DEFAULTMAP));
   
   XAD (k);
 
@@ -794,6 +910,7 @@ def_FXTRAN_omptc_simple (DYNAMIC_ALLOCATORS)
 def_FXTRAN_omptc_simple (REVERSE_OFFLOAD)
 def_FXTRAN_omptc_simple (FULL)
 def_FXTRAN_omptc_simple (INDIRECT)
+def_FXTRAN_omptc_simple (NO_PARALLELISM)
 
 def_FXTRAN_omptc_ktype (DEFAULT)
 def_FXTRAN_omptc_ktype (BIND)
@@ -804,8 +921,6 @@ def_FXTRAN_omptc_ktype (AT)
 
 def_FXTRAN_omptc_expr (PARTIAL)
 def_FXTRAN_omptc_expr (SIMD)
-def_FXTRAN_omptc_expr (IF)
-def_FXTRAN_omptc_expr (DEVICE)
 def_FXTRAN_omptc_expr (NUM_TEAMS)
 def_FXTRAN_omptc_expr (THREAD_LIMIT)
 def_FXTRAN_omptc_expr (COLLAPSE)
@@ -833,7 +948,6 @@ def_FXTRAN_omptc_list (UNIFORM)
 def_FXTRAN_omptc_list (PRIVATE)
 def_FXTRAN_omptc_list (FIRSTPRIVATE)
 def_FXTRAN_omptc_list (SHARED)
-def_FXTRAN_omptc_list (LASTPRIVATE)
 def_FXTRAN_omptc_list (IS_DEVICE_PTR)
 def_FXTRAN_omptc_list (USES_ALLOCATORS)
 def_FXTRAN_omptc_list (COPYPRIVATE)
@@ -857,12 +971,14 @@ static void omptd_clause_list (const char * t, const FXTRAN_char_info * ci,
         {                                         \
           k = FXTRAN_omptc_##T (t, ci, ctx);      \
           XAD(k);                                 \
+          goto FOUND;                             \
         }
       FXTRAN_omptc_list(test_macro)
 #undef test_macro
 
-      if (k == 0)
-        FXTRAN_THROW ("Unknown OpenMP Target clause");
+      FXTRAN_THROW ("Unknown OpenMP Target clause");
+
+FOUND:
 
       if (t[0] == ',')
         XAD(1);

@@ -137,6 +137,7 @@ typedef enum {
   macro (ORDERED          )  \
   macro (NUM_THREADS      )  \
   macro (NUM_TEAMS        )  \
+  macro (NO_PARALLELISM   )  \
   macro (NOWAIT           )  \
   macro (NOTINBRANCH      )  \
   macro (NOGROUP          )  \
