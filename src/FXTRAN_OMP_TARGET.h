@@ -41,12 +41,16 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (SECTIONS                             )   \
   macro (SECTION                              )   \
   macro (SCOPE                                )   \
+  macro (SCAN                                 )   \
   macro (REQUIRES                             )   \
+  macro (PARALLELMASTER                       )   \
   macro (PARALLELDOSIMD                       )   \
   macro (PARALLEL                             )   \
   macro (ORDERED                              )   \
   macro (MASKED                               )   \
   macro (LOOP                                 )   \
+  macro (FLUSH                                )   \
+  macro (ERROR                                )   \
   macro (ENDWORKSHARE                         )   \
   macro (ENDUNROLL                            )   \
   macro (ENDTILE                              )   \
@@ -61,6 +65,7 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ENDSECTIONS                          )   \
   macro (ENDSECTION                           )   \
   macro (ENDSCOPE                             )   \
+  macro (ENDPARALLELMASTER                    )   \
   macro (ENDPARALLELDOSIMD                    )   \
   macro (ENDPARALLEL                          )   \
   macro (ENDORDERED                           )   \
@@ -70,15 +75,19 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ENDDISTRIBUTE                        )   \
   macro (ENDDECLARETARGET                     )   \
   macro (ENDCRITICAL                          )   \
+  macro (ENDASSUME                            )   \
   macro (ENDATOMIC                            )   \
   macro (ENDALLOCATORS                        )   \
   macro (DOSIMD                               )   \
   macro (DO                                   )   \
   macro (DISTRIBUTE                           )   \
+  macro (DEPOBJ                               )   \
   macro (DECLARETARGET                        )   \
   macro (DECLARE                              )   \
   macro (CRITICAL                             )   \
   macro (BARRIER                              )   \
+  macro (ASSUMES                              )   \
+  macro (ASSUME                               )   \
   macro (ATOMIC                               )   \
   macro (ALLOCATORS                           )   
 
@@ -97,26 +106,33 @@ typedef enum {
 /* OpenMP Target clauses; please sort in reverse alphabetic order */
 #define FXTRAN_omptc_list(macro) \
   macro (WRITE            )  \
+  macro (VARIANT          )  \
   macro (USES_ALLOCATORS  )  \
   macro (UPDATE           )  \
   macro (UNTIED           )  \
   macro (UNIFORM          )  \
+  macro (UNIFIED_ADDRESS  )  \
+  macro (UNIFIED_SHARED_MEMORY) \
   macro (TO               )  \
   macro (THREAD_LIMIT     )  \
   macro (TASK_REDUCTION   )  \
   macro (TASKLOOP         )  \
+  macro (SIZES            )  \
   macro (SIMDLEN          )  \
   macro (SIMD             )  \
   macro (SHARED           )  \
+  macro (SEVERITY         )  \
   macro (SECTIONS         )  \
   macro (SCHEDULE         )  \
   macro (SAFELEN          )  \
+  macro (REVERSE_OFFLOAD  )  \
   macro (RELEASE          )  \
   macro (REDUCTION        )  \
   macro (READ             )  \
   macro (PROC_BIND        )  \
   macro (PRIORITY         )  \
   macro (PRIVATE          )  \
+  macro (PARTIAL          )  \
   macro (PARALLEL         )  \
   macro (ORDERED          )  \
   macro (NUM_THREADS      )  \
@@ -124,6 +140,7 @@ typedef enum {
   macro (NOWAIT           )  \
   macro (NOTINBRANCH      )  \
   macro (NOGROUP          )  \
+  macro (MESSAGE          )  \
   macro (MERGEABLE        )  \
   macro (MASKED           )  \
   macro (MAP              )  \
@@ -132,16 +149,25 @@ typedef enum {
   macro (LASTPRIVATE      )  \
   macro (IS_DEVICE_PTR    )  \
   macro (IN_REDUCTION     )  \
+  macro (INDIRECT         )  \
+  macro (INCLUSIVE        )  \
   macro (INBRANCH         )  \
   macro (IF               )  \
+  macro (HINT             )  \
+  macro (HAS_DEVICE_ADDR  )  \
   macro (GRAINSIZE        )  \
+  macro (FULL             )  \
   macro (FROM             )  \
   macro (FIRSTPRIVATE     )  \
   macro (FINAL            )  \
+  macro (FILTER           )  \
+  macro (EXCLUSIVE        )  \
   macro (ENTER            )  \
+  macro (DYNAMIC_ALLOCATORS)  \
   macro (DO               )  \
   macro (DIST_SCHEDULE    )  \
   macro (DISTRIBUTE       )  \
+  macro (DEVICE_TYPE      )  \
   macro (DEVICE           )  \
   macro (DETACH           )  \
   macro (DEPEND           )  \
@@ -151,8 +177,16 @@ typedef enum {
   macro (COPYIN           )  \
   macro (COLLAPSE         )  \
   macro (CAPTURE          )  \
+  macro (BIND             )  \
+  macro (ACQ_REL          )  \
+  macro (ATOMIC_DEFAULT_MEM_ORDER)  \
+  macro (AT               )  \
   macro (ACQUIRE          )  \
   macro (ALIGNED          )  \
   macro (AFFINITY         )  
+
+
+
+
 
 #endif

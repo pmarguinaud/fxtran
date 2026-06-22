@@ -144,6 +144,8 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_ENDDECLARETARGET  :  return _T(_S(END) H _S(DECLARE) H _S(TARGET) H _S(OPENMP));
       case FXTRAN_OMPTD_DECLARETARGET     :  return _T(_S(DECLARE) H _S(TARGET) H _S(OPENMP));
       case FXTRAN_OMPTD_DECLARE           :  return _T(_S(DECLARE) H _S(OPENMP));
+      case FXTRAN_OMPTD_PARALLELMASTER    :  return _T(_S(PARALLEL) H _S(MASTER) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLELMASTER :  return _T(_S(END) H _S(PARALLEL) H _S(MASTER) H _S(OPENMP));
       case FXTRAN_OMPTD_PARALLELDOSIMD    :  return _T(_S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDPARALLELDOSIMD :  return _T(_S(END) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_PARALLEL          :  return _T(_S(PARALLEL) H _S(OPENMP));
@@ -183,6 +185,7 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_ENDUNROLL         :  return _T(_S(END) H _S(UNROLL) H _S(OPENMP));
       case FXTRAN_OMPTD_ALLOCATORS        :  return _T(_S(ALLOCATORS) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDALLOCATORS     :  return _T(_S(END) H _S(ALLOCATORS) H _S(OPENMP));
+      case FXTRAN_OMPTD_FLUSH             :  return _T(_S(FLUSH) H _S(OPENMP));
       case FXTRAN_OMPTD_WORKSHARE         :  return _T(_S(WORK) H _S(SHARE) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDWORKSHARE      :  return _T(_S(END) H _S(WORK) H _S(SHARE) H _S(OPENMP));
       case FXTRAN_OMPTD_ORDERED           :  return _T(_S(ORDERED) H _S(OPENMP));
@@ -191,6 +194,12 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_ENDLOOP           :  return _T(_S(END) H _S(LOOP) H _S(OPENMP));
       case FXTRAN_OMPTD_THREADPRIVATE     :  return _T(_S(THREAD) H _S(PRIVATE) H _S(OPENMP));
       case FXTRAN_OMPTD_TASKYIELD         :  return _T(_S(TASK) H _S(YIELD) H _S(OPENMP));
+      case FXTRAN_OMPTD_SCAN              :  return _T(_S(SCAN) H _S(OPENMP));
+      case FXTRAN_OMPTD_ASSUMES           :  return _T(_S(ASSUMES) H _S(OPENMP));
+      case FXTRAN_OMPTD_ASSUME            :  return _T(_S(ASSUME) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDASSUME         :  return _T(_S(END) H _S(ASSUME) H _S(OPENMP));
+      case FXTRAN_OMPTD_ERROR             :  return _T(_S(ERROR) H _S(OPENMP));
+      case FXTRAN_OMPTD_DEPOBJ            :  return _T(_S(DEPOBJ) H _S(OPENMP));
       case FXTRAN_OMPTD_NONE:
       case FXTRAN_OMPTD_LAST:
       default:
@@ -287,17 +296,11 @@ static int FXTRAN_omptc_TASK_REDUCTION (const char * t, const FXTRAN_char_info *
   return FXTRAN_omptc_REDUCTION (t, ci, ctx);
 }
 
-static int FXTRAN_omptc_MAP (const char * t, const FXTRAN_char_info * ci,
-                             FXTRAN_xmlctx * ctx)
+static int omptc_map (const char * t, const FXTRAN_char_info * ci,
+                      FXTRAN_xmlctx * ctx)
 {
   const char * T = t;
   int k, kp;
-
-  k = FXTRAN_eat_word (t);
-  XST (_T(_S(CLAUSE)));
-  XST (_T(_S(NAME)));
-  XAD(k);
-  XET ();
 
   if (t[0] != '(')
     FXTRAN_THROW ("Malformed OpenMP Target MAP clause; expected `('");
@@ -323,10 +326,8 @@ static int FXTRAN_omptc_MAP (const char * t, const FXTRAN_char_info * ci,
       if (! kc)
         kc = kp;
 
-      XST (_T(_S(EXPR)));
       FXTRAN_expr (t, ci, kc-1, ctx);
       XAD (kc-1);
-      XET ();
       
       if (t[0] == ',')
         XAD(1);
@@ -340,6 +341,25 @@ static int FXTRAN_omptc_MAP (const char * t, const FXTRAN_char_info * ci,
   XAD(1);
 
   XET ();
+  return t - T;
+}
+
+static int FXTRAN_omptc_MAP (const char * t, const FXTRAN_char_info * ci,
+                             FXTRAN_xmlctx * ctx)
+{
+  const char * T = t;
+  int k;
+
+  k = FXTRAN_eat_word (t);
+  XST (_T(_S(CLAUSE)));
+  XST (_T(_S(NAME)));
+  XAD(k);
+  XET ();
+
+  k = omptc_map (t, ci, ctx);
+  
+  XAD (k);
+
   return t - T;
 }
 
@@ -405,36 +425,10 @@ static int FXTRAN_omptc_DEFAULTMAP (const char * t, const FXTRAN_char_info * ci,
   XAD(k);
   XET ();
 
-  if (t[0] != '(')
-    FXTRAN_THROW ("Malformed OpenMP Target DEFAULTMAP clause; expected `('");
+  k = omptc_map (t, ci, ctx);
+  
+  XAD (k);
 
-  XAD(1);
-
-  /* implicit-behavior */
-  k = FXTRAN_eat_word (t);
-  if (k == 0)
-    FXTRAN_THROW ("Malformed OpenMP Target DEFAULTMAP clause");
-
-  XNW (_T(_S(DEFAULTMAP) H _S(TYPE)), k);
-  XAD(k);
-
-  /* optional :variable-category */
-  if (t[0] == ':')
-    {
-      XAD(1);
-      k = FXTRAN_eat_word (t);
-      if (k > 0)
-        {
-          XNW (_T(_S(VARIABLE) H _S(TYPE)), k);
-          XAD(k);
-        }
-    }
-
-  if (t[0] != ')')
-    FXTRAN_THROW ("Malformed OpenMP Target DEFAULTMAP clause; expected `)'");
-  XAD(1);
-
-  XET ();
   return t - T;
 }
 
@@ -554,10 +548,13 @@ static int FXTRAN_omptc_LINEAR (const char * t, const FXTRAN_char_info * ci,
 }
 
 static int omp_var_list (const char * t, const FXTRAN_char_info * ci,
-                         FXTRAN_xmlctx * ctx, const char * tag)
+                         FXTRAN_xmlctx * ctx, const char * tag, int optional)
 {
   const char * T = t;
   int k;
+
+  if ((t[0] != '(') && optional)
+    return 0;
 
   if (t[0] != '(')
     FXTRAN_THROW ("Malformed OpenMP Target clause");
@@ -610,7 +607,7 @@ static int omptc_var_list (const char * t, const FXTRAN_char_info * ci,
   XAD(k);
   XET ();
 
-  k = omp_var_list (t, ci, ctx, _S(VARIABLE) H _S(LIST));
+  k = omp_var_list (t, ci, ctx, _S(VARIABLE) H _S(LIST), 0);
 
   XAD (k);
     
@@ -638,6 +635,53 @@ static int FXTRAN_omptc_expr (const char * t, const FXTRAN_char_info * ci,
     }
 
   XET ();
+  return t - T;
+}
+
+static int FXTRAN_omptc_expr_list (const char * t, const FXTRAN_char_info * ci,
+                                   FXTRAN_xmlctx * ctx, const char * clause)
+{
+  const char * T = t;
+  int kp, kc;
+
+  if (clause)
+    {
+      XST (_T(_S(CLAUSE)));
+      XST (_T(_S(NAME)));
+      XAD(strlen(clause));
+      XET ();
+    }
+
+  if (t[0] == '(')
+    {
+      XAD (1);
+
+      XST (_T(_S(EXPR) H _S(LIST)));
+
+      while (t[0] != ')')
+        {
+          kp = FXTRAN_str_at_level (t, ci, ")", ci->parens-1);
+          kc = FXTRAN_str_at_level_ir (t, ci, ",", ci->parens, kp);
+
+          if (! kc)
+            kc = kp;
+
+          FXTRAN_expr (t, ci, kc-1, ctx);
+          XAD(kc-1);
+
+          if (t[0] == ',')
+            XAD (1);
+          else if (t[0] != ')') 
+            FXTRAN_THROW ("Expected `)'");
+        }
+      XAD (1);
+
+      XET ();
+    }
+
+  if (clause)
+    XET ();
+
   return t - T;
 }
 
@@ -703,6 +747,13 @@ static int FXTRAN_omptc_##T (const char * t, const FXTRAN_char_info * ci, \
   return FXTRAN_omptc_expr (t, ci, ctx, #T);                              \
 }
 
+#define def_FXTRAN_omptc_expr_list(T) \
+static int FXTRAN_omptc_##T (const char * t, const FXTRAN_char_info * ci, \
+                             FXTRAN_xmlctx * ctx)                         \
+{                                                                         \
+  return FXTRAN_omptc_expr_list (t, ci, ctx, #T);                         \
+}
+
 #define def_FXTRAN_omptc_ktype(T) \
 static int FXTRAN_omptc_##T (const char * t, const FXTRAN_char_info * ci, \
                              FXTRAN_xmlctx * ctx)                         \
@@ -735,10 +786,23 @@ def_FXTRAN_omptc_simple (WRITE)
 def_FXTRAN_omptc_simple (READ)
 def_FXTRAN_omptc_simple (ACQUIRE)
 def_FXTRAN_omptc_simple (RELEASE)
+def_FXTRAN_omptc_simple (ACQ_REL)
 def_FXTRAN_omptc_simple (PARALLEL)
+def_FXTRAN_omptc_simple (UNIFIED_ADDRESS)
+def_FXTRAN_omptc_simple (UNIFIED_SHARED_MEMORY)
+def_FXTRAN_omptc_simple (DYNAMIC_ALLOCATORS)
+def_FXTRAN_omptc_simple (REVERSE_OFFLOAD)
+def_FXTRAN_omptc_simple (FULL)
+def_FXTRAN_omptc_simple (INDIRECT)
 
 def_FXTRAN_omptc_ktype (DEFAULT)
+def_FXTRAN_omptc_ktype (BIND)
+def_FXTRAN_omptc_ktype (ATOMIC_DEFAULT_MEM_ORDER)
+def_FXTRAN_omptc_ktype (DEVICE_TYPE)
+def_FXTRAN_omptc_ktype (SEVERITY)
+def_FXTRAN_omptc_ktype (AT)
 
+def_FXTRAN_omptc_expr (PARTIAL)
 def_FXTRAN_omptc_expr (SIMD)
 def_FXTRAN_omptc_expr (IF)
 def_FXTRAN_omptc_expr (DEVICE)
@@ -755,7 +819,16 @@ def_FXTRAN_omptc_expr (GRAINSIZE)
 def_FXTRAN_omptc_expr (PRIORITY)
 def_FXTRAN_omptc_expr (DETACH)
 def_FXTRAN_omptc_expr (ORDERED)
+def_FXTRAN_omptc_expr (HINT)
+def_FXTRAN_omptc_expr (FILTER)
+def_FXTRAN_omptc_expr (VARIANT)
+def_FXTRAN_omptc_expr (MESSAGE)
 
+def_FXTRAN_omptc_expr_list (TO)
+def_FXTRAN_omptc_expr_list (FROM)
+def_FXTRAN_omptc_expr_list (SIZES)
+
+def_FXTRAN_omptc_list (HAS_DEVICE_ADDR)
 def_FXTRAN_omptc_list (UNIFORM)
 def_FXTRAN_omptc_list (PRIVATE)
 def_FXTRAN_omptc_list (FIRSTPRIVATE)
@@ -763,11 +836,11 @@ def_FXTRAN_omptc_list (SHARED)
 def_FXTRAN_omptc_list (LASTPRIVATE)
 def_FXTRAN_omptc_list (IS_DEVICE_PTR)
 def_FXTRAN_omptc_list (USES_ALLOCATORS)
-def_FXTRAN_omptc_list (TO)
-def_FXTRAN_omptc_list (FROM)
 def_FXTRAN_omptc_list (COPYPRIVATE)
 def_FXTRAN_omptc_list (COPYIN)
 def_FXTRAN_omptc_list (ENTER)
+def_FXTRAN_omptc_list (EXCLUSIVE)
+def_FXTRAN_omptc_list (INCLUSIVE)
 
 static void omptd_clause_list (const char * t, const FXTRAN_char_info * ci,
                                 FXTRAN_xmlctx * ctx)
@@ -818,13 +891,14 @@ def_omptd_extra_clause_list (ENDTARGETTEAMS)
 def_omptd_extra_clause_list (ENDTARGETDATA)
 def_omptd_extra_clause_list (ENDTARGET)
 def_omptd_extra_clause_list (ENDDECLARETARGET)
-def_omptd_extra_clause_list (DECLARETARGET)
 def_omptd_extra_clause_list (DECLARE)
 def_omptd_extra_clause_list (PARALLELDOSIMD)
 def_omptd_extra_clause_list (ENDPARALLELDOSIMD)
 def_omptd_extra_clause_list (TASKWAIT)
 def_omptd_extra_clause_list (TASK)
 def_omptd_extra_clause_list (ENDTASK)
+def_omptd_extra_clause_list (PARALLELMASTER)
+def_omptd_extra_clause_list (ENDPARALLELMASTER)
 def_omptd_extra_clause_list (PARALLEL)
 def_omptd_extra_clause_list (ENDPARALLEL)
 def_omptd_extra_clause_list (SIMD)
@@ -864,16 +938,36 @@ def_omptd_extra_clause_list (ENDLOOP)
 def_omptd_extra_clause_list (TASKGROUP)
 def_omptd_extra_clause_list (ENDTASKGROUP)
 def_omptd_extra_clause_list (TASKYIELD)
+def_omptd_extra_clause_list (SCAN)
+def_omptd_extra_clause_list (ASSUMES)
+def_omptd_extra_clause_list (ASSUME)
+def_omptd_extra_clause_list (ENDASSUME)
+def_omptd_extra_clause_list (ERROR)
 
 static void omptd_THREADPRIVATE_extra (const char * t, const FXTRAN_char_info * ci, 
 		                       FXTRAN_xmlctx * ctx)                         
 {                                                                          
   int k;
-
   XAD(13);                                                                  
+  k = omp_var_list (t, ci, ctx, _T(_S(VARIABLE) H _S(LIST)), 0);
+  XAD (k);
+}
 
-  k = omp_var_list (t, ci, ctx, _T(_S(VARIABLE) H _S(LIST)));
+static void omptd_DECLARETARGET_extra (const char * t, const FXTRAN_char_info * ci, 
+		                       FXTRAN_xmlctx * ctx)                         
+{                                                                          
+  int k;
+  XAD(13);                                                                  
+  k = omp_var_list (t, ci, ctx, _T(_S(VARIABLE) H _S(LIST)), 1);
+  XAD (k);
+}
 
+static void omptd_DEPOBJ_extra (const char * t, const FXTRAN_char_info * ci, 
+		                FXTRAN_xmlctx * ctx)                         
+{                                                                          
+  int k;
+  XAD(6);                                                                  
+  k = omp_var_list (t, ci, ctx, _T(_S(VARIABLE) H _S(LIST)), 0);
   XAD (k);
 }
 
@@ -909,6 +1003,13 @@ static void omptd_ENDCRITICAL_extra (const char * t, const FXTRAN_char_info * ci
 		                     FXTRAN_xmlctx * ctx)                         
 {                                                                          
   omptd_CRITICAL_extra (t, ci, ctx);
+}
+
+static void omptd_FLUSH_extra (const char * t, const FXTRAN_char_info * ci, 
+		               FXTRAN_xmlctx * ctx)                         
+{                                                                          
+  XAD (5);
+  FXTRAN_omptc_expr_list (t, ci, ctx, NULL);
 }
 
 void FXTRAN_dump_omptd (const char * t, const FXTRAN_char_info * ci, FXTRAN_xmlctx * ctx)
