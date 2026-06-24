@@ -88,6 +88,7 @@
 #define FXTRAN_STRING_DEVICE                         "device"
 #define FXTRAN_STRING_DIMENSION                      "DIM"
 #define FXTRAN_STRING_DISTRIBUTE                     "distribute"
+#define FXTRAN_STRING_DOACROSS                       "doacross"
 #define FXTRAN_STRING_DO                             "do"
 #define FXTRAN_STRING_DTIO                           "dtio"
 #define FXTRAN_STRING_DUMMY                          "dummy"

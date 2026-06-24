@@ -417,7 +417,7 @@ static int FXTRAN_omptc_IF (const char * t, const FXTRAN_char_info * ci,
 }
 
 static int FXTRAN_omptc_DEVICE (const char * t, const FXTRAN_char_info * ci,
-                                FXTRAN_xmlctx * ctx)
+                                 FXTRAN_xmlctx * ctx)
 {
   return FXTRAN_omptc_single_prefix (t, ci, ctx, "DEVICE");
 }
@@ -498,22 +498,41 @@ static int FXTRAN_omptc_DEPEND (const char * t, const FXTRAN_char_info * ci,
 
   kp = FXTRAN_str_at_level (t, ci, ")", 0);
 
-  /* depend-type: variable-list */
+  /* depend-type (may include iterator modifier) */
   k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
   if (k > 0)
     {
-      XNW (_T(_S(DEPEND) H _S(TYPE)), k-1);
-      XAD(k);
+      int km = FXTRAN_str_at_level_ir (t, ci, ",", 1, k);
+      if (km > 0)
+        {
+          /* iterator modifier present: iterator(...), type */
+          XST (_T(_S(DEPEND) H _S(MODIFIER)));
+          XAD (km - 1);
+          XET ();
+          XAD (1);
+          XNW (_T(_S(DEPEND) H _S(TYPE)), k - km - 1);
+          XAD (k - km);
+        }
+      else
+        {
+          XNW (_T(_S(DEPEND) H _S(TYPE)), k-1);
+          XAD(k);
+        }
     }
 
-  XST (_T(_S(VARIABLE) H _S(LIST)));
+  /* locator list — parse as comma-separated expressions */
+  XST (_T(_S(EXPR) H _S(LIST)));
   while (t[0] != ')')
     {
-      k = FXTRAN_eat_word (t);
-      if (k == 0)
-        break;
-      XNT (_T(_S(VARIABLE)), k);
-      XAD(k);
+      int kexpr = FXTRAN_str_at_level (t, ci, ")", ci->parens-1);
+      int kc = FXTRAN_str_at_level_ir (t, ci, ",", ci->parens, kexpr);
+
+      if (! kc)
+        kc = kexpr;
+
+      FXTRAN_expr (t, ci, kc - 1, ctx);
+      XAD (kc - 1);
+
       if (t[0] == ',')
         XAD(1);
       else if (t[0] != ')')
@@ -523,6 +542,61 @@ static int FXTRAN_omptc_DEPEND (const char * t, const FXTRAN_char_info * ci,
 
   if (t[0] != ')')
     FXTRAN_THROW ("Malformed OpenMP Target DEPEND clause; expected `)'");
+  XAD(1);
+
+  XET ();
+  return t - T;
+}
+
+static int FXTRAN_omptc_DOACROSS (const char * t, const FXTRAN_char_info * ci,
+                                  FXTRAN_xmlctx * ctx)
+{
+  const char * T = t;
+  int k, kp;
+
+  k = FXTRAN_eat_word (t);
+  XST (_T(_S(CLAUSE)));
+  XST (_T(_S(NAME)));
+  XAD(k);
+  XET ();
+
+  if (t[0] != '(')
+    FXTRAN_THROW ("Malformed OpenMP Target DOACROSS clause; expected `('");
+
+  XAD(1);
+
+  kp = FXTRAN_str_at_level (t, ci, ")", 0);
+
+  /* doacross-type: expression-list */
+  k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
+  if (k > 0)
+    {
+      XNW (_T(_S(DOACROSS) H _S(TYPE)), k-1);
+      XAD(k);
+    }
+
+  /* expression list */
+  XST (_T(_S(EXPR) H _S(LIST)));
+  while (t[0] != ')')
+    {
+      int kexpr = FXTRAN_str_at_level (t, ci, ")", ci->parens-1);
+      int kc = FXTRAN_str_at_level_ir (t, ci, ",", ci->parens, kexpr);
+
+      if (! kc)
+        kc = kexpr;
+
+      FXTRAN_expr (t, ci, kc - 1, ctx);
+      XAD (kc - 1);
+
+      if (t[0] == ',')
+        XAD(1);
+      else if (t[0] != ')')
+        FXTRAN_THROW ("Malformed OpenMP Target DOACROSS clause");
+    }
+  XET ();
+
+  if (t[0] != ')')
+    FXTRAN_THROW ("Malformed OpenMP Target DOACROSS clause; expected `)'");
   XAD(1);
 
   XET ();
@@ -660,7 +734,102 @@ static int FXTRAN_omptc_ALIGNED (const char * t, const FXTRAN_char_info * ci,
 static int FXTRAN_omptc_LINEAR (const char * t, const FXTRAN_char_info * ci,
                                  FXTRAN_xmlctx * ctx)
 {
-  return FXTRAN_omptc_ALIGNED (t, ci, ctx);
+  const char * T = t;
+  int k, kp;
+
+  k = FXTRAN_eat_word (t);
+  XST (_T(_S(CLAUSE)));
+  XST (_T(_S(NAME)));
+  XAD(k);
+  XET ();
+
+  if (t[0] != '(')
+    FXTRAN_THROW ("Malformed OpenMP Target LINEAR clause");
+  XAD(1);
+
+  kp = FXTRAN_str_at_level (t, ci, ")", 0);
+  k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
+
+  XST (_S(VARIABLE) H _S(LIST));
+  if (k > 0)
+    {
+      /* variables before : */
+      while (t[0] != ':' && t[0] != ')')
+        {
+          int kn = FXTRAN_eat_word (t);
+          if (kn == 0) break;
+          XNT (_T(_S(VARIABLE)), kn);
+          XAD(kn);
+          if (t[0] == ',') XAD(1);
+        }
+      XET ();
+      if (t[0] == ':')
+        {
+          int kw;
+          XAD(1);
+          kw = FXTRAN_eat_word (t);
+          if ((kw == 3 && strncmp (t, "REF", 3) == 0) ||
+              (kw == 3 && strncmp (t, "VAL", 3) == 0) ||
+              (kw == 4 && strncmp (t, "UVAL", 4) == 0) ||
+              (kw == 4 && strncmp (t, "STEP", 4) == 0))
+            {
+              /* OpenMP 5.2 modifier list */
+              XST (_T(_S(MODIFIER) H _S(LIST)));
+              while (t[0] != ')')
+                {
+                  int kn = FXTRAN_eat_word (t);
+                  if (kn == 0) break;
+                  XST (_T(_S(MODIFIER)));
+                  XST (_T(_S(NAME)));
+                  XAD(kn);
+                  XET ();
+                  /* if modifier is step, parse (expr) */
+                  if ((kn == 4) && (strncmp (t - 4, "STEP", 4) == 0))
+                    {
+                      if (t[0] == '(')
+                        {
+                          int ks = FXTRAN_str_at_level (t, ci, ")", ci->parens);
+                          XAD(1);
+                          FXTRAN_expr (t, ci, ks - 2, ctx);
+                          XAD(ks - 1);
+                        }
+                    }
+                  XET ();
+                  if (t[0] == ',')
+                    XAD(1);
+                  else if (t[0] != ')')
+                    FXTRAN_THROW ("Malformed OpenMP Target LINEAR clause");
+                }
+              XET ();
+            }
+          else
+            {
+              /* Traditional linear-step expression */
+              kp = FXTRAN_str_at_level (t, ci, ")", 0);
+              FXTRAN_expr (t, ci, kp - 1, ctx);
+              XAD (kp - 1);
+            }
+        }
+    }
+  else
+    {
+      while (t[0] != ')')
+        {
+          int kn = FXTRAN_eat_word (t);
+          if (kn == 0) break;
+          XNT (_T(_S(VARIABLE)), kn);
+          XAD(kn);
+          if (t[0] == ',') XAD(1);
+        }
+      XET ();
+    }
+
+  if (t[0] != ')')
+    FXTRAN_THROW ("Malformed OpenMP Target LINEAR clause; expected `)'");
+  XAD(1);
+
+  XET ();
+  return t - T;
 }
 
 static int omp_var_list (const char * t, const FXTRAN_char_info * ci,
@@ -934,6 +1103,7 @@ def_FXTRAN_omptc_expr (GRAINSIZE)
 def_FXTRAN_omptc_expr (PRIORITY)
 def_FXTRAN_omptc_expr (DETACH)
 def_FXTRAN_omptc_expr (ORDERED)
+def_FXTRAN_omptc_expr (HOLDS)
 def_FXTRAN_omptc_expr (HINT)
 def_FXTRAN_omptc_expr (FILTER)
 def_FXTRAN_omptc_expr (VARIANT)

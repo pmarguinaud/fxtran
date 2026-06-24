@@ -154,6 +154,7 @@ typedef enum {
   macro (INCLUSIVE        )  \
   macro (INBRANCH         )  \
   macro (IF               )  \
+  macro (HOLDS            )  \
   macro (HINT             )  \
   macro (HAS_DEVICE_ADDR  )  \
   macro (GRAINSIZE        )  \
@@ -165,6 +166,7 @@ typedef enum {
   macro (EXCLUSIVE        )  \
   macro (ENTER            )  \
   macro (DYNAMIC_ALLOCATORS)  \
+  macro (DOACROSS         )  \
   macro (DO               )  \
   macro (DIST_SCHEDULE    )  \
   macro (DISTRIBUTE       )  \
