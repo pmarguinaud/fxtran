@@ -37,7 +37,7 @@ const char
    * FXTRAN_OMD_TAG=  "omp",
    * FXTRAN_OMC_TAG=  "omp",
    * FXTRAN_ACC_TAG=  "acc",
-   * FXTRAN_OTD_TAG=  "omptarget",
+   * FXTRAN_OTD_TAG=  "omp",
    * FXTRAN_BOZ_TAG=  "boz",
    * FXTRAN_ZER_TAG=  "zer"
 ;
