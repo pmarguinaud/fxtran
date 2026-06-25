@@ -13,6 +13,7 @@ my @x = qw[
   all                                                            ALL
   allocatable                                                    ALLOCATABLE
   allocate                                                       ALLOCATE
+  allocators                                                     ALLOCATORS
   alt                                                            ALT
   ambiguous                                                      AMBIGUOUS
   ancestor                                                       ANCESTOR
@@ -24,6 +25,8 @@ my @x = qw[
   associate                                                      ASSOCIATE
   association                                                    ASSOCIATION
   assumed                                                        ASSUMED
+  assume                                                         ASSUME
+  assumes                                                        ASSUMES
   asynchronous                                                   ASYNCHRONOUS
   atomic                                                         ATOMIC
   attribute                                                      ATTRIBUTE
@@ -32,6 +35,7 @@ my @x = qw[
   binding                                                        BINDING
   block                                                          BLOCK
   bound                                                          BOUND
+  barrier                                                        BARRIER
   broken                                                         BROKEN
   cache                                                          CACHE
   call                                                           CALL
@@ -71,6 +75,7 @@ my @x = qw[
   deallocate                                                     DEALLOCATE
   declare                                                        DECLARE
   defaultmap                                                     DEFAULTMAP
+  depobj                                                         DEPOBJ
   decl                                                           DECL
   deferred                                                       DEFERRED
   defined                                                        DEFINED
@@ -83,6 +88,7 @@ my @x = qw[
   DIM                                                            DIMENSION
   distribute                                                     DISTRIBUTE
   do                                                             DO
+  doacross                                                       DOACROSS
   dtio                                                           DTIO
   dummy                                                          DUMMY
   E                                                              EXPR
@@ -116,6 +122,7 @@ my @x = qw[
   G                                                              GLOBAL
   goto                                                           GOTO
   group                                                          GROUP
+  holds                                                          HOLDS
   hollerith                                                      HOLLERITH
   host                                                           HOST
   identifier                                                     IDENTIFIER
@@ -152,8 +159,10 @@ my @x = qw[
   map                                                            MAP
   mark                                                           MARK
   mask                                                           MASK
+  masked                                                         MASKED
   master                                                         MASTER
   memory                                                         MEMORY
+  modifier                                                       MODIFIER
   module                                                         MODULE
   named                                                          NAMED
   namelist                                                       NAMELIST
@@ -204,13 +213,16 @@ my @x = qw[
   repeat                                                         REPEAT
   result                                                         RESULT
   return                                                         RETURN
+  requires                                                       REQUIRES
   rewind                                                         REWIND
   routine                                                        ROUTINE
   R                                                              REF
   saved                                                          SAVED
   save                                                           SAVE
+  scan                                                           SCAN
   section                                                        SECTION
   sections                                                       SECTIONS
+  scope                                                          SCOPE
   selectcase                                                     SELECTCASE
   selectrank                                                     SELECTRANK
   selector                                                       SELECTOR
@@ -242,16 +254,23 @@ my @x = qw[
   subscript                                                      SUBSCRIPT
   sync                                                           SYNC
   target                                                         TARGET
+  task                                                           TASK
+  taskgroup                                                      TASKGROUP
+  taskwait                                                       TASKWAIT
+  taskyield                                                      TASKYIELD
   team                                                           TEAM
   teams                                                          TEAMS
   test                                                           TEST
   then                                                           THEN
   thread                                                         THREAD
+  tile                                                           TILE
+  threadprivate                                                  THREADPRIVATE
   triplet                                                        TRIPLET
   T                                                              TYPE
   unit                                                           UNIT
   unlock                                                         UNLOCK
   unknown                                                        UNKNOWN
+  unroll                                                         UNROLL
   update                                                         UPDATE
   upper                                                          UPPER
   user                                                           USER

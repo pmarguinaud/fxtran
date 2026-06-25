@@ -154,13 +154,13 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_DOSIMD            :  return _T(_S(SIMD) H _S(DO) H _S(OPENMP));
       case FXTRAN_OMPTD_SINGLE            :  return _T(_S(SINGLE) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDSINGLE         :  return _T(_S(END) H _S(SINGLE) H _S(OPENMP));
-      case FXTRAN_OMPTD_TASKGROUP         :  return _T(_S(TASK) H _S(GROUP) H _S(OPENMP));
-      case FXTRAN_OMPTD_ENDTASKGROUP      :  return _T(_S(END) H _S(TASK) H _S(GROUP) H _S(OPENMP));
+      case FXTRAN_OMPTD_TASKGROUP         :  return _T(_S(TASKGROUP) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTASKGROUP      :  return _T(_S(END) H _S(TASKGROUP) H _S(OPENMP));
       case FXTRAN_OMPTD_TASK              :  return _T(_S(TASK) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTASK           :  return _T(_S(END) H _S(TASK) H _S(OPENMP));
       case FXTRAN_OMPTD_MASKED            :  return _T(_S(MASKED) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDMASKED         :  return _T(_S(END) H _S(MASKED) H _S(OPENMP));
-      case FXTRAN_OMPTD_TASKWAIT          :  return _T(_S(TASK) H _S (WAIT) H _S(OPENMP));
+      case FXTRAN_OMPTD_TASKWAIT          :  return _T(_S(TASKWAIT) H _S(OPENMP));
       case FXTRAN_OMPTD_BARRIER           :  return _T(_S(BARRIER) H _S(OPENMP));
       case FXTRAN_OMPTD_SECTION           :  return _T(_S(SECTION) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDSECTION        :  return _T(_S(END) H _S(SECTION) H _S(OPENMP));
@@ -192,8 +192,8 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_ENDORDERED        :  return _T(_S(END) H _S(ORDERED) H _S(OPENMP));
       case FXTRAN_OMPTD_LOOP              :  return _T(_S(LOOP) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDLOOP           :  return _T(_S(END) H _S(LOOP) H _S(OPENMP));
-      case FXTRAN_OMPTD_THREADPRIVATE     :  return _T(_S(THREAD) H _S(PRIVATE) H _S(OPENMP));
-      case FXTRAN_OMPTD_TASKYIELD         :  return _T(_S(TASK) H _S(YIELD) H _S(OPENMP));
+      case FXTRAN_OMPTD_THREADPRIVATE     :  return _T(_S(THREADPRIVATE) H _S(OPENMP));
+      case FXTRAN_OMPTD_TASKYIELD         :  return _T(_S(TASKYIELD) H _S(OPENMP));
       case FXTRAN_OMPTD_SCAN              :  return _T(_S(SCAN) H _S(OPENMP));
       case FXTRAN_OMPTD_ASSUMES           :  return _T(_S(ASSUMES) H _S(OPENMP));
       case FXTRAN_OMPTD_ASSUME            :  return _T(_S(ASSUME) H _S(OPENMP));
