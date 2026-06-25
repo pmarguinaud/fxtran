@@ -479,11 +479,16 @@ static int FXTRAN_omptc_LASTPRIVATE (const char * t, const FXTRAN_char_info * ci
   return t - T;
 }
 
-static int FXTRAN_omptc_DEPEND (const char * t, const FXTRAN_char_info * ci,
-                                 FXTRAN_xmlctx * ctx)
+/* Generic clause parser for clauses with an optional type prefix before ':'
+   followed by a comma-separated expression list.
+   If modifier_tag is non-NULL, a modifier may precede the type (comma-separated).
+   The type is emitted as <T>. */
+static int FXTRAN_omptc_clause_with_type_and_exprs (const char * t, const FXTRAN_char_info * ci,
+                                                     FXTRAN_xmlctx * ctx, const char * clause_name,
+                                                     const char * modifier_tag)
 {
   const char * T = t;
-  int k, kp;
+  int k, kp, km;
 
   k = FXTRAN_eat_word (t);
   XST (_T(_S(CLAUSE)));
@@ -492,87 +497,39 @@ static int FXTRAN_omptc_DEPEND (const char * t, const FXTRAN_char_info * ci,
   XET ();
 
   if (t[0] != '(')
-    FXTRAN_THROW ("Malformed OpenMP Target DEPEND clause; expected `('");
-
+    FXTRAN_THROW ("Malformed OpenMP Target %s clause; expected `('", clause_name);
   XAD(1);
 
   kp = FXTRAN_str_at_level (t, ci, ")", 0);
 
-  /* depend-type (may include iterator modifier) */
+  /* type prefix before ':' (may include modifier) */
   k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
   if (k > 0)
     {
-      int km = FXTRAN_str_at_level_ir (t, ci, ",", 1, k);
-      if (km > 0)
+      if (modifier_tag)
         {
-          /* iterator modifier present: iterator(...), type */
-          XST (_T(_S(DEPEND) H _S(MODIFIER)));
-          XAD (km - 1);
-          XET ();
-          XAD (1);
-          XNW (_T(_S(DEPEND) H _S(TYPE)), k - km - 1);
-          XAD (k - km);
+          km = FXTRAN_str_at_level_ir (t, ci, ",", 1, k);
+          if (km > 0)
+            {
+              /* modifier present */
+              XST (modifier_tag);
+              XAD (km - 1);
+              XET ();
+              XAD (1);
+              XNW (_T(_S(TYPE)), k - km - 1);
+              XAD (k - km);
+            }
+          else
+            {
+              XNW (_T(_S(TYPE)), k-1);
+              XAD(k);
+            }
         }
       else
         {
-          XNW (_T(_S(DEPEND) H _S(TYPE)), k-1);
+          XNW (_T(_S(TYPE)), k-1);
           XAD(k);
         }
-    }
-
-  /* locator list — parse as comma-separated expressions */
-  XST (_T(_S(EXPR) H _S(LIST)));
-  while (t[0] != ')')
-    {
-      int kexpr = FXTRAN_str_at_level (t, ci, ")", ci->parens-1);
-      int kc = FXTRAN_str_at_level_ir (t, ci, ",", ci->parens, kexpr);
-
-      if (! kc)
-        kc = kexpr;
-
-      FXTRAN_expr (t, ci, kc - 1, ctx);
-      XAD (kc - 1);
-
-      if (t[0] == ',')
-        XAD(1);
-      else if (t[0] != ')')
-        FXTRAN_THROW ("Malformed OpenMP Target DEPEND clause");
-    }
-  XET ();
-
-  if (t[0] != ')')
-    FXTRAN_THROW ("Malformed OpenMP Target DEPEND clause; expected `)'");
-  XAD(1);
-
-  XET ();
-  return t - T;
-}
-
-static int FXTRAN_omptc_DOACROSS (const char * t, const FXTRAN_char_info * ci,
-                                  FXTRAN_xmlctx * ctx)
-{
-  const char * T = t;
-  int k, kp;
-
-  k = FXTRAN_eat_word (t);
-  XST (_T(_S(CLAUSE)));
-  XST (_T(_S(NAME)));
-  XAD(k);
-  XET ();
-
-  if (t[0] != '(')
-    FXTRAN_THROW ("Malformed OpenMP Target DOACROSS clause; expected `('");
-
-  XAD(1);
-
-  kp = FXTRAN_str_at_level (t, ci, ")", 0);
-
-  /* doacross-type: expression-list */
-  k = FXTRAN_str_at_level_ir (t, ci, ":", 1, kp);
-  if (k > 0)
-    {
-      XNW (_T(_S(DOACROSS) H _S(TYPE)), k-1);
-      XAD(k);
     }
 
   /* expression list */
@@ -591,16 +548,29 @@ static int FXTRAN_omptc_DOACROSS (const char * t, const FXTRAN_char_info * ci,
       if (t[0] == ',')
         XAD(1);
       else if (t[0] != ')')
-        FXTRAN_THROW ("Malformed OpenMP Target DOACROSS clause");
+        FXTRAN_THROW ("Malformed OpenMP Target %s clause", clause_name);
     }
   XET ();
 
   if (t[0] != ')')
-    FXTRAN_THROW ("Malformed OpenMP Target DOACROSS clause; expected `)'");
+    FXTRAN_THROW ("Malformed OpenMP Target %s clause; expected `)'", clause_name);
   XAD(1);
 
   XET ();
   return t - T;
+}
+
+static int FXTRAN_omptc_DEPEND (const char * t, const FXTRAN_char_info * ci,
+                                 FXTRAN_xmlctx * ctx)
+{
+  return FXTRAN_omptc_clause_with_type_and_exprs (t, ci, ctx, "DEPEND",
+                                                   _T(_S(DEPEND) H _S(MODIFIER)));
+}
+
+static int FXTRAN_omptc_DOACROSS (const char * t, const FXTRAN_char_info * ci,
+                                  FXTRAN_xmlctx * ctx)
+{
+  return FXTRAN_omptc_clause_with_type_and_exprs (t, ci, ctx, "DOACROSS", NULL);
 }
 
 static int FXTRAN_omptc_DEFAULTMAP (const char * t, const FXTRAN_char_info * ci,
