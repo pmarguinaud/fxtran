@@ -516,18 +516,18 @@ static int FXTRAN_omptc_clause_with_type_and_exprs (const char * t, const FXTRAN
               XAD (km - 1);
               XET ();
               XAD (1);
-              XNW (_T(_S(TYPE)), k - km - 1);
+              XNT (_T(_S(TYPE)), k - km - 1);
               XAD (k - km);
             }
           else
             {
-              XNW (_T(_S(TYPE)), k-1);
+              XNT (_T(_S(TYPE)), k-1);
               XAD(k);
             }
         }
       else
         {
-          XNW (_T(_S(TYPE)), k-1);
+          XNT (_T(_S(TYPE)), k-1);
           XAD(k);
         }
     }
