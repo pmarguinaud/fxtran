@@ -133,22 +133,29 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_TARGETENTERDATA   :  return _T(_S(TARGET) H _S(ENTER) H _S(DATA) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETEXITDATA    :  return _T(_S(TARGET) H _S(EXIT) H _S(DATA) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETPARALLEL    :  return _T(_S(TARGET) H _S(PARALLEL) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETPARALLELDOSIMD :  return _T(_S(TARGET) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETPARALLELDO  :  return _T(_S(TARGET) H _S(PARALLEL) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETPARALLELLOOP:  return _T(_S(TARGET) H _S(PARALLEL) H _S(LOOP) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETUPDATE      :  return _T(_S(TARGET) H _S(UPDATE) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETTEAMSDISTRIBUTEPARALLELDOSIMD :  return _T(_S(TARGET) H _S(TEAMS) H _S(DISTRIBUTE) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETTEAMSDISTRIBUTEPARALLELDO     :  return _T(_S(TARGET) H _S(TEAMS) H _S(DISTRIBUTE) H _S(PARALLEL) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETTEAMSDISTRIBUTESIMD           :  return _T(_S(TARGET) H _S(TEAMS) H _S(DISTRIBUTE) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETTEAMSDISTRIBUTE               :  return _T(_S(TARGET) H _S(TEAMS) H _S(DISTRIBUTE) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETTEAMSLOOP   :  return _T(_S(TARGET) H _S(TEAMS) H _S(LOOP) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETTEAMS       :  return _T(_S(TARGET) H _S(TEAMS) H _S(OPENMP));
+      case FXTRAN_OMPTD_TARGETSIMD        :  return _T(_S(TARGET) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETDATA        :  return _T(_S(TARGET) H _S(DATA) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETTEAMSDISTRIBUTEPARALLELDOSIMD :  return _T(_S(END) H _S(TARGET) H _S(TEAMS) H _S(DISTRIBUTE) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETTEAMSDISTRIBUTEPARALLELDO     :  return _T(_S(END) H _S(TARGET) H _S(TEAMS) H _S(DISTRIBUTE) H _S(PARALLEL) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTARGETTEAMSDISTRIBUTESIMD           :  return _T(_S(END) H _S(TARGET) H _S(TEAMS) H _S(DISTRIBUTE) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETTEAMSDISTRIBUTE               :  return _T(_S(END) H _S(TARGET) H _S(TEAMS) H _S(DISTRIBUTE) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETTEAMSLOOP :  return _T(_S(END) H _S(TARGET) H _S(TEAMS) H _S(LOOP) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTARGETPARALLELDOSIMD :  return _T(_S(END) H _S(TARGET) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETPARALLELDO :  return _T(_S(END) H _S(TARGET) H _S(PARALLEL) H _S(DO) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETPARALLELLOOP :  return _T(_S(END) H _S(TARGET) H _S(PARALLEL) H _S(LOOP) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETPARALLEL :  return _T(_S(END) H _S(TARGET) H _S(PARALLEL) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETTEAMS    :  return _T(_S(END) H _S(TARGET) H _S(TEAMS) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTARGETSIMD     :  return _T(_S(END) H _S(TARGET) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETDATA     :  return _T(_S(END) H _S(TARGET) H _S(DATA) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGET         :  return _T(_S(END) H _S(TARGET) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDDECLARETARGET  :  return _T(_S(END) H _S(DECLARE) H _S(TARGET) H _S(OPENMP));
@@ -186,6 +193,12 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_ENDMASKEDTASKLOOP :  return _T(_S(END) H _S(MASKED) H _S(TASKLOOP) H _S(OPENMP));
       case FXTRAN_OMPTD_MASKED            :  return _T(_S(MASKED) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDMASKED         :  return _T(_S(END) H _S(MASKED) H _S(OPENMP));
+      case FXTRAN_OMPTD_MASTER            :  return _T(_S(MASTER) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDMASTER         :  return _T(_S(END) H _S(MASTER) H _S(OPENMP));
+      case FXTRAN_OMPTD_MASTERTASKLOOP    :  return _T(_S(MASTER) H _S(TASKLOOP) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDMASTERTASKLOOP :  return _T(_S(END) H _S(MASTER) H _S(TASKLOOP) H _S(OPENMP));
+      case FXTRAN_OMPTD_MASTERTASKLOOPSIMD :  return _T(_S(MASTER) H _S(TASKLOOP) H _S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDMASTERTASKLOOPSIMD :  return _T(_S(END) H _S(MASTER) H _S(TASKLOOP) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_TASKLOOPSIMD      :  return _T(_S(TASKLOOP) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTASKLOOPSIMD   :  return _T(_S(END) H _S(TASKLOOP) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_TASKLOOP          :  return _T(_S(TASKLOOP) H _S(OPENMP));
@@ -207,6 +220,14 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_ENDCRITICAL       :  return _T(_S(END) H _S(CRITICAL) H _S(OPENMP));
       case FXTRAN_OMPTD_SCOPE             :  return _T(_S(SCOPE) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDSCOPE          :  return _T(_S(END) H _S(SCOPE) H _S(OPENMP));
+      case FXTRAN_OMPTD_TEAMSDISTRIBUTEPARALLELDOSIMD :  return _T(_S(TEAMS) H _S(DISTRIBUTE) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTEAMSDISTRIBUTEPARALLELDOSIMD :  return _T(_S(END) H _S(TEAMS) H _S(DISTRIBUTE) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_TEAMSDISTRIBUTEPARALLELDO     :  return _T(_S(TEAMS) H _S(DISTRIBUTE) H _S(PARALLEL) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTEAMSDISTRIBUTEPARALLELDO  :  return _T(_S(END) H _S(TEAMS) H _S(DISTRIBUTE) H _S(PARALLEL) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_TEAMSDISTRIBUTESIMD           :  return _T(_S(TEAMS) H _S(DISTRIBUTE) H _S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTEAMSDISTRIBUTESIMD        :  return _T(_S(END) H _S(TEAMS) H _S(DISTRIBUTE) H _S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_TEAMSDISTRIBUTE               :  return _T(_S(TEAMS) H _S(DISTRIBUTE) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTEAMSDISTRIBUTE            :  return _T(_S(END) H _S(TEAMS) H _S(DISTRIBUTE) H _S(OPENMP));
       case FXTRAN_OMPTD_TEAMS             :  return _T(_S(TEAMS) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTEAMS          :  return _T(_S(END) H _S(TEAMS) H _S(OPENMP));
       case FXTRAN_OMPTD_DISTRIBUTEPARALLELDOSIMD :  return _T(_S(DISTRIBUTE) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
@@ -239,8 +260,8 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_ENDASSUME         :  return _T(_S(END) H _S(ASSUME) H _S(OPENMP));
       case FXTRAN_OMPTD_ERROR             :  return _T(_S(ERROR) H _S(OPENMP));
       case FXTRAN_OMPTD_DEPOBJ            :  return _T(_S(DEPOBJ) H _S(OPENMP));
-      case FXTRAN_OMPTD_PARALLELMASKED    :  return _T(_S(PARALLEL) H _S(MASKED));
-      case FXTRAN_OMPTD_ENDPARALLELMASKED :  return _T(_S(END) H _S(PARALLEL) H _S(MASKED));
+      case FXTRAN_OMPTD_PARALLELMASKED    :  return _T(_S(PARALLEL) H _S(MASKED) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLELMASKED :  return _T(_S(END) H _S(PARALLEL) H _S(MASKED) H _S(OPENMP));
       case FXTRAN_OMPTD_NONE:
       case FXTRAN_OMPTD_LAST:
       default:
@@ -1065,11 +1086,8 @@ static int FXTRAN_omptc_##T (const char * t, const FXTRAN_char_info * ci, \
 }
 
 def_FXTRAN_omptc_simple (NOWAIT)
-def_FXTRAN_omptc_simple (DISTRIBUTE)
 def_FXTRAN_omptc_simple (INBRANCH)
 def_FXTRAN_omptc_simple (NOTINBRANCH)
-def_FXTRAN_omptc_simple (MASKED)
-def_FXTRAN_omptc_simple (SECTIONS)
 def_FXTRAN_omptc_simple (CAPTURE)
 def_FXTRAN_omptc_simple (UNTIED)
 def_FXTRAN_omptc_simple (MERGEABLE)
@@ -1080,7 +1098,6 @@ def_FXTRAN_omptc_simple (READ)
 def_FXTRAN_omptc_simple (ACQUIRE)
 def_FXTRAN_omptc_simple (RELEASE)
 def_FXTRAN_omptc_simple (ACQ_REL)
-def_FXTRAN_omptc_simple (PARALLEL)
 def_FXTRAN_omptc_simple (UNIFIED_ADDRESS)
 def_FXTRAN_omptc_simple (UNIFIED_SHARED_MEMORY)
 def_FXTRAN_omptc_simple (DYNAMIC_ALLOCATORS)
@@ -1183,16 +1200,22 @@ def_omptd_extra_clause_list (TARGETTEAMSDISTRIBUTEPARALLELDO)
 def_omptd_extra_clause_list (TARGETTEAMSDISTRIBUTE)
 def_omptd_extra_clause_list (TARGETTEAMSLOOP)
 def_omptd_extra_clause_list (TARGETTEAMS)
+def_omptd_extra_clause_list (TARGETSIMD)
+def_omptd_extra_clause_list (TARGETPARALLELDOSIMD)
+def_omptd_extra_clause_list (TARGETTEAMSDISTRIBUTESIMD)
 def_omptd_extra_clause_list (TARGETDATA)
 def_omptd_extra_clause_list (TARGET)
 def_omptd_extra_clause_list (ENDTARGETTEAMSDISTRIBUTEPARALLELDOSIMD)
 def_omptd_extra_clause_list (ENDTARGETTEAMSDISTRIBUTEPARALLELDO)
+def_omptd_extra_clause_list (ENDTARGETTEAMSDISTRIBUTESIMD)
 def_omptd_extra_clause_list (ENDTARGETTEAMSDISTRIBUTE)
 def_omptd_extra_clause_list (ENDTARGETTEAMSLOOP)
+def_omptd_extra_clause_list (ENDTARGETPARALLELDOSIMD)
 def_omptd_extra_clause_list (ENDTARGETPARALLELDO)
 def_omptd_extra_clause_list (ENDTARGETPARALLELLOOP)
 def_omptd_extra_clause_list (ENDTARGETPARALLEL)
 def_omptd_extra_clause_list (ENDTARGETTEAMS)
+def_omptd_extra_clause_list (ENDTARGETSIMD)
 def_omptd_extra_clause_list (ENDTARGETDATA)
 def_omptd_extra_clause_list (ENDTARGET)
 def_omptd_extra_clause_list (ENDDECLARETARGET)
@@ -1234,6 +1257,12 @@ def_omptd_extra_clause_list (MASKEDTASKLOOP)
 def_omptd_extra_clause_list (ENDMASKEDTASKLOOP)
 def_omptd_extra_clause_list (MASKED)
 def_omptd_extra_clause_list (ENDMASKED)
+def_omptd_extra_clause_list (MASTER)
+def_omptd_extra_clause_list (ENDMASTER)
+def_omptd_extra_clause_list (MASTERTASKLOOP)
+def_omptd_extra_clause_list (ENDMASTERTASKLOOP)
+def_omptd_extra_clause_list (MASTERTASKLOOPSIMD)
+def_omptd_extra_clause_list (ENDMASTERTASKLOOPSIMD)
 def_omptd_extra_clause_list (BARRIER)
 def_omptd_extra_clause_list (SECTION)
 def_omptd_extra_clause_list (ENDSECTION)
@@ -1253,6 +1282,14 @@ def_omptd_extra_clause_list (SCOPE)
 def_omptd_extra_clause_list (ENDSCOPE)
 def_omptd_extra_clause_list (TEAMS)
 def_omptd_extra_clause_list (ENDTEAMS)
+def_omptd_extra_clause_list (TEAMSDISTRIBUTEPARALLELDOSIMD)
+def_omptd_extra_clause_list (ENDTEAMSDISTRIBUTEPARALLELDOSIMD)
+def_omptd_extra_clause_list (TEAMSDISTRIBUTEPARALLELDO)
+def_omptd_extra_clause_list (ENDTEAMSDISTRIBUTEPARALLELDO)
+def_omptd_extra_clause_list (TEAMSDISTRIBUTESIMD)
+def_omptd_extra_clause_list (ENDTEAMSDISTRIBUTESIMD)
+def_omptd_extra_clause_list (TEAMSDISTRIBUTE)
+def_omptd_extra_clause_list (ENDTEAMSDISTRIBUTE)
 def_omptd_extra_clause_list (DISTRIBUTE)
 def_omptd_extra_clause_list (ENDDISTRIBUTE)
 def_omptd_extra_clause_list (REQUIRES)

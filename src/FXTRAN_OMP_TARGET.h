@@ -23,8 +23,12 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (UNROLL                               )   \
   macro (TILE                                 )   \
   macro (THREADPRIVATE                        )   \
-  macro (TEAMS                                )   \
+  macro (TEAMSDISTRIBUTEPARALLELDOSIMD        )   \
+  macro (TEAMSDISTRIBUTEPARALLELDO            )   \
+  macro (TEAMSDISTRIBUTESIMD                  )   \
+  macro (TEAMSDISTRIBUTE                      )   \
   macro (TEAMSLOOP                            )   \
+  macro (TEAMS                                )   \
   macro (TASKYIELD                            )   \
   macro (TASKWAIT                             )   \
   macro (TASKGROUP                            )   \
@@ -34,11 +38,14 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (TARGETUPDATE                         )   \
   macro (TARGETTEAMSDISTRIBUTEPARALLELDOSIMD  )   \
   macro (TARGETTEAMSDISTRIBUTEPARALLELDO      )   \
+  macro (TARGETTEAMSDISTRIBUTESIMD            )   \
   macro (TARGETTEAMSDISTRIBUTE                )   \
   macro (TARGETTEAMSLOOP                      )   \
   macro (TARGETTEAMS                          )   \
-  macro (TARGETPARALLELDO                     )   \
+  macro (TARGETSIMD                           )   \
+  macro (TARGETPARALLELDOSIMD                 )   \
   macro (TARGETPARALLELLOOP                   )   \
+  macro (TARGETPARALLELDO                     )   \
   macro (TARGETPARALLEL                       )   \
   macro (TARGETEXITDATA                       )   \
   macro (TARGETENTERDATA                      )   \
@@ -64,6 +71,9 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ORDERED                              )   \
   macro (MASKEDTASKLOOPSIMD                   )   \
   macro (MASKEDTASKLOOP                       )   \
+  macro (MASTERTASKLOOPSIMD                   )   \
+  macro (MASTERTASKLOOP                       )   \
+  macro (MASTER                               )   \
   macro (MASKED                               )   \
   macro (LOOP                                 )   \
   macro (FLUSH                                )   \
@@ -71,19 +81,26 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ENDWORKSHARE                         )   \
   macro (ENDUNROLL                            )   \
   macro (ENDTILE                              )   \
-  macro (ENDTEAMS                             )   \
+  macro (ENDTEAMSDISTRIBUTEPARALLELDOSIMD     )   \
+  macro (ENDTEAMSDISTRIBUTEPARALLELDO         )   \
+  macro (ENDTEAMSDISTRIBUTESIMD               )   \
+  macro (ENDTEAMSDISTRIBUTE                   )   \
   macro (ENDTEAMSLOOP                         )   \
+  macro (ENDTEAMS                             )   \
   macro (ENDTASKGROUP                         )   \
   macro (ENDTASKLOOPSIMD                      )   \
   macro (ENDTASKLOOP                          )   \
   macro (ENDTASK                              )   \
   macro (ENDTARGETTEAMSDISTRIBUTEPARALLELDOSIMD)   \
   macro (ENDTARGETTEAMSDISTRIBUTEPARALLELDO   )   \
+  macro (ENDTARGETTEAMSDISTRIBUTESIMD         )   \
   macro (ENDTARGETTEAMSDISTRIBUTE             )   \
   macro (ENDTARGETTEAMSLOOP                   )   \
   macro (ENDTARGETTEAMS                       )   \
-  macro (ENDTARGETPARALLELDO                  )   \
+  macro (ENDTARGETSIMD                        )   \
+  macro (ENDTARGETPARALLELDOSIMD              )   \
   macro (ENDTARGETPARALLELLOOP                )   \
+  macro (ENDTARGETPARALLELDO                  )   \
   macro (ENDTARGETPARALLEL                    )   \
   macro (ENDTARGETDATA                        )   \
   macro (ENDTARGET                            )   \
@@ -104,6 +121,9 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ENDORDERED                           )   \
   macro (ENDMASKEDTASKLOOPSIMD                )   \
   macro (ENDMASKEDTASKLOOP                    )   \
+  macro (ENDMASTERTASKLOOPSIMD                )   \
+  macro (ENDMASTERTASKLOOP                    )   \
+  macro (ENDMASTER                            )   \
   macro (ENDMASKED                            )   \
   macro (ENDLOOP                              )   \
   macro (ENDDOSIMD                            )   \
@@ -163,7 +183,6 @@ typedef enum {
   macro (SIMD             )  \
   macro (SHARED           )  \
   macro (SEVERITY         )  \
-  macro (SECTIONS         )  \
   macro (SCHEDULE         )  \
   macro (SAFELEN          )  \
   macro (REVERSE_OFFLOAD  )  \
@@ -174,7 +193,6 @@ typedef enum {
   macro (PRIORITY         )  \
   macro (PRIVATE          )  \
   macro (PARTIAL          )  \
-  macro (PARALLEL         )  \
   macro (ORDERED          )  \
   macro (NUM_THREADS      )  \
   macro (NUM_TEAMS        )  \
@@ -184,7 +202,6 @@ typedef enum {
   macro (NOGROUP          )  \
   macro (MESSAGE          )  \
   macro (MERGEABLE        )  \
-  macro (MASKED           )  \
   macro (MAP              )  \
   macro (LINEAR           )  \
   macro (LASTPRIVATE      )  \
@@ -208,7 +225,6 @@ typedef enum {
   macro (DYNAMIC_ALLOCATORS)  \
   macro (DOACROSS         )  \
   macro (DIST_SCHEDULE    )  \
-  macro (DISTRIBUTE       )  \
   macro (DEVICE_TYPE      )  \
   macro (DEVICE           )  \
   macro (DETACH           )  \

@@ -6,7 +6,7 @@
 <program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N>=<init-E><literal-E><l>1</l></literal-E></init-E></EN-decl>, <EN-decl><EN-N><N><n>d</n></N></EN-N>=<init-E><literal-E><l>1</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
 
-  <omp>!$omp</omp> <parallel-masked>parallel masked  <clause><N>num_threads</N>(<literal-E><l>5</l></literal-E>)</clause></parallel-masked>
+  <omp>!$omp</omp> <parallel-masked-openmp>parallel masked  <clause><N>num_threads</N>(<literal-E><l>5</l></literal-E>)</clause></parallel-masked-openmp>
 
     <omp>!$omp</omp> <task-openmp>task</task-openmp>                                 <C>!! Task 1</C>
        <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;T1&quot;)'</S></string-E></io-control></io-control-spec>)</write-stmt>
@@ -37,7 +37,7 @@
        <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;T6 a=&quot;,i1,&quot; d=&quot;,i1)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>a</n></N></named-E></output-item>, <output-item><named-E><N><n>d</n></N></named-E></output-item></output-item-LT></write-stmt>
     <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
 
-  <omp>!$omp</omp> <end-parallel-masked>end parallel masked</end-parallel-masked>
+  <omp>!$omp</omp> <end-parallel-masked-openmp>end parallel masked</end-parallel-masked-openmp>
 
 <end-program-stmt>end program</end-program-stmt>
 
