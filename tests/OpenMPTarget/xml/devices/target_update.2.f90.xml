@@ -16,7 +16,7 @@
    <call-stmt>call <procedure-designator><named-E><N><n>init</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>v1</n></N></named-E></arg>, <arg><named-E><N><n>v2</n></N></named-E></arg>, <arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
    <omp>!$omp</omp> <target-data-openmp>target data <clause><N>map</N>(<prefix>to</prefix>: <E-LT><named-E><N><n>v1</n></N></named-E>, <named-E><N><n>v2</n></N></named-E></E-LT>)</clause> <clause><N>map</N>(<prefix>from</prefix>: <E-LT><named-E><N><n>p</n></N></named-E></E-LT>)</clause></target-data-openmp>
       <omp>!$omp</omp> <target-openmp>target</target-openmp>
-         <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+         <omp>!$omp</omp> <parallel-do-openmp>parallel do</parallel-do-openmp>
          <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
             <a-stmt><E-1><named-E><N><n>p</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>v1</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>*</o></op> <named-E><N><n>v2</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
          <end-do-stmt>end do</end-do-stmt>
@@ -26,7 +26,7 @@
       <a-stmt><E-1><named-E><N><n>changed</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>maybe_init_again</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>v2</n></N></named-E></element>, <element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
       <omp>!$omp</omp> <target-update-openmp>target update <clause><N>if</N>(<named-E><N><n>changed</n></N></named-E>)</clause> <clause><N>to</N>(<E-LT><named-E><N><n>v2</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript>:<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E>)</E-LT></clause></target-update-openmp>
       <omp>!$omp</omp> <target-openmp>target</target-openmp>
-         <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+         <omp>!$omp</omp> <parallel-do-openmp>parallel do</parallel-do-openmp>
          <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
             <a-stmt><E-1><named-E><N><n>p</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>p</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <op-E><named-E><N><n>v1</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>*</o></op> <named-E><N><n>v2</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></op-E></E-2></a-stmt>
          <end-do-stmt>end do</end-do-stmt>

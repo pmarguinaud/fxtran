@@ -52,13 +52,13 @@
 <m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>WORK1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>WORK2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>WORK3</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
 <m>      </m>  <external-stmt>EXTERNAL <EN-decl-LT><EN-decl><EN-N><N><n>WORK1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>WORK2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>WORK3</n></N></EN-N></EN-decl></EN-decl-LT></external-stmt>
 
-<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>SECTIONS</N></clause></parallel-openmp>
+<omp>!$OMP</omp><m> </m>  <parallel-sections-openmp>PARALLEL SECTIONS</parallel-sections-openmp>
 
 <omp>!$OMP</omp><m> </m>  <section-openmp>SECTION</section-openmp>
 <m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>INCR_PAIR</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N></named-E></arg>, <arg><named-E><N><n>WORK1</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></arg>, <arg><named-E><N><n>WORK2</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
 <omp>!$OMP</omp><m> </m>  <section-openmp>SECTION</section-openmp>
 <m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>INCR_B</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N></named-E></arg>, <arg><named-E><N><n>WORK3</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
-<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL <clause><N>SECTIONS</N></clause></end-parallel-openmp>
+<omp>!$OMP</omp><m> </m>  <end-parallel-sections-openmp>END PARALLEL SECTIONS</end-parallel-sections-openmp>
 
 <m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>NESTLOCK</n></N></subroutine-N></end-subroutine-stmt>
 </file></object>

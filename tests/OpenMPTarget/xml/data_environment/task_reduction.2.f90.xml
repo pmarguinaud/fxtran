@@ -28,7 +28,7 @@
 
 <C>! USE CASE 2  task reduction +  worksharing reduction clause</C>
    <a-stmt><E-1><named-E><N><n>x</n></N></named-E></E-1><a>=</a><E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
-   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause> <clause><N>num_threads</N>(<named-E><N><n>M</n></N></named-E>)</clause> <clause><N>reduction</N>(<modifier-N><n>task</n></modifier-N>,<op><o>+</o></op>:<V-LT><V><n>x</n></V></V-LT>)</clause></parallel-openmp>
+   <omp>!$omp</omp> <parallel-do-openmp>parallel do <clause><N>num_threads</N>(<named-E><N><n>M</n></N></named-E>)</clause> <clause><N>reduction</N>(<modifier-N><n>task</n></modifier-N>,<op><o>+</o></op>:<V-LT><V><n>x</n></V></V-LT>)</clause></parallel-do-openmp>
      <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
   
         <a-stmt><E-1><named-E><N><n>x</n></N></named-E></E-1><a>=</a><E-2><op-E><named-E><N><n>x</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>

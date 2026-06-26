@@ -4,7 +4,7 @@
 <C>! @@expect:success</C>
 <C>! @@version:pre_omp_3.0</C>
 <m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SECT_EXAMPLE</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
-<omp>!$OMP</omp><m> </m><parallel-openmp>PARALLEL <clause><N>SECTIONS</N></clause></parallel-openmp>
+<omp>!$OMP</omp><m> </m><parallel-sections-openmp>PARALLEL SECTIONS</parallel-sections-openmp>
 <omp>!$OMP</omp><m> </m><section-openmp>SECTION</section-openmp>
 <m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>XAXIS</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
 <omp>!$OMP</omp><m> </m><section-openmp>SECTION</section-openmp>
@@ -13,6 +13,6 @@
 <omp>!$OMP</omp><m> </m><section-openmp>SECTION</section-openmp>
 <m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>ZAXIS</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
 
-<omp>!$OMP</omp><m> </m><end-parallel-openmp>END PARALLEL <clause><N>SECTIONS</N></clause></end-parallel-openmp>
+<omp>!$OMP</omp><m> </m><end-parallel-sections-openmp>END PARALLEL SECTIONS</end-parallel-sections-openmp>
 <m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SECT_EXAMPLE</n></N></subroutine-N></end-subroutine-stmt>
 </file></object>

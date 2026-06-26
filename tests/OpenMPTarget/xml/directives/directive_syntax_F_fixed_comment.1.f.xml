@@ -11,13 +11,13 @@
 
 <C>c     sentinel c$omp or *$omp can also be used</C>
 
-<omp>c$omp</omp><m> </m><parallel-openmp>parallel <clause><N>do</N></clause> <clause><N>num_threads</N>(<named-E><N><n>NT</n></N></named-E>)</clause></parallel-openmp> <C>!comments allowed here   DIR 1</C>
+<omp>c$omp</omp><m> </m><parallel-do-openmp>parallel do <clause><N>num_threads</N>(<named-E><N><n>NT</n></N></named-E>)</clause></parallel-do-openmp> <C>!comments allowed here   DIR 1</C>
 <m>      </m><do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>NT</n></N></named-E></upper-bound></do-stmt>
 <m>      </m>  <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;thrd no&quot;, i2)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
 <m>      </m><end-do-stmt>end do</end-do-stmt>
 
-<omp>!$omp</omp><m> </m><parallel-openmp>parallel <clause><N>do</N></clause>
-<omp>!$omp</omp><cnt>+</cnt> <clause><N>num_threads</N>(<named-E><N><n>NT</n></N></named-E>)</clause></parallel-openmp>          <C>!cont. w. char in col. 6   DIR 2</C>
+<omp>!$omp</omp><m> </m><parallel-do-openmp>parallel do
+<omp>!$omp</omp><cnt>+</cnt> <clause><N>num_threads</N>(<named-E><N><n>NT</n></N></named-E>)</clause></parallel-do-openmp>          <C>!cont. w. char in col. 6   DIR 2</C>
 <m>      </m><do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>NT</n></N></named-E></upper-bound></do-stmt>
 <m>      </m>  <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;thrd no&quot;, i2)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
 <m>      </m><end-do-stmt>end do</end-do-stmt>

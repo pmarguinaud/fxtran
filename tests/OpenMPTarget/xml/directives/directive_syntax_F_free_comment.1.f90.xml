@@ -7,13 +7,13 @@
      <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>,<attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>NT</n></N></EN-N> = <init-E><literal-E><l>4</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
   
-     <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause> <clause><N>num_threads</N>(<named-E><N><n>NT</n></N></named-E>)</clause></parallel-openmp>                <C>!DIR 1</C>
+     <omp>!$omp</omp> <parallel-do-openmp>parallel do <clause><N>num_threads</N>(<named-E><N><n>NT</n></N></named-E>)</clause></parallel-do-openmp>                <C>!DIR 1</C>
      <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>NT</n></N></named-E></upper-bound></do-stmt>
        <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;thrd no&quot;, i2)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
      <end-do-stmt>end do</end-do-stmt>
   
-     <omp>!$omp</omp>  <parallel-openmp>parallel <clause><N>do</N></clause>  <cnt>&amp;</cnt>     <C>!continue line         !DIR 2</C>
-     <omp>!$omp</omp> <clause><N>num_threads</N>(<named-E><N><n>NT</n></N></named-E>)</clause></parallel-openmp>     <C>!or !$omp&amp;</C>
+     <omp>!$omp</omp>  <parallel-do-openmp>parallel do  <cnt>&amp;</cnt>     <C>!continue line         !DIR 2</C>
+     <omp>!$omp</omp> <clause><N>num_threads</N>(<named-E><N><n>NT</n></N></named-E>)</clause></parallel-do-openmp>     <C>!or !$omp&amp;</C>
      <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>NT</n></N></named-E></upper-bound></do-stmt>
        <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;thrd no&quot;, i2)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
      <end-do-stmt>end do</end-do-stmt>

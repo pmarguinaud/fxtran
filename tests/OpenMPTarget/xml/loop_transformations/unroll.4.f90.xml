@@ -8,7 +8,7 @@
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
 
-    <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+    <omp>!$omp</omp> <parallel-do-openmp>parallel do</parallel-do-openmp>
     <omp>!$omp</omp> <unroll-openmp>unroll <clause><N>partial</N>(<literal-E><l>4</l></literal-E>)</clause></unroll-openmp>
     <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
        <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>i</n></N></named-E></E-2></a-stmt>
@@ -21,7 +21,7 @@
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i_iv</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
 
-   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+   <omp>!$omp</omp> <parallel-do-openmp>parallel do</parallel-do-openmp>
    <do-stmt>do <do-V><named-E><N><n>i_iv</n></N></named-E></do-V> = <lower-bound><literal-E><l>0</l></literal-E></lower-bound>,<upper-bound><op-E><op-E><parens-E>(<op-E><named-E><N><n>n</n></N></named-E><op><o>+</o></op><literal-E><l>3</l></literal-E></op-E>)</parens-E><op><o>/</o></op><literal-E><l>4</l></literal-E></op-E> <op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></upper-bound></do-stmt>
                                <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><op-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>*</o></op> <literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>*</o></op> <literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
         <if-stmt>if (<condition-E><op-E><op-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>*</o></op> <literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op> <literal-E><l>2</l></literal-E></op-E> <op><o>&lt;=</o></op> <named-E><N><n>n</n></N></named-E></op-E></condition-E>) <action-stmt><a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><op-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>*</o></op> <literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op> <literal-E><l>2</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>*</o></op> <literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op> <literal-E><l>2</l></literal-E></op-E></E-2></a-stmt></action-stmt></if-stmt>
@@ -36,7 +36,7 @@
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i_iv</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i_rem</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
 
-    <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+    <omp>!$omp</omp> <parallel-do-openmp>parallel do</parallel-do-openmp>
     <do-stmt>do <do-V><named-E><N><n>i_iv</n></N></named-E></do-V> = <lower-bound><literal-E><l>0</l></literal-E></lower-bound>, <upper-bound><op-E><op-E><parens-E>(<op-E><named-E><N><n>n</n></N></named-E><op><o>+</o></op><literal-E><l>3</l></literal-E></op-E>)</parens-E><op><o>/</o></op><literal-E><l>4</l></literal-E></op-E> <op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></upper-bound></do-stmt>
         <if-then-stmt>if (<condition-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>&lt;</o></op> <op-E><named-E><N><n>n</n></N></named-E><op><o>/</o></op><literal-E><l>4</l></literal-E></op-E></op-E></condition-E>) then</if-then-stmt>
             <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><op-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>*</o></op> <literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>*</o></op> <literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
@@ -58,7 +58,7 @@
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i_iv</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i_rem</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
 
-    <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+    <omp>!$omp</omp> <parallel-do-openmp>parallel do</parallel-do-openmp>
     <do-stmt>do <do-V><named-E><N><n>i_iv</n></N></named-E></do-V> = <lower-bound><literal-E><l>0</l></literal-E></lower-bound>, <upper-bound><op-E><parens-E>(<op-E><named-E><N><n>n</n></N></named-E><op><o>/</o></op><literal-E><l>4</l></literal-E></op-E>)</parens-E> <op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></upper-bound></do-stmt>
 
        <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><op-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>*</o></op> <literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>i_iv</n></N></named-E> <op><o>*</o></op> <literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
@@ -68,7 +68,7 @@
     <end-do-stmt>end do</end-do-stmt>
 
     <C>!! remainder loop</C>
-    <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+    <omp>!$omp</omp> <parallel-do-openmp>parallel do</parallel-do-openmp>
     <do-stmt>do <do-V><named-E><N><n>i_rem</n></N></named-E></do-V> = <lower-bound><op-E><op-E><parens-E>(<op-E><named-E><N><n>n</n></N></named-E><op><o>/</o></op><literal-E><l>4</l></literal-E></op-E>)</parens-E><op><o>*</o></op><literal-E><l>4</l></literal-E></op-E> <op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></lower-bound>, <upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
        <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i_rem</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>i_rem</n></N></named-E></E-2></a-stmt>
     <end-do-stmt>end do</end-do-stmt>

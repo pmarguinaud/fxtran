@@ -145,12 +145,18 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_ENDDECLARETARGET  :  return _T(_S(END) H _S(DECLARE) H _S(TARGET) H _S(OPENMP));
       case FXTRAN_OMPTD_DECLARETARGET     :  return _T(_S(DECLARE) H _S(TARGET) H _S(OPENMP));
       case FXTRAN_OMPTD_DECLARE           :  return _T(_S(DECLARE) H _S(OPENMP));
-      case FXTRAN_OMPTD_PARALLELMASTER    :  return _T(_S(PARALLEL) H _S(MASTER) H _S(OPENMP));
-      case FXTRAN_OMPTD_ENDPARALLELMASTER :  return _T(_S(END) H _S(PARALLEL) H _S(MASTER) H _S(OPENMP));
-      case FXTRAN_OMPTD_PARALLELDOSIMD    :  return _T(_S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
-      case FXTRAN_OMPTD_ENDPARALLELDOSIMD :  return _T(_S(END) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
-      case FXTRAN_OMPTD_PARALLEL          :  return _T(_S(PARALLEL) H _S(OPENMP));
-      case FXTRAN_OMPTD_ENDPARALLEL       :  return _T(_S(END) H _S(PARALLEL) H _S(OPENMP));
+      case FXTRAN_OMPTD_PARALLELWORKSHARE    :  return _T(_S(PARALLEL) H _S(WORK) H _S(SHARE) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLELWORKSHARE :  return _T(_S(END) H _S(PARALLEL) H _S(WORK) H _S(SHARE) H _S(OPENMP));
+      case FXTRAN_OMPTD_PARALLELSECTIONS     :  return _T(_S(PARALLEL) H _S(SECTIONS) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLELSECTIONS  :  return _T(_S(END) H _S(PARALLEL) H _S(SECTIONS) H _S(OPENMP));
+      case FXTRAN_OMPTD_PARALLELMASTER       :  return _T(_S(PARALLEL) H _S(MASTER) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLELMASTER    :  return _T(_S(END) H _S(PARALLEL) H _S(MASTER) H _S(OPENMP));
+      case FXTRAN_OMPTD_PARALLELDOSIMD       :  return _T(_S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLELDOSIMD    :  return _T(_S(END) H _S(PARALLEL) H _S(DO) H _S(SIMD) H _S(OPENMP));
+      case FXTRAN_OMPTD_PARALLELDO           :  return _T(_S(PARALLEL) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLELDO        :  return _T(_S(END) H _S(PARALLEL) H _S(DO) H _S(OPENMP));
+      case FXTRAN_OMPTD_PARALLEL             :  return _T(_S(PARALLEL) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDPARALLEL          :  return _T(_S(END) H _S(PARALLEL) H _S(OPENMP));
       case FXTRAN_OMPTD_SIMD              :  return _T(_S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_DOSIMD            :  return _T(_S(SIMD) H _S(DO) H _S(OPENMP));
       case FXTRAN_OMPTD_SINGLE            :  return _T(_S(SINGLE) H _S(OPENMP));
@@ -169,6 +175,7 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_ENDSECTIONS       :  return _T(_S(END) H _S(SECTIONS) H _S(OPENMP));
       case FXTRAN_OMPTD_ATOMIC            :  return _T(_S(ATOMIC) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDATOMIC         :  return _T(_S(END) H _S(ATOMIC) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDDOSIMD         :  return _T(_S(END) H _S(DO) H _S(SIMD) H _S(OPENMP));
       case FXTRAN_OMPTD_DO                :  return _T(_S(DO) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDDO             :  return _T(_S(END) H _S(DO) H _S(OPENMP));
       case FXTRAN_OMPTD_CRITICAL          :  return _T(_S(CRITICAL) H _S(OPENMP));
@@ -1150,8 +1157,14 @@ def_omptd_extra_clause_list (ENDTARGETDATA)
 def_omptd_extra_clause_list (ENDTARGET)
 def_omptd_extra_clause_list (ENDDECLARETARGET)
 def_omptd_extra_clause_list (DECLARE)
+def_omptd_extra_clause_list (PARALLELWORKSHARE)
+def_omptd_extra_clause_list (ENDPARALLELWORKSHARE)
+def_omptd_extra_clause_list (PARALLELSECTIONS)
+def_omptd_extra_clause_list (ENDPARALLELSECTIONS)
 def_omptd_extra_clause_list (PARALLELDOSIMD)
 def_omptd_extra_clause_list (ENDPARALLELDOSIMD)
+def_omptd_extra_clause_list (PARALLELDO)
+def_omptd_extra_clause_list (ENDPARALLELDO)
 def_omptd_extra_clause_list (TASKWAIT)
 def_omptd_extra_clause_list (TASK)
 def_omptd_extra_clause_list (ENDTASK)
@@ -1161,6 +1174,7 @@ def_omptd_extra_clause_list (PARALLEL)
 def_omptd_extra_clause_list (ENDPARALLEL)
 def_omptd_extra_clause_list (SIMD)
 def_omptd_extra_clause_list (DOSIMD)
+def_omptd_extra_clause_list (ENDDOSIMD)
 def_omptd_extra_clause_list (SINGLE)
 def_omptd_extra_clause_list (ENDSINGLE)
 def_omptd_extra_clause_list (MASKED)

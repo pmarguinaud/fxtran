@@ -6,7 +6,7 @@
 <subroutine-stmt>subroutine <subroutine-N><N><n>func1</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>128</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
-    <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+    <omp>!$omp</omp> <parallel-do-openmp>parallel do</parallel-do-openmp>
     <omp>!$omp</omp> <tile-openmp>tile <clause><N>sizes</N>(<E-LT><literal-E><l>5</l></literal-E>,<literal-E><l>16</l></literal-E>)</E-LT></clause></tile-openmp>
     <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
     <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>128</l></literal-E></upper-bound></do-stmt>
@@ -17,7 +17,7 @@
 <subroutine-stmt>subroutine <subroutine-N><N><n>func2</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>128</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>i1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>j1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>j2</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
-    <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+    <omp>!$omp</omp> <parallel-do-openmp>parallel do</parallel-do-openmp>
     <do-stmt>do <do-V><named-E><N><n>i1</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound>,<step><literal-E><l>5</l></literal-E></step></do-stmt>
     <do-stmt>do <do-V><named-E><N><n>j1</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>128</l></literal-E></upper-bound>,<step><literal-E><l>16</l></literal-E></step></do-stmt>
        <do-stmt>do <do-V><named-E><N><n>i2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>i1</n></N></named-E></lower-bound>, <upper-bound><op-E><named-E><N><n>i1</n></N></named-E><op><o>+</o></op><parens-E>( <op-E><literal-E><l>5</l></literal-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E>)</parens-E></op-E></upper-bound></do-stmt>

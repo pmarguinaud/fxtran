@@ -43,8 +43,11 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (SCOPE                                )   \
   macro (SCAN                                 )   \
   macro (REQUIRES                             )   \
+  macro (PARALLELWORKSHARE                    )   \
+  macro (PARALLELSECTIONS                     )   \
   macro (PARALLELMASTER                       )   \
   macro (PARALLELDOSIMD                       )   \
+  macro (PARALLELDO                           )   \
   macro (PARALLEL                             )   \
   macro (ORDERED                              )   \
   macro (MASKED                               )   \
@@ -66,12 +69,16 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ENDSECTIONS                          )   \
   macro (ENDSECTION                           )   \
   macro (ENDSCOPE                             )   \
+  macro (ENDPARALLELWORKSHARE                 )   \
+  macro (ENDPARALLELSECTIONS                  )   \
   macro (ENDPARALLELMASTER                    )   \
   macro (ENDPARALLELDOSIMD                    )   \
+  macro (ENDPARALLELDO                        )   \
   macro (ENDPARALLEL                          )   \
   macro (ENDORDERED                           )   \
   macro (ENDMASKED                            )   \
   macro (ENDLOOP                              )   \
+  macro (ENDDOSIMD                            )   \
   macro (ENDDO                                )   \
   macro (ENDDISTRIBUTE                        )   \
   macro (ENDDECLARETARGET                     )   \

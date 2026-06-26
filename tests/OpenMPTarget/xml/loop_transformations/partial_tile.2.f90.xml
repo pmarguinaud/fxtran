@@ -8,7 +8,7 @@
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
 
-   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause> <clause><N>schedule</N>(<T>static</T>)</clause></parallel-openmp>
+   <omp>!$omp</omp> <parallel-do-openmp>parallel do <clause><N>schedule</N>(<T>static</T>)</clause></parallel-do-openmp>
    <omp>!$omp</omp> <tile-openmp>tile <clause><N>sizes</N>(<E-LT><literal-E><l>4</l></literal-E>,<literal-E><l>16</l></literal-E>)</E-LT></clause></tile-openmp>
    <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
    <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
