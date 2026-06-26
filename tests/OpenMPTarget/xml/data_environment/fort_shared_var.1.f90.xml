@@ -1,0 +1,52 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/fort_shared_var.1.f90"><C>! @@name:&#009;fort_shared_var.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;undefined</C>
+<C>! @@version:&#009;pre_omp_3.0</C>
+<program-stmt>program <program-N><N><n>fort_shared_var</n></N></program-N></program-stmt>
+  <implicit-none-stmt>implicit none</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N> = <init-E><literal-E><l>100</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <interface-stmt>interface</interface-stmt>
+    <subroutine-stmt>subroutine <subroutine-N><N><n>sub1</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>b</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>b</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+    <subroutine-stmt>subroutine <subroutine-N><N><n>sub2</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>b</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>contiguous</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>b</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+  <end-interface-stmt>end interface</end-interface-stmt>
+
+  <a-stmt><E-1><named-E><N><n>a</n></N></named-E></E-1> <a>=</a> <E-2><array-constructor-E>[<ac-value-LT><ac-value><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>i</n></N></named-E></iterator-element>, <iterator-element><V-N><V-N><n>i</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><named-E><N><n>N</n></N></named-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></ac-value></ac-value-LT>]</array-constructor-E></E-2></a-stmt>
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>shared</N>(<V-LT><V-N><n>a</n></V-N></V-LT>)</clause> <clause><N>num_threads</N>(<literal-E><l>2</l></literal-E>)</clause></parallel-openmp>
+    <call-stmt>call <procedure-designator><named-E><N><n>sub1</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>a</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript>::<stride><literal-E><l>2</l></literal-E></stride></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></arg></arg-spec>)</call-stmt>         <C>! copy-in/copy-out may or may not occur</C>
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+  <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>'sum1 ='</S></string-E></output-item>, <output-item><named-E><N><n>sum</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>a</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>   <C>! sum1 may/may not be well defined</C>
+
+  <a-stmt><E-1><named-E><N><n>a</n></N></named-E></E-1> <a>=</a> <E-2><array-constructor-E>[<ac-value-LT><ac-value><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>i</n></N></named-E></iterator-element>, <iterator-element><V-N><V-N><n>i</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><named-E><N><n>N</n></N></named-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></ac-value></ac-value-LT>]</array-constructor-E></E-2></a-stmt>
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>shared</N>(<V-LT><V-N><n>a</n></V-N></V-LT>)</clause> <clause><N>num_threads</N>(<literal-E><l>2</l></literal-E>)</clause></parallel-openmp>
+    <call-stmt>call <procedure-designator><named-E><N><n>sub2</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>a</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript>::<stride><literal-E><l>2</l></literal-E></stride></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></arg></arg-spec>)</call-stmt>         <C>! copy-in/copy-out result in a data race</C>
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+  <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>'sum2 ='</S></string-E></output-item>, <output-item><named-E><N><n>sum</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>a</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>   <C>! sum2 is not well defined</C>
+<end-program-stmt>end</end-program-stmt>
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>sub1</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>b</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+  <implicit-none-stmt>implicit none</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>b</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>size</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>b</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></upper-bound></do-stmt>
+    <omp>!$omp</omp> <atomic-openmp>atomic</atomic-openmp>
+    <a-stmt><E-1><named-E><N><n>b</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>b</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+  <end-do-stmt>end do</end-do-stmt>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>sub2</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>b</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+  <implicit-none-stmt>implicit none</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>contiguous</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>b</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>size</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>b</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></upper-bound></do-stmt>
+    <omp>!$omp</omp> <atomic-openmp>atomic</atomic-openmp>
+    <a-stmt><E-1><named-E><N><n>b</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>b</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+  <end-do-stmt>end do</end-do-stmt>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

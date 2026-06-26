@@ -1,0 +1,34 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="tasking/tasking.10.f90"><C>! @@name:&#009;tasking.10</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_3.0</C>
+      <module-stmt>module <module-N><N><n>example</n></N></module-N></module-stmt>
+      <include-stmt>include <filename><S>'omp_lib.h'</S></filename></include-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N> <K-selector>(<K-spec><arg-N n="KIND"><k>kind</k></arg-N>=<named-E><N><n>omp_lock_kind</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>lock</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+      <contains-stmt>contains</contains-stmt>
+
+      <subroutine-stmt>subroutine <subroutine-N><N><n>work</n></N></subroutine-N></subroutine-stmt>
+      <call-stmt>call <procedure-designator><named-E><N><n>omp_init_lock</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>lock</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <parallel-openmp>parallel</parallel-openmp>
+     <omp>!$omp</omp> <do-openmp>do</do-openmp>
+      <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+         <omp>!$omp</omp> <task-openmp>task</task-openmp>
+              <C>! Outer task</C>
+              <call-stmt>call <procedure-designator><named-E><N><n>omp_set_lock</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>lock</n></N></named-E></arg></arg-spec>)</call-stmt>    <C>! lock is shared by</C>
+                                         <C>! default in the task</C>
+                     <C>! Capture data for the following task</C>
+                     <omp>!$omp</omp> <task-openmp>task</task-openmp>     <C>! Task Scheduling Point 1</C>
+                              <C>! do work here</C>
+                     <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+               <call-stmt>call <procedure-designator><named-E><N><n>omp_unset_lock</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>lock</n></N></named-E></arg></arg-spec>)</call-stmt>
+         <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+      <end-do-stmt>end do</end-do-stmt>
+<omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+      <call-stmt>call <procedure-designator><named-E><N><n>omp_destroy_lock</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>lock</n></N></named-E></arg></arg-spec>)</call-stmt>
+      <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+      <end-module-stmt>end module</end-module-stmt>
+</file></object>

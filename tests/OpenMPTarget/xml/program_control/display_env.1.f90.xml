@@ -1,0 +1,24 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="program_control/display_env.1.f90"><C>! @@name:&#009;display_env.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;link</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.1</C>
+<C>!implementers: customize debug routines for app debugging</C>
+<function-stmt>function  <function-N><N><n>debug</n></N></function-N>(<dummy-arg-LT></dummy-arg-LT>)</function-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>logical</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>debug</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <a-stmt><E-1><named-E><N><n>debug</n></N></named-E></E-1> <a>=</a> <E-2><literal-E>.true.</literal-E></E-2></a-stmt>  
+<end-function-stmt>end function</end-function-stmt>
+
+<function-stmt>function <function-N><N><n>debug_omp_verbose</n></N></function-N>(<dummy-arg-LT></dummy-arg-LT>)</function-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>logical</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>debug_omp_verbose</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <a-stmt><E-1><named-E><N><n>debug_omp_verbose</n></N></named-E></E-1> <a>=</a> <E-2><literal-E>.false.</literal-E></E-2></a-stmt>
+<end-function-stmt>end function</end-function-stmt>
+
+<program-stmt>program <program-N><N><n>display_omp_environment</n></N></program-N></program-stmt>
+  <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>logical</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>debug</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>debug_omp_verbose</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+ 
+  <if-stmt>if( <condition-E><named-E><N><n>debug</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></condition-E> ) <action-stmt><call-stmt>call <procedure-designator><named-E><N><n>omp_display_env</n></N></named-E></procedure-designator>( <arg-spec><arg><named-E><N><n>debug_omp_verbose</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec> )</call-stmt></action-stmt></if-stmt>
+  <C>!! ...</C>
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

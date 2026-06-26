@@ -1,0 +1,34 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="tasking/tasking.13.f90"><C>! @@name:&#009;tasking.13</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_3.1</C>
+<subroutine-stmt><prefix>recursive</prefix> subroutine <subroutine-N><N><n>bin_search</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>pos</n></N></arg-N>, <arg-N><N><n>n</n></N></arg-N>, <arg-N><N><n>state</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+  <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>pos</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>character</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>pointer</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>state</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>character</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>target</attribute-N></attribute>, <attribute><attribute-N>dimension</attribute-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>new_state1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>new_state2</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>LIMIT</n></N></EN-N> = <init-E><literal-E><l>3</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <if-then-stmt>if (<condition-E><op-E><named-E><N><n>pos</n></N></named-E> <op><o>.eq.</o></op> <named-E><N><n>n</n></N></named-E></op-E></condition-E>) then</if-then-stmt>
+    <call-stmt>call <procedure-designator><named-E><N><n>check_solution</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>state</n></N></named-E></arg></arg-spec>)</call-stmt>
+    <return-stmt>return</return-stmt>
+  <end-if-stmt>endif</end-if-stmt>
+<omp>!$omp</omp> <task-openmp>task <clause><N>final</N>(<op-E><named-E><N><n>pos</n></N></named-E> <op><o>&gt;</o></op> <named-E><N><n>LIMIT</n></N></named-E></op-E>)</clause> <clause><N>mergeable</N></clause></task-openmp>
+  <if-then-stmt>if (<condition-E><op-E><op><o>.not.</o></op> <named-E><N><n>omp_in_final</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></op-E></condition-E>) then</if-then-stmt>
+    <a-stmt><E-1><named-E><N><n>new_state1</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>1</l></literal-E></lower-bound>:<upper-bound><named-E><N><n>pos</n></N></named-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>state</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>1</l></literal-E></lower-bound>:<upper-bound><named-E><N><n>pos</n></N></named-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-2></a-stmt>
+    <pointer-a-stmt><E-1><named-E><N><n>state</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>new_state1</n></N></named-E></E-2></pointer-a-stmt>
+  <end-if-stmt>endif</end-if-stmt>
+  <a-stmt><E-1><named-E><N><n>state</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>pos</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><string-E><S>'z'</S></string-E></E-2></a-stmt>
+  <call-stmt>call <procedure-designator><named-E><N><n>bin_search</n></N></named-E></procedure-designator>(<arg-spec><arg><op-E><named-E><N><n>pos</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></arg>, <arg><named-E><N><n>n</n></N></named-E></arg>, <arg><named-E><N><n>state</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+<omp>!$omp</omp> <task-openmp>task <clause><N>final</N>(<op-E><named-E><N><n>pos</n></N></named-E> <op><o>&gt;</o></op> <named-E><N><n>LIMIT</n></N></named-E></op-E>)</clause> <clause><N>mergeable</N></clause></task-openmp>
+  <if-then-stmt>if (<condition-E><op-E><op><o>.not.</o></op> <named-E><N><n>omp_in_final</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></op-E></condition-E>) then</if-then-stmt>
+    <a-stmt><E-1><named-E><N><n>new_state2</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>1</l></literal-E></lower-bound>:<upper-bound><named-E><N><n>pos</n></N></named-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>state</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>1</l></literal-E></lower-bound>:<upper-bound><named-E><N><n>pos</n></N></named-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-2></a-stmt>
+    <pointer-a-stmt><E-1><named-E><N><n>state</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>new_state2</n></N></named-E></E-2></pointer-a-stmt>
+  <end-if-stmt>endif</end-if-stmt>
+  <a-stmt><E-1><named-E><N><n>state</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>pos</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><string-E><S>'y'</S></string-E></E-2></a-stmt>
+  <call-stmt>call <procedure-designator><named-E><N><n>bin_search</n></N></named-E></procedure-designator>(<arg-spec><arg><op-E><named-E><N><n>pos</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></arg>, <arg><named-E><N><n>n</n></N></named-E></arg>, <arg><named-E><N><n>state</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+<omp>!$omp</omp> <taskwait-openmp>taskwait</taskwait-openmp>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

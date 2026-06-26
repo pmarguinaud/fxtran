@@ -1,0 +1,13 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/nthrs_dynamic.1.f"><C>! @@name:nthrs_dynamic.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:link</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>EXAMPLE</n></N></program-N></program-stmt>
+<m>      </m>  <include-stmt>INCLUDE <filename><S>&quot;omp_lib.h&quot;</S></filename></include-stmt>      <C>! or USE OMP_LIB</C>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>OMP_SET_DYNAMIC</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E>.FALSE.</literal-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m>    <parallel-openmp>PARALLEL <clause><N>NUM_THREADS</N>(<literal-E><l>10</l></literal-E>)</clause></parallel-openmp>
+<m>      </m>      <C>! do work here</C>
+<omp>!$OMP</omp><m> </m>    <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m><end-program-stmt>END PROGRAM <program-N><N><n>EXAMPLE</n></N></program-N></end-program-stmt>
+</file></object>

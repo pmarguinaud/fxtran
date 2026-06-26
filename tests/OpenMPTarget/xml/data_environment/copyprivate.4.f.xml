@@ -1,0 +1,26 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/copyprivate.4.f"><C>! @@name:copyprivate.4</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>S</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>DIMENSION</attribute-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></attribute>, <attribute><attribute-N>ALLOCATABLE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>DIMENSION</attribute-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></attribute>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>  <allocate-stmt>ALLOCATE (<arg-spec><arg><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+<omp>!$OMP</omp><m> </m>  <single-openmp>SINGLE</single-openmp>
+<m>      </m>    <allocate-stmt>ALLOCATE (<arg-spec><arg><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+<m>      </m>    <read-stmt>READ (<io-control-spec><io-control><literal-E><l>11</l></literal-E></io-control></io-control-spec>) <input-item-LT><input-item><named-E><N><n>A</n></N></named-E></input-item>,<input-item><named-E><N><n>B</n></N></named-E></input-item></input-item-LT></read-stmt>
+<omp>!$OMP</omp><m> </m>  <end-single-openmp>END SINGLE <clause><N>COPYPRIVATE</N>(<V-LT><V-N><n>A</n></V-N>,<V-N><n>B</n></V-N></V-LT>)</clause></end-single-openmp>
+<m>      </m>  <C>! Variable A is private and is</C>
+<m>      </m>  <C>! assigned the same value in each thread</C>
+<m>      </m>  <C>! Variable B is shared</C>
+
+<omp>!$OMP</omp><m> </m>  <barrier-openmp>BARRIER</barrier-openmp>
+<omp>!$OMP</omp><m> </m>  <single-openmp>SINGLE</single-openmp>
+<m>      </m>    <deallocate-stmt>DEALLOCATE (<arg-spec><arg><named-E><N><n>B</n></N></named-E></arg></arg-spec>)</deallocate-stmt>
+<omp>!$OMP</omp><m> </m>  <end-single-openmp>END SINGLE <clause><N>NOWAIT</N></clause></end-single-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>S</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

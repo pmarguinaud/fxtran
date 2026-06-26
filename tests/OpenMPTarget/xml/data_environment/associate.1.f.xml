@@ -1,0 +1,14 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/associate.1.f"><C>! @@name:associate.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:ct-error</C>
+<C>! @@version:omp_4.0</C>
+<m>      </m><program-stmt>program <program-N><N><n>example_broken</n></N></program-N></program-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>c</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><associate-stmt>associate (<associate-LT><associate><associate-N><n>b</n></associate-N> =&gt; <selector><named-E><N><n>a</n></N></named-E></selector></associate></associate-LT>)</associate-stmt>
+<omp>!$omp</omp><m> </m><parallel-openmp>parallel <clause><N>private</N>(<V-LT><V-N><n>b</n></V-N>, <V-N><n>c</n></V-N></V-LT>)</clause></parallel-openmp>        <C>! invalid to privatize b</C>
+<m>      </m><a-stmt><E-1><named-E><N><n>c</n></N></named-E></E-1> <a>=</a> <E-2><op-E><literal-E><l>2.0</l></literal-E><op><o>*</o></op><named-E><N><n>b</n></N></named-E></op-E></E-2></a-stmt>
+<omp>!$omp</omp><m> </m><end-parallel-openmp>end parallel</end-parallel-openmp>
+<m>      </m><end-associate-stmt>end associate</end-associate-stmt>
+<m>      </m><end-program-stmt>end program</end-program-stmt>
+</file></object>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/parallel.1.f"><C>! @@name:parallel.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:link</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SUBDOMAIN</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>ISTART</n></N></arg-N>, <arg-N><N><n>IPOINTS</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>ISTART</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>IPOINTS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>    <do-label-stmt>DO <label>100</label> <do-V><named-E><N><n>I</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>IPOINTS</n></N></named-E></upper-bound></do-label-stmt>
+<m>      </m>       <a-stmt><E-1><named-E><N><n>X</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>ISTART</n></N></named-E><op><o>+</o></op><named-E><N><n>I</n></N></named-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>123.456</l></literal-E></E-2></a-stmt>
+<m> </m><label>100</label><m>  </m>    <continue-stmt>CONTINUE</continue-stmt>
+
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SUBDOMAIN</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SUB</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>NPOINTS</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>    <include-stmt>INCLUDE <filename><S>&quot;omp_lib.h&quot;</S></filename></include-stmt>     <C>! or USE OMP_LIB</C>
+
+<m>      </m>    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>NPOINTS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>IAM</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>NT</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>IPOINTS</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ISTART</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m><parallel-openmp>PARALLEL <clause><N>DEFAULT</N>(<T>PRIVATE</T>)</clause> <clause><N>SHARED</N>(<V-LT><V-N><n>X</n></V-N>,<V-N><n>NPOINTS</n></V-N></V-LT>)</clause></parallel-openmp>
+
+<m>      </m>    <a-stmt><E-1><named-E><N><n>IAM</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>OMP_GET_THREAD_NUM</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m>    <a-stmt><E-1><named-E><N><n>NT</n></N></named-E></E-1> <a>=</a>  <E-2><named-E><N><n>OMP_GET_NUM_THREADS</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m>    <a-stmt><E-1><named-E><N><n>IPOINTS</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>NPOINTS</n></N></named-E><op><o>/</o></op><named-E><N><n>NT</n></N></named-E></op-E></E-2></a-stmt>
+<m>      </m>    <a-stmt><E-1><named-E><N><n>ISTART</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>IAM</n></N></named-E> <op><o>*</o></op> <named-E><N><n>IPOINTS</n></N></named-E></op-E></E-2></a-stmt>
+<m>      </m>    <if-then-stmt>IF (<condition-E><op-E><named-E><N><n>IAM</n></N></named-E> <op><o>.EQ.</o></op> <op-E><named-E><N><n>NT</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></op-E></condition-E>) THEN</if-then-stmt>
+<m>      </m>        <a-stmt><E-1><named-E><N><n>IPOINTS</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>NPOINTS</n></N></named-E> <op><o>-</o></op> <named-E><N><n>ISTART</n></N></named-E></op-E></E-2></a-stmt>
+<m>      </m>    <end-if-stmt>ENDIF</end-if-stmt>
+<m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>SUBDOMAIN</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>X</n></N></named-E></arg>,<arg><named-E><N><n>ISTART</n></N></named-E></arg>,<arg><named-E><N><n>IPOINTS</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+<omp>!$OMP</omp><m> </m><end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SUB</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>PAREXAMPLE</n></N></program-N></program-stmt>
+<m>      </m>    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>ARRAY</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>10000</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>SUB</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>ARRAY</n></N></named-E></arg>, <arg><literal-E><l>10000</l></literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m><end-program-stmt>END PROGRAM <program-N><N><n>PAREXAMPLE</n></N></program-N></end-program-stmt>
+</file></object>

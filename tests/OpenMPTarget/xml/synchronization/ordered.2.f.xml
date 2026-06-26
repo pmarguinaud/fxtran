@@ -1,0 +1,27 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/ordered.2.f"><C>! @@name:ordered.2</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:ct-error</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>I</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>ORDERED_WRONG</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<omp>!$OMP</omp><m> </m>  <do-openmp>DO <clause><N>ORDERED</N></clause></do-openmp>
+<m>      </m>  <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+<C>! incorrect because an iteration may not execute more than one</C>
+<C>! ordered region</C>
+<omp>!$OMP</omp><m> </m>    <ordered-openmp>ORDERED</ordered-openmp>
+<m>      </m>      <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>I</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m>    <end-ordered-openmp>END ORDERED</end-ordered-openmp>
+
+<omp>!$OMP</omp><m> </m>    <ordered-openmp>ORDERED</ordered-openmp>
+<m>      </m>      <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><op-E><named-E><N><n>I</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m>    <end-ordered-openmp>END ORDERED</end-ordered-openmp>
+<m>      </m>  <end-do-stmt>END DO</end-do-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>ORDERED_WRONG</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

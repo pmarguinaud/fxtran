@@ -1,0 +1,25 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="devices/target_unstructured_data.1.f90"><C>! @@name:&#009;target_unstructured_data.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.5</C>
+<module-stmt>module <module-N><N><n>example</n></N></module-N></module-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N><K-selector>(<K-spec><literal-E><l>8</l></literal-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>allocatable</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <contains-stmt>contains</contains-stmt>
+    <subroutine-stmt>subroutine <subroutine-N><N><n>initialize</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+      <allocate-stmt>allocate(<arg-spec><arg><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+      <omp>!$omp</omp> <target-enter-data-openmp>target enter data <clause><N>map</N>(<prefix>alloc</prefix>:<E-LT><named-E><N><n>A</n></N></named-E></E-LT>)</clause></target-enter-data-openmp>
+
+    <end-subroutine-stmt>end subroutine <subroutine-N><N><n>initialize</n></N></subroutine-N></end-subroutine-stmt>
+
+    <subroutine-stmt>subroutine <subroutine-N><N><n>finalize</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
+
+      <omp>!$omp</omp> <target-exit-data-openmp>target exit data <clause><N>map</N>(<prefix>delete</prefix>:<E-LT><named-E><N><n>A</n></N></named-E></E-LT>)</clause></target-exit-data-openmp>
+      <deallocate-stmt>deallocate(<arg-spec><arg><named-E><N><n>A</n></N></named-E></arg></arg-spec>)</deallocate-stmt>
+
+    <end-subroutine-stmt>end subroutine <subroutine-N><N><n>finalize</n></N></subroutine-N></end-subroutine-stmt>
+<end-module-stmt>end module <module-N><N><n>example</n></N></module-N></end-module-stmt>
+</file></object>

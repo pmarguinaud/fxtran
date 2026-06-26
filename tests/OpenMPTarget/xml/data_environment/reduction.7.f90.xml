@@ -1,0 +1,24 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/reduction.7.f90"><C>! @@name:&#009;reduction.7</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;pre_omp_3.0</C>
+<program-stmt>program <program-N><N><n>array_red</n></N></program-N></program-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>,<attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N>=<init-E><literal-E><l>100</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>           :: <EN-decl-LT><EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt> 
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>              :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>b</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec>,<shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <call-stmt>call <procedure-designator><named-E><N><n>init</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>n</n></N></named-E></arg>,<arg><named-E><N><n>b</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+  <a-stmt><E-1><named-E><N><n>a</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript>:</section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>0.0e0</l></literal-E></E-2></a-stmt>
+
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause> <clause><N>reduction</N>(<op><o>+</o></op>:<V-LT><V><n>a</n></V></V-LT>)</clause></parallel-openmp>
+  <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
+     <a-stmt><E-1><named-E><N><n>a</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript>:</section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>a</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript>:</section-subscript></section-subscript-LT>)</array-R></R-LT></named-E> <op><o>+</o></op> <named-E><N><n>b</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript>:</section-subscript>,<section-subscript><lower-bound><named-E><N><n>j</n></N></named-E></lower-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></op-E></E-2></a-stmt>
+  <end-do-stmt>end do</end-do-stmt>
+
+  <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot; a(1) a(n): &quot;</S></string-E></output-item>, <output-item><named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>n</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>
+
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="program_control/get_wtime.1.f90"><C>! @@name:&#009;get_wtime.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;link</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;pre_omp_3.0</C>
+<subroutine-stmt>subroutine <subroutine-N><N><n>work_to_be_timed</n></N></subroutine-N></subroutine-stmt>
+  <use-stmt>use, <module-nature>intrinsic</module-nature> :: <module-N><N><n>iso_c_binding</n></N></module-N>, only: <rename-LT><rename><use-N><N><n>c_int</n></N></use-N></rename></rename-LT></use-stmt>
+  <interface-stmt>interface</interface-stmt>
+     <subroutine-stmt>subroutine <subroutine-N><N><n>fsleep</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>sec</n></N></arg-N></dummy-arg-LT>) <bind-spec>bind(C, name=<string-E><S>&quot;sleep&quot;</S></string-E>)</bind-spec></subroutine-stmt>
+       <import-stmt>import <import-N-LT><N><n>c_int</n></N></import-N-LT></import-stmt>
+       <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><named-E><N><n>c_int</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>value</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>sec</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+     <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+  <end-interface-stmt>end interface</end-interface-stmt>
+  <call-stmt>call <procedure-designator><named-E><N><n>fsleep</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>2</l></literal-E></arg></arg-spec>)</call-stmt>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+<program-stmt>program <program-N><N><n>do_work</n></N></program-N></program-stmt>
+  <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+  <implicit-none-stmt>implicit none</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>start</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>end</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>start</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_wtime</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <call-stmt>call <procedure-designator><named-E><N><n>work_to_be_timed</n></N></named-E></procedure-designator></call-stmt>    <C>! any parallel or serial codes</C>
+  <a-stmt><E-1><named-E><N><n>end</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_wtime</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+  <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Work took&quot;</S></string-E></output-item>, <output-item><op-E><named-E><N><n>end</n></N></named-E> <op><o>-</o></op> <named-E><N><n>start</n></N></named-E></op-E></output-item>, <output-item><string-E><S>&quot;seconds&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+  <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Precision of the timer is&quot;</S></string-E></output-item>, <output-item><named-E><N><n>omp_get_wtick</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><string-E><S>&quot;(sec)&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="program_control/requires.1.f90"><C>! @@name:&#009;requires.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.0</C>
+<module-stmt>module <module-N><N><n>data</n></N></module-N></module-stmt>
+<omp>!$omp</omp> <requires-openmp>requires <clause><N>unified_shared_memory</N></clause></requires-openmp>
+  <T-stmt>type,<attribute><attribute-N>public</attribute-N></attribute> :: <T-N><N><n>mypoints</n></N></T-N></T-stmt>
+     <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>res</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+     <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>data</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>500</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></component-decl-stmt>
+  <end-T-stmt>end type</end-T-stmt>
+<end-module-stmt>end module</end-module-stmt>
+
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+  <use-stmt>use <module-N><N><n>data</n></N></module-N></use-stmt>
+  <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>mypoints</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>p</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>        :: <EN-decl-LT><EN-decl><EN-N><N><n>q</n></N></EN-N>=<init-E><literal-E><l>0</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <omp>!$omp</omp> <target-openmp>target</target-openmp>    <C>!! no map clauses needed</C>
+     <a-stmt><E-1><named-E><N><n>q</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>q</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>    <C>!! q is firstprivate</C>
+     <call-stmt>call <procedure-designator><named-E><N><n>do_something_with_p</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>p</n></N></named-E></arg>,<arg><named-E><N><n>q</n></N></named-E></arg></arg-spec>)</call-stmt>
+  <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+
+  <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(f5.0,i5)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>p</n></N><R-LT><component-R>%<ct>res</ct></component-R></R-LT></named-E></output-item>, <output-item><named-E><N><n>q</n></N></named-E></output-item></output-item-LT></write-stmt>    <C>!! output 1.   0</C>
+
+<end-program-stmt>end program</end-program-stmt>
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>do_something_with_p</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>p</n></N></arg-N>,<arg-N><N><n>q</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+  <use-stmt>use <module-N><N><n>data</n></N></module-N></use-stmt>
+  <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>mypoints</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>p</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>        :: <EN-decl-LT><EN-decl><EN-N><N><n>q</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+ 
+  <a-stmt><E-1><named-E><N><n>p</n></N><R-LT><component-R>%<ct>res</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>q</n></N></named-E></E-2></a-stmt><smc>;</smc>
+  <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>size</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>p</n></N><R-LT><component-R>%<ct>data</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></upper-bound></do-stmt>
+     <a-stmt><E-1><named-E><N><n>p</n></N><R-LT><component-R>%<ct>data</ct></component-R><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1><a>=</a><E-2><op-E><named-E><N><n>q</n></N></named-E><op><o>*</o></op><named-E><N><n>i</n></N></named-E></op-E></E-2></a-stmt>
+  <end-do-stmt>enddo</end-do-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

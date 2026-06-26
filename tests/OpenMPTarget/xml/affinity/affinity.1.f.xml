@@ -1,0 +1,11 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="affinity/affinity.1.f"><C>! @@name:affinity.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_4.0</C>
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>EXAMPLE</n></N></program-N></program-stmt>
+<omp>!$OMP</omp><m> </m><parallel-openmp>PARALLEL <clause><N>PROC_BIND</N>(<named-E><N><n>SPREAD</n></N></named-E>)</clause> <clause><N>NUM_THREADS</N>(<literal-E><l>4</l></literal-E>)</clause></parallel-openmp>
+<m>      </m><call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m><end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m><end-program-stmt>END PROGRAM <program-N><N><n>EXAMPLE</n></N></program-N></end-program-stmt>
+</file></object>

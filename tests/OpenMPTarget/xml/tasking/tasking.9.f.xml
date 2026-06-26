@@ -1,0 +1,29 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="tasking/tasking.9.f"><C>! @@name:tasking.9</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:rt-error</C>
+<C>! @@version:omp_3.0</C>
+<m>      </m> <module-stmt>module <module-N><N><n>example</n></N></module-N></module-stmt>
+<m>      </m> <contains-stmt>contains</contains-stmt>
+<m>      </m> <subroutine-stmt>subroutine <subroutine-N><N><n>work</n></N></subroutine-N></subroutine-stmt>
+<omp>!$omp</omp><m> </m><task-openmp>task</task-openmp>
+<m>      </m> <C>! Task 1</C>
+<omp>!$omp</omp><m> </m><task-openmp>task</task-openmp>
+<m>      </m> <C>! Task 2</C>
+<omp>!$omp</omp><m> </m><critical-openmp>critical</critical-openmp>
+<m>      </m> <C>! Critical region 1</C>
+<m>      </m> <C>! do work here</C>
+<omp>!$omp</omp><m> </m><end-critical-openmp>end critical</end-critical-openmp>
+<omp>!$omp</omp><m> </m><end-task-openmp>end task</end-task-openmp>
+<omp>!$omp</omp><m> </m><critical-openmp>critical</critical-openmp>
+<m>      </m> <C>! Critical region 2</C>
+<m>      </m> <C>! Capture data for the following task</C>
+<omp>!$omp</omp><m> </m><task-openmp>task</task-openmp>
+<m>      </m> <C>!Task 3</C>
+<m>      </m> <C>! do work here</C>
+<omp>!$omp</omp><m> </m><end-task-openmp>end task</end-task-openmp>
+<omp>!$omp</omp><m> </m><end-critical-openmp>end critical</end-critical-openmp>
+<omp>!$omp</omp><m> </m><end-task-openmp>end task</end-task-openmp>
+<m>      </m><end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+<m>      </m><end-module-stmt>end module</end-module-stmt>
+</file></object>

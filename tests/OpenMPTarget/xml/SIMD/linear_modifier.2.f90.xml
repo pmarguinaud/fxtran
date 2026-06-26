@@ -1,0 +1,46 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="SIMD/linear_modifier.2.f90"><C>! @@name:&#009;linear_modifier.2</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.2</C>
+<module-stmt>module <module-N><N><n>m</n></N></module-N></module-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>NN</n></N></EN-N> = <init-E><literal-E><l>1023</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>NN</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+
+ <contains-stmt>contains</contains-stmt>
+   <subroutine-stmt>subroutine <subroutine-N><N><n>add_one2</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>p</n></N></arg-N>, <arg-N><N><n>i</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <omp>!$omp</omp> <declare-openmp>declare <clause><N>simd</N>(<named-E><N><n>add_one2</n></N></named-E>)</clause> <clause><N>linear</N>(<V-LT><V><n>p</n></V></V-LT>: <modifier-LT><modifier><N>ref</N></modifier></modifier-LT>)</clause> <clause><N>linear</N>(<V-LT><V><n>i</n></V></V-LT>: <modifier-LT><modifier><N>uval</N></modifier></modifier-LT>)</clause></declare-openmp>
+   
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>p</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>in</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <a-stmt><E-1><named-E><N><n>p</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>p</n></N></named-E> <op><o>+</o></op> <named-E><N><n>i</n></N></named-E></op-E></E-2></a-stmt>
+   <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+<end-module-stmt>end module</end-module-stmt>
+
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+   <use-stmt>use <module-N><N><n>m</n></N></module-N></use-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>p</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>NN</n></N></named-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>i</n></N></named-E></E-2></a-stmt>
+   <end-do-stmt>end do</end-do-stmt>
+
+   <a-stmt><E-1><named-E><N><n>p</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>1</l></literal-E></E-2></a-stmt>
+   <omp>!$omp</omp> <simd-openmp>simd <clause><N>linear</N>(<V-LT><V><n>p</n></V></V-LT>)</clause></simd-openmp>
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>NN</n></N></named-E></upper-bound></do-stmt>
+      <call-stmt>call <procedure-designator><named-E><N><n>add_one2</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>p</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg>, <arg><named-E><N><n>i</n></N></named-E></arg></arg-spec>)</call-stmt>
+      <a-stmt><E-1><named-E><N><n>p</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>p</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <end-do-stmt>end do</end-do-stmt>
+
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>NN</n></N></named-E></upper-bound></do-stmt>
+      <if-then-stmt>if (<condition-E><op-E><op-E><named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>/=</o></op> <named-E><N><n>i</n></N></named-E></op-E><op><o>*</o></op><literal-E><l>2</l></literal-E></op-E></condition-E>) then</if-then-stmt>
+         <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>&quot;failed&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+         <stop-stmt>stop</stop-stmt>
+      <end-if-stmt>endif</end-if-stmt>
+   <end-do-stmt>end do</end-do-stmt>
+   <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>&quot;passed&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

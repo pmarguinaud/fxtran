@@ -1,0 +1,34 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="program_control/metadirective.2.f90"><C>! @@name:&#009;metadirective.2</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.2</C>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>                    <C>!!Driver</C>
+  <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+  <implicit-none-stmt>implicit none</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N>=<init-E><literal-E><l>1000</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <external-stmt>external           :: <EN-decl-LT><EN-decl><EN-N><N><n>work_on_chunk</n></N></EN-N></EN-decl></EN-decl-LT></external-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>idev</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <do-stmt>do <do-V><named-E><N><n>idev</n></N></named-E></do-V>=<lower-bound><literal-E><l>0</l></literal-E></lower-bound>,<upper-bound><op-E><named-E><N><n>omp_get_num_devices</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></upper-bound></do-stmt>
+
+    <omp>!$omp</omp> <target-openmp>target <clause><N>device</N>(<named-E><N><n>idev</n></N></named-E>)</clause></target-openmp>
+    <omp>!$omp</omp> <broken-openmp>begin metadirective <cnt>&amp;</cnt>
+    <omp>!$omp</omp><cnt>&amp;</cnt>  when( implementation={vendor(nvidia)},        <cnt>&amp;</cnt>
+    <omp>!$omp</omp><cnt>&amp;</cnt>           device={arch(<S>&quot;kepler&quot;</S>)}:             <cnt>&amp;</cnt>
+    <omp>!$omp</omp><cnt>&amp;</cnt>        teams num_teams(512) thread_limit(32) ) <cnt>&amp;</cnt>
+    <omp>!$omp</omp><cnt>&amp;</cnt>  when( implementation={vendor(amd)},           <cnt>&amp;</cnt>
+    <omp>!$omp</omp><cnt>&amp;</cnt>           device={arch(<S>&quot;fiji&quot;</S>  )}:             <cnt>&amp;</cnt>
+    <omp>!$omp</omp><cnt>&amp;</cnt>        teams num_teams(512) thread_limit(64) ) <cnt>&amp;</cnt>
+    <omp>!$omp</omp><cnt>&amp;</cnt>  otherwise( teams )</broken-openmp>
+    <omp>!$omp</omp> <distribute-openmp>distribute <clause><N>parallel</N></clause> <clause><N>do</N></clause></distribute-openmp>
+    <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>  
+       <call-stmt>call <procedure-designator><named-E><N><n>work_on_chunk</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>idev</n></N></named-E></arg>,<arg><named-E><N><n>i</n></N></named-E></arg></arg-spec>)</call-stmt>
+    <end-do-stmt>end do</end-do-stmt>
+    <omp>!$omp</omp> <broken-openmp>end metadirective</broken-openmp>
+    <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+
+  <end-do-stmt>end do</end-do-stmt>
+
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

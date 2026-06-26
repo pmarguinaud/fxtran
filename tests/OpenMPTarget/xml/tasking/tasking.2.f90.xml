@@ -1,0 +1,24 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="tasking/tasking.2.f90"><C>! @@name:&#009;tasking.2</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_3.0</C>
+      <subroutine-stmt><prefix>RECURSIVE</prefix> SUBROUTINE <subroutine-N><N><n>traverse</n></N></subroutine-N> ( <dummy-arg-LT><arg-N><N><n>P</n></N></arg-N></dummy-arg-LT> )</subroutine-stmt>
+         <T-stmt>TYPE <T-N><N><n>Node</n></N></T-N></T-stmt>
+             <component-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>Node</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>left</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>right</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+         <end-T-stmt>END TYPE <T-N><N><n>Node</n></N></T-N></end-T-stmt>
+         <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>Node</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>P</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+         <if-then-stmt>IF (<condition-E><named-E><N><n>associated</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>P</n></N><R-LT><component-R>%<ct>left</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) THEN</if-then-stmt>
+             <omp>!$OMP</omp> <task-openmp>TASK</task-openmp>    <C>! P is firstprivate by default</C>
+                 <call-stmt>CALL <procedure-designator><named-E><N><n>traverse</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N><R-LT><component-R>%<ct>left</ct></component-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+             <omp>!$OMP</omp> <end-task-openmp>END TASK</end-task-openmp>
+         <end-if-stmt>ENDIF</end-if-stmt>
+         <if-then-stmt>IF (<condition-E><named-E><N><n>associated</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>P</n></N><R-LT><component-R>%<ct>right</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) THEN</if-then-stmt>
+             <omp>!$OMP</omp> <task-openmp>TASK</task-openmp>    <C>! P is firstprivate by default</C>
+                 <call-stmt>CALL <procedure-designator><named-E><N><n>traverse</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N><R-LT><component-R>%<ct>right</ct></component-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+             <omp>!$OMP</omp> <end-task-openmp>END TASK</end-task-openmp>
+         <end-if-stmt>ENDIF</end-if-stmt>
+         <omp>!$OMP</omp> <taskwait-openmp>TASKWAIT</taskwait-openmp>
+         <call-stmt>CALL <procedure-designator><named-E><N><n>process</n></N></named-E></procedure-designator> ( <arg-spec><arg><named-E><N><n>P</n></N></named-E></arg></arg-spec> )</call-stmt>
+      <end-subroutine-stmt>END SUBROUTINE</end-subroutine-stmt>
+</file></object>

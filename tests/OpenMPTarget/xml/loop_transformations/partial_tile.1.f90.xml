@@ -1,0 +1,118 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="loop_transformations/partial_tile.1.f90"><C>! @@name:&#009;partial_tile.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.1</C>
+<subroutine-stmt>subroutine <subroutine-N><N><n>func1</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <omp>!$omp</omp> <tile-openmp>tile <clause><N>sizes</N>(<E-LT><literal-E><l>4</l></literal-E>,<literal-E><l>16</l></literal-E>)</E-LT></clause></tile-openmp>
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j</n></N></named-E></element>,<element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1>  <a>=</a> <E-2><op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j</n></N></named-E></element>,<element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>func2</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>i2</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j2</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <do-stmt>do <do-V><named-E><N><n>i1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound>,  <step><literal-E><l>4</l></literal-E></step></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound>, <step><literal-E><l>16</l></literal-E></step></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>i2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>i1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>i1</n></N></named-E> <op><o>+</o></op> <literal-E><l>3</l></literal-E></op-E></upper-bound></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>j1</n></N></named-E></lower-bound>, <upper-bound><named-E><N><n>min</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>j1</n></N></named-E><op><o>+</o></op><literal-E><l>15</l></literal-E></op-E></element>,<element><literal-E><l>100</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>func3</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>i2</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <C>!! complete tiles</C>
+   <do-stmt>do <do-V><named-E><N><n>i1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound>,  <step><literal-E><l>4</l></literal-E></step></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,  <upper-bound><literal-E><l>96</l></literal-E></upper-bound>, <step><literal-E><l>16</l></literal-E></step></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>i2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>i1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>i1</n></N></named-E> <op><o>+</o></op> <literal-E><l>3</l></literal-E></op-E></upper-bound></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>j1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>j1</n></N></named-E> <op><o>+</o></op><literal-E><l>15</l></literal-E></op-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt>
+
+   <C>!! partial tiles / remainder</C>
+   <do-stmt>do <do-V><named-E><N><n>i1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound>, <step><literal-E><l>4</l></literal-E></step></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>i2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>i1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>i1</n></N></named-E> <op><o>+</o></op><literal-E><l>3</l></literal-E></op-E></upper-bound></do-stmt>
+   <do-stmt>do  <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><literal-E><l>97</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>func4</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>i2</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <do-stmt>do <do-V><named-E><N><n>i1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound>,  <step><literal-E><l>4</l></literal-E></step></do-stmt>
+
+      <C>!! complete tiles</C>
+      <do-stmt>do <do-V><named-E><N><n>j1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,  <upper-bound><literal-E><l>96</l></literal-E></upper-bound>, <step><literal-E><l>16</l></literal-E></step></do-stmt>
+      <do-stmt>do <do-V><named-E><N><n>i2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>i1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>i1</n></N></named-E> <op><o>+</o></op> <literal-E><l>3</l></literal-E></op-E></upper-bound></do-stmt>
+      <do-stmt>do <do-V><named-E><N><n>j2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>j1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>j1</n></N></named-E> <op><o>+</o></op><literal-E><l>15</l></literal-E></op-E></upper-bound></do-stmt>
+         <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+      <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt>
+
+      <C>!! partial tiles     </C>
+      <do-stmt>do <do-V><named-E><N><n>i2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>i1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>i1</n></N></named-E> <op><o>+</o></op><literal-E><l>3</l></literal-E></op-E></upper-bound></do-stmt>
+      <do-stmt>do  <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><literal-E><l>97</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+         <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+      <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt>
+
+   <end-do-stmt>end do</end-do-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>func5</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>i2</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j2</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <do-stmt>do <do-V><named-E><N><n>i1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound>,  <step><literal-E><l>4</l></literal-E></step></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound>, <step><literal-E><l>16</l></literal-E></step></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>i2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>i1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>i1</n></N></named-E> <op><o>+</o></op> <literal-E><l>3</l></literal-E></op-E></upper-bound></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>j1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>j1</n></N></named-E> <op><o>+</o></op><literal-E><l>15</l></literal-E></op-E></upper-bound></do-stmt>
+      <if-stmt>if (<condition-E><op-E><named-E><N><n>j2</n></N></named-E> <op><o>&lt;</o></op> <literal-E><l>101</l></literal-E></op-E></condition-E>) <action-stmt><a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt></action-stmt></if-stmt>
+   <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>func6</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec>,<shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>i2</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j1</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <C>!! complete tiles</C>
+   <do-stmt>do <do-V><named-E><N><n>i1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound>,  <step><literal-E><l>4</l></literal-E></step></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j1</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,  <upper-bound><literal-E><l>96</l></literal-E></upper-bound>, <step><literal-E><l>16</l></literal-E></step></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>i2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>i1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>i1</n></N></named-E> <op><o>+</o></op> <literal-E><l>3</l></literal-E></op-E></upper-bound></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j2</n></N></named-E></do-V> = <lower-bound><named-E><N><n>j1</n></N></named-E></lower-bound>,  <upper-bound><op-E><named-E><N><n>j1</n></N></named-E> <op><o>+</o></op><literal-E><l>15</l></literal-E></op-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j2</n></N></named-E></element>,<element><named-E><N><n>i2</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt>
+
+   <C>!! partial tiles / remainder (not tiled)</C>
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> =  <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+   <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><literal-E><l>97</l></literal-E></lower-bound>, <upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j</n></N></named-E></element>,<element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>j</n></N></named-E></element>,<element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <end-do-stmt>end do</end-do-stmt><smc>;</smc> <end-do-stmt>end do</end-do-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

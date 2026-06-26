@@ -1,0 +1,16 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/copyprivate.1.f"><C>! @@name:copyprivate.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INIT</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N>,<arg-N><N><n>B</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <common-stmt>COMMON /<common-block-N><n>XY</n></common-block-N>/ <common-block-obj-LT><common-block-obj><common-block-obj-N><N><n>X</n></N></common-block-obj-N></common-block-obj>,<common-block-obj><common-block-obj-N><N><n>Y</n></N></common-block-obj-N></common-block-obj></common-block-obj-LT></common-stmt>
+<omp>!$OMP</omp><m> </m>  <threadprivate-openmp>THREADPRIVATE (<V-LT><common-block>/<common-block-N><n>XY</n></common-block-N>/</common-block></V-LT>)</threadprivate-openmp>
+
+<omp>!$OMP</omp><m> </m>  <single-openmp>SINGLE</single-openmp>
+<m>      </m>    <read-stmt>READ (<io-control-spec><io-control><literal-E><l>11</l></literal-E></io-control></io-control-spec>) <input-item-LT><input-item><named-E><N><n>A</n></N></named-E></input-item>,<input-item><named-E><N><n>B</n></N></named-E></input-item>,<input-item><named-E><N><n>X</n></N></named-E></input-item>,<input-item><named-E><N><n>Y</n></N></named-E></input-item></input-item-LT></read-stmt>
+<omp>!$OMP</omp><m> </m>  <end-single-openmp>END SINGLE <clause><N>COPYPRIVATE</N> (<V-LT><V-N><n>A</n></V-N>,<V-N><n>B</n></V-N>,<common-block>/<common-block-N><n>XY</n></common-block-N>/</common-block></V-LT>)</clause></end-single-openmp>
+
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>INIT</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

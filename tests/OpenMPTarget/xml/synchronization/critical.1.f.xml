@@ -1,0 +1,26 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/critical.1.f"><C>! @@name:critical.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>CRITICAL_EXAMPLE</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>Y</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>IX_NEXT</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>IY_NEXT</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m><parallel-openmp>PARALLEL <clause><N>SHARED</N>(<V-LT><V-N><n>X</n></V-N>, <V-N><n>Y</n></V-N></V-LT>)</clause> <clause><N>PRIVATE</N>(<V-LT><V-N><n>IX_NEXT</n></V-N>, <V-N><n>IY_NEXT</n></V-N></V-LT>)</clause></parallel-openmp>
+
+<omp>!$OMP</omp><m> </m><critical-openmp>CRITICAL(<N>XAXIS</N>)</critical-openmp>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>DEQUEUE</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>IX_NEXT</n></N></named-E></arg>, <arg><named-E><N><n>X</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m><end-critical-openmp>END CRITICAL(<N>XAXIS</N>)</end-critical-openmp>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>IX_NEXT</n></N></named-E></arg>, <arg><named-E><N><n>X</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+<omp>!$OMP</omp><m> </m><critical-openmp>CRITICAL(<N>YAXIS</N>)</critical-openmp>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>DEQUEUE</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>IY_NEXT</n></N></named-E></arg>,<arg><named-E><N><n>Y</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m><end-critical-openmp>END CRITICAL(<N>YAXIS</N>)</end-critical-openmp>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>IY_NEXT</n></N></named-E></arg>, <arg><named-E><N><n>Y</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+<omp>!$OMP</omp><m> </m><end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>CRITICAL_EXAMPLE</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

@@ -1,0 +1,78 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="affinity/affinity_display.3.f90"><C>! @@name:&#009;affinity_display.3</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.0</C>
+<program-stmt>program <program-N><N><n>affinity_display</n></N></program-N></program-stmt>
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>FORMAT_STORE</n></N></EN-N>=<init-E><literal-E><l>80</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>BUFFER_STORE</n></N></EN-N>=<init-E><literal-E><l>80</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>thrd_num</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>nchars</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>max_req_store</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>character</T-N><char-selector>(<char-spec><named-E><N><n>FORMAT_STORE</n></N></named-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_>     :: <EN-decl-LT><EN-decl><EN-N><N><n>default_format</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>character</T-N><char-selector>(<char-spec>*</char-spec>)</char-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute>     :: <EN-decl-LT><EN-decl><EN-N><N><n>my_format</n></N></EN-N> = <cnt>&amp;</cnt>
+                                  <init-E><string-E><S>&quot;host=%20H thrd_num=%0.4n binds_to=%A&quot;</S></string-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>character</T-N><char-selector>(<char-spec>:</char-spec>)</char-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>allocatable</attribute-N></attribute>   :: <EN-decl-LT><EN-decl><EN-N><N><n>buffer</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>character</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>len</k></arg-N>=<literal-E><l>0</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>null</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+
+<C>!  CODE SEGMENT 1         AFFINITY FORMAT</C>
+
+<C>!                         Get and Display Default Affinity Format</C>
+
+   <a-stmt><E-1><named-E><N><n>nchars</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_affinity_format</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>default_format</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+   <print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;Default Affinity Format: &quot;</S></string-E></output-item>, <output-item><named-E><N><n>trim</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>default_format</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>
+
+   <if-then-stmt>if( <condition-E><op-E><named-E><N><n>nchars</n></N></named-E> <op><o>&gt;</o></op> <named-E><N><n>FORMAT_STORE</n></N></named-E></op-E></condition-E>) then</if-then-stmt>
+      <print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;Caution: Reported Format is truncated.  Increase&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+      <print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;         FORMAT_STORE to &quot;</S></string-E></output-item>, <output-item><named-E><N><n>nchars</n></N></named-E></output-item></output-item-LT></print-stmt>
+   <end-if-stmt>endif</end-if-stmt>
+
+<C>!                         Set Affinity Format</C>
+
+   <call-stmt>call <procedure-designator><named-E><N><n>omp_set_affinity_format</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>my_format</n></N></named-E></arg></arg-spec>)</call-stmt>
+   <print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;Affinity Format set to: &quot;</S></string-E></output-item>, <output-item><named-E><N><n>my_format</n></N></named-E></output-item></output-item-LT></print-stmt>
+
+
+<C>!  CODE SEGMENT 2         CAPTURE AFFINITY </C>
+
+<C>!                         Set up buffer for affinity of n threads</C>
+
+   <a-stmt><E-1><named-E><N><n>n</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_num_procs</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+   <allocate-stmt>allocate( <intrinsic-T-spec><T-N>character</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>len</k></arg-N>=<named-E><N><n>BUFFER_STORE</n></N></named-E></char-spec>)</char-selector></intrinsic-T-spec>::<arg-spec><arg><named-E><N><n>buffer</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><literal-E><l>0</l></literal-E></lower-bound>:<upper-bound><op-E><named-E><N><n>n</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></arg></arg-spec> )</allocate-stmt>
+
+<C>!                         Capture Affinity using Affinity Format set above.</C>
+<C>!                         Use max reduction to check size of buffer areas</C>
+   <a-stmt><E-1><named-E><N><n>max_req_store</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
+   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>private</N>(<V-LT><V-N><n>thrd_num</n></V-N>,<V-N><n>nchars</n></V-N></V-LT>)</clause> <clause><N>reduction</N>(<op><n>max</n></op>:<V-LT><V><n>max_req_store</n></V></V-LT>)</clause></parallel-openmp>
+
+      <if-stmt>if(<condition-E><op-E><named-E><N><n>omp_get_num_threads</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E><op><o>&gt;</o></op><named-E><N><n>n</n></N></named-E></op-E></condition-E>) <action-stmt><stop-stmt>stop <stop-code><S>&quot;ERROR: increase buffer lines&quot;</S></stop-code></stop-stmt></action-stmt></if-stmt>
+
+      <a-stmt><E-1><named-E><N><n>thrd_num</n></N></named-E></E-1><a>=</a><E-2><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+      <a-stmt><E-1><named-E><N><n>nchars</n></N></named-E></E-1><a>=</a><E-2><named-E><N><n>omp_capture_affinity</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>buffer</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>thrd_num</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element>,<element><named-E><N><n>null</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+      <if-stmt>if(<condition-E><op-E><named-E><N><n>nchars</n></N></named-E><op><o>&gt;</o></op><named-E><N><n>max_req_store</n></N></named-E></op-E></condition-E>) <action-stmt><a-stmt><E-1><named-E><N><n>max_req_store</n></N></named-E></E-1><a>=</a><E-2><named-E><N><n>nchars</n></N></named-E></E-2></a-stmt></action-stmt></if-stmt>
+      <C>!  ...</C>
+
+   <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>0</l></literal-E></lower-bound>, <upper-bound><op-E><named-E><N><n>n</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></upper-bound></do-stmt>
+      <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;thrd_num= &quot;</S></string-E></output-item>,<output-item><named-E><N><n>i</n></N></named-E></output-item>,<output-item><string-E><S>&quot;   affinity:&quot;</S></string-E></output-item>, <output-item><named-E><N><n>trim</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>buffer</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>
+   <end-do-stmt>end do</end-do-stmt>
+         <C>!  For 4 threads with OMP_PLACES='{0,1},{2,3},{4,5},{6,7}'</C>
+         <C>!  Format:   host=%20H thrd_num=%0.4n binds_to=%A</C>
+
+         <C>!  affinity: host=hpc.cn567            thrd_num=0000 binds_to=0,1</C>
+         <C>!  affinity: host=hpc.cn567            thrd_num=0001 binds_to=2,3</C>
+         <C>!  affinity: host=hpc.cn567            thrd_num=0002 binds_to=4,5</C>
+         <C>!  affinity: host=hpc.cn567            thrd_num=0003 binds_to=6,7</C>
+
+   <if-then-stmt>if(<condition-E><op-E><named-E><N><n>max_req_store</n></N></named-E> <op><o>&gt;</o></op> <named-E><N><n>BUFFER_STORE</n></N></named-E></op-E></condition-E>) then</if-then-stmt>
+      <print-stmt>print<format>*</format>,  <output-item-LT><output-item><string-E><S>&quot;Caution: Affinity string truncated.  Increase&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+      <print-stmt>print<format>*</format>,  <output-item-LT><output-item><string-E><S>&quot;         BUFFER_STORE to &quot;</S></string-E></output-item>,<output-item><named-E><N><n>max_req_store</n></N></named-E></output-item></output-item-LT></print-stmt>
+   <end-if-stmt>endif</end-if-stmt>
+
+   <deallocate-stmt>deallocate(<arg-spec><arg><named-E><N><n>buffer</n></N></named-E></arg></arg-spec>)</deallocate-stmt>
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

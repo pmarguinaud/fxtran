@@ -1,0 +1,26 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/atomic_restrict.3.f"><C>! @@name:atomic_restrict.3</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:unspecified</C>
+<C>! @@version:omp_3.1</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>ATOMIC_WRONG3</n></N></subroutine-N></subroutine-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_>:: <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>:: <EN-decl-LT><EN-decl><EN-N><N><n>R</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <equivalence-stmt>EQUIVALENCE<equivalence-set-LT><equivalence-set>(<equivalence-obj-LT><equivalence-obj><named-E><N><n>I</n></N></named-E></equivalence-obj>,<equivalence-obj><named-E><N><n>R</n></N></named-E></equivalence-obj></equivalence-obj-LT>)</equivalence-set></equivalence-set-LT></equivalence-stmt>
+
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL</parallel-openmp>
+<omp>!$OMP</omp><m> </m>    <atomic-openmp>ATOMIC <clause><N>UPDATE</N></clause></atomic-openmp>
+<m>      </m>      <a-stmt><E-1><named-E><N><n>I</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>I</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+<C>! incorrect because I and R reference the same location</C>
+<C>! but have different types</C>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL</parallel-openmp>
+<omp>!$OMP</omp><m> </m>    <atomic-openmp>ATOMIC <clause><N>UPDATE</N></clause></atomic-openmp>
+<m>      </m>      <a-stmt><E-1><named-E><N><n>R</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>R</n></N></named-E> <op><o>+</o></op> <literal-E><l>1.0</l></literal-E></op-E></E-2></a-stmt>
+<C>! incorrect because I and R reference the same location</C>
+<C>! but have different types</C>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>ATOMIC_WRONG3</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

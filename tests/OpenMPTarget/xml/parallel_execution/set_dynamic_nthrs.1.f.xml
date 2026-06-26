@@ -1,0 +1,36 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/set_dynamic_nthrs.1.f"><C>! @@name:set_dynamic_nthrs.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>DO_BY_16</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>IAM</n></N></arg-N>, <arg-N><N><n>IPOINTS</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>IAM</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>IPOINTS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>DO_BY_16</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>DYNTHREADS</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>X</n></N></arg-N>, <arg-N><N><n>NPOINTS</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+
+<m>      </m>  <include-stmt>INCLUDE <filename><S>&quot;omp_lib.h&quot;</S></filename></include-stmt>      <C>! or USE OMP_LIB</C>
+
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>NPOINTS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>NPOINTS</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>IAM</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>IPOINTS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>OMP_SET_DYNAMIC</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E>.FALSE.</literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>OMP_SET_NUM_THREADS</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>16</l></literal-E></arg></arg-spec>)</call-stmt>
+
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>SHARED</N>(<V-LT><V-N><n>X</n></V-N>,<V-N><n>NPOINTS</n></V-N></V-LT>)</clause> <clause><N>PRIVATE</N>(<V-LT><V-N><n>IAM</n></V-N>, <V-N><n>IPOINTS</n></V-N></V-LT>)</clause></parallel-openmp>
+
+<m>      </m>    <if-then-stmt>IF (<condition-E><op-E><named-E><N><n>OMP_GET_NUM_THREADS</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>.NE.</o></op> <literal-E><l>16</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+<m>      </m>      <stop-stmt>STOP</stop-stmt>
+<m>      </m>    <end-if-stmt>ENDIF</end-if-stmt>
+
+<m>      </m>    <a-stmt><E-1><named-E><N><n>IAM</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>OMP_GET_THREAD_NUM</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m>    <a-stmt><E-1><named-E><N><n>IPOINTS</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>NPOINTS</n></N></named-E><op><o>/</o></op><literal-E><l>16</l></literal-E></op-E></E-2></a-stmt>
+<m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>DO_BY_16</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>X</n></N></named-E></arg>,<arg><named-E><N><n>IAM</n></N></named-E></arg>,<arg><named-E><N><n>IPOINTS</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>DYNTHREADS</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

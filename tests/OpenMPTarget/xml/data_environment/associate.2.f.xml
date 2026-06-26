@@ -1,0 +1,16 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/associate.2.f"><C>! @@name:associate.2</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:link</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_4.0</C>
+<m>      </m><program-stmt>program <program-N><N><n>example</n></N></program-N></program-stmt>
+<m>      </m><use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>  <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<omp>!$omp</omp><m> </m><parallel-openmp>parallel <clause><N>private</N>(<V-LT><V-N><n>i</n></V-N></V-LT>)</clause></parallel-openmp>
+<m>      </m><a-stmt><E-1><named-E><N><n>i</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m><associate-stmt>associate(<associate-LT><associate><associate-N><n>thread_id</n></associate-N> =&gt; <selector><named-E><N><n>i</n></N></named-E></selector></associate></associate-LT>)</associate-stmt>
+<m>      </m>  <print-stmt>print <format>*</format>, <output-item-LT><output-item><named-E><N><n>thread_id</n></N></named-E></output-item></output-item-LT></print-stmt>       <C>! print private i value</C>
+<m>      </m><end-associate-stmt>end associate</end-associate-stmt>
+<omp>!$omp</omp><m> </m><end-parallel-openmp>end parallel</end-parallel-openmp>
+<m>      </m><end-program-stmt>end program</end-program-stmt>
+</file></object>

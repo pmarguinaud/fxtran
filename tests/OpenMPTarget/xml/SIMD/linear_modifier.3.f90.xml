@@ -1,0 +1,48 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="SIMD/linear_modifier.3.f90"><C>! @@name:&#009;linear_modifier.3</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.2</C>
+<module-stmt>module <module-N><N><n>func_mod</n></N></module-N></module-stmt>
+<contains-stmt>contains</contains-stmt>
+   <function-stmt><intrinsic-T-spec><T-N>real</T-N><K-selector>(<K-spec><literal-E><l>8</l></literal-E></K-spec>)</K-selector></intrinsic-T-spec> function <function-N><N><n>func</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>x</n></N></arg-N>, <arg-N><N><n>y</n></N></arg-N>, <arg-N><N><n>i</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+<omp>!$omp</omp> <declare-openmp>declare <clause><N>simd</N>(<named-E><N><n>func</n></N></named-E>)</clause> <clause><N>simdlen</N>(<literal-E><l>4</l></literal-E>)</clause> <clause><N>uniform</N>(<V-LT><V-N><n>x</n></V-N>, <V-N><n>y</n></V-N></V-LT>)</clause> <clause><N>linear</N>(<V-LT><V><n>i</n></V></V-LT>:<modifier-LT><modifier><N>val</N></modifier>,<modifier><N>step</N>(<literal-E><l>1</l></literal-E>)</modifier></modifier-LT>)</clause></declare-openmp>
+      
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N><K-selector>(<K-spec><literal-E><l>8</l></literal-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>in</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>x</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>y</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>in</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+      <a-stmt><E-1><named-E><N><n>func</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <named-E><N><n>y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+
+   <end-function-stmt>end function <function-N><N><n>func</n></N></function-N></end-function-stmt>
+<end-module-stmt>end module <module-N><N><n>func_mod</n></N></module-N></end-module-stmt>
+
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+   <use-stmt>use <module-N><N><n>func_mod</n></N></module-N></use-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N> = <init-E><literal-E><l>128</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N><K-selector>(<K-spec><literal-E><l>8</l></literal-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>x</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>y</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>z1</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>z2</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>k</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>real</n></N><R-LT><parens-R>(<arg-spec><arg><named-E><N><n>i</n></N></named-E></arg>, <arg><arg-N n="KIND"><k>kind</k></arg-N>=<literal-E><l>8</l></literal-E></arg></arg-spec>)</parens-R></R-LT></named-E></E-2></a-stmt>
+      <a-stmt><E-1><named-E><N><n>y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>real</n></N><R-LT><parens-R>(<arg-spec><arg><op-E><named-E><N><n>i</n></N></named-E><op><o>*</o></op><literal-E><l>2</l></literal-E></op-E></arg>, <arg><arg-N n="KIND"><k>kind</k></arg-N>=<literal-E><l>8</l></literal-E></arg></arg-spec>)</parens-R></R-LT></named-E></E-2></a-stmt>
+   <end-do-stmt>enddo</end-do-stmt>
+
+   <a-stmt><E-1><named-E><N><n>k</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>1</l></literal-E></E-2></a-stmt>
+<omp>!$omp</omp> <simd-openmp>simd <clause><N>linear</N>(<V-LT><V><n>k</n></V></V-LT>)</clause></simd-openmp>
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>z1</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>func</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>x</n></N></named-E></element>, <element><named-E><N><n>y</n></N></named-E></element>, <element><named-E><N><n>k</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+      <a-stmt><E-1><named-E><N><n>k</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>k</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <end-do-stmt>enddo</end-do-stmt>
+ 
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>z2</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>real</n></N><R-LT><parens-R>(<arg-spec><arg><op-E><named-E><N><n>i</n></N></named-E><op><o>+</o></op><op-E><named-E><N><n>i</n></N></named-E><op><o>*</o></op><literal-E><l>2</l></literal-E></op-E></op-E></arg>, <arg><arg-N n="KIND"><k>kind</k></arg-N>=<literal-E><l>8</l></literal-E></arg></arg-spec>)</parens-R></R-LT></named-E></E-2></a-stmt>
+      <if-then-stmt>if (<condition-E><op-E><named-E><N><n>z1</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>/=</o></op> <named-E><N><n>z2</n></N></named-E></op-E></condition-E>) then</if-then-stmt>
+         <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>'failed'</S></string-E></output-item></output-item-LT></print-stmt>
+         <stop-stmt>stop</stop-stmt>
+      <end-if-stmt>endif</end-if-stmt>
+   <end-do-stmt>enddo</end-do-stmt>
+   <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>'passed'</S></string-E></output-item></output-item-LT></print-stmt>
+<end-program-stmt>end program <program-N><N><n>main</n></N></program-N></end-program-stmt>
+</file></object>

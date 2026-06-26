@@ -1,0 +1,30 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/ordered.1.f"><C>! @@name:ordered.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:run</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>K</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>k</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m><ordered-openmp>ORDERED</ordered-openmp>
+<m>      </m>  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>K</n></N></named-E></output-item></output-item-LT></write-stmt>
+<omp>!$OMP</omp><m> </m><end-ordered-openmp>END ORDERED</end-ordered-openmp>
+
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SUB</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>LB</n></N></arg-N>, <arg-N><N><n>UB</n></N></arg-N>, <arg-N><N><n>STRIDE</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>LB</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>UB</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>STRIDE</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m><parallel-openmp>PARALLEL <clause><N>DO</N></clause> <clause><N>ORDERED</N></clause> <clause><N>SCHEDULE</N>(<T>DYNAMIC</T>)</clause></parallel-openmp>
+<m>      </m>  <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V>=<lower-bound><named-E><N><n>LB</n></N></named-E></lower-bound>,<upper-bound><named-E><N><n>UB</n></N></named-E></upper-bound>,<step><named-E><N><n>STRIDE</n></N></named-E></step></do-stmt>
+<m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>I</n></N></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m>  <end-do-stmt>END DO</end-do-stmt>
+<omp>!$OMP</omp><m> </m><end-parallel-openmp>END PARALLEL <clause><N>DO</N></clause></end-parallel-openmp>
+
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SUB</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>ORDERED_EXAMPLE</n></N></program-N></program-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>SUB</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>1</l></literal-E></arg>,<arg><literal-E><l>100</l></literal-E></arg>,<arg><literal-E><l>5</l></literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m><end-program-stmt>END PROGRAM <program-N><N><n>ORDERED_EXAMPLE</n></N></program-N></end-program-stmt>
+</file></object>

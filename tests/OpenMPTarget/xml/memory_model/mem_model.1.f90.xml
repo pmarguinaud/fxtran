@@ -1,0 +1,36 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="memory_model/mem_model.1.f90"><C>! @@name:&#009;mem_model.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_3.1</C>
+<program-stmt>PROGRAM <program-N><N><n>MEMMODEL</n></N></program-N></program-stmt>
+  <include-stmt>INCLUDE <filename><S>&quot;omp_lib.h&quot;</S></filename></include-stmt>      <C>! or USE OMP_LIB</C>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>XVAL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>2</l></literal-E></E-2></a-stmt>
+<omp>!$OMP</omp> <parallel-openmp>PARALLEL <clause><N>NUM_THREADS</N>(<literal-E><l>2</l></literal-E>)</clause> <clause><N>SHARED</N>(<V-LT><V-N><n>X</n></V-N></V-LT>)</clause></parallel-openmp>
+
+    <if-then-stmt>IF (<condition-E><op-E><named-E><N><n>OMP_GET_THREAD_NUM</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>.EQ.</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+    <omp>!$OMP</omp> <atomic-openmp>ATOMIC <clause><N>WRITE</N></clause></atomic-openmp>
+       <a-stmt><E-1><named-E><N><n>X</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>5</l></literal-E></E-2></a-stmt>
+    <else-stmt>ELSE</else-stmt>
+    <omp>!$OMP</omp> <atomic-openmp>ATOMIC <clause><N>READ</N></clause></atomic-openmp>
+      <a-stmt><E-1><named-E><N><n>XVAL</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>X</n></N></named-E></E-2></a-stmt>
+    <C>! PRINT 1: XVAL can be 2 or 5</C>
+      <print-stmt>PRINT <format>*</format>,<output-item-LT><output-item><string-E><S>&quot;1: THREAD# &quot;</S></string-E></output-item>, <output-item><named-E><N><n>OMP_GET_THREAD_NUM</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><string-E><S>&quot;X = &quot;</S></string-E></output-item>, <output-item><named-E><N><n>XVAL</n></N></named-E></output-item></output-item-LT></print-stmt>
+    <end-if-stmt>ENDIF</end-if-stmt>
+
+ <omp>!$OMP</omp> <barrier-openmp>BARRIER</barrier-openmp>
+
+    <if-then-stmt>IF (<condition-E><op-E><named-E><N><n>OMP_GET_THREAD_NUM</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>.EQ.</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+    <C>! PRINT 2</C>
+      <print-stmt>PRINT <format>*</format>,<output-item-LT><output-item><string-E><S>&quot;2: THREAD# &quot;</S></string-E></output-item>, <output-item><named-E><N><n>OMP_GET_THREAD_NUM</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><string-E><S>&quot;X = &quot;</S></string-E></output-item>, <output-item><named-E><N><n>X</n></N></named-E></output-item></output-item-LT></print-stmt>
+    <else-stmt>ELSE</else-stmt>
+    <C>! PRINT 3</C>
+      <print-stmt>PRINT <format>*</format>,<output-item-LT><output-item><string-E><S>&quot;3: THREAD# &quot;</S></string-E></output-item>, <output-item><named-E><N><n>OMP_GET_THREAD_NUM</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><string-E><S>&quot;X = &quot;</S></string-E></output-item>, <output-item><named-E><N><n>X</n></N></named-E></output-item></output-item-LT></print-stmt>
+    <end-if-stmt>ENDIF</end-if-stmt>
+
+<omp>!$OMP</omp> <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+
+<end-program-stmt>END PROGRAM <program-N><N><n>MEMMODEL</n></N></program-N></end-program-stmt>
+</file></object>

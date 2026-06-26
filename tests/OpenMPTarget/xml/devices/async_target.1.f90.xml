@@ -1,0 +1,40 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="devices/async_target.1.f90"><C>! @@name:&#009;async_target.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.0</C>
+<module-stmt>module <module-N><N><n>parameters</n></N></module-N></module-stmt>
+<T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N>=<init-E><literal-E><l>1000000000</l></literal-E></init-E></EN-decl>, <EN-decl><EN-N><N><n>CHUNKSZ</n></N></EN-N>=<init-E><literal-E><l>1000000</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+<end-module-stmt>end module</end-module-stmt>
+<subroutine-stmt>subroutine <subroutine-N><N><n>pipedF</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
+<use-stmt>use <module-N><N><n>parameters</n></N></module-N>, ONLY: <rename-LT><rename><use-N><N><n>N</n></N></use-N></rename>, <rename><use-N><N><n>CHUNKSZ</n></N></use-N></rename></rename-LT></use-stmt>
+<T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>C</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>               :: <EN-decl-LT><EN-decl><EN-N><N><n>z</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<interface-stmt>interface</interface-stmt>
+   <function-stmt>function <function-N><N><n>F</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>z</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+   <omp>!$omp</omp> <declare-target-openmp>declare target</declare-target-openmp>
+     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>IN</intent-spec>)</attribute> ::<EN-decl-LT><EN-decl><EN-N><N><n>z</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>             ::<EN-decl-LT><EN-decl><EN-N><N><n>F</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <end-function-stmt>end function <function-N><N><n>F</n></N></function-N></end-function-stmt>
+<end-interface-stmt>end interface</end-interface-stmt>
+
+   <call-stmt>call <procedure-designator><named-E><N><n>init</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>z</n></N></named-E></arg>,<arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+   <do-stmt>do <do-V><named-E><N><n>C</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound>,<step><named-E><N><n>CHUNKSZ</n></N></named-E></step></do-stmt>
+
+      <omp>!$omp</omp> <task-openmp>task <clause><N>shared</N>(<V-LT><V-N><n>z</n></V-N></V-LT>)</clause></task-openmp>
+      <omp>!$omp</omp> <target-openmp>target <clause><N>map</N>(<E-LT><named-E><N><n>z</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><named-E><N><n>C</n></N></named-E></lower-bound>:<upper-bound><op-E><named-E><N><n>C</n></N></named-E><op><o>+</o></op><op-E><named-E><N><n>CHUNKSZ</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></op-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-LT>)</clause></target-openmp>
+      <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+         <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><named-E><N><n>C</n></N></named-E></lower-bound>,<upper-bound><op-E><named-E><N><n>C</n></N></named-E><op><o>+</o></op><op-E><named-E><N><n>CHUNKSZ</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></op-E></upper-bound></do-stmt>
+            <a-stmt><E-1><named-E><N><n>z</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>F</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>z</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+         <end-do-stmt>end do</end-do-stmt>
+      <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+      <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+   <end-do-stmt>end do</end-do-stmt>
+   <omp>!$omp</omp> <taskwait-openmp>taskwait</taskwait-openmp>
+   <print-stmt>print<format>*</format>, <output-item-LT><output-item><named-E><N><n>z</n></N></named-E></output-item></output-item-LT></print-stmt>
+
+<end-subroutine-stmt>end subroutine <subroutine-N><N><n>pipedF</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

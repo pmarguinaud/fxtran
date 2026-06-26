@@ -1,0 +1,46 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="devices/async_target.2.f90"><C>! @@name:&#009;async_target.2</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.0</C>
+ <subroutine-stmt>subroutine <subroutine-N><N><n>mult</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>p</n></N></arg-N>,  <arg-N><N><n>N</n></N></arg-N>, <arg-N><N><n>idev</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N>, ONLY: <rename-LT><rename><use-N><N><n>omp_is_initial_device</n></N></use-N></rename></rename-LT></use-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>             :: <EN-decl-LT><EN-decl><EN-N><N><n>p</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>,<attribute><attribute-N>allocatable</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>v1</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>v2</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> ::  <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>idev</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <omp>!$omp</omp> <declare-target-openmp>declare target (<V-LT><V-N><n>init</n></V-N></V-LT>)</declare-target-openmp>
+
+   <omp>!$omp</omp> <target-data-openmp>target data <clause><N>map</N>(<E-LT><named-E><N><n>v1</n></N></named-E>,<named-E><N><n>v2</n></N></named-E></E-LT>)</clause></target-data-openmp>
+
+   <omp>!$omp</omp> <task-openmp>task <clause><N>shared</N>(<V-LT><V-N><n>v1</n></V-N>,<V-N><n>v2</n></V-N></V-LT>)</clause> <clause><N>depend</N>(<T><n>out</n></T>: <E-LT><named-E><N><n>N</n></N></named-E></E-LT>)</clause></task-openmp>
+      <omp>!$omp</omp> <target-openmp>target <clause><N>device</N>(<named-E><N><n>idev</n></N></named-E>)</clause></target-openmp>
+         <if-stmt>if( <condition-E><named-E><N><n>omp_is_initial_device</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></condition-E> ) <cnt>&amp;</cnt>
+            <action-stmt><stop-stmt>stop <stop-code><S>&quot;not executing on target device&quot;</S></stop-code></stop-stmt></action-stmt></if-stmt>
+         <allocate-stmt>allocate(<arg-spec><arg><named-E><N><n>v1</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg>, <arg><named-E><N><n>v2</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+         <call-stmt>call <procedure-designator><named-E><N><n>init</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>v1</n></N></named-E></arg>,<arg><named-E><N><n>v2</n></N></named-E></arg>,<arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
+      <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+   <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+   <call-stmt>call <procedure-designator><named-E><N><n>foo</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>  <C>! execute other work asychronously</C>
+
+   <omp>!$omp</omp> <task-openmp>task <clause><N>shared</N>(<V-LT><V-N><n>v1</n></V-N>,<V-N><n>v2</n></V-N>,<V-N><n>p</n></V-N></V-LT>)</clause> <clause><N>depend</N>(<T><n>in</n></T>: <E-LT><named-E><N><n>N</n></N></named-E></E-LT>)</clause></task-openmp>
+      <omp>!$omp</omp> <target-openmp>target <clause><N>device</N>(<named-E><N><n>idev</n></N></named-E>)</clause> <clause><N>map</N>(<prefix>from</prefix>: <E-LT><named-E><N><n>p</n></N></named-E></E-LT>)</clause></target-openmp>
+         <if-stmt>if( <condition-E><named-E><N><n>omp_is_initial_device</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></condition-E> ) <cnt>&amp;</cnt>
+            <action-stmt><stop-stmt>stop <stop-code><S>&quot;not executing on target device&quot;</S></stop-code></stop-stmt></action-stmt></if-stmt>
+         <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause></parallel-openmp>
+            <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+               <a-stmt><E-1><named-E><N><n>p</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>v1</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>*</o></op> <named-E><N><n>v2</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+            <end-do-stmt>end do</end-do-stmt>
+         <deallocate-stmt>deallocate(<arg-spec><arg><named-E><N><n>v1</n></N></named-E></arg>,<arg><named-E><N><n>v2</n></N></named-E></arg></arg-spec>)</deallocate-stmt>
+
+      <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+   <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+   <omp>!$omp</omp> <taskwait-openmp>taskwait</taskwait-openmp>
+
+   <omp>!$omp</omp> <end-target-data-openmp>end target data</end-target-data-openmp>
+
+   <call-stmt>call <procedure-designator><named-E><N><n>output</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>p</n></N></named-E></arg>, <arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

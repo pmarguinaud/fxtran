@@ -1,0 +1,54 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="directives/directive_syntax_F_block.2.f90"><C>! @@name:&#009;directive_syntax_F_block.2</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.1</C>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>(<literal-E><l>2</l></literal-E>)</clause></parallel-openmp>
+     <if-stmt>if( <condition-E><op-E><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>==</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E> ) <cnt>&amp;</cnt>
+         <action-stmt><print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Loosely  structured block  -- end required.&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+     <block-stmt>block</block-stmt>                                <C>! BLOCK Fortran 2008</C>
+       <if-stmt>if( <condition-E><op-E><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>==</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E> ) <cnt>&amp;</cnt>
+           <action-stmt><print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;                           --&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+     <end-block-stmt>end block</end-block-stmt>
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp> 
+
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>(<literal-E><l>2</l></literal-E>)</clause></parallel-openmp>
+     <block-stmt>block</block-stmt> 
+       <if-stmt>if( <condition-E><op-E><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>==</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E> ) <cnt>&amp;</cnt>
+           <action-stmt><print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Strictly structured block  -- end not required.&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+     <end-block-stmt>end block</end-block-stmt>
+ <C>!!$omp end parallel !is optional for strictly structured block </C>
+
+  <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Sequential part&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>(<literal-E><l>2</l></literal-E>)</clause></parallel-openmp>                      <C>!outer parallel</C>
+     <if-stmt>if( <condition-E><op-E><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>==</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E> ) <cnt>&amp;</cnt> 
+         <action-stmt><print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Outer, loosely  structured block.&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+     <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>(<literal-E><l>2</l></literal-E>)</clause></parallel-openmp>                   <C>!inner parallel</C>
+        <block-stmt>block</block-stmt>
+          <if-stmt>if( <condition-E><op-E><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>==</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E> ) <cnt>&amp;</cnt>
+          <action-stmt><print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Inner, strictly structured block.&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+        <end-block-stmt>end block</end-block-stmt>
+     <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+  <C>! Two end directives are required here.</C>
+  <C>! A single &quot;!$omp end parallel&quot; terminator will fail.</C>
+  <C>! 1st end directive is assumed to be for inner parallel construct.</C>
+  <C>! 2nd end directive applies to outer parallel construct.</C>
+
+<end-program-stmt>end program</end-program-stmt>
+
+<C>!OUTPUT, in order:</C>
+<C>! Loosely  structured block  -- end required.</C>
+<C>!                            --</C>
+<C>! Strictly structured block  -- end not required.</C>
+<C>! Sequential part</C>
+<C>! Outer, loosely  structured block.</C>
+<C>! Inner, strictly structured block.</C>
+<C>! Inner, strictly structured block.</C>
+</file></object>

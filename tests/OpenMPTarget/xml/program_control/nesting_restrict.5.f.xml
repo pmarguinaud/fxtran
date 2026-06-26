@@ -1,0 +1,18 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="program_control/nesting_restrict.5.f"><C>! @@name:nesting_restrict.5</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:ct-error</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>WRONG5</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>DEFAULT</N>(<T>SHARED</T>)</clause></parallel-openmp>
+<omp>!$OMP</omp><m> </m>    <critical-openmp>CRITICAL</critical-openmp>
+<m>      </m>      <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>N</n></N></named-E></arg>,<arg><literal-E><l>1</l></literal-E></arg></arg-spec>)</call-stmt>
+<C>! incorrect nesting of barrier region in a critical region</C>
+<omp>!$OMP</omp><m> </m>      <barrier-openmp>BARRIER</barrier-openmp>
+<m>      </m>      <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>N</n></N></named-E></arg>,<arg><literal-E><l>2</l></literal-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m>    <end-critical-openmp>END CRITICAL</end-critical-openmp>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>WRONG5</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

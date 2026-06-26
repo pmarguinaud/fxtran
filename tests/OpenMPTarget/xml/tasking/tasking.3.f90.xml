@@ -1,0 +1,39 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="tasking/tasking.3.f90"><C>! @@name:&#009;tasking.3</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_3.0</C>
+      <module-stmt>MODULE <module-N><N><n>LIST</n></N></module-N></module-stmt>
+          <T-stmt>TYPE <T-N><N><n>NODE</n></N></T-N></T-stmt>
+             <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>PAYLOAD</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+             <component-decl-stmt><_T-spec_><derived-T-spec>TYPE (<T-N><N><n>NODE</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>NEXT</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+          <end-T-stmt>END TYPE <T-N><N><n>NODE</n></N></T-N></end-T-stmt>
+      <contains-stmt>CONTAINS</contains-stmt>
+
+          <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>PROCESS</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>p</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+             <T-decl-stmt><_T-spec_><derived-T-spec>TYPE (<T-N><N><n>NODE</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>P</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+                 <C>! do work here</C>
+          <end-subroutine-stmt>END SUBROUTINE</end-subroutine-stmt>
+
+          <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INCREMENT_LIST_ITEMS</n></N></subroutine-N> (<dummy-arg-LT><arg-N><N><n>HEAD</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+
+             <T-decl-stmt><_T-spec_><derived-T-spec>TYPE (<T-N><N><n>NODE</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>HEAD</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+             <T-decl-stmt><_T-spec_><derived-T-spec>TYPE (<T-N><N><n>NODE</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>P</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+             <omp>!$OMP</omp> <parallel-openmp>PARALLEL <clause><N>PRIVATE</N>(<V-LT><V-N><n>P</n></V-N></V-LT>)</clause></parallel-openmp>
+                 <omp>!$OMP</omp> <single-openmp>SINGLE</single-openmp>
+                     <pointer-a-stmt><E-1><named-E><N><n>P</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>HEAD</n></N></named-E></E-2></pointer-a-stmt>
+                     <do-stmt>DO</do-stmt>
+                        <omp>!$OMP</omp> <task-openmp>TASK</task-openmp>
+                            <C>! P is firstprivate by default</C>
+                            <call-stmt>CALL <procedure-designator><named-E><N><n>PROCESS</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N></named-E></arg></arg-spec>)</call-stmt>
+                        <omp>!$OMP</omp> <end-task-openmp>END TASK</end-task-openmp>
+                        <pointer-a-stmt><E-1><named-E><N><n>P</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>P</n></N><R-LT><component-R>%<ct>NEXT</ct></component-R></R-LT></named-E></E-2></pointer-a-stmt>
+                        <if-stmt>IF ( <condition-E><op-E><op><o>.NOT.</o></op> <named-E><N><n>ASSOCIATED</n></N> <R-LT><parens-R>(<element-LT><element><named-E><N><n>P</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></condition-E> ) <action-stmt><exit-stmt>EXIT</exit-stmt></action-stmt></if-stmt>
+                     <end-do-stmt>END DO</end-do-stmt>
+                 <omp>!$OMP</omp> <end-single-openmp>END SINGLE</end-single-openmp>
+             <omp>!$OMP</omp> <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+
+          <end-subroutine-stmt>END SUBROUTINE</end-subroutine-stmt>
+
+      <end-module-stmt>END MODULE</end-module-stmt>
+</file></object>

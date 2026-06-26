@@ -1,0 +1,39 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="program_control/icv.1.f"><C>! @@name:icv.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:run</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><program-stmt>program <program-N><N><n>icv</n></N></program-N></program-stmt>
+<m>      </m><use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+
+<m>      </m><call-stmt>call <procedure-designator><named-E><N><n>omp_set_nested</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E>.true.</literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m><call-stmt>call <procedure-designator><named-E><N><n>omp_set_max_active_levels</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>8</l></literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m><call-stmt>call <procedure-designator><named-E><N><n>omp_set_dynamic</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E>.false.</literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m><call-stmt>call <procedure-designator><named-E><N><n>omp_set_num_threads</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>2</l></literal-E></arg></arg-spec>)</call-stmt>
+
+<omp>!$omp</omp><m> </m><parallel-openmp>parallel</parallel-openmp>
+<m>      </m><call-stmt>call <procedure-designator><named-E><N><n>omp_set_num_threads</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>3</l></literal-E></arg></arg-spec>)</call-stmt>
+
+<omp>!$omp</omp><m> </m><parallel-openmp>parallel</parallel-openmp>
+<m>      </m><call-stmt>call <procedure-designator><named-E><N><n>omp_set_num_threads</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>4</l></literal-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp><m> </m><single-openmp>single</single-openmp>
+<C>!      The following should print:</C>
+<C>!      Inner: max_act_lev= 8 , num_thds= 3 , max_thds= 4</C>
+<C>!      Inner: max_act_lev= 8 , num_thds= 3 , max_thds= 4</C>
+<m>      </m> <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Inner: max_act_lev=&quot;</S></string-E></output-item>, <output-item><named-E><N><n>omp_get_max_active_levels</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item>,
+<m>     </m><cnt>&amp;</cnt>           <output-item><string-E><S>&quot;, num_thds=&quot;</S></string-E></output-item>, <output-item><named-E><N><n>omp_get_num_threads</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item>,
+<m>     </m><cnt>&amp;</cnt>           <output-item><string-E><S>&quot;, max_thds=&quot;</S></string-E></output-item>, <output-item><named-E><N><n>omp_get_max_threads</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>
+<omp>!$omp</omp><m> </m><end-single-openmp>end single</end-single-openmp>
+<omp>!$omp</omp><m> </m><end-parallel-openmp>end parallel</end-parallel-openmp>
+
+<omp>!$omp</omp><m> </m><barrier-openmp>barrier</barrier-openmp>
+<omp>!$omp</omp><m> </m><single-openmp>single</single-openmp>
+<C>!      The following should print:</C>
+<C>!      Outer: max_act_lev= 8 , num_thds= 2 , max_thds= 3</C>
+<m>      </m> <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Outer: max_act_lev=&quot;</S></string-E></output-item>, <output-item><named-E><N><n>omp_get_max_active_levels</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item>,
+<m>     </m><cnt>&amp;</cnt>           <output-item><string-E><S>&quot;, num_thds=&quot;</S></string-E></output-item>, <output-item><named-E><N><n>omp_get_num_threads</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item>,
+<m>     </m><cnt>&amp;</cnt>           <output-item><string-E><S>&quot;, max_thds=&quot;</S></string-E></output-item>, <output-item><named-E><N><n>omp_get_max_threads</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>
+<omp>!$omp</omp><m> </m><end-single-openmp>end single</end-single-openmp>
+<omp>!$omp</omp><m> </m><end-parallel-openmp>end parallel</end-parallel-openmp>
+<m>      </m> <end-program-stmt>end</end-program-stmt>
+</file></object>

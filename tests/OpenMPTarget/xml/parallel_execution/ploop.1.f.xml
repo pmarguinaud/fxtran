@@ -1,0 +1,18 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/ploop.1.f"><C>! @@name:ploop.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SIMPLE</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N>, <arg-N><N><n>A</n></N></arg-N>, <arg-N><N><n>B</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>B</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m><parallel-openmp>PARALLEL <clause><N>DO</N></clause></parallel-openmp>  <C>!I is private by default</C>
+<m>      </m><do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V>=<lower-bound><literal-E><l>2</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+<m>      </m>    <a-stmt><E-1><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><parens-E>(<op-E><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>I</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></op-E>)</parens-E> <op><o>/</o></op> <literal-E><l>2.0</l></literal-E></op-E></E-2></a-stmt>
+<m>      </m><end-do-stmt>ENDDO</end-do-stmt>
+<omp>!$OMP</omp><m> </m><end-parallel-openmp>END PARALLEL <clause><N>DO</N></clause></end-parallel-openmp>
+
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SIMPLE</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

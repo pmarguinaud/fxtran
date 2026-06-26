@@ -1,0 +1,29 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/copyin.1.f"><C>! @@name:copyin.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><module-stmt>MODULE <module-N><N><n>M</n></N></module-N></module-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute>, <attribute><attribute-N>SAVE</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>WORK</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>SIZE</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>TOL</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<omp>!$OMP</omp><m> </m>  <threadprivate-openmp>THREADPRIVATE(<V-LT><V-N><n>WORK</n></V-N>,<V-N><n>SIZE</n></V-N>,<V-N><n>TOL</n></V-N></V-LT>)</threadprivate-openmp>
+<m>      </m><end-module-stmt>END MODULE <module-N><N><n>M</n></N></module-N></end-module-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>COPYIN_EXAMPLE</n></N></subroutine-N>( <dummy-arg-LT><arg-N><N><n>T</n></N></arg-N>, <arg-N><N><n>N</n></N></arg-N></dummy-arg-LT> )</subroutine-stmt>
+<m>      </m>  <use-stmt>USE <module-N><N><n>M</n></N></module-N></use-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>T</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>TOL</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>T</n></N></named-E></E-2></a-stmt>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>SIZE</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>N</n></N></named-E></E-2></a-stmt>
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>COPYIN</N>(<V-LT><V-N><n>TOL</n></V-N>,<V-N><n>SIZE</n></V-N></V-LT>)</clause></parallel-openmp>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>BUILD</n></N></named-E></procedure-designator></call-stmt>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>COPYIN_EXAMPLE</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>BUILD</n></N></subroutine-N></subroutine-stmt>
+<m>      </m>  <use-stmt>USE <module-N><N><n>M</n></N></module-N></use-stmt>
+<m>      </m>  <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>WORK</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>SIZE</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</allocate-stmt>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>WORK</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>TOL</n></N></named-E></E-2></a-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>BUILD</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

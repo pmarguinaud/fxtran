@@ -1,0 +1,34 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="affinity/affinity_query.1.f90"><C>! @@name:&#009;affinity_query.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.5</C>
+<subroutine-stmt>subroutine <subroutine-N><N><n>socket_init</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>socket_num</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>  :: <EN-decl-LT><EN-decl><EN-N><N><n>socket_num</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>n_procs</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <a-stmt><E-1><named-E><N><n>n_procs</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_place_num_procs</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>socket_num</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>(<named-E><N><n>n_procs</n></N></named-E>)</clause> <clause><N>proc_bind</N>(<named-E><N><n>close</n></N></named-E>)</clause></parallel-openmp>
+
+      <print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;Reporting in from socket num, thread num: &quot;</S></string-E></output-item>,  <cnt>&amp;</cnt>
+                                <output-item><named-E><N><n>socket_num</n></N></named-E></output-item>,<output-item><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>
+   <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+<program-stmt>program <program-N><N><n>numa_teams</n></N></program-N></program-stmt>
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>n_sockets</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>socket_num</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <call-stmt>call <procedure-designator><named-E><N><n>omp_set_nested</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E>.true.</literal-E></arg></arg-spec>)</call-stmt>            <C>! or export OMP_NESTED=true</C>
+   <call-stmt>call <procedure-designator><named-E><N><n>omp_set_max_active_levels</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>2</l></literal-E></arg></arg-spec>)</call-stmt> <C>! or export OMP_MAX_ACTIVE_LEVELS=2</C>
+
+   <a-stmt><E-1><named-E><N><n>n_sockets</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_num_places</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>(<named-E><N><n>n_sockets</n></N></named-E>)</clause> <clause><N>private</N>(<V-LT><V-N><n>socket_num</n></V-N></V-LT>)</clause> <cnt>&amp;</cnt>
+   <omp>!$omp</omp><cnt>&amp;</cnt>         <clause><N>proc_bind</N>(<named-E><N><n>spread</n></N></named-E>)</clause></parallel-openmp>
+
+      <a-stmt><E-1><named-E><N><n>socket_num</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_place_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+      <call-stmt>call <procedure-designator><named-E><N><n>socket_init</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>socket_num</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+   <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

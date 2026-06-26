@@ -1,0 +1,15 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/copyprivate.3.f"><C>! @@name:copyprivate.3</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><function-stmt>FUNCTION <function-N><N><n>NEW_LOCK</n></N></function-N>(<dummy-arg-LT></dummy-arg-LT>)</function-stmt>
+<m>      </m><use-stmt>USE <module-N><N><n>OMP_LIB</n></N></module-N></use-stmt>       <C>! or INCLUDE &quot;omp_lib.h&quot;</C>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>OMP_LOCK_KIND</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>NEW_LOCK</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m>  <single-openmp>SINGLE</single-openmp>
+<m>      </m>    <allocate-stmt>ALLOCATE(<arg-spec><arg><named-E><N><n>NEW_LOCK</n></N></named-E></arg></arg-spec>)</allocate-stmt>
+<m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>OMP_INIT_LOCK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>NEW_LOCK</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m>  <end-single-openmp>END SINGLE <clause><N>COPYPRIVATE</N>(<V-LT><V-N><n>NEW_LOCK</n></V-N></V-LT>)</clause></end-single-openmp>
+<m>      </m><end-function-stmt>END FUNCTION <function-N><N><n>NEW_LOCK</n></N></function-N></end-function-stmt>
+</file></object>

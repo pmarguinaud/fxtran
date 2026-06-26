@@ -1,0 +1,25 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="tasking/taskloop.1.f90"><C>! @@name:&#009;taskloop.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.5</C>
+<subroutine-stmt>subroutine <subroutine-N><N><n>parallel_work</n></N></subroutine-N></subroutine-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<omp>!$omp</omp> <taskgroup-openmp>taskgroup</taskgroup-openmp>
+
+<omp>!$omp</omp> <task-openmp>task</task-openmp>
+   <call-stmt>call <procedure-designator><named-E><N><n>long_running_task</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+<omp>!$omp</omp> <task-openmp>task<clause><N>loop</N></clause> <clause><N>private</N>(<V-LT><V-N><n>j</n></V-N></V-LT>)</clause> <clause><N>grainsize</N>(<literal-E><l>500</l></literal-E>)</clause> <clause><N>nogroup</N></clause></task-openmp>
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>10000</l></literal-E></upper-bound></do-stmt>
+      <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>i</n></N></named-E></upper-bound></do-stmt>
+         <call-stmt>call <procedure-designator><named-E><N><n>loop_body</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>i</n></N></named-E></arg>, <arg><named-E><N><n>j</n></N></named-E></arg></arg-spec>)</call-stmt>
+      <end-do-stmt>end do</end-do-stmt>
+   <end-do-stmt>end do</end-do-stmt>
+<omp>!$omp</omp> <end-task-openmp>end task<clause><N>loop</N></clause></end-task-openmp>
+
+<omp>!$omp</omp> <end-taskgroup-openmp>end taskgroup</end-taskgroup-openmp>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/fpriv_sections.1.f90"><C>! @@name:&#009;fpriv_sections.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;pre_omp_3.0</C>
+<program-stmt>program <program-N><N><n>section</n></N></program-N></program-stmt>
+    <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>section_count</n></N></EN-N> = <init-E><literal-E><l>0</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>NT</n></N></EN-N> = <init-E><literal-E><l>4</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+    <call-stmt>call <procedure-designator><named-E><N><n>omp_set_dynamic</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E>.false.</literal-E></arg></arg-spec>)</call-stmt>
+    <call-stmt>call <procedure-designator><named-E><N><n>omp_set_num_threads</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>NT</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <parallel-openmp>parallel</parallel-openmp>
+<omp>!$omp</omp> <sections-openmp>sections <clause><N>firstprivate</N> ( <V-LT><V-N><n>section_count</n></V-N></V-LT> )</clause></sections-openmp>
+<omp>!$omp</omp> <section-openmp>section</section-openmp>
+    <a-stmt><E-1><named-E><N><n>section_count</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>section_count</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+<C>! may print the number one or two</C>
+    <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>'section_count'</S></string-E></output-item>, <output-item><named-E><N><n>section_count</n></N></named-E></output-item></output-item-LT></print-stmt>
+<omp>!$omp</omp> <section-openmp>section</section-openmp>
+    <a-stmt><E-1><named-E><N><n>section_count</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>section_count</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+<C>! may print the number one or two</C>
+    <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>'section_count'</S></string-E></output-item>, <output-item><named-E><N><n>section_count</n></N></named-E></output-item></output-item-LT></print-stmt>
+<omp>!$omp</omp> <end-sections-openmp>end sections</end-sections-openmp>
+<omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+<end-program-stmt>end program <program-N><N><n>section</n></N></program-N></end-program-stmt>
+</file></object>

@@ -1,0 +1,105 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="devices/device.4.f90"><C>! @@name:&#009;device.4</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.0</C>
+<program-stmt>program <program-N><N><n>device_mem</n></N></program-N></program-stmt>
+  <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+  <use-stmt>use, <module-nature>intrinsic</module-nature>            :: <module-N><N><n>iso_c_binding</n></N></module-N></use-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><arg-N n="KIND"><k>kind</k></arg-N>=<literal-E><l>4</l></literal-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>,<attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N> = <init-E><literal-E><l>10</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>c_ptr</n></N></T-N>)</derived-T-spec></_T-spec_>               :: <EN-decl-LT><EN-decl><EN-N><N><n>cp</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><named-E><N><n>c_int</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>pointer</attribute-N></attribute>   :: <EN-decl-LT><EN-decl><EN-N><N><n>fp</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><named-E><N><n>c_int</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>rc</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>host_dev</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>targ_dev</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><named-E><N><n>c_size_t</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>         :: <EN-decl-LT><EN-decl><EN-N><N><n>int_bytes</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>pointer</attribute-N></attribute>  :: <EN-decl-LT><EN-decl><EN-N><N><n>fp_src</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>fp_dst</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>    <C>! Section 2 vars</C>
+  <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>c_ptr</n></N></T-N>)</derived-T-spec></_T-spec_>       :: <EN-decl-LT><EN-decl><EN-N><N><n>cp_src</n></N></EN-N></EN-decl>,    <EN-decl><EN-N><N><n>cp_dst</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>       <C>! Section 2 vars</C>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>pointer</attribute-N></attribute>  :: <EN-decl-LT><EN-decl><EN-N><N><n>h_fp</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>                 <C>! Section 3 vars</C>
+  <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>c_ptr</n></N></T-N>)</derived-T-spec></_T-spec_>       :: <EN-decl-LT><EN-decl><EN-N><N><n>h_cp</n></N></EN-N></EN-decl>,    <EN-decl><EN-N><N><n>d_cp</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>           <C>! Section 3 vars</C>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>host_dev</n></N></named-E></E-1>  <a>=</a> <E-2><named-E><N><n>omp_get_initial_device</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>targ_dev</n></N></named-E></E-1>  <a>=</a> <E-2><named-E><N><n>omp_get_default_device</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>int_bytes</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>C_SIZEOF</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>rc</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+<C>!------------------------------------------------Section 1 vv-----------</C>
+  <a-stmt><E-1><named-E><N><n>cp</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_target_alloc</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>N</n></N></named-E><op><o>*</o></op><named-E><N><n>int_bytes</n></N></named-E></op-E></element>, <element><named-E><N><n>targ_dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  
+  <omp>!$omp</omp> <target-openmp>target <clause><N>is_device_ptr</N>(<V-LT><V-N><n>cp</n></V-N></V-LT>)</clause> <clause><N>device</N>(<named-E><N><n>targ_dev</n></N></named-E>)</clause></target-openmp> <C>!fp implicit map</C>
+     <call-stmt>call <procedure-designator><named-E><N><n>c_f_pointer</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>cp</n></N></named-E></arg>, <arg><named-E><N><n>fp</n></N></named-E></arg>, <arg><array-constructor-E>[ <ac-value-LT><ac-value><named-E><N><n>N</n></N></named-E></ac-value></ac-value-LT> ]</array-constructor-E></arg></arg-spec>)</call-stmt>              <C>!fp becomes associated</C>
+     <a-stmt><E-1><named-E><N><n>fp</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript>:</section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-1> <a>=</a> <E-2><literal-E><l>4</l></literal-E></E-2></a-stmt>        
+     <if-stmt>if( <condition-E><named-E><N><n>all</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>fp</n></N></named-E> <op><o>==</o></op> <literal-E><l>4</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E> ) <action-stmt><print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;PASSED 1 of 5&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+     <nullify-stmt>nullify(<arg-spec><arg><named-E><N><n>fp</n></N></named-E></arg></arg-spec>)</nullify-stmt>                   <C>!fp must be returned as disassociated</C>
+  <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp> 
+
+  <call-stmt>call <procedure-designator><named-E><N><n>omp_target_free</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>cp</n></N></named-E></arg>, <arg><named-E><N><n>targ_dev</n></N></named-E></arg></arg-spec>)</call-stmt>
+  <a-stmt><E-1><named-E><N><n>cp</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>c_null_ptr</n></N></named-E></E-2></a-stmt>
+
+<C>!------------------------------------------------Section 2 vv-----------</C>
+
+   <a-stmt><E-1><named-E><N><n>cp_src</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_target_alloc</n></N><R-LT><parens-R>(<element-LT><element><op-E><parens-E>(<op-E><named-E><N><n>N</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E>)</parens-E><op><o>*</o></op><named-E><N><n>int_bytes</n></N></named-E></op-E></element>, <element><named-E><N><n>host_dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+   <a-stmt><E-1><named-E><N><n>cp_dst</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_target_alloc</n></N><R-LT><parens-R>(  <element-LT><element><op-E><named-E><N><n>N</n></N></named-E>  <op><o>*</o></op><named-E><N><n>int_bytes</n></N></named-E></op-E></element>, <element><named-E><N><n>targ_dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+<C>!           Initialize host array (src)</C>
+   <call-stmt>call <procedure-designator><named-E><N><n>c_f_pointer</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>cp_src</n></N></named-E></arg>, <arg><named-E><N><n>fp_src</n></N></named-E></arg>, <arg><array-constructor-E>[<ac-value-LT><ac-value><op-E><named-E><N><n>N</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></ac-value></ac-value-LT>]</array-constructor-E></arg></arg-spec>)</call-stmt>
+   <a-stmt><E-1><named-E><N><n>fp_src</n></N></named-E></E-1> <a>=</a> <E-2><array-constructor-E>[<ac-value-LT><ac-value><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>i</n></N></named-E></iterator-element>,<iterator-element><V-N><V-N><n>i</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><op-E><named-E><N><n>N</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></ac-value></ac-value-LT>]</array-constructor-E></E-2></a-stmt>
+
+   <omp>!$omp</omp> <target-openmp>target <clause><N>device</N>(<named-E><N><n>targ_dev</n></N></named-E>)</clause> <clause><N>is_device_ptr</N>(<V-LT><V-N><n>cp_dst</n></V-N></V-LT>)</clause></target-openmp>
+     <call-stmt>call <procedure-designator><named-E><N><n>c_f_pointer</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>cp_dst</n></N></named-E></arg>, <arg><named-E><N><n>fp_dst</n></N></named-E></arg>, <arg><array-constructor-E>[<ac-value-LT><ac-value><named-E><N><n>N</n></N></named-E></ac-value></ac-value-LT>]</array-constructor-E></arg></arg-spec>)</call-stmt>   <C>! fp_dst becomes associated</C>
+     <a-stmt><E-1><named-E><N><n>fp_dst</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript>:</section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>                          <C>! Initial device storage</C>
+     <nullify-stmt>nullify(<arg-spec><arg><named-E><N><n>fp_dst</n></N></named-E></arg></arg-spec>)</nullify-stmt>                         <C>! return as disassociated</C>
+   <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+
+<C>!  Copy subset of host (src) array to device (dst) array</C>
+   <a-stmt><E-1><named-E><N><n>rc</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_target_memcpy</n></N><R-LT><parens-R>(                                             <cnt>&amp;</cnt>
+            <arg-spec><arg><arg-N n="DST"><k>dst</k></arg-N>=<named-E><N><n>cp_dst</n></N></named-E></arg>,             <arg><arg-N n="SRC"><k>src</k></arg-N>=<named-E><N><n>cp_src</n></N></named-E></arg>,    <arg><arg-N n="LENGTH"><k>length</k></arg-N>=<op-E><named-E><N><n>N</n></N></named-E><op><o>*</o></op><named-E><N><n>int_bytes</n></N></named-E></op-E></arg>, <cnt>&amp;</cnt>
+            <arg><arg-N n="DST_OFFSET"><k>dst_offset</k></arg-N>=<literal-E><l>0</l><K-spec>_<N><n>c_size_t</n></N></K-spec></literal-E></arg>,  <arg><arg-N n="SRC_OFFSET"><k>src_offset</k></arg-N>=<named-E><N><n>int_bytes</n></N></named-E></arg>,              <cnt>&amp;</cnt>
+            <arg><arg-N n="DST_DEVICE_NUM"><k>dst_device_num</k></arg-N>=<named-E><N><n>targ_dev</n></N></named-E></arg>,<arg><arg-N n="SRC_DEVICE_NUM"><k>src_device_num</k></arg-N>=<named-E><N><n>host_dev</n></N></named-E></arg></arg-spec>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+<C>!  Check dst array on device</C>
+
+   <omp>!$omp</omp> <target-openmp>target <clause><N>device</N>(<named-E><N><n>targ_dev</n></N></named-E>)</clause> <clause><N>is_device_ptr</N>(<V-LT><V-N><n>cp_dst</n></V-N></V-LT>)</clause></target-openmp>
+     <call-stmt>call <procedure-designator><named-E><N><n>c_f_pointer</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>cp_dst</n></N></named-E></arg>, <arg><named-E><N><n>fp_dst</n></N></named-E></arg>, <arg><array-constructor-E>[<ac-value-LT><ac-value><named-E><N><n>N</n></N></named-E></ac-value></ac-value-LT>]</array-constructor-E></arg></arg-spec>)</call-stmt>
+     <if-stmt>if ( <condition-E><named-E><N><n>all</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>fp_dst</n></N></named-E> <op><o>==</o></op> <array-constructor-E>[<ac-value-LT><ac-value><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>i</n></N></named-E></iterator-element>,<iterator-element><V-N><V-N><n>i</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><named-E><N><n>N</n></N></named-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></ac-value></ac-value-LT>]</array-constructor-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E> ) <action-stmt><print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;PASSED 2 of 5&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+     <nullify-stmt>nullify(<arg-spec><arg><named-E><N><n>fp_dst</n></N></named-E></arg></arg-spec>)</nullify-stmt>
+   <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+
+<C>!------------------------------------------------Section 3 vv-----------</C>
+
+   <C>!allocate host memory and initialize.</C>
+   <allocate-stmt>allocate(<arg-spec><arg><named-E><N><n>h_fp</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg>, <arg><arg-N n="SOURCE"><k>source</k></arg-N>=<array-constructor-E>[<ac-value-LT><ac-value><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>i</n></N></named-E></iterator-element>,<iterator-element><V-N><V-N><n>i</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><named-E><N><n>N</n></N></named-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></ac-value></ac-value-LT>]</array-constructor-E></arg></arg-spec>)</allocate-stmt>
+
+   <a-stmt><E-1><named-E><N><n>h_cp</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>c_loc</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_fp</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+             <C>! Device is not aware of allocation on host</C>
+   <if-stmt>if(<condition-E><op-E><named-E><N><n>omp_target_is_present</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_cp</n></N></named-E></element>, <element><named-E><N><n>targ_dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>==</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) <cnt>&amp;</cnt>
+      <action-stmt><print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;PASSED 3 of 5&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+
+             <C>! Allocate device memory</C>
+   <a-stmt><E-1><named-E><N><n>d_cp</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_target_alloc</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>c_sizeof</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_fp</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E><op><o>*</o></op><named-E><N><n>size</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_fp</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></element>, <element><named-E><N><n>targ_dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+             <C>! now associate host and device storage</C>
+   <a-stmt><E-1><named-E><N><n>rc</n></N></named-E></E-1><a>=</a><E-2><named-E><N><n>omp_target_associate_ptr</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_cp</n></N></named-E></element>,<element><named-E><N><n>d_cp</n></N></named-E></element>,<element><op-E><named-E><N><n>c_sizeof</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_fp</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E><op><o>*</o></op><named-E><N><n>size</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_fp</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></element>, <cnt>&amp;</cnt>
+                               <element><literal-E><l>0</l><K-spec>_<N><n>c_size_t</n></N></K-spec></literal-E></element>,<element><named-E><N><n>targ_dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+             <C>! check presence of device data, associated w. host pointer</C>
+   <if-stmt>if(<condition-E><op-E><named-E><N><n>omp_target_is_present</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_cp</n></N></named-E></element>, <element><named-E><N><n>targ_dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>/=</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) <cnt>&amp;</cnt>
+      <action-stmt><print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;PASSED 4 of 5&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+
+             <C>! copy from host to device via C pointers</C>
+   <a-stmt><E-1><named-E><N><n>rc</n></N></named-E></E-1><a>=</a><E-2><named-E><N><n>omp_target_memcpy</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>d_cp</n></N></named-E></element>,       <element><named-E><N><n>h_cp</n></N></named-E></element>,<element><op-E><named-E><N><n>c_sizeof</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_fp</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E><op><o>*</o></op><named-E><N><n>size</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_fp</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></element>, <cnt>&amp;</cnt>
+                        <element><literal-E><l>0</l><K-spec>_<N><n>c_size_t</n></N></K-spec></literal-E></element>, <element><literal-E><l>0</l><K-spec>_<N><n>c_size_t</n></N></K-spec></literal-E></element>,                        <cnt>&amp;</cnt>
+                        <element><named-E><N><n>targ_dev</n></N></named-E></element>,   <element><named-E><N><n>host_dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+             <C>! validate the device data in the target region</C>
+             <C>! no data copy here since the reference count is infinity</C>
+   <omp>!$omp</omp> <target-openmp>target <clause><N>device</N>(<named-E><N><n>targ_dev</n></N></named-E>)</clause> <clause><N>map</N>(<E-LT><named-E><N><n>h_fp</n></N></named-E></E-LT>)</clause></target-openmp>
+     <if-stmt>if ( <condition-E><named-E><N><n>all</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>h_fp</n></N></named-E> <op><o>==</o></op> <array-constructor-E>[<ac-value-LT><ac-value><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>i</n></N></named-E></iterator-element>,<iterator-element><V-N><V-N><n>i</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><named-E><N><n>N</n></N></named-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></ac-value></ac-value-LT>]</array-constructor-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E> ) <action-stmt><print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;PASSED 5 of 5&quot;</S></string-E></output-item></output-item-LT></print-stmt></action-stmt></if-stmt>
+   <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+
+   <call-stmt>call <procedure-designator><named-E><N><n>omp_target_free</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>d_cp</n></N></named-E></arg>,<arg><named-E><N><n>targ_dev</n></N></named-E></arg></arg-spec>)</call-stmt>
+   <deallocate-stmt>deallocate(<arg-spec><arg><named-E><N><n>h_fp</n></N></named-E></arg></arg-spec>)</deallocate-stmt>
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

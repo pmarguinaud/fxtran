@@ -1,0 +1,29 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="program_control/pause_resource.2a.f90"><C>! @@name:       pause_resource.2a</C>
+<C>! @@type:       F-free</C>
+<C>! @@operation:  link</C>
+<C>! @@expect:     success</C>
+<C>! @@version:    omp_5.0</C>
+<program-stmt>program <program-N><N><n>relinquish</n></N></program-N></program-stmt>
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>err</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <write-stmt>write (<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'In relinquish'</S></string-E></output-item></output-item-LT></write-stmt>
+
+   <omp>!$omp</omp> <parallel-openmp>parallel</parallel-openmp>
+   <write-stmt>write (<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'In parallel region 1'</S></string-E></output-item></output-item-LT></write-stmt>
+   <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+   <a-stmt><E-1><named-E><N><n>err</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_pause_resource_all</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>omp_pause_soft</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+   <C>! execute the external subprogram produced from pause_resource.2b</C>
+   <call-stmt>call <procedure-designator><named-E><N><n>execute_command_line</n></N></named-E></procedure-designator>(<arg-spec><arg><arg-N n="COMMAND"><k>command</k></arg-N>=<string-E><S>'./subprogram'</S></string-E></arg>, <arg><arg-N n="WAIT"><k>wait</k></arg-N>=<literal-E>.true.</literal-E></arg>, <cnt>&amp;</cnt>
+                             <arg><arg-N n="CMDSTAT"><k>cmdstat</k></arg-N>=<named-E><N><n>err</n></N></named-E></arg></arg-spec>)</call-stmt>
+   <if-stmt>if (<condition-E><op-E><named-E><N><n>err</n></N></named-E> <op><o>/=</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) <action-stmt><write-stmt>write (<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'Warning: subprogram failed to execute'</S></string-E></output-item></output-item-LT></write-stmt></action-stmt></if-stmt>
+
+   <omp>!$omp</omp> <parallel-openmp>parallel</parallel-openmp>
+   <write-stmt>write (<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><string-E><S>'In parallel region 2'</S></string-E></output-item></output-item-LT></write-stmt>
+   <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+<end-program-stmt>end program <program-N><N><n>relinquish</n></N></program-N></end-program-stmt>
+</file></object>

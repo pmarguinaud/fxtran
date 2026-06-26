@@ -1,0 +1,30 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="program_control/cancellation.1.f90"><C>! @@name:&#009;cancellation.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.0</C>
+<subroutine-stmt>subroutine <subroutine-N><N><n>example</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>n</n></N></arg-N>, <arg-N><N><n>dim</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>in</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>dim</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>s</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>err</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>allocatable</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>B</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <a-stmt><E-1><named-E><N><n>err</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
+<omp>!$omp</omp> <parallel-openmp>parallel <clause><N>shared</N>(<V-LT><V-N><n>err</n></V-N></V-LT>)</clause></parallel-openmp>
+<C>! ...</C>
+<omp>!$omp</omp> <do-openmp>do <clause><N>private</N>(<V-LT><V-N><n>s</n></V-N>, <V-N><n>B</n></V-N></V-LT>)</clause></do-openmp>
+  <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
+<omp>!$omp</omp> <broken-openmp>cancellation point do</broken-openmp>
+    <allocate-stmt>allocate(<arg-spec><arg><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>dim</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg>, <arg><arg-N n="STAT"><k>stat</k></arg-N>=<named-E><N><n>s</n></N></named-E></arg></arg-spec>)</allocate-stmt>
+    <if-then-stmt>if (<condition-E><op-E><named-E><N><n>s</n></N></named-E> <op><o>.gt.</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) then</if-then-stmt>
+<omp>!$omp</omp> <atomic-openmp>atomic <clause><N>write</N></clause></atomic-openmp>
+      <a-stmt><E-1><named-E><N><n>err</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>s</n></N></named-E></E-2></a-stmt>
+<omp>!$omp</omp> <broken-openmp>cancel do</broken-openmp>
+    <end-if-stmt>endif</end-if-stmt>
+<C>!   ...</C>
+<C>! deallocate private array B</C>
+    <if-then-stmt>if (<condition-E><named-E><N><n>allocated</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>B</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) then</if-then-stmt>
+      <deallocate-stmt>deallocate(<arg-spec><arg><named-E><N><n>B</n></N></named-E></arg></arg-spec>)</deallocate-stmt>
+    <end-if-stmt>endif</end-if-stmt>
+  <end-do-stmt>enddo</end-do-stmt>
+<omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

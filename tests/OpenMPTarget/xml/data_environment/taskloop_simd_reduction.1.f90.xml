@@ -1,0 +1,63 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/taskloop_simd_reduction.1.f90"><C>! @@name:&#009;taskloop_simd_reduction.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.1</C>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+
+  <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> ::  <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N>=<init-E><literal-E><l>100</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>            :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>asum</n></N></EN-N>=<init-E><literal-E><l>0</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <a-stmt><E-1><named-E><N><n>a</n></N></named-E></E-1> <a>=</a> <E-2><array-constructor-E>[<ac-value-LT><ac-value><parens-E><iterator>( <iterator-definition-LT><iterator-element><named-E><N><n>i</n></N></named-E></iterator-element>, <iterator-element><V-N><V-N><n>i</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><named-E><N><n>N</n></N></named-E></iterator-element></iterator-definition-LT> )</iterator></parens-E></ac-value></ac-value-LT>]</array-constructor-E></E-2></a-stmt>    <C>!! initialize</C>
+
+<C>!! taskloop reductions</C>
+
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>masked</N></clause></parallel-openmp>
+  <omp>!$omp</omp> <task-openmp>task<clause><N>loop</N></clause> <clause><N>reduction</N>(<op><o>+</o></op>:<V-LT><V><n>asum</n></V></V-LT>)</clause></task-openmp>                  <C>!! taskloop 1</C>
+    <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt><smc>;</smc>  <a-stmt><E-1><named-E><N><n>asum</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>asum</n></N></named-E> <op><o>+</o></op> <named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt><smc>;</smc>  <end-do-stmt>enddo</end-do-stmt>
+  <omp>!$omp</omp> <end-task-openmp>end task<clause><N>loop</N></clause></end-task-openmp>
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel <clause><N>masked</N></clause></end-parallel-openmp>
+
+
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>reduction</N>(<modifier-N><n>task</n></modifier-N>, <op><o>+</o></op>:<V-LT><V><n>asum</n></V></V-LT>)</clause></parallel-openmp>            <C>!! parallel reduction a</C>
+
+     <omp>!$omp</omp> <masked-openmp>masked</masked-openmp>
+     <omp>!$omp</omp> <task-openmp>task            <clause><N>in_reduction</N>(<op><o>+</o></op>:<V-LT><V><n>asum</n></V></V-LT>)</clause></task-openmp>     <C>!! task 2</C>
+       <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt><smc>;</smc>  <a-stmt><E-1><named-E><N><n>asum</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>asum</n></N></named-E> <op><o>+</o></op> <named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt><smc>;</smc>  <end-do-stmt>enddo</end-do-stmt>
+     <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+     <omp>!$omp</omp> <end-masked-openmp>end masked</end-masked-openmp>
+
+     <omp>!$omp</omp> <masked-openmp>masked <clause><N>taskloop</N></clause> <clause><N>in_reduction</N>(<op><o>+</o></op>:<V-LT><V><n>asum</n></V></V-LT>)</clause></masked-openmp>     <C>!! taskloop 2</C>
+       <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt><smc>;</smc>  <a-stmt><E-1><named-E><N><n>asum</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>asum</n></N></named-E> <op><o>+</o></op> <named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt><smc>;</smc>  <end-do-stmt>enddo</end-do-stmt>
+     <omp>!$omp</omp> <end-masked-openmp>end masked <clause><N>taskloop</N></clause></end-masked-openmp>
+
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+<C>!! taskloop simd reductions</C>
+
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>masked</N></clause></parallel-openmp>
+  <omp>!$omp</omp> <task-openmp>task<clause><N>loop</N></clause> <clause><N>simd</N></clause> <clause><N>reduction</N>(<op><o>+</o></op>:<V-LT><V><n>asum</n></V></V-LT>)</clause></task-openmp>             <C>!! taskloop simd 3</C>
+    <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt><smc>;</smc>  <a-stmt><E-1><named-E><N><n>asum</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>asum</n></N></named-E> <op><o>+</o></op> <named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt><smc>;</smc>  <end-do-stmt>enddo</end-do-stmt>
+  <omp>!$omp</omp> <end-task-openmp>end task<clause><N>loop</N></clause> <clause><N>simd</N></clause></end-task-openmp>
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel <clause><N>masked</N></clause></end-parallel-openmp>
+
+
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>reduction</N>(<modifier-N><n>task</n></modifier-N>, <op><o>+</o></op>:<V-LT><V><n>asum</n></V></V-LT>)</clause></parallel-openmp>            <C>!! parallel reduction b</C>
+
+    <omp>!$omp</omp> <masked-openmp>masked</masked-openmp>
+    <omp>!$omp</omp> <task-openmp>task                 <clause><N>in_reduction</N>(<op><o>+</o></op>:<V-LT><V><n>asum</n></V></V-LT>)</clause></task-openmp> <C>!! task 4</C>
+       <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt><smc>;</smc>  <a-stmt><E-1><named-E><N><n>asum</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>asum</n></N></named-E> <op><o>+</o></op> <named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt><smc>;</smc>  <end-do-stmt>enddo</end-do-stmt>
+    <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+    <omp>!$omp</omp> <end-masked-openmp>end masked</end-masked-openmp>
+
+    <omp>!$omp</omp> <masked-openmp>masked <clause><N>taskloop</N></clause> <clause><N>simd</N></clause> <clause><N>in_reduction</N>(<op><o>+</o></op>:<V-LT><V><n>asum</n></V></V-LT>)</clause></masked-openmp> <C>!! taskloop simd 4</C>
+       <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt><smc>;</smc>  <a-stmt><E-1><named-E><N><n>asum</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>asum</n></N></named-E> <op><o>+</o></op> <named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt><smc>;</smc>  <end-do-stmt>enddo</end-do-stmt>
+    <omp>!$omp</omp> <end-masked-openmp>end masked <clause><N>taskloop</N></clause> <clause><N>simd</N></clause></end-masked-openmp>
+
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+  <print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;asum=&quot;</S></string-E></output-item>,<output-item><named-E><N><n>asum</n></N></named-E></output-item></output-item-LT></print-stmt>   <C>!! output: asum=30300</C>
+
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

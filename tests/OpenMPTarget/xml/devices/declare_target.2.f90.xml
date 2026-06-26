@@ -1,0 +1,24 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="devices/declare_target.2.f90"><C>! @@name:&#009;declare_target.2</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;link</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.0</C>
+<program-stmt>program <program-N><N><n>my_fib</n></N></program-N></program-stmt>
+<T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N> = <init-E><literal-E><l>8</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+<interface-stmt>interface</interface-stmt>
+  <subroutine-stmt>subroutine <subroutine-N><N><n>fib</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+    <omp>!$omp</omp> <declare-target-openmp>declare target</declare-target-openmp>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <end-subroutine-stmt>end subroutine <subroutine-N><N><n>fib</n></N></subroutine-N></end-subroutine-stmt>
+<end-interface-stmt>end interface</end-interface-stmt>
+   <omp>!$omp</omp> <target-openmp>target</target-openmp>
+      <call-stmt>call <procedure-designator><named-E><N><n>fib</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
+   <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+<end-program-stmt>end program</end-program-stmt>
+<subroutine-stmt>subroutine <subroutine-N><N><n>fib</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<omp>!$omp</omp> <declare-target-openmp>declare target</declare-target-openmp>
+     <print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot;hello from fib&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+     <C>!...</C>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

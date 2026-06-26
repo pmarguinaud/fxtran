@@ -1,0 +1,32 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/fort_do.1.f"><C>! @@name:fort_do.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>I</n></N></arg-N>, <arg-N><N><n>J</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl>,<EN-decl><EN-N><N><n>J</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>DO_GOOD</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>J</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>1000</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>  <do-label-stmt>DO <label>100</label> <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>10</l></literal-E></upper-bound></do-label-stmt>
+<omp>!$OMP</omp><m> </m>    <do-openmp>DO</do-openmp>
+<m>      </m>    <do-label-stmt>DO <label>100</label> <do-V><named-E><N><n>J</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>10</l></literal-E></upper-bound></do-label-stmt>
+<m>      </m>      <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>I</n></N></named-E></arg>,<arg><named-E><N><n>J</n></N></named-E></arg></arg-spec>)</call-stmt>
+<label>100</label><m>   </m>  <continue-stmt>CONTINUE</continue-stmt>      <C>!  !$OMP ENDDO implied here</C>
+
+<omp>!$OMP</omp><m> </m>  <do-openmp>DO</do-openmp>
+<m>      </m>  <do-label-stmt>DO <label>200</label> <do-V><named-E><N><n>J</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>10</l></literal-E></upper-bound></do-label-stmt>
+<label>200</label><m>   </m>    <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>I</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+<omp>!$OMP</omp><m> </m>  <end-do-openmp>ENDDO</end-do-openmp>
+
+<omp>!$OMP</omp><m> </m>  <do-openmp>DO</do-openmp>
+<m>      </m>  <do-label-stmt>DO <label>300</label> <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>10</l></literal-E></upper-bound></do-label-stmt>
+<m>      </m>    <do-label-stmt>DO <label>300</label> <do-V><named-E><N><n>J</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>10</l></literal-E></upper-bound></do-label-stmt>
+<m>      </m>      <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>I</n></N></named-E></arg>,<arg><named-E><N><n>J</n></N></named-E></arg></arg-spec>)</call-stmt>
+<label>300</label><m>   </m>  <continue-stmt>CONTINUE</continue-stmt>
+<omp>!$OMP</omp><m> </m>  <end-do-openmp>ENDDO</end-do-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>DO_GOOD</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

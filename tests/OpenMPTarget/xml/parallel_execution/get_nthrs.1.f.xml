@@ -1,0 +1,22 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/get_nthrs.1.f"><C>! @@name:get_nthrs.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:rt-error</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>I</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>I</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>I</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INCORRECT</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <include-stmt>INCLUDE <filename><S>&quot;omp_lib.h&quot;</S></filename></include-stmt>      <C>! or USE OMP_LIB</C>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>NP</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>  <a-stmt><E-1><named-E><N><n>NP</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>OMP_GET_NUM_THREADS</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>   <C>!misplaced: will return 1</C>
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>DO</N></clause> <clause><N>SCHEDULE</N>(<T>STATIC</T>)</clause></parallel-openmp>
+<m>      </m>    <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>0</l></literal-E></lower-bound>, <upper-bound><op-E><named-E><N><n>NP</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></upper-bound></do-stmt>
+<m>      </m>      <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>I</n></N></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m>    <end-do-stmt>ENDDO</end-do-stmt>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL <clause><N>DO</N></clause></end-parallel-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>INCORRECT</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

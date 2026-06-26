@@ -1,0 +1,21 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/collapse.2.f"><C>! @@name:collapse.2</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:run</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_3.0</C>
+<m>      </m><program-stmt>program <program-N><N><n>test</n></N></program-N></program-stmt>
+<omp>!$omp</omp><m> </m><parallel-openmp>parallel</parallel-openmp>
+<omp>!$omp</omp><m> </m><do-openmp>do <clause><N>private</N>(<V-LT><V-N><n>j</n></V-N>,<V-N><n>k</n></V-N></V-LT>)</clause> <clause><N>collapse</N>(<literal-E><l>2</l></literal-E>)</clause> <clause><N>lastprivate</N>(<named-E><N><n>jlast</n></N></named-E>, <named-E><N><n>klast</n></N></named-E>)</clause></do-openmp>
+<m>      </m><do-stmt>do <do-V><named-E><N><n>k</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>2</l></literal-E></upper-bound></do-stmt>
+<m>      </m>  <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>3</l></literal-E></upper-bound></do-stmt>
+<m>      </m>    <a-stmt><E-1><named-E><N><n>jlast</n></N></named-E></E-1><a>=</a><E-2><named-E><N><n>j</n></N></named-E></E-2></a-stmt>
+<m>      </m>    <a-stmt><E-1><named-E><N><n>klast</n></N></named-E></E-1><a>=</a><E-2><named-E><N><n>k</n></N></named-E></E-2></a-stmt>
+<m>      </m>  <end-do-stmt>enddo</end-do-stmt>
+<m>      </m><end-do-stmt>enddo</end-do-stmt>
+<omp>!$omp</omp><m> </m><end-do-openmp>end do</end-do-openmp>
+<omp>!$omp</omp><m> </m><single-openmp>single</single-openmp>
+<m>      </m><print-stmt>print <format>*</format>, <output-item-LT><output-item><named-E><N><n>klast</n></N></named-E></output-item>, <output-item><named-E><N><n>jlast</n></N></named-E></output-item></output-item-LT></print-stmt> <C>!2, 3</C>
+<omp>!$omp</omp><m> </m><end-single-openmp>end single</end-single-openmp>
+<omp>!$omp</omp><m> </m><end-parallel-openmp>end parallel</end-parallel-openmp>
+<m>      </m><end-program-stmt>end program <program-N><N><n>test</n></N></program-N></end-program-stmt>
+</file></object>

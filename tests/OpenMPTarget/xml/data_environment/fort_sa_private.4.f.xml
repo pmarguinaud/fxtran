@@ -1,0 +1,32 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/fort_sa_private.4.f"><C>! @@name:fort_sa_private.4</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:run</C>
+<C>! @@expect:unspecified</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>PRIV_RESTRICT4</n></N></program-N></program-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>J</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>100</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <equivalence-stmt>EQUIVALENCE <equivalence-set-LT><equivalence-set>(<equivalence-obj-LT><equivalence-obj><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>51</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></equivalence-obj>, <equivalence-obj><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></equivalence-obj></equivalence-obj-LT>)</equivalence-set></equivalence-set-LT></equivalence-stmt>
+
+<omp>!$OMP</omp><m> </m><parallel-openmp>PARALLEL <clause><N>DO</N></clause> <clause><N>DEFAULT</N>(<T>PRIVATE</T>)</clause> <clause><N>PRIVATE</N>(<V-LT><V-N><n>I</n></V-N>,<V-N><n>J</n></V-N></V-LT>)</clause> <clause><N>LASTPRIVATE</N>(<named-E><N><n>A</n></N></named-E>)</clause></parallel-openmp>
+<m>      </m>    <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+<m>      </m>       <do-stmt>DO <do-V><named-E><N><n>J</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+<m>      </m>         <a-stmt><E-1><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>J</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>J</n></N></named-E> <op><o>-</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+<m>      </m>       <end-do-stmt>ENDDO</end-do-stmt>
+
+<m>      </m>       <do-stmt>DO <do-V><named-E><N><n>J</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>100</l></literal-E></upper-bound></do-stmt>
+<m>      </m>         <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>J</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>J</n></N></named-E></E-2></a-stmt>   <C>! B becomes undefined at this point</C>
+<m>      </m>       <end-do-stmt>ENDDO</end-do-stmt>
+
+<m>      </m>       <do-stmt>DO <do-V><named-E><N><n>J</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>50</l></literal-E></upper-bound></do-stmt>
+<m>      </m>         <a-stmt><E-1><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>J</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>J</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>  <C>! B is undefined</C>
+<m>      </m>                   <C>! A becomes undefined at this point</C>
+<m>      </m>       <end-do-stmt>ENDDO</end-do-stmt>
+<m>      </m>    <end-do-stmt>ENDDO</end-do-stmt>
+<omp>!$OMP</omp><m> </m><end-parallel-openmp>END PARALLEL <clause><N>DO</N></clause></end-parallel-openmp>       <C>! The LASTPRIVATE write for A has</C>
+<m>      </m>                      <C>! undefined results</C>
+
+<m>      </m>   <print-stmt>PRINT <format>*</format>, <output-item-LT><output-item><named-E><N><n>B</n></N></named-E></output-item></output-item-LT></print-stmt>    <C>! B is undefined since the LASTPRIVATE</C>
+<m>      </m>                 <C>! write of A was not defined</C>
+<m>      </m> <end-program-stmt>END PROGRAM <program-N><N><n>PRIV_RESTRICT4</n></N></program-N></end-program-stmt>
+</file></object>

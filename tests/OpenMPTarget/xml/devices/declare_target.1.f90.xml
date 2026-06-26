@@ -1,0 +1,22 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="devices/declare_target.1.f90"><C>! @@name:&#009;declare_target.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.0</C>
+<module-stmt>module <module-N><N><n>module_fib</n></N></module-N></module-stmt>
+<T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>THRESHOLD</n></N></EN-N>=<init-E><literal-E><l>1000000</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+<contains-stmt>contains</contains-stmt>
+   <subroutine-stmt>subroutine <subroutine-N><N><n>fib</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+      <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+      <omp>!$omp</omp> <declare-target-openmp>declare target</declare-target-openmp>
+      <C>!...</C>
+   <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+<end-module-stmt>end module</end-module-stmt>
+<subroutine-stmt>subroutine <subroutine-N><N><n>my_fib</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<use-stmt>use <module-N><N><n>module_fib</n></N></module-N></use-stmt>
+<T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <omp>!$omp</omp> <target-openmp>target <clause><N>if</N>( <op-E><named-E><N><n>N</n></N></named-E> <op><o>&gt;</o></op> <named-E><N><n>THRESHOLD</n></N></named-E></op-E> )</clause></target-openmp>
+      <call-stmt>call <procedure-designator><named-E><N><n>fib</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
+   <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

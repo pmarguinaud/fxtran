@@ -1,0 +1,33 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="program_control/error.1.f90"><C>! @@name:&#009;error.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;link</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.2</C>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+<use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+
+<omp>!$omp</omp>  <broken-openmp>metadirective  <cnt>&amp;</cnt>
+<omp>!$omp</omp><cnt>&amp;</cnt>     when( implementation={vendor(gnu)}: nothing    ) <cnt>&amp;</cnt>
+<omp>!$omp</omp><cnt>&amp;</cnt>     otherwise( error at(compilation) severity(fatal) <cnt>&amp;</cnt>
+<omp>!$omp</omp><cnt>&amp;</cnt>                message( <S>&quot;GNU compiler required.&quot;</S> ) )</broken-openmp>
+
+
+<if-then-stmt>if( <condition-E><op-E><named-E><N><n>omp_get_num_procs</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>&lt;</o></op> <literal-E><l>3</l></literal-E></op-E></condition-E> ) then</if-then-stmt>
+   <omp>!$omp</omp>  <error-openmp>error <clause><N>at</N>(<T>execution</T>)</clause> <clause><N>severity</N>(<T>fatal</T>)</clause> <cnt>&amp;</cnt>
+   <omp>!$omp</omp><cnt>&amp;</cnt>       <clause><N>message</N>(<string-E><S>&quot;3 or more procs required.&quot;</S></string-E>)</clause></error-openmp>
+<end-if-stmt>endif</end-if-stmt>
+
+  <omp>!$omp</omp> <parallel-master-openmp>parallel master</parallel-master-openmp>
+
+<C>!! Give notice about master deprecation at compile time and run time.</C>
+  <omp>!$omp</omp>  <error-openmp>error <clause><N>at</N>(<T>compilation</T>)</clause> <clause><N>severity</N>(<T>warning</T>)</clause> <cnt>&amp;</cnt>
+  <omp>!$omp</omp><cnt>&amp;</cnt>       <clause><N>message</N>(<string-E><S>&quot;Notice: master is deprecated.&quot;</S></string-E>)</clause></error-openmp>
+  <omp>!$omp</omp>  <error-openmp>error <clause><N>at</N>(<T>execution</T>)</clause> <clause><N>severity</N>(<T>warning</T>)</clause> <cnt>&amp;</cnt>
+  <omp>!$omp</omp><cnt>&amp;</cnt>       <clause><N>message</N>(<string-E><S>&quot;Notice: masked to be used in next release.&quot;</S></string-E>)</clause></error-openmp>
+
+  <print-stmt>print<format>*</format>,<output-item-LT><output-item><string-E><S>&quot; Hello from thread number 0.&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+
+  <omp>!$omp</omp> <end-parallel-master-openmp>end parallel master</end-parallel-master-openmp>
+
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

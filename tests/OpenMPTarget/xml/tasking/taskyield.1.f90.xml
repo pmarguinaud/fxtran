@@ -1,0 +1,24 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="tasking/taskyield.1.f90"><C>! @@name:&#009;taskyield.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_3.1</C>
+<subroutine-stmt>subroutine <subroutine-N><N><n>foo</n></N></subroutine-N> ( <dummy-arg-LT><arg-N><N><n>lock</n></N></arg-N>, <arg-N><N><n>n</n></N></arg-N></dummy-arg-LT> )</subroutine-stmt>
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N> <K-selector>(<K-spec><arg-N n="KIND"><k>kind</k></arg-N>=<named-E><N><n>omp_lock_kind</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>lock</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
+     <omp>!$omp</omp> <task-openmp>task</task-openmp>
+       <call-stmt>call <procedure-designator><named-E><N><n>something_useful</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+       <do-stmt>do while ( <test-E><op-E><op><o>.not.</o></op> <named-E><N><n>omp_test_lock</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>lock</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></test-E> )</do-stmt>
+         <omp>!$omp</omp> <taskyield-openmp>taskyield</taskyield-openmp>
+       <end-do-stmt>end do</end-do-stmt>
+       <call-stmt>call <procedure-designator><named-E><N><n>something_critical</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+       <call-stmt>call <procedure-designator><named-E><N><n>omp_unset_lock</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>lock</n></N></named-E></arg></arg-spec>)</call-stmt>
+     <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+   <end-do-stmt>end do</end-do-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

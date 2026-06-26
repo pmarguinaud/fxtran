@@ -1,0 +1,48 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="program_control/metadirective.3.f90"><C>! @@name:&#009;metadirective.3</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.2</C>
+<module-stmt>module <module-N><N><n>params</n></N></module-N></module-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N>=<init-E><literal-E><l>1000</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>DOUBLE PRECISION</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>PARAMETER</attribute-N></attribute>::<EN-decl-LT><EN-decl><EN-N><N><n>M_PI</n></N></EN-N>=<init-E><op-E><literal-E><l>4.0d0</l></literal-E><op><o>*</o></op><named-E><N><n>DATAN</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1.0d0</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+                                     <C>! 3.1415926535897932_8</C>
+<end-module-stmt>end module</end-module-stmt>
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>exp_pi_diff</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>d</n></N></arg-N>,    <arg-N><N><n>my_pi</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+  <use-stmt>use <module-N><N><n>params</n></N></module-N></use-stmt>
+  <implicit-none-stmt>implicit none</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>          ::  <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_> ::  <EN-decl-LT><EN-decl><EN-N><N><n>d</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>my_pi</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <omp>!$omp</omp> <declare-target-openmp>declare target</declare-target-openmp>
+
+  <omp>!$omp</omp>   <broken-openmp>metadirective <cnt>&amp;</cnt>
+  <omp>!$omp</omp><cnt>&amp;</cnt>      when( construct={target}: distribute parallel do )  <cnt>&amp;</cnt>
+  <omp>!$omp</omp><cnt>&amp;</cnt>      otherwise(                parallel do simd )</broken-openmp>
+  <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>size</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>d</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></upper-bound></do-stmt>
+     <a-stmt><E-1><named-E><N><n>d</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>exp</n></N><R-LT><parens-R>( <element-LT><element><op-E><parens-E>(<op-E><named-E><N><n>M_PI</n></N></named-E><op><o>-</o></op><named-E><N><n>my_pi</n></N></named-E></op-E>)</parens-E><op><o>*</o></op><named-E><N><n>i</n></N></named-E></op-E></element></element-LT> )</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-do-stmt>end do</end-do-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+  <C>! Calculates sequence of exponentials: (M_PI-my_pi) * index</C>
+  <C>! M_PI is from usual way, and my_pi is user provided.</C>
+  <C>! Fortran Standard does not provide PI</C>
+
+  <use-stmt>use <module-N><N><n>params</n></N></module-N></use-stmt>
+  <implicit-none-stmt>implicit none</implicit-none-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>d</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>   :: <EN-decl-LT><EN-decl><EN-N><N><n>my_pi</n></N></EN-N>=<init-E><literal-E><l>3.14159265358979d0</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+      <omp>!$omp</omp> <target-teams-openmp>target teams <clause><N>map</N>(<prefix>from</prefix>: <E-LT><named-E><N><n>d</n></N></named-E></E-LT>)</clause></target-teams-openmp>
+      <call-stmt>call <procedure-designator><named-E><N><n>exp_pi_diff</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>d</n></N></named-E></arg>,<arg><named-E><N><n>my_pi</n></N></named-E></arg></arg-spec>)</call-stmt>
+      <omp>!$omp</omp> <end-target-teams-openmp>end target teams</end-target-teams-openmp>
+                                  <C>! value should be near 1</C>
+      <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;d(N) = &quot;</S></string-E></output-item>,<output-item><named-E><N><n>d</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>      <C>! 1.00000000000311</C>
+
+      <call-stmt>call <procedure-designator><named-E><N><n>exp_pi_diff</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>d</n></N></named-E></arg>,<arg><named-E><N><n>my_pi</n></N></named-E></arg></arg-spec>)</call-stmt> <C>! value should be near 1</C>
+      <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;d(N) = &quot;</S></string-E></output-item>,<output-item><named-E><N><n>d</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>      <C>! 1.00000000000311</C>
+
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

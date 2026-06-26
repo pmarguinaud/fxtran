@@ -1,0 +1,69 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="devices/target_associate_ptr.1.f90"><C>! @@name:&#009;target_associate_ptr.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.1</C>
+<program-stmt>program <program-N><N><n>target_associate</n></N></program-N></program-stmt>
+  <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+  <use-stmt>use, <module-nature>intrinsic</module-nature> :: <module-N><N><n>iso_c_binding</n></N></module-N></use-stmt>
+  <implicit-none-stmt>implicit none</implicit-none-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>CS</n></N></EN-N> = <init-E><literal-E><l>50</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N>  = <init-E><op-E><named-E><N><n>CS</n></N></named-E><op><o>*</o></op><literal-E><l>2</l></literal-E></op-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>target</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>arr</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>c_ptr</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>h_ptr</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>dev_ptr</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><named-E><N><n>c_size_t</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>csize</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>dev_off</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><named-E><N><n>c_int</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>dev</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ioff</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>s</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+    <a-stmt><E-1><named-E><N><n>arr</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>i</n></N></named-E></E-2></a-stmt>
+  <end-do-stmt>end do</end-do-stmt>
+
+  <a-stmt><E-1><named-E><N><n>dev</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_default_device</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>csize</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>c_sizeof</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>arr</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>*</o></op> <named-E><N><n>CS</n></N></named-E></op-E></E-2></a-stmt>
+
+  <C>! Allocate device memory</C>
+  <a-stmt><E-1><named-E><N><n>dev_ptr</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_target_alloc</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>csize</n></N></named-E></element>, <element><named-E><N><n>dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <a-stmt><E-1><named-E><N><n>dev_off</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
+
+  <C>! Loop over chunks</C>
+  <do-stmt>do <do-V><named-E><N><n>ioff</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>N</n></N></named-E></upper-bound>, <step><named-E><N><n>CS</n></N></named-E></step></do-stmt>
+
+    <C>! Associate device memory with one chunk of host memory</C>
+    <a-stmt><E-1><named-E><N><n>h_ptr</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>c_loc</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>arr</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>ioff</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+    <a-stmt><E-1><named-E><N><n>s</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_target_associate_ptr</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_ptr</n></N></named-E></element>, <element><named-E><N><n>dev_ptr</n></N></named-E></element>, <element><named-E><N><n>csize</n></N></named-E></element>, <element><named-E><N><n>dev_off</n></N></named-E></element>, <element><named-E><N><n>dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+    <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>&quot;before: arr(&quot;</S></string-E></output-item>, <output-item><named-E><N><n>ioff</n></N></named-E></output-item>, <output-item><string-E><S>&quot;)=&quot;</S></string-E></output-item>, <output-item><named-E><N><n>arr</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>ioff</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>
+
+    <C>! Update the device data</C>
+    <omp>!$omp</omp> <target-update-openmp>target update <clause><N>to</N>(<E-LT><named-E><N><n>arr</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><named-E><N><n>ioff</n></N></named-E></lower-bound>:<upper-bound><op-E><named-E><N><n>ioff</n></N></named-E><op><o>+</o></op><op-E><named-E><N><n>CS</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></op-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E>)</E-LT></clause> <clause><N>device</N>(<named-E><N><n>dev</n></N></named-E>)</clause></target-update-openmp>
+
+    <C>! Explicit mapping of arr to make sure that we use the allocated </C>
+    <C>! and associated memory.  No host-device data update here.</C>
+    <omp>!$omp</omp> <target-openmp>target <clause><N>map</N>(<prefix>tofrom</prefix>: <E-LT><named-E><N><n>arr</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><named-E><N><n>ioff</n></N></named-E></lower-bound>:<upper-bound><op-E><named-E><N><n>ioff</n></N></named-E><op><o>+</o></op><op-E><named-E><N><n>CS</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></op-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E></E-LT>)</clause> <clause><N>device</N>(<named-E><N><n>dev</n></N></named-E>)</clause></target-openmp>
+      <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>0</l></literal-E></lower-bound>, <upper-bound><op-E><named-E><N><n>CS</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></upper-bound></do-stmt>
+        <a-stmt><E-1><named-E><N><n>arr</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>i</n></N></named-E><op><o>+</o></op><named-E><N><n>ioff</n></N></named-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>arr</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>i</n></N></named-E><op><o>+</o></op><named-E><N><n>ioff</n></N></named-E></op-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+      <end-do-stmt>end do</end-do-stmt>
+    <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+
+    <C>! Update the host data</C>
+    <omp>!$omp</omp> <target-update-openmp>target update <clause><N>from</N>(<E-LT><named-E><N><n>arr</n></N><R-LT><array-R>(<section-subscript-LT><section-subscript><lower-bound><named-E><N><n>ioff</n></N></named-E></lower-bound>:<upper-bound><op-E><named-E><N><n>ioff</n></N></named-E><op><o>+</o></op><op-E><named-E><N><n>CS</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></op-E></upper-bound></section-subscript></section-subscript-LT>)</array-R></R-LT></named-E>)</E-LT></clause> <clause><N>device</N>(<named-E><N><n>dev</n></N></named-E>)</clause></target-update-openmp>
+
+    <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>&quot;after: arr(&quot;</S></string-E></output-item>, <output-item><named-E><N><n>ioff</n></N></named-E></output-item>, <output-item><string-E><S>&quot;)=&quot;</S></string-E></output-item>, <output-item><named-E><N><n>arr</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>ioff</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>
+
+    <C>! Disassociate device pointer from the current chunk of host memory</C>
+    <C>! before next use</C>
+    <a-stmt><E-1><named-E><N><n>s</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_target_disassociate_ptr</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>h_ptr</n></N></named-E></element>, <element><named-E><N><n>dev</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-do-stmt>end do</end-do-stmt>
+
+  <C>! Free device memory</C>
+  <call-stmt>call <procedure-designator><named-E><N><n>omp_target_free</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>dev_ptr</n></N></named-E></arg>, <arg><named-E><N><n>dev</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+<end-program-stmt>end</end-program-stmt>
+<C>! Outputs:</C>
+<C>!  before: arr( 1 )= 1</C>
+<C>!  after: arr( 1 )= 2</C>
+<C>!  before: arr( 51 )= 51</C>
+<C>!  after: arr( 51 )= 52</C>
+</file></object>

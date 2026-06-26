@@ -1,0 +1,25 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/atomic.2.f"><C>! @@name:atomic.2</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_3.1</C>
+<m>      </m> <function-stmt>function <function-N><N><n>atomic_read</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>p</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+<m>      </m> <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>atomic_read</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m> <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>in</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>p</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<C>! Guarantee that the entire value of p is read atomically. No part of</C>
+<C>! p can change during the read operation.</C>
+
+<omp>!$omp</omp><m> </m><atomic-openmp>atomic <clause><N>read</N></clause></atomic-openmp>
+<m>      </m> <a-stmt><E-1><named-E><N><n>atomic_read</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>p</n></N></named-E></E-2></a-stmt>
+<m>      </m> <return-stmt>return</return-stmt>
+<m>      </m> <end-function-stmt>end function <function-N><N><n>atomic_read</n></N></function-N></end-function-stmt>
+
+<m>      </m> <subroutine-stmt>subroutine <subroutine-N><N><n>atomic_write</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>p</n></N></arg-N>, <arg-N><N><n>value</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m> <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>out</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>p</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m> <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>in</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>value</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<C>! Guarantee that value is stored atomically into p. No part of p can change</C>
+<C>! until after the entire write operation is completed.</C>
+<omp>!$omp</omp><m> </m><atomic-openmp>atomic <clause><N>write</N></clause></atomic-openmp>
+<m>      </m> <a-stmt><E-1><named-E><N><n>p</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>value</n></N></named-E></E-2></a-stmt>
+<m>      </m> <end-subroutine-stmt>end subroutine <subroutine-N><N><n>atomic_write</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

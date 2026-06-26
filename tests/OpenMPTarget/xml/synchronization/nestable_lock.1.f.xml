@@ -1,0 +1,64 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/nestable_lock.1.f"><C>! @@name:nestable_lock.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><module-stmt>MODULE <module-N><N><n>DATA</n></N></module-N></module-stmt>
+<m>      </m>  <use-stmt>USE <module-N><N><n>OMP_LIB</n></N></module-N>, ONLY: <rename-LT><rename><use-N><N><n>OMP_NEST_LOCK_KIND</n></N></use-N></rename></rename-LT></use-stmt>
+<m>      </m>  <T-stmt>TYPE <T-N><N><n>LOCKED_PAIR</n></N></T-N></T-stmt>
+<m>      </m>    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+<m>      </m>    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+<m>      </m>    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N> <K-selector>(<K-spec><named-E><N><n>OMP_NEST_LOCK_KIND</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>LCK</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+<m>      </m> <end-T-stmt>END TYPE</end-T-stmt>
+<m>      </m><end-module-stmt>END MODULE <module-N><N><n>DATA</n></N></module-N></end-module-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INCR_A</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>P</n></N></arg-N>, <arg-N><N><n>A</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <C>! called only from INCR_PAIR, no need to lock</C>
+<m>      </m>  <use-stmt>USE <module-N><N><n>DATA</n></N></module-N></use-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>LOCKED_PAIR</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>P</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>P</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>P</n></N><R-LT><component-R>%<ct>A</ct></component-R></R-LT></named-E> <op><o>+</o></op> <named-E><N><n>A</n></N></named-E></op-E></E-2></a-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>INCR_A</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INCR_B</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>P</n></N></arg-N>, <arg-N><N><n>B</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <C>! called from both INCR_PAIR and elsewhere,</C>
+<m>      </m>  <C>! so we need a nestable lock</C>
+<m>      </m>  <use-stmt>USE <module-N><N><n>OMP_LIB</n></N></module-N></use-stmt>       <C>! or INCLUDE &quot;omp_lib.h&quot;</C>
+<m>      </m>  <use-stmt>USE <module-N><N><n>DATA</n></N></module-N></use-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>LOCKED_PAIR</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>P</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>OMP_SET_NEST_LOCK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N><R-LT><component-R>%<ct>LCK</ct></component-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>P</n></N><R-LT><component-R>%<ct>B</ct></component-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>P</n></N><R-LT><component-R>%<ct>B</ct></component-R></R-LT></named-E> <op><o>+</o></op> <named-E><N><n>B</n></N></named-E></op-E></E-2></a-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>OMP_UNSET_NEST_LOCK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N><R-LT><component-R>%<ct>LCK</ct></component-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>INCR_B</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INCR_PAIR</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>P</n></N></arg-N>, <arg-N><N><n>A</n></N></arg-N>, <arg-N><N><n>B</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <use-stmt>USE <module-N><N><n>OMP_LIB</n></N></module-N></use-stmt>        <C>! or INCLUDE &quot;omp_lib.h&quot;</C>
+<m>      </m>  <use-stmt>USE <module-N><N><n>DATA</n></N></module-N></use-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>LOCKED_PAIR</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>P</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>OMP_SET_NEST_LOCK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N><R-LT><component-R>%<ct>LCK</ct></component-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>INCR_A</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N></named-E></arg>, <arg><named-E><N><n>A</n></N></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>INCR_B</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N></named-E></arg>, <arg><named-E><N><n>B</n></N></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>OMP_UNSET_NEST_LOCK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N><R-LT><component-R>%<ct>LCK</ct></component-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>INCR_PAIR</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>NESTLOCK</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>P</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <use-stmt>USE <module-N><N><n>OMP_LIB</n></N></module-N></use-stmt>        <C>! or INCLUDE &quot;omp_lib.h&quot;</C>
+<m>      </m>  <use-stmt>USE <module-N><N><n>DATA</n></N></module-N></use-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><derived-T-spec>TYPE(<T-N><N><n>LOCKED_PAIR</n></N></T-N>)</derived-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>P</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>WORK1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>WORK2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>WORK3</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <external-stmt>EXTERNAL <EN-decl-LT><EN-decl><EN-N><N><n>WORK1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>WORK2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>WORK3</n></N></EN-N></EN-decl></EN-decl-LT></external-stmt>
+
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>SECTIONS</N></clause></parallel-openmp>
+
+<omp>!$OMP</omp><m> </m>  <section-openmp>SECTION</section-openmp>
+<m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>INCR_PAIR</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N></named-E></arg>, <arg><named-E><N><n>WORK1</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></arg>, <arg><named-E><N><n>WORK2</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m>  <section-openmp>SECTION</section-openmp>
+<m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>INCR_B</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>P</n></N></named-E></arg>, <arg><named-E><N><n>WORK3</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL <clause><N>SECTIONS</N></clause></end-parallel-openmp>
+
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>NESTLOCK</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

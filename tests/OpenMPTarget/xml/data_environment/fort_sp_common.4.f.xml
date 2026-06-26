@@ -1,0 +1,13 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/fort_sp_common.4.f"><C>! @@name:fort_sp_common.4</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:ct-error</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>COMMON_WRONG</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <common-stmt>COMMON /<common-block-N><n>C</n></common-block-N>/ <common-block-obj-LT><common-block-obj><common-block-obj-N><N><n>X</n></N></common-block-obj-N></common-block-obj>,<common-block-obj><common-block-obj-N><N><n>Y</n></N></common-block-obj-N></common-block-obj></common-block-obj-LT></common-stmt>
+<C>! Incorrect because X is a constituent element of C</C>
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>PRIVATE</N>(<V-LT><common-block>/<common-block-N><n>C</n></common-block-N>/</common-block></V-LT>)</clause>, <clause><N>SHARED</N>(<V-LT><V-N><n>X</n></V-N></V-LT>)</clause></parallel-openmp>
+<m>      </m>    <C>! do work here</C>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>COMMON_WRONG</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

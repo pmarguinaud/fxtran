@@ -1,0 +1,36 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="tasking/task_detach.1.f90"><C>! @@name:&#009;task_detach.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.0</C>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+  <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+  <implicit-none-stmt>implicit none</implicit-none-stmt>
+
+  <external-stmt>external :: <EN-decl-LT><EN-decl><EN-N><N><n>async_work</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>work</n></N></EN-N></EN-decl></EN-decl-LT></external-stmt>
+
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>logical</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>async</n></N></EN-N>=<init-E><literal-E>.true.</literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><named-E><N><n>omp_event_handle_kind</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>event</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <omp>!$omp</omp> <parallel-openmp>parallel</parallel-openmp>
+  <omp>!$omp</omp> <masked-openmp>masked</masked-openmp>
+
+    <omp>!$omp</omp> <task-openmp>task <clause><N>detach</N>(<named-E><N><n>event</n></N></named-E>)</clause></task-openmp>
+
+      <if-then-stmt>if(<condition-E><named-E><N><n>async</n></N></named-E></condition-E>) then</if-then-stmt>
+        <call-stmt>call <procedure-designator><named-E><N><n>async_work</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>omp_fulfill_event</n></N></named-E></arg>, <arg><named-E><N><n>event</n></N></named-E></arg></arg-spec>)</call-stmt>
+      <else-stmt>else</else-stmt>
+        <call-stmt>call <procedure-designator><named-E><N><n>work</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+        <call-stmt>call <procedure-designator><named-E><N><n>omp_fulfill_event</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>event</n></N></named-E></arg></arg-spec>)</call-stmt>
+      <end-if-stmt>endif</end-if-stmt>
+
+    <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+                  <C>!! Other work</C>
+
+    <omp>!$omp</omp> <taskwait-openmp>taskwait</taskwait-openmp>
+
+  <omp>!$omp</omp> <end-masked-openmp>end masked</end-masked-openmp>
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

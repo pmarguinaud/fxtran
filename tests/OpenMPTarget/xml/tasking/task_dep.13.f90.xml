@@ -1,0 +1,52 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="tasking/task_dep.13.f90"><C>! @@name:&#009;task_dep.13</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.1</C>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N>=<init-E><literal-E><l>1</l></literal-E></init-E></EN-decl>, <EN-decl><EN-N><N><n>d</n></N></EN-N>=<init-E><literal-E><l>1</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>masked</N></clause>  <clause><N>num_threads</N>(<literal-E><l>5</l></literal-E>)</clause></parallel-openmp>
+
+    <omp>!$omp</omp> <task-openmp>task</task-openmp>                                 <C>!! Task 1</C>
+       <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;T1&quot;)'</S></string-E></io-control></io-control-spec>)</write-stmt>
+    <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+    <omp>!$omp</omp> <task-openmp>task <clause><N>depend</N>(<T><n>out</n></T>: <E-LT><named-E><N><n>a</n></N></named-E></E-LT>)</clause></task-openmp>                  <C>!! Task 2</C>
+       <a-stmt><E-1><named-E><N><n>a</n></N></named-E></E-1><a>=</a><E-2><op-E><named-E><N><n>a</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+       <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;T2 a=&quot;,i1)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>a</n></N></named-E></output-item></output-item-LT></write-stmt>
+    <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+    <omp>!$omp</omp> <task-openmp>task <clause><N>depend</N>(<T><n>out</n></T>: <E-LT><named-E><N><n>d</n></N></named-E></E-LT>)</clause></task-openmp>                  <C>!! Task 3</C>
+       <a-stmt><E-1><named-E><N><n>d</n></N></named-E></E-1><a>=</a><E-2><op-E><named-E><N><n>d</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+       <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;T3 d=&quot;,i1)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>d</n></N></named-E></output-item></output-item-LT></write-stmt>
+    <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+ 
+    <omp>!$omp</omp> <task-openmp>task <clause><N>depend</N>(<T><n>inout</n></T>: <E-LT><named-E><N><n>omp_all_memory</n></N></named-E></E-LT>)</clause></task-openmp>   <C>!! Task 4</C>
+       <a-stmt><E-1><named-E><N><n>a</n></N></named-E></E-1><a>=</a><E-2><op-E><named-E><N><n>a</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></E-2></a-stmt><smc>;</smc> <a-stmt><E-1><named-E><N><n>d</n></N></named-E></E-1><a>=</a><E-2><op-E><named-E><N><n>d</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+       <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;T4 a=&quot;,i1,&quot; d=&quot;,i1)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>a</n></N></named-E></output-item>, <output-item><named-E><N><n>d</n></N></named-E></output-item></output-item-LT></write-stmt>
+    <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+    <omp>!$omp</omp> <task-openmp>task</task-openmp>                                 <C>!! Task 5</C>
+       <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;T5&quot;)'</S></string-E></io-control></io-control-spec>)</write-stmt> 
+    <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+ 
+    <omp>!$omp</omp> <task-openmp>task <clause><N>depend</N>(<T><n>in</n></T>: <E-LT><named-E><N><n>a</n></N></named-E>,<named-E><N><n>d</n></N></named-E></E-LT>)</clause></task-openmp>                 <C>!! Task 6</C>
+       <a-stmt><E-1><named-E><N><n>a</n></N></named-E></E-1><a>=</a><E-2><op-E><named-E><N><n>a</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></E-2></a-stmt><smc>;</smc> <a-stmt><E-1><named-E><N><n>d</n></N></named-E></E-1><a>=</a><E-2><op-E><named-E><N><n>d</n></N></named-E><op><o>+</o></op><literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+       <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(&quot;T6 a=&quot;,i1,&quot; d=&quot;,i1)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>a</n></N></named-E></output-item>, <output-item><named-E><N><n>d</n></N></named-E></output-item></output-item-LT></write-stmt>
+    <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+  <omp>!$omp</omp> <end-parallel-openmp>end parallel <clause><N>masked</N></clause></end-parallel-openmp>
+
+<end-program-stmt>end program</end-program-stmt>
+
+<C>! OUTPUT: ordered  {T2,T3 any order}, {T4}, {T6}</C>
+<C>! T2 a=2</C>
+<C>! T3 d=2</C>
+<C>! T4 a=3 d=3</C>
+<C>! T6 a=4 d=4</C>
+<C>! OUTPUT: unordered (can appear interspersed in ordered output)</C>
+<C>! T1</C>
+<C>! T5</C>
+</file></object>

@@ -1,0 +1,51 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/atomic.3.f"><C>! @@name:atomic.3</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_3.1</C>
+<m>      </m> <function-stmt>function <function-N><N><n>fetch_and_add</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>p</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+<m>      </m> <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>:: <EN-decl-LT><EN-decl><EN-N><N><n>fetch_and_add</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m> <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>inout</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>p</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<C>! Atomically read the value of p and then increment it. The previous value</C>
+<C>! is returned. This can be used to implement a simple lock as shown below.</C>
+<omp>!$omp</omp><m> </m><atomic-openmp>atomic <clause><N>capture</N></clause></atomic-openmp>
+<m>      </m> <a-stmt><E-1><named-E><N><n>fetch_and_add</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>p</n></N></named-E></E-2></a-stmt>
+<m>      </m> <a-stmt><E-1><named-E><N><n>p</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>p</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+<omp>!$omp</omp><m> </m><end-atomic-openmp>end atomic</end-atomic-openmp>
+<m>      </m> <end-function-stmt>end function <function-N><N><n>fetch_and_add</n></N></function-N></end-function-stmt>
+<m>      </m> <module-stmt>module <module-N><N><n>m</n></N></module-N></module-stmt>
+<m>      </m> <interface-stmt>interface</interface-stmt>
+<m>      </m>   <function-stmt>function <function-N><N><n>fetch_and_add</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>p</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+<m>      </m>     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>fetch_and_add</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>inout</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>p</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>   <end-function-stmt>end function</end-function-stmt>
+<m>      </m>   <function-stmt>function <function-N><N><n>atomic_read</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>p</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+<m>      </m>     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>atomic_read</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>     <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>in</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>p</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>   <end-function-stmt>end function</end-function-stmt>
+<m>      </m> <end-interface-stmt>end interface</end-interface-stmt>
+<m>      </m> <T-stmt>type <T-N><N><n>locktype</n></N></T-N></T-stmt>
+<m>      </m>    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>ticketnumber</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+<m>      </m>    <component-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>turn</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+<m>      </m> <end-T-stmt>end type</end-T-stmt>
+<m>      </m> <contains-stmt>contains</contains-stmt>
+<m>      </m> <subroutine-stmt>subroutine <subroutine-N><N><n>do_locked_work</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>lock</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m> <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>locktype</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>intent</attribute-N>(<intent-spec>inout</intent-spec>)</attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>lock</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m> <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>myturn</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m> <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>junk</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<C>! obtain the lock</C>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>myturn</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>fetch_and_add</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>lock</n></N><R-LT><component-R>%<ct>ticketnumber</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m>  <do-stmt>do while (<test-E><op-E><named-E><N><n>atomic_read</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>lock</n></N><R-LT><component-R>%<ct>turn</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>.ne.</o></op> <named-E><N><n>myturn</n></N></named-E></op-E></test-E>)</do-stmt>
+<m>      </m>    <continue-stmt>continue</continue-stmt>
+<m>      </m>  <end-do-stmt>enddo</end-do-stmt>
+<C>! Do some work. The flush is needed to ensure visibility of variables</C>
+<C>! not involved in atomic directives</C>
+<omp>!$omp</omp><m> </m><flush-openmp>flush</flush-openmp>
+<m>      </m> <call-stmt>call <procedure-designator><named-E><N><n>work</n></N></named-E></procedure-designator></call-stmt>
+<omp>!$omp</omp><m> </m><flush-openmp>flush</flush-openmp>
+<C>! Release the lock</C>
+<m>      </m> <a-stmt><E-1><named-E><N><n>junk</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>fetch_and_add</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>lock</n></N><R-LT><component-R>%<ct>turn</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+<m>      </m> <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+<m>      </m> <end-module-stmt>end module</end-module-stmt>
+</file></object>

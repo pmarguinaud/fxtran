@@ -1,0 +1,17 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/threadprivate.3.f"><C>! @@name:threadprivate.3</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:ct-error</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INC_WRONG</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <common-stmt>COMMON /<common-block-N><n>T</n></common-block-N>/ <common-block-obj-LT><common-block-obj><common-block-obj-N><N><n>A</n></N></common-block-obj-N></common-block-obj></common-block-obj-LT></common-stmt>
+<omp>!$OMP</omp><m> </m>  <threadprivate-openmp>THREADPRIVATE(<V-LT><common-block>/<common-block-N><n>T</n></common-block-N>/</common-block></V-LT>)</threadprivate-openmp>
+
+<m>      </m>  <contains-stmt>CONTAINS</contains-stmt>
+<m>      </m>    <subroutine-stmt>SUBROUTINE <subroutine-N><N><n>INC_WRONG_SUB</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
+<omp>!$OMP</omp><m> </m>      <parallel-openmp>PARALLEL <clause><N>COPYIN</N>(<V-LT><common-block>/<common-block-N><n>T</n></common-block-N>/</common-block></V-LT>)</clause></parallel-openmp>
+<m>      </m><C>!non-conforming because /T/ not declared in INC_WRONG_SUB</C>
+<omp>!$OMP</omp><m> </m>      <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m>    <end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>INC_WRONG_SUB</n></N></subroutine-N></end-subroutine-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>INC_WRONG</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

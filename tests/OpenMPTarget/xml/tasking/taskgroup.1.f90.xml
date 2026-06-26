@@ -1,0 +1,54 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="tasking/taskgroup.1.f90"><C>! @@name:&#009;taskgroup.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.0</C>
+<module-stmt>module <module-N><N><n>tree_type_mod</n></N></module-N></module-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>max_steps</n></N></EN-N>=<init-E><literal-E><l>100</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-stmt>type <T-N><N><n>tree_type</n></N></T-N></T-stmt>
+    <component-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>tree_type</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>pointer</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>left</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>right</n></N></EN-N></EN-decl></EN-decl-LT></component-decl-stmt>
+  <end-T-stmt>end type</end-T-stmt>
+  <contains-stmt>contains</contains-stmt>
+    <subroutine-stmt>subroutine <subroutine-N><N><n>compute_something</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>tree</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+      <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>tree_type</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>pointer</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>tree</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<C>! some computation</C>
+    <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+    <subroutine-stmt><prefix>recursive</prefix> subroutine <subroutine-N><N><n>compute_tree</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>tree</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+      <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>tree_type</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>pointer</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>tree</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+      <if-then-stmt>if (<condition-E><named-E><N><n>associated</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>tree</n></N><R-LT><component-R>%<ct>left</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) then</if-then-stmt>
+<omp>!$omp</omp> <task-openmp>task</task-openmp>
+        <call-stmt>call <procedure-designator><named-E><N><n>compute_tree</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>tree</n></N><R-LT><component-R>%<ct>left</ct></component-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+      <end-if-stmt>endif</end-if-stmt>
+      <if-then-stmt>if (<condition-E><named-E><N><n>associated</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>tree</n></N><R-LT><component-R>%<ct>right</ct></component-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></condition-E>) then</if-then-stmt>
+<omp>!$omp</omp> <task-openmp>task</task-openmp>
+        <call-stmt>call <procedure-designator><named-E><N><n>compute_tree</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>tree</n></N><R-LT><component-R>%<ct>right</ct></component-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+      <end-if-stmt>endif</end-if-stmt>
+<omp>!$omp</omp> <task-openmp>task</task-openmp>
+      <call-stmt>call <procedure-designator><named-E><N><n>compute_something</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>tree</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+    <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+<end-module-stmt>end module</end-module-stmt>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+  <use-stmt>use <module-N><N><n>tree_type_mod</n></N></module-N></use-stmt>
+  <T-decl-stmt><_T-spec_><derived-T-spec>type(<T-N><N><n>tree_type</n></N></T-N>)</derived-T-spec></_T-spec_>, <attribute><attribute-N>pointer</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>tree</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <call-stmt>call <procedure-designator><named-E><N><n>init_tree</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>tree</n></N></named-E></arg></arg-spec>)</call-stmt><smc>;</smc>
+<omp>!$omp</omp> <parallel-openmp>parallel</parallel-openmp>
+<omp>!$omp</omp> <single-openmp>single</single-openmp>
+<omp>!$omp</omp> <task-openmp>task</task-openmp>
+  <call-stmt>call <procedure-designator><named-E><N><n>start_background_work</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+  <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>max_steps</n></N></named-E></upper-bound></do-stmt>
+<omp>!$omp</omp> <taskgroup-openmp>taskgroup</taskgroup-openmp>
+<omp>!$omp</omp> <task-openmp>task</task-openmp>
+    <call-stmt>call <procedure-designator><named-E><N><n>compute_tree</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>tree</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+<omp>!$omp</omp> <end-taskgroup-openmp>end taskgroup</end-taskgroup-openmp> <C>! wait on tree traversal in this step</C>
+    <call-stmt>call <procedure-designator><named-E><N><n>check_step</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+  <end-do-stmt>enddo</end-do-stmt>
+<omp>!$omp</omp> <end-single-openmp>end single</end-single-openmp>
+<omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>    <C>! only now is background work required to be complete</C>
+  <call-stmt>call <procedure-designator><named-E><N><n>print_results</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

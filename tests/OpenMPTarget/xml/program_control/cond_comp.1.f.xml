@@ -1,0 +1,12 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="program_control/cond_comp.1.f"><C>! @@name:cond_comp.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:run</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>EXAMPLE</n></N></program-N></program-stmt>
+
+<C>C234567890</C>
+<C>!$    PRINT *, &quot;Compiled by an OpenMP-compliant implementation.&quot;</C>
+
+<m>      </m><end-program-stmt>END PROGRAM <program-N><N><n>EXAMPLE</n></N></program-N></end-program-stmt>
+</file></object>

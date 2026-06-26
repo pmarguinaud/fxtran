@@ -1,0 +1,21 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/collapse.3.f"><C>! @@name:collapse.3</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_3.0</C>
+<m>      </m><program-stmt>program <program-N><N><n>test</n></N></program-N></program-stmt>
+<m>      </m><include-stmt>include <filename><S>'omp_lib.h'</S></filename></include-stmt>
+<omp>!$omp</omp><m> </m><parallel-openmp>parallel <clause><N>num_threads</N>(<literal-E><l>2</l></literal-E>)</clause></parallel-openmp>
+<omp>!$omp</omp><m> </m><do-openmp>do <clause><N>collapse</N>(<literal-E><l>2</l></literal-E>)</clause> <clause><N>ordered</N></clause> <clause><N>private</N>(<V-LT><V-N><n>j</n></V-N>,<V-N><n>k</n></V-N></V-LT>)</clause> <clause><N>schedule</N>(<T>static</T>,<chunk-size><literal-E><l>3</l></literal-E></chunk-size>)</clause></do-openmp>
+<m>      </m><do-stmt>do <do-V><named-E><N><n>k</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>3</l></literal-E></upper-bound></do-stmt>
+<m>      </m>  <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>2</l></literal-E></upper-bound></do-stmt>
+<omp>!$omp</omp><m> </m><ordered-openmp>ordered</ordered-openmp>
+<m>      </m>    <print-stmt>print <format>*</format>, <output-item-LT><output-item><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><named-E><N><n>k</n></N></named-E></output-item>, <output-item><named-E><N><n>j</n></N></named-E></output-item></output-item-LT></print-stmt>
+<omp>!$omp</omp><m> </m><end-ordered-openmp>end ordered</end-ordered-openmp>
+<m>      </m>    <call-stmt>call <procedure-designator><named-E><N><n>work</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>a</n></N></named-E></arg>,<arg><named-E><N><n>j</n></N></named-E></arg>,<arg><named-E><N><n>k</n></N></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m>  <end-do-stmt>enddo</end-do-stmt>
+<m>      </m><end-do-stmt>enddo</end-do-stmt>
+<omp>!$omp</omp><m> </m><end-do-openmp>end do</end-do-openmp>
+<omp>!$omp</omp><m> </m><end-parallel-openmp>end parallel</end-parallel-openmp>
+<m>      </m><end-program-stmt>end program <program-N><N><n>test</n></N></program-N></end-program-stmt>
+</file></object>

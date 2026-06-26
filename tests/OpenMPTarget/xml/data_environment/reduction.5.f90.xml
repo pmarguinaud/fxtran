@@ -1,0 +1,21 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/reduction.5.f90"><C>! @@name:&#009;reduction.5</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;pre_omp_3.0</C>
+<module-stmt>MODULE <module-N><N><n>MOD</n></N></module-N></module-stmt>
+   <intrinsic-stmt>INTRINSIC <EN-decl-LT><EN-decl><EN-N><N><n>MAX</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>MIN</n></N></EN-N></EN-decl></EN-decl-LT></intrinsic-stmt>
+<end-module-stmt>END MODULE <module-N><N><n>MOD</n></N></module-N></end-module-stmt>
+
+<program-stmt>PROGRAM <program-N><N><n>REDUCTION4</n></N></program-N></program-stmt>
+   <use-stmt>USE <module-N><N><n>MOD</n></N></module-N>, <rename-LT><rename><use-N><N><n>MIN</n></N></use-N>=&gt;<N><N><n>MAX</n></N></N></rename>, <rename><use-N><N><n>MAX</n></N></use-N>=&gt;<N><N><n>MIN</n></N></N></rename></rename-LT></use-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>R</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <a-stmt><E-1><named-E><N><n>R</n></N></named-E></E-1> <a>=</a> <E-2><op-E><op><o>-</o></op><named-E><N><n>HUGE</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>0.0</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+
+<omp>!$OMP</omp> <parallel-openmp>PARALLEL <clause><N>DO</N></clause> <clause><N>REDUCTION</N>(<op><n>MIN</n></op>: <V-LT><V><n>R</n></V></V-LT>)</clause></parallel-openmp>     <C>! still does MAX</C>
+   <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><literal-E><l>1000</l></literal-E></upper-bound></do-stmt>
+      <a-stmt><E-1><named-E><N><n>R</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>MIN</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>R</n></N></named-E></element>, <element><named-E><N><n>SIN</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>REAL</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+   <end-do-stmt>END DO</end-do-stmt>
+   <print-stmt>PRINT <format>*</format>, <output-item-LT><output-item><named-E><N><n>R</n></N></named-E></output-item></output-item-LT></print-stmt>
+<end-program-stmt>END PROGRAM <program-N><N><n>REDUCTION4</n></N></program-N></end-program-stmt>
+</file></object>

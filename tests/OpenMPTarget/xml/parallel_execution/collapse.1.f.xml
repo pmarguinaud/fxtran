@@ -1,0 +1,24 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/collapse.1.f"><C>! @@name:collapse.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_3.0</C>
+<m>      </m><subroutine-stmt>subroutine <subroutine-N><N><n>sub</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>a</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><star-E>*</star-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>kl</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ku</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ks</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>jl</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>ju</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>js</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>il</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>iu</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>is</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><common-stmt>common /<common-block-N><n>csub</n></common-block-N>/ <common-block-obj-LT><common-block-obj><common-block-obj-N><N><n>kl</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>ku</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>ks</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>jl</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>ju</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>js</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>il</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>iu</n></N></common-block-obj-N></common-block-obj>, <common-block-obj><common-block-obj-N><N><n>is</n></N></common-block-obj-N></common-block-obj></common-block-obj-LT></common-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>k</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$omp</omp><m> </m><do-openmp>do <clause><N>collapse</N>(<literal-E><l>2</l></literal-E>)</clause> <clause><N>private</N>(<V-LT><V-N><n>i</n></V-N>,<V-N><n>j</n></V-N>,<V-N><n>k</n></V-N></V-LT>)</clause></do-openmp>
+<m>      </m> <do-stmt>do <do-V><named-E><N><n>k</n></N></named-E></do-V> = <lower-bound><named-E><N><n>kl</n></N></named-E></lower-bound>, <upper-bound><named-E><N><n>ku</n></N></named-E></upper-bound>, <step><named-E><N><n>ks</n></N></named-E></step></do-stmt>
+<m>      </m>   <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V> = <lower-bound><named-E><N><n>jl</n></N></named-E></lower-bound>, <upper-bound><named-E><N><n>ju</n></N></named-E></upper-bound>, <step><named-E><N><n>js</n></N></named-E></step></do-stmt>
+<m>      </m>     <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><named-E><N><n>il</n></N></named-E></lower-bound>, <upper-bound><named-E><N><n>iu</n></N></named-E></upper-bound>, <step><named-E><N><n>is</n></N></named-E></step></do-stmt>
+<m>      </m>       <call-stmt>call <procedure-designator><named-E><N><n>bar</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>a</n></N></named-E></arg>,<arg><named-E><N><n>i</n></N></named-E></arg>,<arg><named-E><N><n>j</n></N></named-E></arg>,<arg><named-E><N><n>k</n></N></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m>    <end-do-stmt>enddo</end-do-stmt>
+<m>      </m>  <end-do-stmt>enddo</end-do-stmt>
+<m>      </m><end-do-stmt>enddo</end-do-stmt>
+<omp>!$omp</omp><m> </m><end-do-openmp>end do</end-do-openmp>
+
+<m>      </m><end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

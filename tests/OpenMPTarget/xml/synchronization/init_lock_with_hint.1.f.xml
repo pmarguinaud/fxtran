@@ -1,0 +1,20 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/init_lock_with_hint.1.f"><C>! @@name:init_lock_with_hint.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_5.0</C>
+<m>      </m><function-stmt>FUNCTION <function-N><N><n>NEW_LOCKS</n></N></function-N>(<dummy-arg-LT></dummy-arg-LT>)</function-stmt>
+<m>      </m>  <use-stmt>USE <module-N><N><n>OMP_LIB</n></N></module-N></use-stmt>        <C>! or INCLUDE &quot;omp_lib.h&quot;</C>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N><K-selector>(<K-spec><named-E><N><n>OMP_LOCK_KIND</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>DIMENSION</attribute-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>1000</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>NEW_LOCKS</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>DO</N></clause> <clause><N>PRIVATE</N>(<V-LT><V-N><n>I</n></V-N></V-LT>)</clause></parallel-openmp>
+<m>      </m>    <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>1000</l></literal-E></upper-bound></do-stmt>
+<m>      </m>      <call-stmt>CALL <procedure-designator><named-E><N><n>OMP_INIT_LOCK_WITH_HINT</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>NEW_LOCKS</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>I</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg>, 
+<m>     </m><cnt>&amp;</cnt>             <arg><op-E><named-E><N><n>OMP_SYNC_HINT_CONTENDED</n></N></named-E> <op><o>+</o></op> <named-E><N><n>OMP_SYNC_HINT_SPECULATIVE</n></N></named-E></op-E></arg></arg-spec>)</call-stmt>
+<m>      </m>    <end-do-stmt>END DO</end-do-stmt>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL <clause><N>DO</N></clause></end-parallel-openmp>
+
+<m>      </m><end-function-stmt>END FUNCTION <function-N><N><n>NEW_LOCKS</n></N></function-N></end-function-stmt>
+</file></object>

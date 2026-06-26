@@ -1,0 +1,22 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/doacross.1.f90"><C>! @@name:&#009;doacross.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.2</C>
+<subroutine-stmt>subroutine <subroutine-N><N><n>work</n></N></subroutine-N>( <dummy-arg-LT><arg-N><N><n>N</n></N></arg-N>, <arg-N><N><n>A</n></N></arg-N>, <arg-N><N><n>B</n></N></arg-N>, <arg-N><N><n>C</n></N></arg-N></dummy-arg-LT> )</subroutine-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>dimension</attribute-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>A</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>B</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>C</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>external</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>foo</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>bar</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>baz</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+  <omp>!$omp</omp> <do-openmp>do <clause><N>ordered</N>(<literal-E><l>1</l></literal-E>)</clause></do-openmp>
+  <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>2</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+    <a-stmt><E-1><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>foo</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+  <omp>!$omp</omp> <ordered-openmp>ordered <clause><N>doacross</N>(<T><n>sink</n></T>: <E-LT><op-E><named-E><N><n>i</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></E-LT>)</clause></ordered-openmp>
+    <a-stmt><E-1><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>bar</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>A</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element>, <element><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>i</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <omp>!$omp</omp> <ordered-openmp>ordered <clause><N>doacross</N>(<T><n>source</n></T>: <E-LT><named-E><N><n>omp_cur_iteration</n></N></named-E></E-LT>)</clause></ordered-openmp>
+
+    <a-stmt><E-1><named-E><N><n>C</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>baz</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+  <end-do-stmt>end do</end-do-stmt>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

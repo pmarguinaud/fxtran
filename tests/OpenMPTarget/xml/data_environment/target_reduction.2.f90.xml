@@ -1,0 +1,44 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/target_reduction.2.f90"><C>! @@name:&#009;target_reduction.2</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.0</C>
+<program-stmt>program <program-N><N><n>target_reduction_ex2</n></N></program-N></program-stmt>
+   <interface-stmt>interface</interface-stmt>
+      <function-stmt>function <function-N><N><n>f</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>res</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+             <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>f</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>res</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+          <end-function-stmt>end function</end-function-stmt>
+      <function-stmt>function <function-N><N><n>g</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>res</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+             <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>g</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>res</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+          <end-function-stmt>end function</end-function-stmt>
+   <end-interface-stmt>end interface</end-interface-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>sum1</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>sum2</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>parameter</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N> = <init-E><literal-E><l>100</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+   <a-stmt><E-1><named-E><N><n>sum1</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
+   <a-stmt><E-1><named-E><N><n>sum2</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
+   <omp>!$omp</omp> <target-data-openmp>target data <clause><N>map</N>(<E-LT><named-E><N><n>sum1</n></N></named-E>, <named-E><N><n>sum2</n></N></named-E></E-LT>)</clause></target-data-openmp>
+       <omp>!$omp</omp> <target-teams-openmp>target teams <clause><N>distribute</N></clause> <clause><N>reduction</N>(<op><o>+</o></op>:<V-LT><V><n>sum1</n></V></V-LT>)</clause></target-teams-openmp>
+           <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
+              <a-stmt><E-1><named-E><N><n>sum1</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>sum1</n></N></named-E> <op><o>+</o></op> <named-E><N><n>f</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+           <end-do-stmt>end do</end-do-stmt>
+       <omp>!$omp</omp> <target-teams-openmp>target teams <clause><N>distribute</N></clause> <clause><N>map</N>(<E-LT><named-E><N><n>sum1</n></N></named-E></E-LT>)</clause> <clause><N>reduction</N>(<op><o>+</o></op>:<V-LT><V><n>sum2</n></V></V-LT>)</clause></target-teams-openmp>
+           <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></do-stmt>
+              <a-stmt><E-1><named-E><N><n>sum2</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>sum2</n></N></named-E> <op><o>+</o></op> <op-E><named-E><N><n>g</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E><op><o>*</o></op><named-E><N><n>sum1</n></N></named-E></op-E></op-E></E-2></a-stmt>
+           <end-do-stmt>end do</end-do-stmt>
+   <omp>!$omp</omp> <end-target-data-openmp>end target data</end-target-data-openmp>
+   <print-stmt>print <format>*</format>, <output-item-LT><output-item><string-E><S>&quot;sum1 = &quot;</S></string-E></output-item>, <output-item><named-E><N><n>sum1</n></N></named-E></output-item>, <output-item><string-E><S>&quot;, sum2 = &quot;</S></string-E></output-item>, <output-item><named-E><N><n>sum2</n></N></named-E></output-item></output-item-LT></print-stmt>
+   <C>!!OUTPUT: sum1 =     10100 , sum2 = 153015000</C>
+<end-program-stmt>end program</end-program-stmt>
+
+
+<function-stmt><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec> function <function-N><N><n>f</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>res</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>res</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <omp>!$omp</omp> <declare-target-openmp>declare target enter(f)</declare-target-openmp>
+   <a-stmt><E-1><named-E><N><n>f</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>res</n></N></named-E><op><o>*</o></op><literal-E><l>2</l></literal-E></op-E></E-2></a-stmt>
+<end-function-stmt>end function</end-function-stmt>
+<function-stmt><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec> function <function-N><N><n>g</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>res</n></N></arg-N></dummy-arg-LT>)</function-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>res</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <omp>!$omp</omp> <declare-target-openmp>declare target enter(g)</declare-target-openmp>
+   <a-stmt><E-1><named-E><N><n>g</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>res</n></N></named-E><op><o>*</o></op><literal-E><l>3</l></literal-E></op-E></E-2></a-stmt>
+<end-function-stmt>end function</end-function-stmt>
+</file></object>

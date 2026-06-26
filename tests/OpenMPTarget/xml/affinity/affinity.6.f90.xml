@@ -1,0 +1,23 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="affinity/affinity.6.f90"><C>! @@name:&#009;affinity.6</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.0</C>
+<subroutine-stmt>subroutine <subroutine-N><N><n>task_affinity</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>A</n></N></arg-N>, <arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+
+  <external-stmt>external <EN-decl-LT><EN-decl><EN-N><N><n>alloc_init_B</n></N></EN-N></EN-decl></EN-decl-LT></external-stmt>
+  <external-stmt>external <EN-decl-LT><EN-decl><EN-N><N><n>compute_on_B</n></N></EN-N></EN-decl></EN-decl-LT></external-stmt>
+  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>allocatable</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>B</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec>:</shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <omp>!$omp</omp> <task-openmp>task <clause><N>depend</N>(<T><n>out</n></T>:<E-LT><named-E><N><n>B</n></N></named-E></E-LT>)</clause> <clause><N>shared</N>(<V-LT><V-N><n>B</n></V-N></V-LT>)</clause> <clause><N>affinity</N>(<named-E><N><n>A</n></N></named-E>)</clause></task-openmp>
+     <call-stmt>call <procedure-designator><named-E><N><n>alloc_init_B</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>B</n></N></named-E></arg>,<arg><named-E><N><n>A</n></N></named-E></arg></arg-spec>)</call-stmt>
+   <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp> 
+
+   <omp>!$omp</omp> <task-openmp>task <clause><N>depend</N>(<T><n>in</n></T>:<E-LT><named-E><N><n>B</n></N></named-E></E-LT>)</clause> <clause><N>shared</N>(<V-LT><V-N><n>B</n></V-N></V-LT>)</clause> <clause><N>affinity</N>(<named-E><N><n>A</n></N></named-E>)</clause></task-openmp>
+     <call-stmt>call <procedure-designator><named-E><N><n>compute_on_B</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>B</n></N></named-E></arg></arg-spec>)</call-stmt>
+   <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp> 
+
+   <omp>!$omp</omp> <taskwait-openmp>taskwait</taskwait-openmp>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

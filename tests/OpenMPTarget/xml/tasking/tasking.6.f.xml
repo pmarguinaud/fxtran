@@ -1,0 +1,20 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="tasking/tasking.6.f"><C>! @@name:tasking.6</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_3.0</C>
+<m>      </m> <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N><K-selector>*<literal-E><l>8</l></literal-E></K-selector></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>item</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><literal-E><l>10000000</l></literal-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+<omp>!$omp</omp><m> </m><parallel-openmp>parallel</parallel-openmp>
+<omp>!$omp</omp><m> </m><single-openmp>single</single-openmp>
+<omp>!$omp</omp><m> </m><task-openmp>task <clause><N>untied</N></clause></task-openmp>
+<m>      </m> <C>! loop iteration variable i is private</C>
+<m>      </m> <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>10000000</l></literal-E></upper-bound></do-stmt>
+<omp>!$omp</omp><m> </m><task-openmp>task</task-openmp> <C>! i is firstprivate, item is shared</C>
+<m>      </m>    <call-stmt>call <procedure-designator><named-E><N><n>process</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>item</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$omp</omp><m> </m><end-task-openmp>end task</end-task-openmp>
+<m>      </m> <end-do-stmt>end do</end-do-stmt>
+<omp>!$omp</omp><m> </m><end-task-openmp>end task</end-task-openmp>
+<omp>!$omp</omp><m> </m><end-single-openmp>end single</end-single-openmp>
+<omp>!$omp</omp><m> </m><end-parallel-openmp>end parallel</end-parallel-openmp>
+<m>      </m> <end-program-stmt>end</end-program-stmt>
+</file></object>

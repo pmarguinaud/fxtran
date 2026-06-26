@@ -1,0 +1,58 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="devices/usm_scalar_ptr_ref_asc.1.f90"><C>! @@name:       usm_scalar_ptr_ref_ax.1</C>
+<C>! @@type:       F-free</C>
+<C>! @@operation:  compile</C>
+<C>! @@expect:     success</C>
+<C>! @@version:    omp_5.2</C>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+   <omp>!$omp</omp> <requires-openmp>requires <clause><N>unified_shared_memory</N></clause></requires-openmp>
+   
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>logical</T-N></intrinsic-T-spec></_T-spec_>          :: <EN-decl-LT><EN-decl><EN-N><N><n>pass</n></N></EN-N>=<init-E><literal-E>.TRUE.</literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>          :: <EN-decl-LT><EN-decl><EN-N><N><n>x</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>target</attribute-N></attribute>  :: <EN-decl-LT><EN-decl><EN-N><N><n>y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>pointer</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>ptr</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt> 
+
+   <a-stmt><E-1><named-E><N><n>x</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt> 
+   <C>! Case 1 : x is firstprivate</C>
+   <omp>!$omp</omp> <target-openmp>target</target-openmp>
+      <a-stmt><E-1><named-E><N><n>x</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>x</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>  
+   <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+   <if-stmt>if(<condition-E><op-E><named-E><N><n>x</n></N></named-E> <op><o>/=</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E> ) <action-stmt><a-stmt><E-1><named-E><N><n>pass</n></N></named-E></E-1> <a>=</a> <E-2><literal-E>.FALSE.</literal-E></E-2></a-stmt></action-stmt></if-stmt>
+
+   <a-stmt><E-1><named-E><N><n>x</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt> 
+   <associate-stmt>ASSOCIATE( <associate-LT><associate><associate-N><n>ax</n></associate-N> =&gt; <selector><named-E><N><n>x</n></N></named-E></selector></associate></associate-LT>)</associate-stmt>
+
+   <C>! Case 2 : </C>
+   <omp>!$omp</omp> <target-openmp>target</target-openmp>    
+      <a-stmt><E-1><named-E><N><n>ax</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>ax</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt> 
+   <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>    
+   <if-stmt>if(<condition-E><op-E><named-E><N><n>x</n></N></named-E> <op><o>/=</o></op> <literal-E><l>1</l></literal-E></op-E></condition-E> ) <action-stmt><a-stmt><E-1><named-E><N><n>pass</n></N></named-E></E-1> <a>=</a> <E-2><literal-E>.FALSE.</literal-E></E-2></a-stmt></action-stmt></if-stmt>
+
+   <end-associate-stmt>end ASSOCIATE</end-associate-stmt>
+
+   <a-stmt><E-1><named-E><N><n>y</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
+   <pointer-a-stmt><E-1><named-E><N><n>ptr</n></N></named-E></E-1> <a>=&gt;</a> <E-2><named-E><N><n>y</n></N></named-E></E-2></pointer-a-stmt>
+
+   <C>! Case 3a : ptr is mapped</C>
+   <omp>!$omp</omp> <target-openmp>target</target-openmp>
+      <a-stmt><E-1><named-E><N><n>ptr</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>ptr</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+   <if-stmt>if(<condition-E><op-E><named-E><N><n>y</n></N></named-E> <op><o>/=</o></op> <literal-E><l>1</l></literal-E></op-E></condition-E> ) <action-stmt><a-stmt><E-1><named-E><N><n>pass</n></N></named-E></E-1> <a>=</a> <E-2><literal-E>.FALSE.</literal-E></E-2></a-stmt></action-stmt></if-stmt>
+
+   <a-stmt><E-1><named-E><N><n>y</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0</l></literal-E></E-2></a-stmt>
+
+   <C>! Case 3b : y is mapped</C>
+   <omp>!$omp</omp> <target-openmp>target</target-openmp>
+      <a-stmt><E-1><named-E><N><n>y</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>y</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+   <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+   <if-stmt>if(<condition-E><op-E><named-E><N><n>y</n></N></named-E> <op><o>/=</o></op> <literal-E><l>1</l></literal-E></op-E></condition-E> ) <action-stmt><a-stmt><E-1><named-E><N><n>pass</n></N></named-E></E-1> <a>=</a> <E-2><literal-E>.FALSE.</literal-E></E-2></a-stmt></action-stmt></if-stmt>
+  
+
+  <if-then-stmt>if(<condition-E><named-E><N><n>pass</n></N></named-E></condition-E>) then</if-then-stmt>
+    <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;PASSED&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+  <else-stmt>else</else-stmt> 
+    <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;FAILED&quot;</S></string-E></output-item></output-item-LT></print-stmt><smc>;</smc> <stop-stmt>stop <stop-code>1</stop-code></stop-stmt>
+  <end-if-stmt>endif</end-if-stmt>
+
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

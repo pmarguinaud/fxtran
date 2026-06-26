@@ -1,0 +1,41 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/barrier_regions.1.f"><C>! @@name:barrier_regions.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:link</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>WORK</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SUB3</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m>  <barrier-openmp>BARRIER</barrier-openmp>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>WORK</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SUB3</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SUB2</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>K</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>K</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>SHARED</N>(<V-LT><V-N><n>K</n></V-N></V-LT>)</clause></parallel-openmp>
+<m>      </m>    <call-stmt>CALL <procedure-designator><named-E><N><n>SUB3</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>K</n></N></named-E></arg></arg-spec>)</call-stmt>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SUB2</n></N></subroutine-N></end-subroutine-stmt>
+
+
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>SUB1</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>N</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>I</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>PRIVATE</N>(<V-LT><V-N><n>I</n></V-N></V-LT>)</clause> <clause><N>SHARED</N>(<V-LT><V-N><n>N</n></V-N></V-LT>)</clause></parallel-openmp>
+<omp>!$OMP</omp><m> </m>    <do-openmp>DO</do-openmp>
+<m>      </m>    <do-stmt>DO <do-V><named-E><N><n>I</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+<m>      </m>      <call-stmt>CALL <procedure-designator><named-E><N><n>SUB2</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>I</n></N></named-E></arg></arg-spec>)</call-stmt>
+<m>      </m>    <end-do-stmt>END DO</end-do-stmt>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>SUB1</n></N></subroutine-N></end-subroutine-stmt>
+
+<m>      </m><program-stmt>PROGRAM <program-N><N><n>EXAMPLE</n></N></program-N></program-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>SUB1</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>2</l></literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>SUB2</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>2</l></literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m>  <call-stmt>CALL <procedure-designator><named-E><N><n>SUB3</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E><l>2</l></literal-E></arg></arg-spec>)</call-stmt>
+<m>      </m><end-program-stmt>END PROGRAM <program-N><N><n>EXAMPLE</n></N></program-N></end-program-stmt>
+</file></object>

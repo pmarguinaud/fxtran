@@ -1,0 +1,85 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="synchronization/depobj.1.f90"><C>! @@name:&#009;depobj.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;link</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.2</C>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+    <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+    <implicit-none-stmt>implicit none</implicit-none-stmt>
+    
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>,<attribute><attribute-N>parameter</attribute-N></attribute>        :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N>=<init-E><literal-E><l>100</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>                     :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>,<EN-decl><EN-N><N><n>b</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><named-E><N><n>omp_depend_kind</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>obj</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+    <call-stmt>call <procedure-designator><named-E><N><n>init</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>a</n></N></named-E></arg>, <arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+    <omp>!$omp</omp> <depobj-openmp>depobj(<V-LT><V-N><n>obj</n></V-N></V-LT>) depend(inout: a)</depobj-openmp>
+
+    <call-stmt>call <procedure-designator><named-E><N><n>driver</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E>.true.</literal-E></arg>,  <arg><named-E><N><n>a</n></N></named-E></arg>,<arg><named-E><N><n>b</n></N></named-E></arg>,<arg><named-E><N><n>N</n></N></named-E></arg>, <arg><named-E><N><n>obj</n></N></named-E></arg></arg-spec>)</call-stmt>  <C>!! updating occurs</C>
+
+    <omp>!$omp</omp> <depobj-openmp>depobj(<V-LT><V-N><n>obj</n></V-N></V-LT>) update(in)</depobj-openmp>
+
+    <call-stmt>call <procedure-designator><named-E><N><n>driver</n></N></named-E></procedure-designator>(<arg-spec><arg><literal-E>.false.</literal-E></arg>, <arg><named-E><N><n>a</n></N></named-E></arg>,<arg><named-E><N><n>b</n></N></named-E></arg>,<arg><named-E><N><n>N</n></N></named-E></arg>, <arg><named-E><N><n>obj</n></N></named-E></arg></arg-spec>)</call-stmt>  <C>!! no updating</C>
+
+    <omp>!$omp</omp> <depobj-openmp>depobj(<V-LT><V-N><n>obj</n></V-N></V-LT>) destroy(obj)</depobj-openmp>    <C>!! obj is set to uninitialized</C>
+                                      <C>!! state, resources are freed</C>
+
+<end-program-stmt>end program</end-program-stmt>
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>driver</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>update</n></N></arg-N>, <arg-N><N><n>a</n></N></arg-N>, <arg-N><N><n>b</n></N></arg-N>, <arg-N><N><n>n</n></N></arg-N>, <arg-N><N><n>obj</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>logical</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>update</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>    :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>b</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N><K-selector>(<K-spec><named-E><N><n>omp_depend_kind</n></N></named-E></K-spec>)</K-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>obj</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>(<literal-E><l>2</l></literal-E>)</clause></parallel-openmp>
+
+     <omp>!$omp</omp> <single-openmp>single</single-openmp>
+
+       <omp>!$omp</omp> <task-openmp>task <clause><N>depend</N>(<T><n>depobj</n></T>: <E-LT><named-E><N><n>obj</n></N></named-E></E-LT>)</clause></task-openmp>       <C>!! Task 1, uses depend object</C>
+         <call-stmt>call <procedure-designator><named-E><N><n>update_copy</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>update</n></N></named-E></arg>, <arg><named-E><N><n>a</n></N></named-E></arg>,<arg><named-E><N><n>b</n></N></named-E></arg>,<arg><named-E><N><n>n</n></N></named-E></arg></arg-spec>)</call-stmt>
+              <C>!! update a or not, always copy a to b</C>
+       <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+       <omp>!$omp</omp> <task-openmp>task <clause><N>depend</N>(<T><n>in</n></T>: <E-LT><named-E><N><n>a</n></N></named-E></E-LT>)</clause></task-openmp>             <C>!! Task 2, only read a</C>
+         <call-stmt>call <procedure-designator><named-E><N><n>checkpoint</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>a</n></N></named-E></arg>,<arg><named-E><N><n>n</n></N></named-E></arg></arg-spec>)</call-stmt>
+       <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
+
+     <omp>!$omp</omp> <end-single-openmp>end single</end-single-openmp>
+
+   <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>update_copy</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>update</n></N></arg-N>, <arg-N><N><n>a</n></N></arg-N>, <arg-N><N><n>b</n></N></arg-N>, <arg-N><N><n>n</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>logical</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>update</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>    :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>b</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+  
+   <if-stmt>if (<condition-E><named-E><N><n>update</n></N></named-E></condition-E>) <action-stmt><a-stmt><E-1><named-E><N><n>a</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>a</n></N></named-E> <op><o>+</o></op> <literal-E><l>1.0</l></literal-E></op-E></E-2></a-stmt></action-stmt></if-stmt>
+
+   <a-stmt><E-1><named-E><N><n>b</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>a</n></N></named-E></E-2></a-stmt>
+
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>checkpoint</n></N></subroutine-N>( <dummy-arg-LT><arg-N><N><n>a</n></N></arg-N>, <arg-N><N><n>n</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>    :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt> 
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'( *(f5.0) )'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></iterator-element>, <iterator-element><V-N><V-N><n>i</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><named-E><N><n>n</n></N></named-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></output-item></output-item-LT></write-stmt>
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+
+<subroutine-stmt>subroutine <subroutine-N><N><n>init</n></N></subroutine-N>(<dummy-arg-LT><arg-N><N><n>a</n></N></arg-N>,<arg-N><N><n>n</n></N></arg-N></dummy-arg-LT>)</subroutine-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>    :: <EN-decl-LT><EN-decl><EN-N><N><n>a</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>n</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl></EN-decl-LT></T-decl-stmt> 
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <a-stmt><E-1><named-E><N><n>a</n></N></named-E></E-1><a>=</a><E-2><array-constructor-E>[ <ac-value-LT><ac-value><parens-E><iterator>(<iterator-definition-LT><iterator-element><named-E><N><n>i</n></N></named-E></iterator-element>, <iterator-element><V-N><V-N><n>i</n></V-N></V-N>=<literal-E><l>1</l></literal-E></iterator-element>,<iterator-element><named-E><N><n>n</n></N></named-E></iterator-element></iterator-definition-LT>)</iterator></parens-E></ac-value></ac-value-LT> ]</array-constructor-E></E-2></a-stmt> 
+<end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

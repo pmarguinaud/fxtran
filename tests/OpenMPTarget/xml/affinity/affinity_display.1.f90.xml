@@ -1,0 +1,75 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="affinity/affinity_display.1.f90"><C>! @@name:&#009;affinity_display.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.0</C>
+<C>! @@env:&#009;OMP_DISPLAY_AFFINITY=TRUE OMP_NUM_THREADS=8</C>
+<program-stmt>program <program-N><N><n>affinity_display</n></N></program-N></program-stmt>        <C>! MAX threads = 8, single socket system</C>
+
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+   <implicit-none-stmt>implicit none</implicit-none-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>character</T-N><char-selector>(<char-spec><arg-N n="LEN"><k>len</k></arg-N>=<literal-E><l>0</l></literal-E></char-spec>)</char-selector></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>null</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <C>! API call - Displays Affinity of Primary Thread</C>
+   <call-stmt>call <procedure-designator><named-E><N><n>omp_display_affinity</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>null</n></N></named-E></arg></arg-spec>)</call-stmt>
+
+   <C>! API CALL OUTPUT (default format): </C>
+   <C>! team_num= 0, nesting_level= 0, thread_num= 0, &amp;</C>
+   <C>!   thread_affinity= 0,1,2,3,4,5,6,7</C>
+
+
+   <C>! OMP_DISPLAY_AFFINITY=TRUE, OMP_NUM_THREADS=8</C>
+
+   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>(<named-E><N><n>omp_get_num_procs</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E>)</clause></parallel-openmp>
+
+     <if-then-stmt>if(<condition-E><op-E><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E><op><o>==</o></op><literal-E><l>0</l></literal-E></op-E></condition-E>) then</if-then-stmt>
+        <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;1st Parallel Region  -- Affinity Reported&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+     <end-if-stmt>endif</end-if-stmt>
+
+     <C>! DISPLAY OUTPUT (default format) has been sorted:</C>
+     <C>! team_num= 0, nesting_level= 1, thread_num= 0, thread_affinity= 0</C>
+     <C>! team_num= 0, nesting_level= 1, thread_num= 1, thread_affinity= 1</C>
+     <C>! ...</C>
+     <C>! team_num= 0, nesting_level= 1, thread_num= 7, thread_affinity= 7</C>
+
+      <C>! doing work here</C>
+
+   <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>( <named-E><N><n>omp_get_num_procs</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> )</clause></parallel-openmp>
+   
+     <if-then-stmt>if(<condition-E><op-E><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E><op><o>==</o></op><literal-E><l>0</l></literal-E></op-E></condition-E>) then</if-then-stmt>
+        <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Same Affinity in Parallel Region -- no Affinity Reported&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+     <end-if-stmt>endif</end-if-stmt>
+
+     <C>! NO AFFINITY OUTPUT:  </C>
+     <C>! (output in 1st parallel region only for</C>
+     <C>!  OMP_DISPLAY_AFFINITY=TRUE)</C>
+     
+      <C>! doing more work here</C>
+
+   <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+   <C>! Report Affinity for 1/2 number of threads</C>
+   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>num_threads</N>( <op-E><named-E><N><n>omp_get_num_procs</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E><op><o>/</o></op><literal-E><l>2</l></literal-E></op-E> )</clause></parallel-openmp>
+
+     <if-then-stmt>if(<condition-E><op-E><named-E><N><n>omp_get_thread_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E><op><o>==</o></op><literal-E><l>0</l></literal-E></op-E></condition-E>) then</if-then-stmt>
+        <print-stmt>print<format>*</format>, <output-item-LT><output-item><string-E><S>&quot;Altered Affinity in Parallel Region -- Affinity Reported&quot;</S></string-E></output-item></output-item-LT></print-stmt>
+     <end-if-stmt>endif</end-if-stmt>
+    
+     <C>! DISPLAY OUTPUT (default format) has been sorted:</C>
+     <C>! team_num= 0, nesting_level= 1, thread_num= 0, &amp;</C>
+     <C>!   thread_affinity= 0,1</C>
+     <C>! team_num= 0, nesting_level= 1, thread_num= 1, &amp;</C>
+     <C>!   thread_affinity= 2,3</C>
+     <C>! team_num= 0, nesting_level= 1, thread_num= 2, &amp;</C>
+     <C>!   thread_affinity= 4,5</C>
+     <C>! team_num= 0, nesting_level= 1, thread_num= 3, &amp;</C>
+     <C>!   thread_affinity= 6,7</C>
+
+      <C>! do work</C>
+
+   <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
+
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

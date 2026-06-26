@@ -1,0 +1,27 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="devices/teams.2.f90"><C>! @@name:&#009;teams.2</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;compile</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_4.0</C>
+<function-stmt>function <function-N><N><n>dotprod</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>B</n></N></arg-N>,<arg-N><N><n>C</n></N></arg-N>,<arg-N><N><n>N</n></N></arg-N>, <arg-N><N><n>block_size</n></N></arg-N>, <arg-N><N><n>num_teams</n></N></arg-N>, <arg-N><N><n>block_threads</n></N></arg-N></dummy-arg-LT>) <result-spec>result(<N><n>sum</n></N>)</result-spec></function-stmt>
+<implicit-none-stmt>implicit none</implicit-none-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>    :: <EN-decl-LT><EN-decl><EN-N><N><n>B</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>C</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>sum</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> :: <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>block_size</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>num_teams</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>block_threads</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i0</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+    <a-stmt><E-1><named-E><N><n>sum</n></N></named-E></E-1> <a>=</a> <E-2><literal-E><l>0.0e0</l></literal-E></E-2></a-stmt>
+    <omp>!$omp</omp> <target-openmp>target <clause><N>map</N>(<prefix>to</prefix>: <E-LT><named-E><N><n>B</n></N></named-E>, <named-E><N><n>C</n></N></named-E></E-LT>)</clause> <clause><N>map</N>(<prefix>tofrom</prefix>: <E-LT><named-E><N><n>sum</n></N></named-E></E-LT>)</clause></target-openmp>
+    <omp>!$omp</omp> <teams-openmp>teams <clause><N>num_teams</N>(<named-E><N><n>num_teams</n></N></named-E>)</clause> <clause><N>thread_limit</N>(<named-E><N><n>block_threads</n></N></named-E>)</clause> <cnt>&amp;</cnt>
+    <omp>!$omp</omp><cnt>&amp;</cnt>  <clause><N>reduction</N>(<op><o>+</o></op>:<V-LT><V><n>sum</n></V></V-LT>)</clause></teams-openmp>
+    <omp>!$omp</omp> <distribute-openmp>distribute</distribute-openmp>
+       <do-stmt>do <do-V><named-E><N><n>i0</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound>, <step><named-E><N><n>block_size</n></N></named-E></step></do-stmt>
+          <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>do</N></clause> <clause><N>reduction</N>(<op><o>+</o></op>:<V-LT><V><n>sum</n></V></V-LT>)</clause></parallel-openmp>
+          <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><named-E><N><n>i0</n></N></named-E></lower-bound>, <upper-bound><named-E><N><n>min</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>i0</n></N></named-E><op><o>+</o></op><named-E><N><n>block_size</n></N></named-E></op-E></element>,<element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></upper-bound></do-stmt>
+             <a-stmt><E-1><named-E><N><n>sum</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>sum</n></N></named-E> <op><o>+</o></op> <op-E><named-E><N><n>B</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>*</o></op> <named-E><N><n>C</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></op-E></E-2></a-stmt>
+          <end-do-stmt>end do</end-do-stmt>
+       <end-do-stmt>end do</end-do-stmt>
+    <omp>!$omp</omp> <end-teams-openmp>end teams</end-teams-openmp>
+    <omp>!$omp</omp> <end-target-openmp>end target</end-target-openmp>
+<end-function-stmt>end function</end-function-stmt>
+
+<C>! Note:  The variable sum is now mapped with tofrom, for correct </C>
+<C>! execution with 4.5 (and pre-4.5) compliant compilers. See Devices Intro.</C>
+</file></object>

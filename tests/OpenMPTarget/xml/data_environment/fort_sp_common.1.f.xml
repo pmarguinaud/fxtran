@@ -1,0 +1,17 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/fort_sp_common.1.f"><C>! @@name:fort_sp_common.1</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:pre_omp_3.0</C>
+<m>      </m><subroutine-stmt>SUBROUTINE <subroutine-N><N><n>COMMON_GOOD</n></N></subroutine-N>(<dummy-arg-LT></dummy-arg-LT>)</subroutine-stmt>
+<m>      </m>  <common-stmt>COMMON /<common-block-N><n>C</n></common-block-N>/ <common-block-obj-LT><common-block-obj><common-block-obj-N><N><n>X</n></N></common-block-obj-N></common-block-obj>,<common-block-obj><common-block-obj-N><N><n>Y</n></N></common-block-obj-N></common-block-obj></common-block-obj-LT></common-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>X</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>Y</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>PRIVATE</N> (<V-LT><common-block>/<common-block-N><n>C</n></common-block-N>/</common-block></V-LT>)</clause></parallel-openmp>
+<m>      </m>    <C>! do work here</C>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<omp>!$OMP</omp><m> </m>  <parallel-openmp>PARALLEL <clause><N>SHARED</N> (<V-LT><V-N><n>X</n></V-N>,<V-N><n>Y</n></V-N></V-LT>)</clause></parallel-openmp>
+<m>      </m>    <C>! do work here</C>
+<omp>!$OMP</omp><m> </m>  <end-parallel-openmp>END PARALLEL</end-parallel-openmp>
+<m>      </m><end-subroutine-stmt>END SUBROUTINE <subroutine-N><N><n>COMMON_GOOD</n></N></subroutine-N></end-subroutine-stmt>
+</file></object>

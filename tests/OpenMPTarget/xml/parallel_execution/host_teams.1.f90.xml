@@ -1,0 +1,69 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FREE" source-width="132" openmp="0" openacc="0" openmp-target="1"><file name="parallel_execution/host_teams.1.f90"><C>! @@name:&#009;host_teams.1</C>
+<C>! @@type:&#009;F-free</C>
+<C>! @@operation:&#009;run</C>
+<C>! @@expect:&#009;success</C>
+<C>! @@version:&#009;omp_5.0</C>
+<program-stmt>program <program-N><N><n>main</n></N></program-N></program-stmt>
+   <use-stmt>use <module-N><N><n>omp_lib</n></N></module-N></use-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>           :: <EN-decl-LT><EN-decl><EN-N><N><n>nteams_required</n></N></EN-N>=<init-E><literal-E><l>2</l></literal-E></init-E></EN-decl>, <EN-decl><EN-N><N><n>max_thrds</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>tm_id</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_>,<attribute><attribute-N>parameter</attribute-N></attribute> ::  <EN-decl-LT><EN-decl><EN-N><N><n>N</n></N></EN-N>=<init-E><literal-E><l>1000</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>real</T-N></intrinsic-T-spec></_T-spec_>              :: <EN-decl-LT><EN-decl><EN-N><N><n>sp_x</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>sp_y</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>sp_a</n></N></EN-N>=<init-E><literal-E><l>0.0001e0</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+   <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>double precision</T-N></intrinsic-T-spec></_T-spec_>  :: <EN-decl-LT><EN-decl><EN-N><N><n>dp_x</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>dp_y</n></N></EN-N><array-spec>(<shape-spec-LT><shape-spec><upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></shape-spec></shape-spec-LT>)</array-spec></EN-decl>, <EN-decl><EN-N><N><n>dp_a</n></N></EN-N>=<init-E><literal-E><l>0.0001d0</l></literal-E></init-E></EN-decl></EN-decl-LT></T-decl-stmt>
+
+   <a-stmt><E-1><named-E><N><n>max_thrds</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>omp_get_num_procs</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E><op><o>/</o></op><named-E><N><n>nteams_required</n></N></named-E></op-E></E-2></a-stmt>
+ 
+   <C>!! Create 2 teams, each team works in a different precision</C>
+   <omp>!$omp</omp> <teams-openmp>teams <clause><N>num_teams</N>(<named-E><N><n>nteams_required</n></N></named-E>)</clause> <clause><N>thread_limit</N>(<named-E><N><n>max_thrds</n></N></named-E>)</clause> <cnt>&amp;</cnt>
+   <omp>!$omp</omp><cnt>&amp;</cnt>      <clause><N>private</N>(<V-LT><V-N><n>tm_id</n></V-N></V-LT>)</clause></teams-openmp>
+
+      <a-stmt><E-1><named-E><N><n>tm_id</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>omp_get_team_num</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
+
+      <if-then-stmt>if( <condition-E><op-E><named-E><N><n>omp_get_num_teams</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E> <op><o>/=</o></op> <literal-E><l>2</l></literal-E></op-E></condition-E> ) then</if-then-stmt>   <C>!! if only getting 1, quit</C>
+         <stop-stmt>stop <stop-code><S>&quot;error: Insufficient teams on host, 2 required.&quot;</S></stop-code></stop-stmt>
+      <end-if-stmt>endif</end-if-stmt>
+
+      <C>!! Do Single Precision Work (SAXPY) with this team</C>
+      <if-then-stmt>if(<condition-E><op-E><named-E><N><n>tm_id</n></N></named-E> <op><o>==</o></op> <literal-E><l>0</l></literal-E></op-E></condition-E>) then</if-then-stmt>
+
+         <omp>!$omp</omp> <parallel-openmp>parallel</parallel-openmp> 
+            <omp>!$omp</omp> <do-openmp>do</do-openmp>         <C>!! init</C>
+            <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+               <a-stmt><E-1><named-E><N><n>sp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>i</n></N></named-E><op><o>*</o></op><literal-E><l>0.0001e0</l></literal-E></op-E></E-2></a-stmt>
+               <a-stmt><E-1><named-E><N><n>sp_y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>i</n></N></named-E></E-2></a-stmt>
+            <end-do-stmt>end do</end-do-stmt>
+
+            <omp>!$omp</omp> <simd-do-openmp>do simd <clause><N>simdlen</N>(<literal-E><l>8</l></literal-E>)</clause></simd-do-openmp>
+            <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+               <a-stmt><E-1><named-E><N><n>sp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>sp_a</n></N></named-E><op><o>*</o></op><named-E><N><n>sp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E> <op><o>+</o></op> <named-E><N><n>sp_y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+            <end-do-stmt>end do</end-do-stmt>
+         <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp> 
+
+      <end-if-stmt>endif</end-if-stmt>
+
+      <C>!! Do Double Precision Work (DAXPY) with this team</C>
+      <if-then-stmt>if(<condition-E><op-E><named-E><N><n>tm_id</n></N></named-E> <op><o>==</o></op> <literal-E><l>1</l></literal-E></op-E></condition-E>) then</if-then-stmt>
+
+         <omp>!$omp</omp> <parallel-openmp>parallel</parallel-openmp> 
+            <omp>!$omp</omp> <do-openmp>do</do-openmp>         <C>!! init</C>
+            <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+               <a-stmt><E-1><named-E><N><n>dp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>i</n></N></named-E><op><o>*</o></op><literal-E><l>0.0001d0</l></literal-E></op-E></E-2></a-stmt>
+               <a-stmt><E-1><named-E><N><n>dp_y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>i</n></N></named-E></E-2></a-stmt>
+            <end-do-stmt>end do</end-do-stmt>
+
+            <omp>!$omp</omp> <simd-do-openmp>do simd <clause><N>simdlen</N>(<literal-E><l>4</l></literal-E>)</clause></simd-do-openmp>
+            <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
+               <a-stmt><E-1><named-E><N><n>dp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>dp_a</n></N></named-E><op><o>*</o></op><named-E><N><n>dp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E> <op><o>+</o></op> <named-E><N><n>dp_y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
+            <end-do-stmt>end do</end-do-stmt>
+         <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp> 
+
+      <end-if-stmt>endif</end-if-stmt>
+   <omp>!$omp</omp> <end-teams-openmp>end teams</end-teams-openmp>
+
+   <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'( &quot;i=&quot;,i4,&quot; sp|dp= &quot;, e15.7, d25.16  )'</S></string-E></io-control></io-control-spec>) <cnt>&amp;</cnt>
+            <output-item-LT><output-item><named-E><N><n>N</n></N></named-E></output-item>, <output-item><named-E><N><n>sp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><named-E><N><n>dp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+   <write-stmt>write(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'( &quot;i=&quot;,i4,&quot; sp|dp= &quot;, e15.7, d25.16  )'</S></string-E></io-control></io-control-spec>) <cnt>&amp;</cnt>
+            <output-item-LT><output-item><op-E><named-E><N><n>N</n></N></named-E><op><o>/</o></op><literal-E><l>2</l></literal-E></op-E></output-item>, <output-item><named-E><N><n>sp_x</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>N</n></N></named-E><op><o>/</o></op><literal-E><l>2</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></output-item>, <output-item><named-E><N><n>dp_x</n></N><R-LT><parens-R>(<element-LT><element><op-E><named-E><N><n>N</n></N></named-E><op><o>/</o></op><literal-E><l>2</l></literal-E></op-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></write-stmt>
+            <C>!! i=1000 sp|dp=   0.1000000E+04   0.1000000010000000D+04</C>
+            <C>!! i= 500 sp|dp=   0.5000000E+03   0.5000000050000000D+03</C>
+<end-program-stmt>end program</end-program-stmt>
+</file></object>

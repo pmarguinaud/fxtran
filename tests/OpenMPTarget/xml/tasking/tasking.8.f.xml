@@ -1,0 +1,26 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="tasking/tasking.8.f"><C>! @@name:tasking.8</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_3.0</C>
+<m>      </m><module-stmt>module <module-N><N><n>example</n></N></module-N></module-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>tp</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<omp>!$omp</omp><m> </m><threadprivate-openmp>threadprivate(<V-LT><V-N><n>tp</n></V-N></V-LT>)</threadprivate-openmp>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>integer</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>var</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><end-module-stmt>end module</end-module-stmt>
+
+<m>      </m><subroutine-stmt>subroutine <subroutine-N><N><n>work</n></N></subroutine-N></subroutine-stmt>
+<m>      </m>   <use-stmt>use <module-N><N><n>example</n></N></module-N></use-stmt>
+<omp>!$omp</omp><m> </m><parallel-openmp>parallel</parallel-openmp>
+<m>      </m>   <C>! do work here</C>
+<omp>!$omp</omp><m> </m><task-openmp>task</task-openmp>
+<m>      </m>   <a-stmt><E-1><named-E><N><n>tp</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>tp</n></N></named-E> <op><o>+</o></op> <literal-E><l>1</l></literal-E></op-E></E-2></a-stmt>
+<m>      </m>   <C>! do work here</C>
+<omp>!$omp</omp><m> </m><task-openmp>task</task-openmp>
+<m>      </m>     <C>! do work here but don't modify tp</C>
+<omp>!$omp</omp><m> </m><end-task-openmp>end task</end-task-openmp>
+<m>      </m>   <a-stmt><E-1><named-E><N><n>var</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>tp</n></N></named-E></E-2></a-stmt>    <C>! value does not change after write above</C>
+<omp>!$omp</omp><m> </m><end-task-openmp>end task</end-task-openmp>
+<omp>!$omp</omp><m> </m><end-parallel-openmp>end parallel</end-parallel-openmp>
+<m>      </m><end-subroutine-stmt>end subroutine</end-subroutine-stmt>
+</file></object>

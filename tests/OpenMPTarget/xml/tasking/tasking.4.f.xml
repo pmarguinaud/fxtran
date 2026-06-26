@@ -1,0 +1,21 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="tasking/tasking.4.f"><C>! @@name:tasking.4</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_3.0</C>
+<m>      </m><function-stmt><prefix>RECURSIVE</prefix> <intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>fib</n></N></function-N>(<dummy-arg-LT><arg-N><N><n>n</n></N></arg-N></dummy-arg-LT>) <result-spec>RESULT(<N><n>res</n></N>)</result-spec></function-stmt>
+<m>      </m><T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>INTEGER</T-N></intrinsic-T-spec></_T-spec_> <EN-decl-LT><EN-decl><EN-N><N><n>n</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>i</n></N></EN-N></EN-decl>, <EN-decl><EN-N><N><n>j</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+<m>      </m><if-then-stmt>IF ( <condition-E><op-E><named-E><N><n>n</n></N></named-E> <op><o>.LT.</o></op> <literal-E><l>2</l></literal-E></op-E></condition-E>) THEN</if-then-stmt>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>res</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>n</n></N></named-E></E-2></a-stmt>
+<m>      </m><else-stmt>ELSE</else-stmt>
+<omp>!$OMP</omp><m> </m><task-openmp>TASK <clause><N>SHARED</N>(<V-LT><V-N><n>i</n></V-N></V-LT>)</clause></task-openmp>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>i</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>fib</n></N><R-LT><parens-R>( <element-LT><element><op-E><named-E><N><n>n</n></N></named-E><op><o>-</o></op><literal-E><l>1</l></literal-E></op-E></element></element-LT> )</parens-R></R-LT></named-E></E-2></a-stmt>
+<omp>!$OMP</omp><m> </m><end-task-openmp>END TASK</end-task-openmp>
+<omp>!$OMP</omp><m> </m><task-openmp>TASK <clause><N>SHARED</N>(<V-LT><V-N><n>j</n></V-N></V-LT>)</clause></task-openmp>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>j</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>fib</n></N><R-LT><parens-R>( <element-LT><element><op-E><named-E><N><n>n</n></N></named-E><op><o>-</o></op><literal-E><l>2</l></literal-E></op-E></element></element-LT> )</parens-R></R-LT></named-E></E-2></a-stmt>
+<omp>!$OMP</omp><m> </m><end-task-openmp>END TASK</end-task-openmp>
+<omp>!$OMP</omp><m> </m><taskwait-openmp>TASKWAIT</taskwait-openmp>
+<m>      </m>  <a-stmt><E-1><named-E><N><n>res</n></N></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>i</n></N></named-E><op><o>+</o></op><named-E><N><n>j</n></N></named-E></op-E></E-2></a-stmt>
+<m>      </m><end-if-stmt>END IF</end-if-stmt>
+<m>      </m><end-function-stmt>END FUNCTION</end-function-stmt>
+</file></object>

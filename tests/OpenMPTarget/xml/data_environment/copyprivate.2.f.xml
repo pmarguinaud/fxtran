@@ -1,0 +1,25 @@
+<?xml version="1.0"?><object xmlns="http://fxtran.net/#syntax" source-form="FIXED" source-width="72" openmp="0" openacc="0" openmp-target="1"><file name="data_environment/copyprivate.2.f"><C>! @@name:copyprivate.2</C>
+<C>! @@type:F-fixed</C>
+<C>! @@operation:compile</C>
+<C>! @@expect:success</C>
+<C>! @@version:omp_5.1</C>
+<m>      </m>  <function-stmt><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec> FUNCTION <function-N><N><n>READ_NEXT</n></N></function-N>(<dummy-arg-LT></dummy-arg-LT>)</function-stmt>
+<m>      </m>  <T-decl-stmt><_T-spec_><intrinsic-T-spec><T-N>REAL</T-N></intrinsic-T-spec></_T-spec_>, <attribute><attribute-N>POINTER</attribute-N></attribute> :: <EN-decl-LT><EN-decl><EN-N><N><n>TMP</n></N></EN-N></EN-decl></EN-decl-LT></T-decl-stmt>
+
+<omp>!$OMP</omp><m> </m>  <single-openmp>SINGLE</single-openmp>
+<m>      </m>    <allocate-stmt>ALLOCATE (<arg-spec><arg><named-E><N><n>TMP</n></N></named-E></arg></arg-spec>)</allocate-stmt>
+<omp>!$OMP</omp><m> </m>  <end-single-openmp>END SINGLE <clause><N>COPYPRIVATE</N> (<V-LT><V-N><n>TMP</n></V-N></V-LT>)</clause></end-single-openmp>  <C>! copies the pointer only</C>
+
+<omp>!$OMP</omp><m> </m>  <masked-openmp>MASKED</masked-openmp>
+<m>      </m>    <read-stmt>READ (<io-control-spec><io-control><literal-E><l>11</l></literal-E></io-control></io-control-spec>) <input-item-LT><input-item><named-E><N><n>TMP</n></N></named-E></input-item></input-item-LT></read-stmt>
+<omp>!$OMP</omp><m> </m>  <end-masked-openmp>END MASKED</end-masked-openmp>
+
+<omp>!$OMP</omp><m> </m>  <barrier-openmp>BARRIER</barrier-openmp>
+<m>      </m>    <a-stmt><E-1><named-E><N><n>READ_NEXT</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>TMP</n></N></named-E></E-2></a-stmt>
+<omp>!$OMP</omp><m> </m>  <barrier-openmp>BARRIER</barrier-openmp>
+
+<omp>!$OMP</omp><m> </m>  <single-openmp>SINGLE</single-openmp>
+<m>      </m>    <deallocate-stmt>DEALLOCATE (<arg-spec><arg><named-E><N><n>TMP</n></N></named-E></arg></arg-spec>)</deallocate-stmt>
+<omp>!$OMP</omp><m> </m>  <end-single-openmp>END SINGLE <clause><N>NOWAIT</N></clause></end-single-openmp>
+<m>      </m>  <end-function-stmt>END FUNCTION <function-N><N><n>READ_NEXT</n></N></function-N></end-function-stmt>
+</file></object>
