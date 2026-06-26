@@ -58,6 +58,7 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ENDTASKGROUP                         )   \
   macro (ENDTASK                              )   \
   macro (ENDTARGETTEAMS                       )   \
+  macro (ENDTARGETPARALLELDO                  )   \
   macro (ENDTARGETPARALLEL                    )   \
   macro (ENDTARGETDATA                        )   \
   macro (ENDTARGET                            )   \

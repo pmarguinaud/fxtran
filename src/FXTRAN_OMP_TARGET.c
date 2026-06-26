@@ -137,6 +137,7 @@ static const char * omptd_as_str (FXTRAN_omptd_type type)
       case FXTRAN_OMPTD_TARGETUPDATE      :  return _T(_S(TARGET) H _S(UPDATE) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETTEAMS       :  return _T(_S(TARGET) H _S(TEAMS) H _S(OPENMP));
       case FXTRAN_OMPTD_TARGETDATA        :  return _T(_S(TARGET) H _S(DATA) H _S(OPENMP));
+      case FXTRAN_OMPTD_ENDTARGETPARALLELDO :  return _T(_S(END) H _S(TARGET) H _S(PARALLEL) H _S(DO) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETPARALLEL :  return _T(_S(END) H _S(TARGET) H _S(PARALLEL) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETTEAMS    :  return _T(_S(END) H _S(TARGET) H _S(TEAMS) H _S(OPENMP));
       case FXTRAN_OMPTD_ENDTARGETDATA     :  return _T(_S(END) H _S(TARGET) H _S(DATA) H _S(OPENMP));
@@ -1142,6 +1143,7 @@ def_omptd_extra_clause_list (TARGETUPDATE)
 def_omptd_extra_clause_list (TARGETTEAMS)
 def_omptd_extra_clause_list (TARGETDATA)
 def_omptd_extra_clause_list (TARGET)
+def_omptd_extra_clause_list (ENDTARGETPARALLELDO)
 def_omptd_extra_clause_list (ENDTARGETPARALLEL)
 def_omptd_extra_clause_list (ENDTARGETTEAMS)
 def_omptd_extra_clause_list (ENDTARGETDATA)

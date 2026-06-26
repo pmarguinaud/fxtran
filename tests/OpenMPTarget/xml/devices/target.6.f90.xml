@@ -20,7 +20,7 @@
       <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
 &#009; <a-stmt><E-1><named-E><N><n>p</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>v1</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>*</o></op> <named-E><N><n>v2</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
       <end-do-stmt>end do</end-do-stmt>
-   <omp>!$omp</omp> <end-target-parallel-openmp>end target parallel <clause><N>do</N></clause></end-target-parallel-openmp>
+   <omp>!$omp</omp> <end-target-parallel-do-openmp>end target parallel do</end-target-parallel-do-openmp>
 
    <call-stmt>call <procedure-designator><named-E><N><n>output</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>p</n></N></named-E></arg>, <arg><named-E><N><n>N</n></N></named-E></arg></arg-spec>)</call-stmt>
 <end-subroutine-stmt>end subroutine</end-subroutine-stmt>
