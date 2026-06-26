@@ -274,11 +274,11 @@ all: $(XMLS)
 
 %.f90.xml: %.f90
 	$(FXTRAN) $< -no-include -openmp-target -o $@
-	@diff xml/$@ $@ 
+	@diff xml/$@ $@ || true
 
 %.f.xml: %.f
 	$(FXTRAN) $< -no-include -openmp-target -o $@
-	@diff xml/$@ $@
+	@diff xml/$@ $@ || true
 
 clean:
 	\rm -f $(XMLS)

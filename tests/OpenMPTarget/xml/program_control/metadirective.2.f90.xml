@@ -21,7 +21,7 @@
     <omp>!$omp</omp><cnt>&amp;</cnt>           device={arch(<S>&quot;fiji&quot;</S>  )}:             <cnt>&amp;</cnt>
     <omp>!$omp</omp><cnt>&amp;</cnt>        teams num_teams(512) thread_limit(64) ) <cnt>&amp;</cnt>
     <omp>!$omp</omp><cnt>&amp;</cnt>  otherwise( teams )</broken-openmp>
-    <omp>!$omp</omp> <distribute-openmp>distribute <clause><N>parallel</N></clause> <clause><N>do</N></clause></distribute-openmp>
+    <omp>!$omp</omp> <distribute-parallel-do-openmp>distribute parallel do</distribute-parallel-do-openmp>
     <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>  
        <call-stmt>call <procedure-designator><named-E><N><n>work_on_chunk</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>idev</n></N></named-E></arg>,<arg><named-E><N><n>i</n></N></named-E></arg></arg-spec>)</call-stmt>
     <end-do-stmt>end do</end-do-stmt>

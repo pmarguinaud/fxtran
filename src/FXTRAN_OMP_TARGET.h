@@ -29,6 +29,9 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (TASKGROUP                            )   \
   macro (TASK                                 )   \
   macro (TARGETUPDATE                         )   \
+  macro (TARGETTEAMSDISTRIBUTEPARALLELDOSIMD  )   \
+  macro (TARGETTEAMSDISTRIBUTEPARALLELDO      )   \
+  macro (TARGETTEAMSDISTRIBUTE                )   \
   macro (TARGETTEAMS                          )   \
   macro (TARGETPARALLELDO                     )   \
   macro (TARGETPARALLEL                       )   \
@@ -60,6 +63,9 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ENDTEAMS                             )   \
   macro (ENDTASKGROUP                         )   \
   macro (ENDTASK                              )   \
+  macro (ENDTARGETTEAMSDISTRIBUTEPARALLELDOSIMD)   \
+  macro (ENDTARGETTEAMSDISTRIBUTEPARALLELDO   )   \
+  macro (ENDTARGETTEAMSDISTRIBUTE             )   \
   macro (ENDTARGETTEAMS                       )   \
   macro (ENDTARGETPARALLELDO                  )   \
   macro (ENDTARGETPARALLEL                    )   \
@@ -80,6 +86,9 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ENDLOOP                              )   \
   macro (ENDDOSIMD                            )   \
   macro (ENDDO                                )   \
+  macro (ENDDISTRIBUTEPARALLELDOSIMD          )   \
+  macro (ENDDISTRIBUTEPARALLELDO              )   \
+  macro (ENDDISTRIBUTESIMD                    )   \
   macro (ENDDISTRIBUTE                        )   \
   macro (ENDDECLARETARGET                     )   \
   macro (ENDCRITICAL                          )   \
@@ -88,6 +97,9 @@ void FXTRAN_dump_omptd (const char *, const FXTRAN_char_info *, FXTRAN_xmlctx *)
   macro (ENDALLOCATORS                        )   \
   macro (DOSIMD                               )   \
   macro (DO                                   )   \
+  macro (DISTRIBUTEPARALLELDOSIMD             )   \
+  macro (DISTRIBUTEPARALLELDO                 )   \
+  macro (DISTRIBUTESIMD                       )   \
   macro (DISTRIBUTE                           )   \
   macro (DEPOBJ                               )   \
   macro (DECLARETARGET                        )   \
@@ -175,7 +187,6 @@ typedef enum {
   macro (ENTER            )  \
   macro (DYNAMIC_ALLOCATORS)  \
   macro (DOACROSS         )  \
-  macro (DO               )  \
   macro (DIST_SCHEDULE    )  \
   macro (DISTRIBUTE       )  \
   macro (DEVICE_TYPE      )  \

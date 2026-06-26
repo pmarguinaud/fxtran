@@ -33,7 +33,7 @@
 
 <C>!! Case 1: Delimited scope, see module interface</C>
     
-   <omp>!$omp</omp> <target-teams-openmp>target teams <clause><N>distribute</N></clause> <clause><N>parallel</N></clause> <clause><N>do</N></clause> <clause><N>map</N>(<prefix>tofrom</prefix>: <E-LT><named-E><N><n>A</n></N></named-E></E-LT>)</clause></target-teams-openmp>
+   <omp>!$omp</omp> <target-teams-distribute-parallel-do-openmp>target teams distribute parallel do <clause><N>map</N>(<prefix>tofrom</prefix>: <E-LT><named-E><N><n>A</n></N></named-E></E-LT>)</clause></target-teams-distribute-parallel-do-openmp>
    <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>, <upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
      <call-stmt>call <procedure-designator><named-E><N><n>fun</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>A</n></N></named-E></arg>,<arg><named-E><N><n>i</n></N></named-E></arg></arg-spec>)</call-stmt>
    <end-do-stmt>end do</end-do-stmt>
