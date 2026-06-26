@@ -257,6 +257,7 @@
 #define FXTRAN_STRING_TARGET                         "target"
 #define FXTRAN_STRING_TASK                           "task"
 #define FXTRAN_STRING_TASKGROUP                      "taskgroup"
+#define FXTRAN_STRING_TASKLOOP                       "taskloop"
 #define FXTRAN_STRING_TASKWAIT                       "taskwait"
 #define FXTRAN_STRING_TASKYIELD                      "taskyield"
 #define FXTRAN_STRING_TEAM                           "team"

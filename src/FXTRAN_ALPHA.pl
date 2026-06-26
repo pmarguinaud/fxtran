@@ -256,6 +256,7 @@ my @x = qw[
   target                                                         TARGET
   task                                                           TASK
   taskgroup                                                      TASKGROUP
+  taskloop                                                       TASKLOOP
   taskwait                                                       TASKWAIT
   taskyield                                                      TASKYIELD
   team                                                           TEAM

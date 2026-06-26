@@ -12,13 +12,13 @@
    <call-stmt>call <procedure-designator><named-E><N><n>long_running_task</n></N></named-E></procedure-designator>(<arg-spec></arg-spec>)</call-stmt>
 <omp>!$omp</omp> <end-task-openmp>end task</end-task-openmp>
 
-<omp>!$omp</omp> <task-openmp>task<clause><N>loop</N></clause> <clause><N>private</N>(<V-LT><V-N><n>j</n></V-N></V-LT>)</clause> <clause><N>grainsize</N>(<literal-E><l>500</l></literal-E>)</clause> <clause><N>nogroup</N></clause></task-openmp>
+<omp>!$omp</omp> <taskloop-openmp>taskloop <clause><N>private</N>(<V-LT><V-N><n>j</n></V-N></V-LT>)</clause> <clause><N>grainsize</N>(<literal-E><l>500</l></literal-E>)</clause> <clause><N>nogroup</N></clause></taskloop-openmp>
    <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><literal-E><l>10000</l></literal-E></upper-bound></do-stmt>
       <do-stmt>do <do-V><named-E><N><n>j</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>i</n></N></named-E></upper-bound></do-stmt>
          <call-stmt>call <procedure-designator><named-E><N><n>loop_body</n></N></named-E></procedure-designator>(<arg-spec><arg><named-E><N><n>i</n></N></named-E></arg>, <arg><named-E><N><n>j</n></N></named-E></arg></arg-spec>)</call-stmt>
       <end-do-stmt>end do</end-do-stmt>
    <end-do-stmt>end do</end-do-stmt>
-<omp>!$omp</omp> <end-task-openmp>end task<clause><N>loop</N></clause></end-task-openmp>
+<omp>!$omp</omp> <end-taskloop-openmp>end taskloop</end-taskloop-openmp>
 
 <omp>!$omp</omp> <end-taskgroup-openmp>end taskgroup</end-taskgroup-openmp>
 <end-subroutine-stmt>end subroutine</end-subroutine-stmt>

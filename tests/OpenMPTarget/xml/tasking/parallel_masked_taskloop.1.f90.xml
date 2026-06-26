@@ -15,25 +15,25 @@
 
    <omp>!$omp</omp> <parallel-openmp>parallel</parallel-openmp> 
    <omp>!$omp</omp> <masked-openmp>masked</masked-openmp>
-   <omp>!$omp</omp> <task-openmp>task<clause><N>loop</N></clause></task-openmp>                      <C>!! taskloop 1</C>
+   <omp>!$omp</omp> <taskloop-openmp>taskloop</taskloop-openmp>                      <C>!! taskloop 1</C>
    <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
       <a-stmt><E-1><named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>b</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <named-E><N><n>c</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
    <end-do-stmt>enddo</end-do-stmt>
-   <omp>!$omp</omp> <end-task-openmp>end task<clause><N>loop</N></clause></end-task-openmp>
+   <omp>!$omp</omp> <end-taskloop-openmp>end taskloop</end-taskloop-openmp>
    <omp>!$omp</omp> <end-masked-openmp>end masked</end-masked-openmp>
    <omp>!$omp</omp> <end-parallel-openmp>end parallel</end-parallel-openmp>
 
-   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>masked</N></clause> <clause><N>taskloop</N></clause></parallel-openmp>      <C>!! taskloop 2</C>
+   <omp>!$omp</omp> <parallel-masked-taskloop-openmp>parallel masked taskloop</parallel-masked-taskloop-openmp>      <C>!! taskloop 2</C>
    <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
       <a-stmt><E-1><named-E><N><n>b</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <named-E><N><n>c</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
    <end-do-stmt>enddo</end-do-stmt>
-   <omp>!$omp</omp> <end-parallel-openmp>end parallel <clause><N>masked</N></clause> <clause><N>taskloop</N></clause></end-parallel-openmp>
+   <omp>!$omp</omp> <end-parallel-masked-taskloop-openmp>end parallel masked taskloop</end-parallel-masked-taskloop-openmp>
 
-   <omp>!$omp</omp> <parallel-openmp>parallel <clause><N>masked</N></clause> <clause><N>taskloop</N></clause> <clause><N>simd</N></clause></parallel-openmp> <C>!! taskloop 3</C>
+   <omp>!$omp</omp> <parallel-masked-taskloop-simd-openmp>parallel masked taskloop simd</parallel-masked-taskloop-simd-openmp> <C>!! taskloop 3</C>
    <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V>=<lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
       <a-stmt><E-1><named-E><N><n>c</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><named-E><N><n>a</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>+</o></op> <named-E><N><n>b</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
    <end-do-stmt>enddo</end-do-stmt>
-   <omp>!$omp</omp> <end-parallel-openmp>end parallel <clause><N>masked</N></clause> <clause><N>taskloop</N></clause> <clause><N>simd</N></clause></end-parallel-openmp>
+   <omp>!$omp</omp> <end-parallel-masked-taskloop-simd-openmp>end parallel masked taskloop simd</end-parallel-masked-taskloop-simd-openmp>
 
    <print-stmt>print<format>*</format>,<output-item-LT><output-item><named-E><N><n>c</n></N><R-LT><parens-R>(<element-LT><element><literal-E><l>1</l></literal-E></element></element-LT>)</parens-R></R-LT></named-E></output-item>,<output-item><named-E><N><n>c</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>N</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></output-item></output-item-LT></print-stmt>  <C>!! 5 and 500</C>
 

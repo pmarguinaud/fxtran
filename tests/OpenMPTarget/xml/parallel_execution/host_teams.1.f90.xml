@@ -32,7 +32,7 @@
                <a-stmt><E-1><named-E><N><n>sp_y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>i</n></N></named-E></E-2></a-stmt>
             <end-do-stmt>end do</end-do-stmt>
 
-            <omp>!$omp</omp> <simd-do-openmp>do simd <clause><N>simdlen</N>(<literal-E><l>8</l></literal-E>)</clause></simd-do-openmp>
+            <omp>!$omp</omp> <do-simd-openmp>do simd <clause><N>simdlen</N>(<literal-E><l>8</l></literal-E>)</clause></do-simd-openmp>
             <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
                <a-stmt><E-1><named-E><N><n>sp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>sp_a</n></N></named-E><op><o>*</o></op><named-E><N><n>sp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E> <op><o>+</o></op> <named-E><N><n>sp_y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
             <end-do-stmt>end do</end-do-stmt>
@@ -50,7 +50,7 @@
                <a-stmt><E-1><named-E><N><n>dp_y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><named-E><N><n>i</n></N></named-E></E-2></a-stmt>
             <end-do-stmt>end do</end-do-stmt>
 
-            <omp>!$omp</omp> <simd-do-openmp>do simd <clause><N>simdlen</N>(<literal-E><l>4</l></literal-E>)</clause></simd-do-openmp>
+            <omp>!$omp</omp> <do-simd-openmp>do simd <clause><N>simdlen</N>(<literal-E><l>4</l></literal-E>)</clause></do-simd-openmp>
             <do-stmt>do <do-V><named-E><N><n>i</n></N></named-E></do-V> = <lower-bound><literal-E><l>1</l></literal-E></lower-bound>,<upper-bound><named-E><N><n>N</n></N></named-E></upper-bound></do-stmt>
                <a-stmt><E-1><named-E><N><n>dp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></E-1> <a>=</a> <E-2><op-E><op-E><named-E><N><n>dp_a</n></N></named-E><op><o>*</o></op><named-E><N><n>dp_x</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E> <op><o>+</o></op> <named-E><N><n>dp_y</n></N><R-LT><parens-R>(<element-LT><element><named-E><N><n>i</n></N></named-E></element></element-LT>)</parens-R></R-LT></named-E></op-E></E-2></a-stmt>
             <end-do-stmt>end do</end-do-stmt>
