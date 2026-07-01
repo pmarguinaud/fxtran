@@ -73,7 +73,7 @@ static bbt * delete_root (bbt * t)
 
 
 
-static bbt * delete_treap (bbt * old, bbt * t, int (*compare)()) 
+static bbt * delete_treap (bbt * old, bbt * t, int (*compare)(void *, void *)) 
 {
   int c;
 
@@ -96,7 +96,7 @@ static bbt * delete_treap (bbt * old, bbt * t, int (*compare)())
 
 
 
-void FXTRAN_delete_bbt (void * root, void * old, int (*compare)()) 
+void FXTRAN_delete_bbt (void * root, void * old, int (*compare)(void *, void *)) 
 {
   bbt ** t;
 
@@ -107,7 +107,7 @@ void FXTRAN_delete_bbt (void * root, void * old, int (*compare)())
 
 
 
-static bbt * insert(bbt * new, bbt * t, int (*compare)()) 
+static bbt * insert(bbt * new, bbt * t, int (*compare)(void *, void *)) 
 {
   int c;
 
@@ -136,7 +136,7 @@ static bbt * insert(bbt * new, bbt * t, int (*compare)())
   return t;
 }
 
-void FXTRAN_insert_bbt (void * root, void * new, int (*compare)()) 
+void FXTRAN_insert_bbt (void * root, void * new, int (*compare)(void *, void *)) 
 {
   bbt **r, *n;
 

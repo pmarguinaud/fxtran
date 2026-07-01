@@ -7,7 +7,7 @@
 
 #define BBT_HEADER(self) int priority; struct self *left, *right;
 
-void FXTRAN_insert_bbt (void *, void *, int (*)());
-void FXTRAN_delete_bbt (void *, void *, int (*)());
+void FXTRAN_insert_bbt (void *, void *, int (*)(void *, void *));
+void FXTRAN_delete_bbt (void *, void *, int (*)(void *, void *));
 
 #endif
