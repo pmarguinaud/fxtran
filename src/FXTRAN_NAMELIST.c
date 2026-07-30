@@ -81,6 +81,13 @@
           for (; j <= i; j++)                       \
             fprintf (stderr, "%c", ci[j].mask);     \
       }                                             \
+    if (j < i)                                      \
+      {                                             \
+        fprintf (stderr, "\n");                     \
+        for (; j <= i; j++)                         \
+          fprintf (stderr, "%c", ci[j].mask);       \
+        fprintf (stderr, "\n");                     \
+      }                                             \
   } while (0)                             
 
 
@@ -385,14 +392,19 @@ void FXTRAN_NAMELIST_decode (FXTRAN_xmlctx * ctx)
             ci1[j] = ci[i];
 
             if (str)
-              text1[j] = '"';
+              {
+                text1[j] = '"';
+                j++;
+                for (; ci[i+1].mask == FXTRAN_STR; i++);
+                text1[j] = '"';
+                ci1[j] = ci[i];
+              }
             else
-              text1[j] = text[i];
+              {
+                text1[j] = text[i];
+              }
 
             j++; 
-   
-            if (str)
-              for (; ci[i+2].mask == FXTRAN_STR; i++);
    
             in_spc = 0;
           }    
@@ -405,6 +417,7 @@ void FXTRAN_NAMELIST_decode (FXTRAN_xmlctx * ctx)
     text1[j] = 0; 
     len1 = j;
 
+/*DUMP_FXTRAN_MASK(text1,ci1,len1);*/
 
     if (FXTRAN_check_dpb (text1, ci1, len1))
       FXTRAN_THROW ("Unbalanced parens or dots in `%s'\n", text);
