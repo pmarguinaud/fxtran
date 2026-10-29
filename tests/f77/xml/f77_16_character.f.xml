@@ -46,7 +46,7 @@
 <m>   </m><label>10</label><m> </m><continue-stmt>CONTINUE</continue-stmt>
 
 <C>C     Concatenation dans une expression complexe</C>
-<m>      </m><a-stmt><E-1><named-E><N><n>STR3</n></N></named-E></E-1> <a>=</a> <E-2><op-E><op-E><string-E><S>'A'</S></string-E> <op><o>//</o></op> <string-E><S>'B'</S></string-E></op-E> <op><o>//</o></op> <string-E><S>'C'</S></string-E></op-E></E-2></a-stmt>
+<m>      </m><a-stmt><E-1><named-E><N><n>STR3</n></N></named-E></E-1> <a>=</a> <E-2><op-E><string-E><S>'A'</S></string-E> <op><o>//</o></op> <op-E><string-E><S>'B'</S></string-E> <op><o>//</o></op> <string-E><S>'C'</S></string-E></op-E></op-E></E-2></a-stmt>
 
 <C>C     Chaine dans DATA</C>
 <m>      </m><data-stmt>DATA <data-stmt-set><data-stmt-obj-LT><data-stmt-obj><named-E><N><n>STR1</n></N></named-E></data-stmt-obj></data-stmt-obj-LT> / <data-stmt-value-LT><data-stmt-value><data-stmt-constant><string-E><S>'FORTRAN'</S></string-E></data-stmt-constant></data-stmt-value></data-stmt-value-LT> /</data-stmt-set></data-stmt>

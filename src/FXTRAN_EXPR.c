@@ -913,6 +913,14 @@ static void op_chrs (const char * t, int len, int unary, float * rank, int * ord
  *   3  LTR     .EQV.
  *   2  LTR     .NEQV.
  *   1  LTR     defined binary
+ *
+ * order is used to split a chain of operators of the same rank:
+ *  +1 : may be split at its first occurrence (right nesting), as long as
+ *       no operator of order -2 follows: A + B + C -> A + (B + C)
+ *  -1 : split at the last occurrence (left nesting): A - B - C -> (A - B) - C
+ *  -2 : as -1, and no operator on its left may be split at: integer division
+ *       makes I * J / K differ from I * (J / K)
+ *   0 : does not chain
  */
 #define opcmp(op,r,o) \
   if (strncmp (op, t, strlen (op)) == 0) \
@@ -922,9 +930,11 @@ static void op_chrs (const char * t, int len, int unary, float * rank, int * ord
       return;                            \
     }
 
-  opcmp ("**",  12, -1)
-  opcmp ("*",   11.0, +1)
-  opcmp ("/",   11.5, -1)
+  opcmp ("**",  12, +1)
+  opcmp ("//",   8, +1)
+  opcmp ("/=",   7,  0)
+  opcmp ("*",   11, +1)
+  opcmp ("/",   11, -2)
 
   if (unary)
     {
@@ -933,11 +943,9 @@ static void op_chrs (const char * t, int len, int unary, float * rank, int * ord
     }
   else
     {
-      opcmp ("+",    9.0, +1)
-      opcmp ("-",    9.5, -1)
+      opcmp ("+",    9, +1)
+      opcmp ("-",    9, -1)
     }
-
-  opcmp ("//",    8, +1)
 
   opcmp (".EQ.",  7,  0)
   opcmp (".NE.",  7,  0)
@@ -946,7 +954,6 @@ static void op_chrs (const char * t, int len, int unary, float * rank, int * ord
   opcmp (".GT.",  7,  0)
   opcmp (".GE.",  7,  0)
   opcmp ("==",    7,  0)
-  opcmp ("/=",    7,  0)
   opcmp ("<",     7,  0)
   opcmp ("<=",    7,  0)
   opcmp (">",     7,  0)
@@ -969,7 +976,7 @@ static void op_chrs (const char * t, int len, int unary, float * rank, int * ord
   else
     {
       *rank = 0;
-      *order = +1;
+      *order = -1;
     }
 }
 
@@ -1005,9 +1012,24 @@ static void FXTRAN_expr1 (const char * t, const FXTRAN_char_info * ci, FXTRAN_xm
     }
   else
     {
-      int i0 = O[imin1] >= 0 ? imin1 : imin2;
+      int i0 = -1;
       int k1 = K1[0];
       int k2 = K2[kop-1];
+
+      /* Split at the first operator of rank rankmin with order +1 not followed by
+       * an operator of order -2, giving right nesting; otherwise, split at the last
+       * operator of rank rankmin, giving left nesting
+       */
+      for (i = imin2; i >= imin1; i--)
+        if (OP[i] && ((i == 0) || OP[i-1] == 0) && (R[i] == rankmin))
+          {
+            if (O[i] == -2)
+              break;
+            if (O[i] > 0)
+              i0 = i;
+          }
+      if (i0 < 0)
+        i0 = imin2;
 
       if (FXTRAN_XML_dump)                         
         if (! ctx->opts.flat_expr)

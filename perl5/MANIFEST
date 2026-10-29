@@ -4,6 +4,7 @@ Makefile.PL
 MANIFEST
 ppport.h
 README
+t/expr.t
 t/fxtran.t
 lib/fxtran.pm
 lib/fxtran/alpha.pm

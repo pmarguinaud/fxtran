@@ -21,7 +21,7 @@
   <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control>*</io-control></io-control-spec>) <output-item-LT><output-item><named-E><N><n>DST</n></N></named-E></output-item></output-item-LT></write-stmt>
 
   <C>! NEW_LINE</C>
-  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(A)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><op-E><op-E><string-E><S>'LIGNE1'</S></string-E> <op><o>//</o></op> <named-E><N><n>NEW_LINE</n></N><R-LT><parens-R>(<element-LT><element><string-E><S>'A'</S></string-E></element></element-LT>)</parens-R></R-LT></named-E></op-E> <op><o>//</o></op> <string-E><S>'LIGNE2'</S></string-E></op-E></output-item></output-item-LT></write-stmt>
+  <write-stmt>WRITE(<io-control-spec><io-control>*</io-control>,<io-control><string-E><S>'(A)'</S></string-E></io-control></io-control-spec>) <output-item-LT><output-item><op-E><string-E><S>'LIGNE1'</S></string-E> <op><o>//</o></op> <op-E><named-E><N><n>NEW_LINE</n></N><R-LT><parens-R>(<element-LT><element><string-E><S>'A'</S></string-E></element></element-LT>)</parens-R></R-LT></named-E> <op><o>//</o></op> <string-E><S>'LIGNE2'</S></string-E></op-E></op-E></output-item></output-item-LT></write-stmt>
 
   <C>! COMMAND_ARGUMENT_COUNT</C>
   <a-stmt><E-1><named-E><N><n>ARGC</n></N></named-E></E-1> <a>=</a> <E-2><named-E><N><n>COMMAND_ARGUMENT_COUNT</n></N><R-LT><parens-R>(<element-LT></element-LT>)</parens-R></R-LT></named-E></E-2></a-stmt>
