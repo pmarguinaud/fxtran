@@ -20,7 +20,7 @@ _U2S = {
 _S2U = {v: k for k, v in _U2S.items()}
 
 
-def lookup_u2s(x):
+def lookupU2S(x):
     if x not in _U2S:
         parts = x.split('-')
         parts = [_U2S.get(p, p) for p in parts]
@@ -30,7 +30,7 @@ def lookup_u2s(x):
     return _U2S[x]
 
 
-def lookup_s2u(x):
+def lookupS2U(x):
     if x not in _S2U:
         parts = x.split('-')
         parts = [_S2U.get(p, p) for p in parts]

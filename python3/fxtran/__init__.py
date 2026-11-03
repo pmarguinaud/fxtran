@@ -5,7 +5,8 @@ _xml_parser = _XMLParser()
 
 FXTRAN_NS = 'http://fxtran.net/#syntax'
 
-__all__ = ['parse', 'set_options', 'help', 'run', 't', 's', 'e', 'n']
+# Exported as in Perl (@EXPORT); setOptions, help and run are fxtran.setOptions, ...
+__all__ = ['parse', 's', 't', 'e', 'n']
 
 
 def run(*args):
@@ -46,10 +47,10 @@ def parse(**kwargs):
     return PARSER.parse(**kwargs)
 
 
-def set_options(*args):
-    """Modifie les options du parser. Délègue à parser.PARSER.set_options()."""
+def setOptions(*args):
+    """Modifie les options du parser. Délègue à parser.PARSER.setOptions()."""
     from fxtran.parser import PARSER
-    return PARSER.set_options(*args)
+    return PARSER.setOptions(*args)
 
 
 def help():

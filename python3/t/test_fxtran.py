@@ -76,19 +76,19 @@ def test_parse_program():
 
 def test_parse_expression():
     parser = Parser()
-    n = parser.parse_expression('N + 1')
+    n = parser.parseExpression('N + 1')
     assert n is not None
 
 
 def test_parse_expression_with_canonic():
     parser = Parser()
-    n1 = parser.parse_expression('N + 1')
+    n1 = parser.parseExpression('N + 1')
     assert n1 is not None
-    parser.set_options('Expression', '-canonic')
-    n2 = parser.parse_expression('N + 1')
+    parser.setOptions('Expression', '-canonic')
+    n2 = parser.parseExpression('N + 1')
     assert n2 is not None
-    parser.set_options('Expression', '+canonic')
-    n3 = parser.parse_expression('N + 1')
+    parser.setOptions('Expression', '+canonic')
+    n3 = parser.parseExpression('N + 1')
     assert n3 is not None
 
 
@@ -113,7 +113,7 @@ def test_parse_location_with_line_numbers():
         fname = fh.name
 
     try:
-        fxtran.set_options('Location', '-line_numbers', '1')
+        fxtran.setOptions('Location', '-line_numbers', '1')
         d = fxtran.parse(location=fname)
     finally:
         os.unlink(fname)
@@ -136,7 +136,7 @@ def test_parse_location_stmt_names():
         fname = fh.name
 
     try:
-        fxtran.set_options('Location', '-line_numbers', '1')
+        fxtran.setOptions('Location', '-line_numbers', '1')
         d = fxtran.parse(location=fname)
     finally:
         os.unlink(fname)
@@ -167,7 +167,7 @@ def test_F_ANY_stmt():
         fh.write(code)
         fname = fh.name
     try:
-        fxtran.set_options('Location', '-line_numbers', '1')
+        fxtran.setOptions('Location', '-line_numbers', '1')
         d = fxtran.parse(location=fname)
     finally:
         os.unlink(fname)

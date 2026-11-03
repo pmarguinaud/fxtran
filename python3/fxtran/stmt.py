@@ -118,5 +118,5 @@ _stmt = [
 _exec = {name: exe for name, _std, exe in _stmt}
 
 
-def is_executable(stmt_name):
+def isExecutable(stmt_name):
     return bool(_exec.get(stmt_name))

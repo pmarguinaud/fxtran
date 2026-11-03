@@ -44,8 +44,8 @@ class Parser:
             'Expression': {},
         }
 
-    def set_options(self, *args):
-        """set_options(what, ..., -opt [val], +opt, ...)
+    def setOptions(self, *args):
+        """setOptions(what, ..., -opt [val], +opt, ...)
         what can be ':all' or one or more kind names (String, Program, ...).
         Options starting with '-' are added/set; with '+' are removed.
         """
@@ -99,20 +99,20 @@ class Parser:
 
     def parse(self, **kwargs):
         if 'string' in kwargs:
-            return self.parse_string(kwargs.pop('string'), **kwargs)
+            return self.parseString(kwargs.pop('string'), **kwargs)
         elif 'program' in kwargs:
-            return self.parse_program(kwargs.pop('program'), **kwargs)
+            return self.parseProgram(kwargs.pop('program'), **kwargs)
         elif 'location' in kwargs:
-            return self.parse_location(kwargs.pop('location'), **kwargs)
+            return self.parseLocation(kwargs.pop('location'), **kwargs)
         elif 'fragment' in kwargs:
-            return self.parse_fragment(kwargs.pop('fragment'), **kwargs)
+            return self.parseFragment(kwargs.pop('fragment'), **kwargs)
         elif 'statement' in kwargs:
-            return self.parse_statement(kwargs.pop('statement'), **kwargs)
+            return self.parseStatement(kwargs.pop('statement'), **kwargs)
         elif 'expr' in kwargs:
-            return self.parse_expression(kwargs.pop('expr'), **kwargs)
+            return self.parseExpression(kwargs.pop('expr'), **kwargs)
         raise ValueError("parse() requires one of: string, program, location, fragment, statement, expr")
 
-    def parse_string(self, string, fopts=None, xopts=None):
+    def parseString(self, string, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['String'])
         xml_opts = xopts if xopts is not None else self._xml_options['String']
 
@@ -132,7 +132,7 @@ class Parser:
 
         return doc
 
-    def parse_program(self, program, fopts=None, xopts=None):
+    def parseProgram(self, program, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['Program'])
         xml_opts = xopts if xopts is not None else self._xml_options['Program']
 
@@ -142,7 +142,7 @@ class Parser:
         doc = doc.lastChild.firstChild
         return list(doc.childNodes())
 
-    def parse_fragment(self, fragment, fopts=None, xopts=None):
+    def parseFragment(self, fragment, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['Fragment'])
         xml_opts = xopts if xopts is not None else self._xml_options['Fragment']
 
@@ -155,7 +155,7 @@ class Parser:
             file_element.lastChild.unbindNode()
         return list(file_element.childNodes())
 
-    def parse_statement(self, statement, fopts=None, xopts=None):
+    def parseStatement(self, statement, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['Statement'])
         xml_opts = xopts if xopts is not None else self._xml_options['Statement']
 
@@ -164,7 +164,7 @@ class Parser:
         doc = _xml_parser.load_xml(string=xml)
         return doc.documentElement.firstChild.firstChild
 
-    def parse_expression(self, expression, fopts=None, xopts=None):
+    def parseExpression(self, expression, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['Expression'])
         xml_opts = xopts if xopts is not None else self._xml_options['Expression']
 
@@ -173,7 +173,7 @@ class Parser:
         doc = _xml_parser.load_xml(string=xml)
         return doc.documentElement.firstChild.firstChild.lastChild.firstChild
 
-    def parse_location(self, location, fopts=None, xopts=None, dir=None):
+    def parseLocation(self, location, fopts=None, xopts=None, dir=None):
         fopts = fopts if fopts is not None else list(self._options['Location'])
         xml_opts = xopts if xopts is not None else self._xml_options['Location']
 
