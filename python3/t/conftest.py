@@ -9,9 +9,11 @@ _HERE = os.path.dirname(__file__)
 _PYTHON3 = os.path.dirname(_HERE)
 _ROOT = os.path.dirname(os.path.dirname(_PYTHON3))
 
+# This directory first; xml_libxml and xpath_parser from PYTHONPATH or installed,
+# else next to this repository
 sys.path.insert(0, _PYTHON3)
-sys.path.insert(0, os.path.join(_ROOT, 'python-libxml2'))
-sys.path.insert(0, os.path.join(_ROOT, 'python-xpath_parser'))
+sys.path.append(os.path.join(_ROOT, 'python-libxml2'))
+sys.path.append(os.path.join(_ROOT, 'python-xpath_parser'))
 
 # fxtran/bin in PATH
 _BIN = os.path.join(os.path.dirname(_PYTHON3), 'bin')
