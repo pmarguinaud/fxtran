@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 
 import _fxtran
+from fxtran import Error, run as _run
 from xml_libxml import Parser as _XMLParser, XPathContext as _XPathContext
 
 _xml_parser = _XMLParser()
@@ -23,6 +24,14 @@ def _load_opts():
             _opts[name] = (type_, help_)
 
 _load_opts()
+
+
+def _xml_value(value):
+    """An option value for load_xml: '0' is false, as in Perl."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return value
 
 
 class Parser:
@@ -92,7 +101,7 @@ class Parser:
                 else:
                     if c == '-':
                         i += 1
-                        xml_hash[name] = opts[i]
+                        xml_hash[name] = _xml_value(opts[i])
                     else:
                         xml_hash.pop(name, None)
                     i += 1
@@ -114,42 +123,45 @@ class Parser:
 
     def parseString(self, string, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['String'])
-        xml_opts = xopts if xopts is not None else self._xml_options['String']
+        xml_opts = dict(xopts) if xopts is not None else self._xml_options['String']
 
         with tempfile.NamedTemporaryFile(suffix='.F90', mode='w', delete=False) as fh:
             fh.write(string)
             fname = fh.name
 
+        xml_file = fname + '.xml'
         try:
             ret = subprocess.call(['fxtran'] + fopts + [fname])
             if ret != 0:
-                raise RuntimeError(string)
-            xml_file = fname + '.xml'
-            doc = _xml_parser.load_xml(location=xml_file)
-            os.unlink(xml_file)
+                raise Error(string)
+            doc = _xml_parser.load_xml(location=xml_file, **xml_opts)
         finally:
             os.unlink(fname)
+            if os.path.exists(xml_file):
+                os.unlink(xml_file)
 
         return doc
 
     def parseProgram(self, program, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['Program'])
-        xml_opts = xopts if xopts is not None else self._xml_options['Program']
+        xml_opts = dict(xopts) if xopts is not None else self._xml_options['Program']
 
         program = program.rstrip('\n') + '\n'
-        xml = _fxtran.run(*fopts, program)
-        doc = _xml_parser.load_xml(string=xml)
+        xml = _run(*fopts, program)
+        doc = _xml_parser.load_xml(string=xml, **xml_opts)
         doc = doc.lastChild.firstChild
         return list(doc.childNodes())
 
     def parseFragment(self, fragment, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['Fragment'])
-        xml_opts = xopts if xopts is not None else self._xml_options['Fragment']
+        xml_opts = dict(xopts) if xopts is not None else self._xml_options['Fragment']
 
-        fragment = fragment.strip('\n')
+        # chomp, as in Perl: one final newline only
+        if fragment.endswith('\n'):
+            fragment = fragment[:-1]
         program = fragment + '\nEND\n'
-        xml = _fxtran.run(*fopts, program)
-        doc = _xml_parser.load_xml(string=xml)
+        xml = _run(*fopts, program)
+        doc = _xml_parser.load_xml(string=xml, **xml_opts)
         file_element = doc.documentElement.firstChild  # object → file
         for _ in range(2):
             file_element.lastChild.unbindNode()
@@ -157,25 +169,25 @@ class Parser:
 
     def parseStatement(self, statement, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['Statement'])
-        xml_opts = xopts if xopts is not None else self._xml_options['Statement']
+        xml_opts = dict(xopts) if xopts is not None else self._xml_options['Statement']
 
         program = statement + '\nEND\n'
-        xml = _fxtran.run(*fopts, program)
-        doc = _xml_parser.load_xml(string=xml)
+        xml = _run(*fopts, program)
+        doc = _xml_parser.load_xml(string=xml, **xml_opts)
         return doc.documentElement.firstChild.firstChild
 
     def parseExpression(self, expression, fopts=None, xopts=None):
         fopts = fopts if fopts is not None else list(self._options['Expression'])
-        xml_opts = xopts if xopts is not None else self._xml_options['Expression']
+        xml_opts = dict(xopts) if xopts is not None else self._xml_options['Expression']
 
         program = 'X = ' + expression + '\nEND\n'
-        xml = _fxtran.run(*fopts, program)
-        doc = _xml_parser.load_xml(string=xml)
+        xml = _run(*fopts, program)
+        doc = _xml_parser.load_xml(string=xml, **xml_opts)
         return doc.documentElement.firstChild.firstChild.lastChild.firstChild
 
     def parseLocation(self, location, fopts=None, xopts=None, dir=None):
         fopts = fopts if fopts is not None else list(self._options['Location'])
-        xml_opts = xopts if xopts is not None else self._xml_options['Location']
+        xml_opts = dict(xopts) if xopts is not None else self._xml_options['Location']
 
         if not os.path.isfile(location):
             return None
@@ -187,9 +199,9 @@ class Parser:
         cmd = ['fxtran'] + fopts + ['-o', xml_file, location]
         ret = subprocess.call(cmd)
         if ret != 0:
-            raise RuntimeError('`{}` failed'.format(' '.join(cmd)))
+            raise Error('`{}` failed'.format(' '.join(cmd)))
 
-        doc = _xml_parser.load_xml(location=xml_file)
+        doc = _xml_parser.load_xml(location=xml_file, **xml_opts)
         return doc
 
 

@@ -9,9 +9,18 @@ FXTRAN_NS = 'http://fxtran.net/#syntax'
 __all__ = ['parse', 's', 't', 'e', 'n']
 
 
+class Error(_fxtran.error):
+    """Error of fxtran, or of the fxtran command that parseString and parseLocation run."""
+
+
 def run(*args):
     """Appel direct à fxtran.run() (module C)."""
-    return _fxtran.run(*args)
+    try:
+        return _fxtran.run(*args)
+    except Error:
+        raise
+    except _fxtran.error as err:
+        raise Error(*err.args) from None
 
 
 def t(content):

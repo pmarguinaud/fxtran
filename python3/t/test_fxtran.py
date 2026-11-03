@@ -176,3 +176,62 @@ def test_F_ANY_stmt():
             os.unlink(xml_file)
     stmts = F('.//ANY-stmt', d)
     assert len(stmts) == 3  # program-stmt, call-stmt, end-program-stmt
+
+
+# ---------------------------------------------------------------------------
+# Options, errors and fragments
+# ---------------------------------------------------------------------------
+
+BLANK_TEXT = './/text()[normalize-space(.)=""]'
+PROGRAM = 'PROGRAM P\n  X = 1\nEND PROGRAM\n'
+
+
+def test_xopts_reach_the_xml_parser():
+    parser = Parser()
+    assert parser.parseProgram(PROGRAM)[0].findnodes(BLANK_TEXT)
+    assert not parser.parseProgram(PROGRAM, xopts={'no_blanks': 1})[0].findnodes(BLANK_TEXT)
+    # a list of pairs, as in Perl
+    assert not parser.parseProgram(PROGRAM, xopts=[('no_blanks', 1)])[0].findnodes(BLANK_TEXT)
+
+
+def test_xml_options_of_set_options():
+    parser = Parser()
+    parser.setOptions('Program', '-no_blanks', '1')
+    assert not parser.parseProgram(PROGRAM)[0].findnodes(BLANK_TEXT)
+    # '0' is false, as in Perl
+    parser.setOptions('Program', '-no_blanks', '0')
+    assert parser.parseProgram(PROGRAM)[0].findnodes(BLANK_TEXT)
+    parser.setOptions('Program', '+no_blanks')
+    assert parser.parseProgram(PROGRAM)[0].findnodes(BLANK_TEXT)
+
+
+def test_parse_fragment_keeps_leading_newlines():
+    # chomp, as in Perl: only the last newline goes
+    nodes = Parser().parseFragment('\n\nIF (A) THEN\n  X = 1\nENDIF\n')
+    assert nodes[0].nodeName == '#text' and nodes[0].textContent == '\n\n'
+    assert [n.nodeName for n in nodes if n.nodeName != '#text'] == ['if-construct']
+
+
+def test_errors_are_fxtran_error():
+    import _fxtran
+    parser = Parser()
+    for call in (lambda: parser.parseStatement('X = ..'),
+                 lambda: parser.parseExpression('..'),
+                 lambda: parser.parseProgram('X = ..\nEND\n'),
+                 lambda: parser.parseString('X = ..\nEND\n'),
+                 lambda: fxtran.run('X = ..\nEND\n')):
+        with pytest.raises(fxtran.Error) as info:
+            call()
+        assert isinstance(info.value, _fxtran.error)
+
+
+def test_parse_string_leaves_no_file(tmp_path, monkeypatch):
+    monkeypatch.setenv('TMPDIR', str(tmp_path))
+    tempfile.tempdir = None
+    try:
+        Parser().parseString('REAL :: X\nEND\n')
+        with pytest.raises(fxtran.Error):
+            Parser().parseString('X = ..\nEND\n')
+    finally:
+        tempfile.tempdir = None
+    assert list(tmp_path.iterdir()) == []
