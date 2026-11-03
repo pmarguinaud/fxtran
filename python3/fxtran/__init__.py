@@ -14,7 +14,7 @@ class Error(_fxtran.error):
 
 
 def run(*args):
-    """Appel direct à fxtran.run() (module C)."""
+    """Run fxtran on the text, with options: run(option, ..., text)."""
     try:
         return _fxtran.run(*args)
     except Error:
@@ -24,22 +24,22 @@ def run(*args):
 
 
 def t(content):
-    """Crée un nœud texte XML (équivalent de XML::LibXML::Text->new)."""
+    """A text node."""
     return Text(content)
 
 
 def s(statement):
-    """Parse un statement Fortran, retourne le nœud XML."""
+    """Parse a statement."""
     return parse(statement=statement)
 
 
 def e(expr):
-    """Parse une expression Fortran, retourne le nœud XML."""
+    """Parse an expression."""
     return parse(expr=expr)
 
 
 def n(xml):
-    """Parse un fragment XML fxtran, retourne un ou plusieurs nœuds."""
+    """Nodes from fxtran XML: one node, or a list if there are several."""
     doc = _xml_parser.load_xml(
         string='<?xml version="1.0"?><object xmlns="' + FXTRAN_NS + '">' + xml + '</object>'
     )
@@ -51,17 +51,17 @@ def n(xml):
 
 
 def parse(**kwargs):
-    """Parse du code Fortran. Délègue à parser.PARSER.parse()."""
+    """Parse Fortran code: parse(string=...), program, location, fragment, statement or expr."""
     from fxtran.parser import PARSER
     return PARSER.parse(**kwargs)
 
 
 def setOptions(*args):
-    """Modifie les options du parser. Délègue à parser.PARSER.setOptions()."""
+    """Change the options of the parser."""
     from fxtran.parser import PARSER
     return PARSER.setOptions(*args)
 
 
 def help():
-    """Retourne le XML d'aide de fxtran."""
+    """The help of fxtran, as XML."""
     return _fxtran.run('-help-xml', '')

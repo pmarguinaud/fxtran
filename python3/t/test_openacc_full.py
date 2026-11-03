@@ -1,6 +1,5 @@
 """
-Tests OpenACC complets.
-Transcription de perl5/t/openacc_full.t
+Port of perl5/t/openacc_full.t
 """
 from conftest import parse_with_opts, xfind, xval, has, hasnt, count
 

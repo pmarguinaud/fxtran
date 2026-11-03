@@ -1,6 +1,5 @@
 """
-Tests OpenMP Target complets.
-Transcription de perl5/t/openmp_target_full.t
+Port of perl5/t/openmp_target_full.t
 """
 from conftest import parse_with_opts, xfind, xval, has, hasnt, count
 

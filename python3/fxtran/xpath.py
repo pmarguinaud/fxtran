@@ -7,7 +7,7 @@ FXTRAN_NS = 'http://fxtran.net/#syntax'
 __all__ = ['F', 'f']
 
 # ---------------------------------------------------------------------------
-# AST walker : transforme les noms de tags en ajoutant le préfixe f:
+# AST walker: puts the f: prefix on element names
 # ---------------------------------------------------------------------------
 
 def walk(node, seen=None):
@@ -70,7 +70,7 @@ def walk_Step(node, seen):
             p = _XPathParserCls()
             xpath = './f:*[substring(name(),string-length(name())-{})="-{}"]'.format(size, type_)
             t = p.parse(xpath)
-            # t.lhs est un LocationPath ; on veut t.lhs[1] (le deuxième pas)
+            # t.lhs is a LocationPath; t.lhs[1] is its second step
             new_step = t.lhs[1]
 
             saved_axis = node.axis
@@ -111,7 +111,7 @@ def walk_VariableReference(node, seen):
 
 
 # ---------------------------------------------------------------------------
-# Cache des expressions XPath préprocessées
+# Cache of the preprocessed expressions
 # ---------------------------------------------------------------------------
 
 _cache = {}
@@ -127,7 +127,7 @@ def preprocess(xpath):
 
 
 # ---------------------------------------------------------------------------
-# XPathContext global avec namespace f:
+# XPath context with the f: namespace
 # ---------------------------------------------------------------------------
 
 _xpc = _XPathContext()
@@ -139,30 +139,30 @@ _xpc.registerNs('f', FXTRAN_NS)
 # ---------------------------------------------------------------------------
 
 def F(xpath, *args):
-    """Comme f(), mais préprocesse le xpath : ajoute f: sur les noms sans préfixe,
-    gère @NAME et ANY-xxx."""
+    """f() on a preprocessed expression: f: on names without a prefix, @NAME and
+    ANY-xxx."""
     xpath = preprocess(xpath)
     return f(xpath, *args)
 
 
 def f(xpath, *args):
-    """Évalue un xpath sur un nœud XML fxtran.
+    """Evaluate an XPath expression on a node of an fxtran document.
 
     Signatures :
-      f(xpath, node)           → liste de nœuds
-      f(xpath, node, 1)        → liste de str (textContent, sans espaces, upper-case)
-      f(xpath, node, 2)        → liste de str (textContent brut)
-      f(xpath, '?', val, node) → remplace les '?' par des valeurs littérales
+      f(xpath, node)           -> list of nodes
+      f(xpath, node, 1)        -> list of str (textContent, no spaces, upper case)
+      f(xpath, node, 2)        -> list of str (textContent)
+      f(xpath, val, ..., node) -> each '?' of xpath replaced by the next val
     """
     args = list(args)
 
-    # Remplacer les '?' par les valeurs successives
+    # Each '?' takes the next value
     while args and '?' in xpath:
         val = args.pop(0)
         xpath = xpath.replace('?', str(val), 1)
 
     if not args:
-        raise TypeError("f() : nœud de contexte manquant")
+        raise TypeError("f(): expected node")
 
     node = args[0]
     mode = args[1] if len(args) > 1 else None

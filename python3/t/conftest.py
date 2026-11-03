@@ -1,11 +1,10 @@
 """
-Fixtures et helpers partagés pour les tests fxtran Python.
-Équivalent des sous-routines communes dans les fichiers .t Perl.
+Helpers of the tests, as the subroutines of the Perl .t files.
 """
 import os
 import sys
 
-# Ajout des chemins nécessaires
+# Paths of the modules
 _HERE = os.path.dirname(__file__)
 _PYTHON3 = os.path.dirname(_HERE)
 _ROOT = os.path.dirname(os.path.dirname(_PYTHON3))
@@ -14,11 +13,11 @@ sys.path.insert(0, _PYTHON3)
 sys.path.insert(0, os.path.join(_ROOT, 'python-libxml2'))
 sys.path.insert(0, os.path.join(_ROOT, 'python-xpath_parser'))
 
-# Ajouter fxtran/bin au PATH
+# fxtran/bin in PATH
 _BIN = os.path.join(os.path.dirname(_PYTHON3), 'bin')
 os.environ['PATH'] = _BIN + os.pathsep + os.environ.get('PATH', '')
 
-# Ajouter fxtran/lib au LD_LIBRARY_PATH
+# fxtran/lib in LD_LIBRARY_PATH
 _LIB = os.path.join(os.path.dirname(_PYTHON3), 'lib')
 os.environ['LD_LIBRARY_PATH'] = _LIB + os.pathsep + os.environ.get('LD_LIBRARY_PATH', '')
 
@@ -38,7 +37,7 @@ def _make_xpc():
     return xpc
 
 def parse_with_opts(code, *extra_opts):
-    """Parse du code Fortran avec les options données, retourne un Document XML."""
+    """Parse Fortran code with these options, and return the document."""
     import _fxtran
     code = code.strip('\n') + '\n'
     xml = _fxtran.run(*extra_opts, code)
@@ -46,30 +45,30 @@ def parse_with_opts(code, *extra_opts):
 
 
 def xfind(xpath, doc):
-    """Retourne la liste des nœuds correspondant au xpath dans doc."""
+    """The nodes of doc that xpath finds."""
     if doc is None:
         return []
     return list(_make_xpc().findnodes(xpath, doc))
 
 
 def xval(xpath, doc):
-    """Retourne la valeur de chaîne d'une expression XPath."""
+    """The string value of xpath."""
     return _make_xpc().findvalue(xpath, doc)
 
 
 def has(xpath, doc):
-    """Assert qu'il existe au moins un nœud correspondant."""
+    """xpath finds something."""
     nodes = xfind(xpath, doc)
     assert len(nodes) > 0, f"Expected to find '{xpath}' but found nothing"
 
 
 def hasnt(xpath, doc):
-    """Assert qu'il n'existe aucun nœud correspondant."""
+    """xpath finds nothing."""
     nodes = xfind(xpath, doc)
     assert len(nodes) == 0, f"Expected to find nothing for '{xpath}' but found {len(nodes)} node(s)"
 
 
 def count(xpath, doc, n):
-    """Assert que le nombre de nœuds correspondants est exactement n."""
+    """xpath finds n nodes."""
     nodes = xfind(xpath, doc)
     assert len(nodes) == n, f"Expected {n} node(s) for '{xpath}' but found {len(nodes)}"

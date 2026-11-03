@@ -1,13 +1,12 @@
 """
-Tests de base pour fxtran Python.
-Transcription de perl5/t/fxtran.t
+Port of perl5/t/fxtran.t, and tests of the Python modules.
 """
 import os
 import sys
 import tempfile
 import pytest
 
-# conftest.py ajoute les chemins nécessaires
+# conftest.py sets the paths
 from conftest import parse_with_opts, xfind, xval, has, hasnt, count, FXTRAN_NS
 import xml_libxml
 _xml_parser = xml_libxml.Parser()
@@ -152,7 +151,7 @@ def test_parse_location_stmt_names():
 
 
 # ---------------------------------------------------------------------------
-# F() — xpath avec namespace auto et ANY-stmt
+# F(): XPath with the f: prefix added, and ANY-stmt
 # ---------------------------------------------------------------------------
 
 def test_F_find_EN_decl():
