@@ -50,8 +50,8 @@ PROGRAM MAIN
 !$OMP END TARGET
 END PROGRAM
 SRC
-  has ('//f:omptarget', $doc);
-  count ('//f:omptarget', $doc, 2);
+  has ('//f:omp', $doc);
+  count ('//f:omp', $doc, 2);
 }
 
 # ---- TARGET DATA with MAP clauses --------------------------------------------
@@ -68,7 +68,7 @@ SRC
   count ('//f:target-data-openmp/f:clause[f:N="MAP"]', $doc, 2);
 }
 
-# ---- TARGET TEAMS with DISTRIBUTE and PARALLEL DO clauses -------------------
+# ---- TARGET TEAMS DISTRIBUTE PARALLEL DO: one compound directive ------------
 
 {
   my $doc = parse_omt (<< 'SRC');
@@ -80,15 +80,15 @@ END DO
 !$OMP END TARGET TEAMS DISTRIBUTE PARALLEL DO
 END PROGRAM
 SRC
-  has ('//f:target-teams-openmp', $doc);
-  has ('//f:target-teams-openmp/f:clause[f:N="DISTRIBUTE"]',   $doc);
-  has ('//f:target-teams-openmp/f:clause[f:N="PARALLEL DO"]',  $doc);
-  has ('//f:target-teams-openmp/f:clause[f:N="PRIVATE"]',      $doc);
-  # END directive carries the same composite clauses
-  has ('//f:end-target-teams-openmp/f:clause[f:N="DISTRIBUTE"]',  $doc);
-  has ('//f:end-target-teams-openmp/f:clause[f:N="PARALLEL DO"]', $doc);
-  # DISTRIBUTE and PARALLEL DO are not embedded in the tag name
-  hasnt ('//f:target-teams-distribute-parallel-do-openmp', $doc);
+  has ('//f:target-teams-distribute-parallel-do-openmp', $doc);
+  hasnt ('//f:target-teams-distribute-parallel-do-openmp/f:clause[f:N="DISTRIBUTE"]',   $doc);
+  hasnt ('//f:target-teams-distribute-parallel-do-openmp/f:clause[f:N="PARALLEL DO"]',  $doc);
+  has ('//f:target-teams-distribute-parallel-do-openmp/f:clause[f:N="PRIVATE"]',      $doc);
+  # END directive names the same compound construct
+  has ('//f:end-target-teams-distribute-parallel-do-openmp',  $doc);
+  hasnt ('//f:end-target-teams-distribute-parallel-do-openmp/f:clause[f:N="PARALLEL DO"]', $doc);
+  # DISTRIBUTE and PARALLEL DO are in the tag name, not clauses of TARGET TEAMS
+  hasnt ('//f:target-teams-openmp', $doc);
 }
 
 # ---- TARGET TEAMS DISTRIBUTE PARALLEL DO SIMD --------------------------------
@@ -100,9 +100,9 @@ PROGRAM MAIN
 !$OMP END TARGET TEAMS DISTRIBUTE PARALLEL DO SIMD
 END PROGRAM
 SRC
-  has ('//f:target-teams-openmp/f:clause[f:N="DISTRIBUTE"]',           $doc);
-  has ('//f:target-teams-openmp/f:clause[f:N="PARALLEL DO SIMD"]',     $doc);
-  has ('//f:end-target-teams-openmp/f:clause[f:N="PARALLEL DO SIMD"]', $doc);
+  has ('//f:target-teams-distribute-parallel-do-simd-openmp',           $doc);
+  hasnt ('//f:target-teams-distribute-parallel-do-simd-openmp/f:clause[f:N="PARALLEL DO SIMD"]',     $doc);
+  has ('//f:end-target-teams-distribute-parallel-do-simd-openmp', $doc);
 }
 
 # ---- TARGET PARALLEL DO SIMD with REDUCTION ----------------------------------
@@ -117,12 +117,12 @@ END DO
 !$OMP END TARGET PARALLEL DO SIMD
 END PROGRAM
 SRC
-  has ('//f:target-parallel-openmp', $doc);
-  has ('//f:target-parallel-openmp/f:clause[f:N="DO"]',        $doc);
-  has ('//f:target-parallel-openmp/f:clause[f:N="SIMD"]',      $doc);
-  has ('//f:target-parallel-openmp/f:clause[f:N="REDUCTION"]', $doc);
-  has ('//f:end-target-parallel-openmp/f:clause[f:N="DO"]',    $doc);
-  has ('//f:end-target-parallel-openmp/f:clause[f:N="SIMD"]',  $doc);
+  has ('//f:target-parallel-do-simd-openmp', $doc);
+  hasnt ('//f:target-parallel-do-simd-openmp/f:clause[f:N="DO"]',        $doc);
+  hasnt ('//f:target-parallel-do-simd-openmp/f:clause[f:N="SIMD"]',      $doc);
+  has ('//f:target-parallel-do-simd-openmp/f:clause[f:N="REDUCTION"]', $doc);
+  has ('//f:end-target-parallel-do-simd-openmp',    $doc);
+  hasnt ('//f:end-target-parallel-do-simd-openmp/f:clause[f:N="SIMD"]',  $doc);
 }
 
 # ---- TARGET TEAMS LOOP -------------------------------------------------------
@@ -134,12 +134,12 @@ PROGRAM MAIN
 !$OMP END TARGET TEAMS LOOP
 END PROGRAM
 SRC
-  has ('//f:target-teams-openmp/f:clause[f:N="LOOP"]',     $doc);
-  has ('//f:target-teams-openmp/f:clause[f:N="COLLAPSE"]', $doc);
-  has ('//f:end-target-teams-openmp/f:clause[f:N="LOOP"]', $doc);
+  has ('//f:target-teams-loop-openmp',     $doc);
+  has ('//f:target-teams-loop-openmp/f:clause[f:N="COLLAPSE"]', $doc);
+  has ('//f:end-target-teams-loop-openmp', $doc);
 }
 
-# ---- TARGET SIMD (SIMD as clause of TARGET) ----------------------------------
+# ---- TARGET SIMD: one compound directive ------------------------------------
 
 {
   my $doc = parse_omt (<< 'SRC');
@@ -148,8 +148,8 @@ PROGRAM MAIN
 !$OMP END TARGET SIMD
 END PROGRAM
 SRC
-  has ('//f:target-openmp/f:clause[f:N="SIMD"]',     $doc);
-  has ('//f:end-target-openmp/f:clause[f:N="SIMD"]', $doc);
+  has ('//f:target-simd-openmp',     $doc);
+  has ('//f:end-target-simd-openmp', $doc);
 }
 
 # ---- DECLARE TARGET / END DECLARE TARGET -------------------------------------

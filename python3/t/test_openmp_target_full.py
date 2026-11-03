@@ -63,8 +63,8 @@ PROGRAM MAIN
 !$OMP END TARGET
 END PROGRAM""")
     count('//f:target-openmp/f:clause[f:N="MAP"]',                    doc, 4)
-    has  ('//f:target-openmp/f:clause[f:N="MAP"]/f:map-T[@n="TO"]',   doc)
-    has  ('//f:target-openmp/f:clause[f:N="MAP"]/f:map-T[@n="FROM"]', doc)
+    has  ('//f:target-openmp/f:clause[f:N="MAP"]/f:prefix[.="to"]',   doc)
+    has  ('//f:target-openmp/f:clause[f:N="MAP"]/f:prefix[.="from"]', doc)
 
 
 # ============================================================
@@ -143,8 +143,8 @@ PROGRAM MAIN
 !$OMP TARGET DEPEND(in:A) DEPEND(out:B)
 !$OMP END TARGET
 END PROGRAM""")
-    has('//f:target-openmp/f:clause[f:N="DEPEND"]/f:depend-T[@n="IN"]',  doc)
-    has('//f:target-openmp/f:clause[f:N="DEPEND"]/f:depend-T[@n="OUT"]', doc)
+    has('//f:target-openmp/f:clause[f:N="DEPEND"]/f:T[f:n="in"]',  doc)
+    has('//f:target-openmp/f:clause[f:N="DEPEND"]/f:T[f:n="out"]', doc)
 
 
 # ============================================================
@@ -210,7 +210,7 @@ PROGRAM MAIN
 !$OMP END TARGET
 END PROGRAM""")
     has('//f:target-openmp/f:clause[f:N="DEFAULTMAP"]',                             doc)
-    has('//f:target-openmp/f:clause[f:N="DEFAULTMAP"]/f:defaultmap-T[@n="TOFROM"]', doc)
+    has('//f:target-openmp/f:clause[f:N="DEFAULTMAP"]/f:prefix[.="tofrom"]', doc)
 
 
 # ============================================================
@@ -238,8 +238,8 @@ PROGRAM MAIN
 !$OMP END TARGET DATA
 END PROGRAM""")
     has('//f:target-data-openmp/f:clause[f:N="IF"]',                           doc)
-    has('//f:target-data-openmp/f:clause[f:N="MAP"]/f:map-T[@n="TO"]',   doc)
-    has('//f:target-data-openmp/f:clause[f:N="MAP"]/f:map-T[@n="FROM"]', doc)
+    has('//f:target-data-openmp/f:clause[f:N="MAP"]/f:prefix[.="to"]',   doc)
+    has('//f:target-data-openmp/f:clause[f:N="MAP"]/f:prefix[.="from"]', doc)
 
 
 # ============================================================
@@ -344,9 +344,9 @@ DO I = 1, N
 END DO
 !$OMP END TARGET PARALLEL DO
 END PROGRAM""")
-    has('//f:target-parallel-openmp/f:clause[f:N="DO"]',       doc)
-    has('//f:target-parallel-openmp/f:clause[f:N="ORDERED"]',  doc)
-    has('//f:target-parallel-openmp/f:clause[f:N="COLLAPSE"]', doc)
+    has('//f:target-parallel-do-openmp',       doc)
+    has('//f:target-parallel-do-openmp/f:clause[f:N="ORDERED"]',  doc)
+    has('//f:target-parallel-do-openmp/f:clause[f:N="COLLAPSE"]', doc)
 
 
 # ============================================================
@@ -362,8 +362,8 @@ DO I = 1, N
 END DO
 !$OMP END TARGET PARALLEL DO
 END PROGRAM""")
-    has('//f:target-parallel-openmp/f:clause[f:N="LASTPRIVATE"]', doc)
-    has('//f:target-parallel-openmp/f:clause[f:N="SCHEDULE"]',    doc)
+    has('//f:target-parallel-do-openmp/f:clause[f:N="LASTPRIVATE"]', doc)
+    has('//f:target-parallel-do-openmp/f:clause[f:N="SCHEDULE"]',    doc)
 
 
 # ============================================================
@@ -379,9 +379,9 @@ DO I = 1, N
 END DO
 !$OMP END TARGET PARALLEL DO SIMD
 END PROGRAM""")
-    has('//f:target-parallel-openmp/f:clause[f:N="SIMD"]',    doc)
-    has('//f:target-parallel-openmp/f:clause[f:N="SAFELEN"]', doc)
-    has('//f:target-parallel-openmp/f:clause[f:N="SIMDLEN"]', doc)
+    has('//f:target-parallel-do-simd-openmp',    doc)
+    has('//f:target-parallel-do-simd-openmp/f:clause[f:N="SAFELEN"]', doc)
+    has('//f:target-parallel-do-simd-openmp/f:clause[f:N="SIMDLEN"]', doc)
 
 
 # ============================================================
@@ -397,8 +397,8 @@ DO I = 1, N
 END DO
 !$OMP END TARGET PARALLEL DO SIMD
 END PROGRAM""")
-    has('//f:target-parallel-openmp/f:clause[f:N="ALIGNED"]', doc)
-    has('//f:target-parallel-openmp/f:clause[f:N="LINEAR"]',  doc)
+    has('//f:target-parallel-do-simd-openmp/f:clause[f:N="ALIGNED"]', doc)
+    has('//f:target-parallel-do-simd-openmp/f:clause[f:N="LINEAR"]',  doc)
 
 
 # ============================================================
@@ -442,8 +442,8 @@ DO I = 1, N
 END DO
 !$OMP END TARGET TEAMS DISTRIBUTE
 END PROGRAM""")
-    has('//f:target-teams-openmp/f:clause[f:N="DISTRIBUTE"]',    doc)
-    has('//f:target-teams-openmp/f:clause[f:N="DIST_SCHEDULE"]', doc)
+    has('//f:target-teams-distribute-openmp',    doc)
+    has('//f:target-teams-distribute-openmp/f:clause[f:N="DIST_SCHEDULE"]', doc)
 
 
 # ============================================================
@@ -459,8 +459,8 @@ DO I = 1, N
 END DO
 !$OMP END TARGET TEAMS DISTRIBUTE PARALLEL DO
 END PROGRAM""")
-    has('//f:target-teams-openmp/f:clause[f:N="PARALLEL DO"]', doc)
-    has('//f:target-teams-openmp/f:clause[f:N="COLLAPSE"]',    doc)
+    has('//f:target-teams-distribute-parallel-do-openmp', doc)
+    has('//f:target-teams-distribute-parallel-do-openmp/f:clause[f:N="COLLAPSE"]',    doc)
 
 
 # ============================================================
@@ -476,7 +476,7 @@ DO I = 1, N
 END DO
 !$OMP END TARGET TEAMS DISTRIBUTE PARALLEL DO SIMD
 END PROGRAM""")
-    has('//f:target-teams-openmp/f:clause[f:N="PARALLEL DO SIMD"]', doc)
+    has('//f:target-teams-distribute-parallel-do-simd-openmp', doc)
 
 
 # ============================================================
@@ -505,8 +505,8 @@ PROGRAM MAIN
 !$OMP END TARGET
 END PROGRAM""")
     has('//f:target-openmp',                                             doc)
-    has('//f:target-openmp/f:clause[f:N="MAP"]/f:map-T[@n="TO"]',   doc)
-    has('//f:target-openmp/f:clause[f:N="MAP"]/f:map-T[@n="FROM"]', doc)
+    has('//f:target-openmp/f:clause[f:N="MAP"]/f:prefix[.="to"]',   doc)
+    has('//f:target-openmp/f:clause[f:N="MAP"]/f:prefix[.="from"]', doc)
 
 
 # ============================================================

@@ -24,14 +24,14 @@ END PROGRAM""")
 
 # ---- !$OMP sentinel tag ------------------------------------------------------
 
-def test_omptarget_sentinel():
+def test_omp_sentinel():
     doc = parse_omt("""\
 PROGRAM MAIN
 !$OMP TARGET
 !$OMP END TARGET
 END PROGRAM""")
-    has  ('//f:omptarget', doc)
-    count('//f:omptarget', doc, 2)
+    has  ('//f:omp', doc)
+    count('//f:omp', doc, 2)
 
 
 # ---- TARGET DATA with MAP clauses --------------------------------------------
@@ -47,7 +47,7 @@ END PROGRAM""")
     count('//f:target-data-openmp/f:clause[f:N="MAP"]', doc, 2)
 
 
-# ---- TARGET TEAMS with DISTRIBUTE and PARALLEL DO clauses -------------------
+# ---- TARGET TEAMS DISTRIBUTE PARALLEL DO: one compound directive ------------
 
 def test_target_teams_distribute_parallel_do():
     doc = parse_omt("""\
@@ -58,13 +58,13 @@ DO I = 1, N
 END DO
 !$OMP END TARGET TEAMS DISTRIBUTE PARALLEL DO
 END PROGRAM""")
-    has  ('//f:target-teams-openmp',                                     doc)
-    has  ('//f:target-teams-openmp/f:clause[f:N="DISTRIBUTE"]',          doc)
-    has  ('//f:target-teams-openmp/f:clause[f:N="PARALLEL DO"]',         doc)
-    has  ('//f:target-teams-openmp/f:clause[f:N="PRIVATE"]',             doc)
-    has  ('//f:end-target-teams-openmp/f:clause[f:N="DISTRIBUTE"]',      doc)
-    has  ('//f:end-target-teams-openmp/f:clause[f:N="PARALLEL DO"]',     doc)
-    hasnt('//f:target-teams-distribute-parallel-do-openmp',              doc)
+    has  ('//f:target-teams-distribute-parallel-do-openmp',                                     doc)
+    hasnt ('//f:target-teams-distribute-parallel-do-openmp/f:clause[f:N="DISTRIBUTE"]',          doc)
+    hasnt ('//f:target-teams-distribute-parallel-do-openmp/f:clause[f:N="PARALLEL DO"]',         doc)
+    has  ('//f:target-teams-distribute-parallel-do-openmp/f:clause[f:N="PRIVATE"]',             doc)
+    has  ('//f:end-target-teams-distribute-parallel-do-openmp',      doc)
+    hasnt ('//f:end-target-teams-distribute-parallel-do-openmp/f:clause[f:N="PARALLEL DO"]',     doc)
+    hasnt('//f:target-teams-openmp',              doc)
 
 
 # ---- TARGET TEAMS DISTRIBUTE PARALLEL DO SIMD --------------------------------
@@ -75,9 +75,9 @@ PROGRAM MAIN
 !$OMP TARGET TEAMS DISTRIBUTE PARALLEL DO SIMD
 !$OMP END TARGET TEAMS DISTRIBUTE PARALLEL DO SIMD
 END PROGRAM""")
-    has('//f:target-teams-openmp/f:clause[f:N="DISTRIBUTE"]',           doc)
-    has('//f:target-teams-openmp/f:clause[f:N="PARALLEL DO SIMD"]',     doc)
-    has('//f:end-target-teams-openmp/f:clause[f:N="PARALLEL DO SIMD"]', doc)
+    has('//f:target-teams-distribute-parallel-do-simd-openmp',           doc)
+    hasnt('//f:target-teams-distribute-parallel-do-simd-openmp/f:clause[f:N="PARALLEL DO SIMD"]',     doc)
+    has('//f:end-target-teams-distribute-parallel-do-simd-openmp', doc)
 
 
 # ---- TARGET PARALLEL DO SIMD with REDUCTION ----------------------------------
@@ -91,12 +91,12 @@ DO I = 1, N
 END DO
 !$OMP END TARGET PARALLEL DO SIMD
 END PROGRAM""")
-    has('//f:target-parallel-openmp',                          doc)
-    has('//f:target-parallel-openmp/f:clause[f:N="DO"]',       doc)
-    has('//f:target-parallel-openmp/f:clause[f:N="SIMD"]',     doc)
-    has('//f:target-parallel-openmp/f:clause[f:N="REDUCTION"]',doc)
-    has('//f:end-target-parallel-openmp/f:clause[f:N="DO"]',   doc)
-    has('//f:end-target-parallel-openmp/f:clause[f:N="SIMD"]', doc)
+    has('//f:target-parallel-do-simd-openmp',                          doc)
+    hasnt('//f:target-parallel-do-simd-openmp/f:clause[f:N="DO"]',       doc)
+    hasnt('//f:target-parallel-do-simd-openmp/f:clause[f:N="SIMD"]',     doc)
+    has('//f:target-parallel-do-simd-openmp/f:clause[f:N="REDUCTION"]',doc)
+    has('//f:end-target-parallel-do-simd-openmp',   doc)
+    hasnt('//f:end-target-parallel-do-simd-openmp/f:clause[f:N="SIMD"]', doc)
 
 
 # ---- TARGET TEAMS LOOP -------------------------------------------------------
@@ -107,9 +107,9 @@ PROGRAM MAIN
 !$OMP TARGET TEAMS LOOP COLLAPSE(2)
 !$OMP END TARGET TEAMS LOOP
 END PROGRAM""")
-    has('//f:target-teams-openmp/f:clause[f:N="LOOP"]',     doc)
-    has('//f:target-teams-openmp/f:clause[f:N="COLLAPSE"]', doc)
-    has('//f:end-target-teams-openmp/f:clause[f:N="LOOP"]', doc)
+    has('//f:target-teams-loop-openmp',     doc)
+    has('//f:target-teams-loop-openmp/f:clause[f:N="COLLAPSE"]', doc)
+    has('//f:end-target-teams-loop-openmp', doc)
 
 
 # ---- TARGET SIMD -------------------------------------------------------------
@@ -120,8 +120,8 @@ PROGRAM MAIN
 !$OMP TARGET SIMD
 !$OMP END TARGET SIMD
 END PROGRAM""")
-    has('//f:target-openmp/f:clause[f:N="SIMD"]',     doc)
-    has('//f:end-target-openmp/f:clause[f:N="SIMD"]', doc)
+    has('//f:target-simd-openmp',     doc)
+    has('//f:end-target-simd-openmp', doc)
 
 
 # ---- DECLARE TARGET / END DECLARE TARGET -------------------------------------
