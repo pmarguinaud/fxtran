@@ -235,3 +235,12 @@ def test_parse_string_leaves_no_file(tmp_path, monkeypatch):
     finally:
         tempfile.tempdir = None
     assert list(tmp_path.iterdir()) == []
+
+
+def test_F_leaves_attributes_alone():
+    from fxtran.xpath import preprocess
+    assert preprocess('./@name') == './@name'
+    assert preprocess('./object/file/@name') == './f:object/f:file/@name'
+    assert preprocess('.//a-stmt[@x]') == './/f:a-stmt[@x]'
+    doc = _xml_parser.load_xml(string=fxtran.run('REAL :: X\nEND\n'))
+    assert F('./object/file/@name', doc, 2) == ['string']

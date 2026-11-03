@@ -87,7 +87,10 @@ def walk_Step(node, seen):
 
             walk(node, seen)
             return
-        elif node.literal not in ('.', '..', '*') and ':' not in node.literal and not node.test:
+        elif (node.literal not in ('.', '..', '*') and ':' not in node.literal and not node.test
+              and node.axis != 'attribute'):
+            # Attributes have no namespace: XML::XPath gives them a test code
+            # (test_attr_qname), which keeps Perl from prefixing them.
             node.literal = 'f:' + node.literal
 
     for p in node.predicates:
