@@ -3,7 +3,10 @@ import subprocess
 import tempfile
 
 import _fxtran
-from fxtran import Error, run as _run
+from fxtran import Error, run as _run, _require
+
+_require('xml_libxml')
+
 from xml_libxml import Parser as _XMLParser, XPathContext as _XPathContext
 
 _xml_parser = _XMLParser()

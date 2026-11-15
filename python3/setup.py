@@ -22,8 +22,10 @@ setup (
     packages = ["fxtran"],
     version = "0.1",
     python_requires = ">=3.6",
-    # github.com/pmarguinaud/python-libxml2 and github.com/pmarguinaud/python-xpath_parser
-    install_requires = ["xml_libxml", "xpath-parser"],
+    # fxtran.run needs nothing else; the DOM layer (parse, fxtran.xpath, ...) needs
+    # github.com/pmarguinaud/python-libxml2 and github.com/pmarguinaud/python-xpath_parser:
+    # pip install fxtran[dom]
+    extras_require = {"dom": ["xml_libxml", "xpath-parser"]},
     ext_modules = [Extension ("_fxtran", ["fxtran.c"],
     include_dirs=[TOP + '/include'], 
     libraries=['fxtran'],

@@ -1,3 +1,7 @@
+from fxtran import _require
+
+_require('xml_libxml', 'xpath_parser')
+
 from xml_libxml import XPathContext as _XPathContext
 from xpath_parser import Parser as _XPathParserCls, Step, Expr, LocationPath, Function
 

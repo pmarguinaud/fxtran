@@ -75,7 +75,9 @@ fxtran/
 │   ├── t/                      Perl test suite (Test::More)
 │   └── …
 ├── python3/
-│   ├── fxtran.c                Python 3 C extension
+│   ├── fxtran.c                Python 3 C extension (_fxtran)
+│   ├── fxtran/                 Python package: run(), DOM layer (optional)
+│   ├── t/                      Python test suite (pytest)
 │   └── …
 ├── bin/fxtran                  Built executable
 ├── lib/libfxtran.so.0          Built shared library
@@ -885,16 +887,42 @@ my $xml = fxtran::run('-openmp-target', '-construct-tag', '-no-include', $src);
 The module also provides `fxtran::xpath` which wraps `XML::LibXML` and
 `XML::XPath::Parser` for convenient XPath evaluation on the returned XML.
 
-### Python 3 (`python3/fxtran.c`)
+### Python 3 (`python3/`)
 
-The Python extension exposes `fxtran.run(...)` with identical semantics. It uses
-the standard CPython extension API (`PyArg_ParseTuple`, `Py_BuildValue`). On
-error it raises `fxtran.error`.
+The C extension `_fxtran` (`python3/fxtran.c`) exposes `run(...)` with
+identical semantics, using the standard CPython extension API. On error it
+raises `_fxtran.error`. The `fxtran` package wraps it in two layers.
+
+**Core** (no dependency): `fxtran.run(...)` returns the XML as a `str`,
+`fxtran.help()` the options as XML. Errors raise `fxtran.Error`, a subclass of
+`fxtran.error` (the exception of the extension), so code written for the
+extension alone works unchanged:
 
 ```python
 import fxtran
-xml = fxtran.run('-openmp-target', '-construct-tag', '-no-include', src)
+try:
+    xml = fxtran.run('-openmp-target', '-construct-tag', '-no-include', src)
+except fxtran.error as err:
+    ...
 ```
+
+**DOM layer**: the port of the Perl modules, with the Perl names. `fxtran.parse`,
+`s`, `e`, `t`, `n`, `setOptions` and `fxtran.parser` return
+[python-libxml2](https://github.com/pmarguinaud/python-libxml2) nodes;
+`fxtran.xpath` provides `F` and `f`, and also needs
+[python-xpath_parser](https://github.com/pmarguinaud/python-xpath_parser).
+
+```python
+import fxtran
+from fxtran.xpath import F
+stmt = fxtran.s('X = A + B')
+names = F('.//n', stmt, 1)   # ['X', 'A', 'B']
+```
+
+These dependencies are optional: `pip install fxtran` gives the core,
+`pip install fxtran[dom]` the DOM layer too. They are imported when the DOM
+layer is first used; if one is missing, it raises an `ImportError` that names
+it, and the core keeps working.
 
 ---
 

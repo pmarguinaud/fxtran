@@ -1,16 +1,42 @@
-import _fxtran
-from xml_libxml import Parser as _XMLParser, Text
+"""fxtran: Fortran source to XML.
 
-_xml_parser = _XMLParser()
+The core, run(), help() and the exceptions, needs only the _fxtran extension:
+it returns the XML as a str, as before the DOM layer existed.
+
+The DOM layer (parse, s, e, t, n, setOptions, fxtran.parser, fxtran.xpath)
+returns xml_libxml nodes, and needs xml_libxml and xpath_parser
+(pip install fxtran[dom]). These modules are imported when it is first used.
+"""
+
+import importlib
+
+import _fxtran
 
 FXTRAN_NS = 'http://fxtran.net/#syntax'
 
 # Exported as in Perl (@EXPORT); setOptions, help and run are fxtran.setOptions, ...
 __all__ = ['parse', 's', 't', 'e', 'n']
 
+# The exception of the extension, as before the DOM layer existed
+error = _fxtran.error
+
 
 class Error(_fxtran.error):
     """Error of fxtran, or of the fxtran command that parseString and parseLocation run."""
+
+
+def _require(*modules):
+    """Import the modules of the DOM layer, with a clear message if one is missing."""
+    for module in modules:
+        try:
+            importlib.import_module(module)
+        except ImportError as err:
+            raise ImportError(
+                "{} is not installed: it is needed by the DOM layer of fxtran "
+                "(parse, s, e, t, n, setOptions, fxtran.parser, fxtran.xpath); "
+                "install fxtran[dom], or xml_libxml and xpath-parser. "
+                "fxtran.run() works without it.".format(module),
+                name=module) from err
 
 
 def run(*args):
@@ -25,6 +51,8 @@ def run(*args):
 
 def t(content):
     """A text node."""
+    _require('xml_libxml')
+    from xml_libxml import Text
     return Text(content)
 
 
@@ -38,8 +66,16 @@ def e(expr):
     return parse(expr=expr)
 
 
+_xml_parser = None
+
+
 def n(xml):
     """Nodes from fxtran XML: one node, or a list if there are several."""
+    global _xml_parser
+    if _xml_parser is None:
+        _require('xml_libxml')
+        from xml_libxml import Parser
+        _xml_parser = Parser()
     doc = _xml_parser.load_xml(
         string='<?xml version="1.0"?><object xmlns="' + FXTRAN_NS + '">' + xml + '</object>'
     )
