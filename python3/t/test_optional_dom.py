@@ -37,6 +37,22 @@ def test_run_without_dom():
     assert out.strip() == 'True'
 
 
+def test_run_without_final_newline():
+    # The text was read past its end when its last line had no newline:
+    # the XML could lack </file>; it must be the same as with the newline
+    out = _run("""
+        import fxtran
+        opts = ['-construct-tag', '-no-include', '-no-cpp', '-line-length', '9999']
+        bad = []
+        for n in range(1, 60):
+            text = 'SUBROUTINE T; X = ' + 'A' * n + '; END'
+            if fxtran.run(*opts, text) != fxtran.run(*opts, text + '\\n'):
+                bad.append(n)
+        print(bad)
+    """)
+    assert out.strip() == '[]'
+
+
 def test_error_without_dom():
     out = _run("""
         import fxtran

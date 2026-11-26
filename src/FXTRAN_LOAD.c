@@ -118,8 +118,16 @@ static void FXTRAN_load_nocpp0 (FXTRAN_FBUFFER * fb, const char * filename, char
     }
   else if (text)
     {
+      /* As FXTRAN_slurp: the loop below expects a final newline */
+      size_t len = strlen (text);
       filename_r = "string";
-      t0 = text;
+      t0 = (char*)malloc (len + 2);
+      if (t0 == NULL)
+        FXTRAN_ABORT ("Cannot allocate memory");
+      memcpy (t0, text, len);
+      if ((len == 0) || (t0[len-1] != '\n'))
+        t0[len++] = '\n';
+      t0[len] = '\0';
       FXTRAN_file_enter (filename_r, t0, pcurrent, proot);
     }
   else
@@ -167,8 +175,7 @@ static void FXTRAN_load_nocpp0 (FXTRAN_FBUFFER * fb, const char * filename, char
 
   FXTRAN_file_leave (pcurrent, proot);
 
-  if (text == NULL)
-    free (t0);
+  free (t0);
 
 }
 
