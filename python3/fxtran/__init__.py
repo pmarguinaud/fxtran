@@ -101,3 +101,11 @@ def setOptions(*args):
 def help():
     """The help of fxtran, as XML."""
     return _fxtran.run('-help-xml', '')
+
+
+def main():
+    """The fxtran command, installed by pip: fxtran [option ...] file."""
+    import sys
+    sys.stdout.flush()
+    sys.stderr.flush()
+    sys.exit(_fxtran.main(['fxtran'] + sys.argv[1:]))

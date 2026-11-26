@@ -96,10 +96,76 @@ done:
   return ret;
 }
 
+/*
+ * main (argv): run fxtran as the fxtran command, with the arguments of the
+ * sequence argv (argv[0] is the program name): files are read and written,
+ * errors are printed on stderr. Return the exit status.
+ */
+static PyObject * main_ (PyObject * self, PyObject * args)
+{
+  PyObject * seq = NULL, * fast = NULL, ** str = NULL, * ret = NULL;
+  Py_ssize_t items, i, nstr = 0;
+  char ** argv = NULL;
+  int status;
+
+  if (! PyArg_ParseTuple (args, "O", &seq))
+    return NULL;
+
+  fast = PySequence_Fast (seq, "main() takes a sequence of arguments");
+  if (fast == NULL)
+    return NULL;
+
+  items = PySequence_Fast_GET_SIZE (fast);
+  if ((items < 1) || (items > INT_MAX - 1))
+    {
+      PyErr_SetString (PyExc_ValueError, "main() takes the program name and the arguments");
+      goto done;
+    }
+
+  argv = PyMem_New (char *, items + 1);
+  str  = PyMem_New (PyObject *, items);
+  if ((argv == NULL) || (str == NULL))
+    {
+      PyErr_NoMemory ();
+      goto done;
+    }
+
+  for (i = 0; i < items; i++)
+    {
+      str[i] = PyObject_Str (PySequence_Fast_GET_ITEM (fast, i));
+      if (str[i] == NULL)
+        goto done;
+      nstr++;
+      argv[i] = (char *)PyUnicode_AsUTF8 (str[i]);
+      if (argv[i] == NULL)
+        goto done;
+    }
+  argv[items] = NULL;
+
+  status = FXTRAN_RUN ((int)items, argv, NULL, NULL, NULL);
+
+  /* fxtran writes with the stdio of C, not with sys.stdout */
+  fflush (stdout);
+  fflush (stderr);
+
+  ret = PyLong_FromLong (status ? 1 : 0);
+
+done:
+  for (i = 0; i < nstr; i++)
+    Py_DECREF (str[i]);
+  PyMem_Free (str);
+  PyMem_Free (argv);
+  Py_DECREF (fast);
+
+  return ret;
+}
+
 static PyMethodDef fxtran_Methods[] =
 {
   {"run", run, METH_VARARGS,
    "run(option, ..., text): parse Fortran source text and return the XML"},
+  {"main", main_, METH_VARARGS,
+   "main(argv): run fxtran as the fxtran command; return the exit status"},
   {NULL,  NULL, 0, NULL}
 };
 
